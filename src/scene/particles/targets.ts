@@ -9,7 +9,6 @@ export interface TargetOptions {
   count: number;
   anchors?: SanctumSpots["anchors"];
   activeProject: number;
-  activeRole: number;
   bust?: THREE.Object3D;
 }
 
@@ -89,8 +88,8 @@ function glyphPoints(count: number, name: string, center: THREE.Vector3, random:
 }
 
 export function createTargetTexture(options: TargetOptions) {
-  const { shape, count, anchors, activeProject, activeRole, bust } = options;
-  const random = seeded((activeProject + 1) * 997 + (activeRole + 1) * 131 + shape.length * 17);
+  const { shape, count, anchors, activeProject, bust } = options;
+  const random = seeded((activeProject + 1) * 997 + shape.length * 131);
   const core = anchorPosition(anchors, "core", new THREE.Vector3());
   const shapeAnchor = shape === "core" ? core : anchorPosition(anchors, shape === "project-glyph" ? "glyph" : shape, new THREE.Vector3());
   const radius = anchors?.[shape === "project-glyph" ? "glyph" : shape]?.radius ?? (shape === "bust" ? 1.35 : 1.6);

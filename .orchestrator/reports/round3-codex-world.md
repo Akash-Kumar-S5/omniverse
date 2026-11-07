@@ -12,3 +12,9 @@
 - The helix highlights the active role; project targets follow `activeProject`; particle positions publish the four scene anchors.
 - Build and lint pass. Target changes currently reinitialize the simulation; step 3 will replace that with continuous morph transitions.
 - Reference checkout `.orchestrator/research/refs/` is absent from this worktree, so the flow-field and Nova source could not be inspected.
+
+## Step 3
+- Added a curl-noise field and a 1.2-second eased transition from a GPU snapshot of the current swarm to each new target, including retargets mid-flight.
+- Reduced motion cuts directly to the final shape and disables turbulence; the beacon pulses when motion is enabled.
+- Publishes the active shape focus/radius/morph and projected hero, bust, glyph, and beacon screen anchors.
+- Build and lint pass. A target change on the helix now only changes the active-role highlight; it does not regenerate the shape.

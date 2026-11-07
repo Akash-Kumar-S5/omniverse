@@ -1,10 +1,13 @@
 import * as THREE from "three";
 import { GPUComputationRenderer } from "three/addons/misc/GPUComputationRenderer.js";
 import simulationShader from "./simulation.frag?raw";
+import curlShader from "../shaders/curl.glsl?raw";
+import noiseShader from "../shaders/lib/noise3D.glsl?raw";
 
 export interface ParticleSimulation {
   compute: GPUComputationRenderer;
   positionVariable: ReturnType<GPUComputationRenderer["addVariable"]>;
+  snapshot: THREE.WebGLRenderTarget;
   dispose: () => void;
 }
 
@@ -29,7 +32,7 @@ export function createParticleSimulation(
     values[i + 3] = Math.max(0.12, distance);
   }
 
-  const positionVariable = compute.addVariable("texturePosition", simulationShader, initial);
+  const positionVariable = compute.addVariable("texturePosition", `${noiseShader}\n${curlShader}\n${simulationShader}`, initial);
   compute.setVariableDependencies(positionVariable, [positionVariable]);
   positionVariable.material.uniforms.uDelta = { value: 0 };
   positionVariable.material.uniforms.uTime = { value: 0 };
@@ -37,6 +40,13 @@ export function createParticleSimulation(
   positionVariable.material.uniforms.uCursorActive = { value: 0 };
   positionVariable.material.uniforms.uCursorRadius = { value: radius * 0.72 };
   positionVariable.material.uniforms.uTarget = { value: target };
+  positionVariable.material.uniforms.uFromTarget = { value: target };
+  positionVariable.material.uniforms.uMorphProgress = { value: 1 };
+  positionVariable.material.uniforms.uTurbulence = { value: 1 };
+  positionVariable.material.uniforms.uBeacon = { value: 0 };
+  positionVariable.material.uniforms.uFocus = { value: center.clone() };
+
+  const snapshot = compute.createRenderTarget(size, size, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.NearestFilter, THREE.NearestFilter);
 
   const error = compute.init();
   initial.dispose();
@@ -45,5 +55,5 @@ export function createParticleSimulation(
     compute.dispose();
     return null;
   }
-  return { compute, positionVariable, dispose: () => compute.dispose() };
+  return { compute, positionVariable, snapshot, dispose: () => { snapshot.dispose(); compute.dispose(); } };
 }
