@@ -118,3 +118,6 @@ Contract: `briefs/round3-contract.md` + `src/state/signal.ts` (CHAPTER_SPOTS nam
 | agy-review | agy opus-4-6-thinking | w2:pD | none | idle/finishing round-2 baseline; judges playbook s8 later |
 Rules: BlenderMCP needs Akash's OK (not installed). Cycles stills per chapter before export. Akash away: stills go in an Artifact.
 Next 3: (1) wait for blender stills -> publish Artifact of stills for Akash (private) -> on go, tell blender-sanctum to export; (2) merge codex-world step 1, then prompt agy-world; (3) integrate, agy-review, strip Artifact, final verify.
+
+## BlenderMCP (2026-11-07 15:32 UTC)
+Akash installed it himself: Claude MCP server "blender" (uvx mcp-for-blender==2.2.7) shows Connected; addon file in ~/Library/Application Support/Blender/5.2/scripts/addons/blender_mcp_addon.py. Only Claude-kind agents can call it; blender-sanctum (agy) keeps using headless scripts. Needs Blender GUI open with the addon connected to drive a live scene. I did not read the addon source; it can execute arbitrary Python in Blender by design.
