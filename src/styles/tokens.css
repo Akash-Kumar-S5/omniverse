@@ -1,15 +1,77 @@
-/* Orchestrator-owned design tokens. Builders consume, never edit. Request changes via report. */
+/* Design tokens for Omniverse (Agent Constellation).
+   All UI components consume these variables. */
 :root {
+  /* Core palette */
   --bg: #05060a;
   --bg-elev: #0c0f17;
+  --bg-card: rgba(12, 15, 23, 0.75);
+  --bg-overlay: rgba(5, 6, 10, 0.92);
+  --bg-glass: rgba(12, 15, 23, 0.55);
+
   --fg: #e8ecf4;
   --fg-dim: #8a93a6;
+  --fg-muted: #5a6275;
+  --fg-bright: #ffffff;
+
+  /* Accents */
   --accent: #7cf7d4;      /* agent-flow mint */
+  --accent-rgb: 124, 247, 212;
   --accent-2: #8fa7ff;    /* node glow periwinkle */
+  --accent-2-rgb: 143, 167, 255;
+  --accent-dim: rgba(124, 247, 212, 0.12);
+  --accent-glow: 0 0 16px rgba(124, 247, 212, 0.35);
+
+  /* Borders & lines */
   --line: rgba(232, 236, 244, 0.14);
+  --line-dim: rgba(232, 236, 244, 0.08);
+  --line-strong: rgba(232, 236, 244, 0.28);
+  --line-accent: rgba(124, 247, 212, 0.35);
+
+  /* Scrims & gradients */
   --scrim: linear-gradient(90deg, rgba(5,6,10,.85), rgba(5,6,10,0));
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --scrim-top: linear-gradient(180deg, rgba(5,6,10,0.85) 0%, rgba(5,6,10,0) 100%);
+  --scrim-bottom: linear-gradient(0deg, rgba(5,6,10,0.85) 0%, rgba(5,6,10,0) 100%);
+  --scrim-radial: radial-gradient(circle at center, rgba(5,6,10,0) 0%, rgba(5,6,10,0.85) 100%);
+
+  /* Typography scale */
+  --font-display: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-2xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);   /* 11px - 12px */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);      /* 12px - 13px */
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.25vw, 0.875rem);   /* 13px - 14px */
+  --text-base: clamp(0.9375rem, 0.88rem + 0.3vw, 1rem);      /* 15px - 16px */
+  --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);      /* 18px - 20px */
+  --text-xl: clamp(1.25rem, 1.15rem + 0.6vw, 1.5rem);        /* 20px - 24px */
+  --text-2xl: clamp(1.5rem, 1.35rem + 1vw, 2rem);            /* 24px - 32px */
+  --text-3xl: clamp(2rem, 1.7rem + 1.6vw, 2.75rem);          /* 32px - 44px */
+  --text-4xl: clamp(2.5rem, 2rem + 2.5vw, 4rem);             /* 40px - 64px */
+
+  /* Spacing & Gutters */
   --gutter: clamp(16px, 4vw, 48px);
-  --z-scene: 0; --z-overlay: 10; --z-hud: 20; --z-boot: 30;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Z-indices */
+  --z-scene: 0;
+  --z-overlay: 10;
+  --z-hud: 20;
+  --z-boot: 30;
+  --z-skip-link: 100;
 }

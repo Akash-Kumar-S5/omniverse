@@ -1,4 +1,3 @@
-// Orchestrator-owned composition.
 import Boot from "./boot/Boot";
 import Hud from "./hud/Hud";
 import Sections from "./sections/Sections";
@@ -8,7 +7,7 @@ export default function Overlay() {
     <>
       <Boot />
       <Hud />
-      <main className="overlay">
+      <main className="overlay" id="main-content" tabIndex={-1}>
         <Sections />
       </main>
     </>
