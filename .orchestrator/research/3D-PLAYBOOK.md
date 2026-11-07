@@ -37,7 +37,42 @@ Igloo Inc stack (from its case study): Three.js, three-mesh-bvh, Svelte, GSAP, V
 exporter and a fluid sim, with Houdini/Blender for assets. **The look comes from the custom simulation,
 not from the framework.**
 
-## 3. Recommended direction: "Signal Field" (keeps the Agent Constellation idea)
+## 3a. UPDATE (Akash, 20:45): Blender is approved and installed. Direction = "Sanctum + Signal Field"
+Blender 5.2.3 LTS is at `/Applications/Blender.app/Contents/MacOS/Blender`. It runs headless; verified:
+`blender/scripts/smoke_bake_export.py` builds geometry, Cycles-bakes a COMBINED lightmap, and exports
+GLB with Draco (SMOKE_OK). This is the pipeline Immersive Garden (Awwwards case study, 2025) and
+Bruno Simon use: **author in Blender, bake the expensive light, ship cheap unlit textures.**
+
+The look = two layers:
+1. **Sanctum (Blender-authored, baked)**: a brutalist concrete chamber, Pantheon-like. A circular
+   oculus in the ceiling throws ONE hard shaft of light onto a central plinth/pool; the floor is wet
+   polished concrete; walls are layered concrete with deep shadow. All light (sun shaft, bounce, AO,
+   soft shadows) is baked in Cycles into 1-2 lightmaps, so runtime cost is near zero and it looks
+   photographic. CC0 textures are already downloaded to `blender/textures/` (Poly Haven 2k:
+   concrete_wall_003, concrete_floor_worn_001, marble_01).
+   Each chapter is a different camera spot or alcove in the same building, so chapters differ by
+   composition and light: hero = under the oculus; about = the bust on a pedestal in a side niche
+   (`marble_bust_01.glb`); experience = a long corridor of 4 pillars/doorways (one per role);
+   projects = a gallery of monolith slabs; contact = the open roof and night sky.
+2. **Signal Field (code, GPGPU)**: the particle swarm from section 3 below lives INSIDE the sanctum,
+   lit by the shaft. That contrast is the signature: organic living light inside cold stone.
+   Runtime extras: a real-time reflector on the wet floor (HIGH only), a volumetric shaft shader
+   matching the baked shaft, dust motes in the beam, fog.
+
+Blender pipeline rules:
+- Everything is scripted (`blender/scripts/*.py`, run with `-b -P`) so it's reproducible and
+  reviewable. The `.blend` is a build artifact, and the GLBs go to `public/assets/models/`.
+- Bake: Cycles, 256-512 samples + denoise, margin 6-16px, lightmap on UV1 (second UV set; three.js
+  `lightMap` reads `uv1` in r15x+), or bake COMBINED straight into the base color and use unlit
+  `MeshBasicMaterial` for static architecture (simplest, best looking).
+- Export: glTF/GLB, Draco mesh compression, `export_lights=False`. Then locally:
+  `npx @gltf-transform/cli optimize in.glb out.glb --texture-compress ktx2` (or webp) for textures.
+- Budget: sanctum GLB + lightmaps <= 4 MB total; textures 2k max (1k for LITE via a second file).
+- Optional live control: BlenderMCP (https://github.com/ahujasid/blender-mcp) lets a Claude agent
+  drive an open Blender GUI. It needs a Blender addon plus `claude mcp add`, which changes Claude
+  config, so **ask Akash first**. Headless scripts are the default.
+
+## 3. "Signal Field" particle layer (lives inside the sanctum)
 One signature effect we can build in code, without a 3D artist: a **GPGPU particle swarm
 (~200k points HIGH, ~40k LITE) that morphs between shapes, one shape per chapter**. It's driven by
 curl noise and reacts to the cursor. It reads as "many agents moving as one system", which is
@@ -92,6 +127,24 @@ Light, atmosphere, shaders
 - The Book of Shaders (noise, fbm): https://thebookofshaders.com/
 - Inigo Quilez articles (SDFs, palettes, smoothstep tricks): https://iquilezles.org/articles/
 - Simplex/curl noise GLSL: https://github.com/ashima/webgl-noise (vendored)
+Blender to three.js
+- Codrops, "Building a Fully-Featured 3D World in the Browser with Blender and Three.js" (Apr 2025): https://tympanus.net/codrops/2025/04/08/3d-world-in-the-browser-with-blender-and-three-js/
+- Awwwards, Immersive Garden case study (Blender/Houdini, a gltf-transform + Blender-script export pipeline, KTX compression, channel packing): https://www.awwwards.com/case-study-immersive-gardens-new-website.html
+- Awwwards, Bruno's portfolio case study (Blender naming conventions drive behaviour, WebGPU/TSL): https://www.awwwards.com/brunos-portfolio-case-study.html
+- Bake, glTF, Draco, load walkthrough: https://dev.to/heygalatea/how-to-export-blender-to-threejs-bake-gltf-draco-and-load-4ac9 (its exact bake numbers are unverified)
+- Lightmap on the second UV in three.js (forum): https://discourse.threejs.org/t/apply-uv-coordinates-and-lightmaps-baked-from-blender-to-mesh/63910
+Cloned reference code (all MIT, in `.orchestrator/research/refs/`, gitignored)
+- `r3f-flow-field-particles`: GPGPU flow-field particles in R3F (GPUComputationRenderer). The closest match to our Signal Field sim.
+- `nextjs-webgl-templates`: 13 R3F templates incl. Nova (90k-particle scroll morph), Flux (GPU fluid), Mycelia (1M-agent Physarum). Read Nova first.
+- `Three-VFX`: WebGPU compute particle system with an R3F wrapper (the stretch path).
+- `codrops-surface-sampling`: MeshSurfaceSampler demos (bust → points).
+- `webgl-noise`: simplex/curl noise (also vendored in `src/scene/shaders/lib`).
+More Codrops (2025-26)
+- Dissolve effect with shaders + particles (Feb 2025): https://tympanus.net/codrops/2025/02/17/implementing-a-dissolve-effect-with-shaders-and-particles-in-three-js/ (use for the chapter transitions)
+- Particle trails with TSL (May 2025): https://tympanus.net/codrops/2025/05/05/matrix-sentinels-building-dynamic-particle-trails-with-tsl/
+- Procedural vortex in a glass sphere, TSL (Mar 2025): https://tympanus.net/codrops/2025/03/10/rendering-a-procedural-vortex-inside-a-glass-sphere-with-three-js-and-tsl/
+- WebGPU dissolve of MSDF text into dust (Jan 2026): https://tympanus.net/codrops/2026/01/28/webgpu-gommage-effect-dissolving-msdf-text-into-dust-and-petals-with-three-js-tsl/
+- Maxime Heckel, "The Study of Shaders with R3F": https://blog.maximeheckel.com/posts/the-study-of-shaders-with-react-three-fiber/
 Craft references (study, never copy assets)
 - Igloo Inc case study: https://www.awwwards.com/igloo-inc-case-study.html and forum thread https://discourse.threejs.org/t/landing-site-igloo-inc/67249
 - aengel.io (screens in `.orchestrator/reference/aengel-*.png`), lusion.co, activetheory.net, bruno-simon.com
@@ -102,6 +155,11 @@ Craft references (study, never copy assets)
 - Smithsonian 3D open access (CC0 scans, GLB): https://3d.si.edu (use the low-res GLB, never the multi-GB full-res)
 - ambientCG (CC0 PBR textures): https://ambientcg.com
 - Sketchfab, filtered by Downloadable + CC0/CC-BY: https://sketchfab.com
+- pmndrs market (~400 CC0 glTF models): https://market.pmnd.rs
+- Fab (filter by CC0): https://www.fab.com. Poly Pizza is mostly CC-BY 3.0, so credit the author.
+Downloaded for Blender (CC0, Poly Haven 2k: diffuse, normal (GL), rough, AO): `blender/textures/`
+concrete_wall_003, concrete_floor_worn_001, marble_01. More are available via the API:
+`curl -A omniverse-build https://api.polyhaven.com/files/<slug>` (add each to CREDITS.md).
 Already in repo: `public/assets/hdri/studio_small_09_1k.exr`, `moonless_golf_512.hdr`, `public/assets/models/marble_bust_01.glb`.
 Point sampling needs geometry only. Strip textures from any GLB used purely as a particle target
 (`npx @gltf-transform/cli` locally via npx is approved for this; no global install).
@@ -109,6 +167,17 @@ Point sampling needs geometry only. Strip textures from any GLB used purely as a
 ## 7. Packages (local installs only)
 Already present: three 0.187, @react-three/fiber 9, drei 10, @react-three/postprocessing 3, postprocessing 6, maath, gsap, lenis.
 Allowed to add if needed: `three-custom-shader-material` (extend standard material with custom GLSL), `r3f-perf` (dev only), `leva` (dev only, tuning panel, stripped in prod).
+
+## 7b. Team for round 3 (per MODEL-POLICY)
+- `blender-sanctum` (codex gpt-6-luna high, or agy claude-opus-4-6-thinking if the codex quota is short):
+  owns `blender/**` and the exported `public/assets/models/sanctum*.glb` + lightmaps. Scripted build, bake and export.
+  It renders a Cycles still per chapter camera to `.orchestrator/reference/r3-blender-*.png` for review BEFORE export.
+- `codex-world` (gpt-6-luna high): `src/scene/particles/**` + `src/scene/shaders/**` (Signal Field).
+- `agy-world` (agy claude-opus-4-6-thinking): loading the sanctum GLB, floor reflector, volumetric shaft,
+  dust motes, CameraRig splines through the building, fx/Effects.
+- `agy-review` (existing): judges section 8 with screenshots. Never reviews its own work.
+Order: contract first (chapter → camera spot names shared between the Blender cameras and CameraRig,
+shape ids, quality tiers), then blender-sanctum and codex-world in parallel, then agy-world integrates.
 
 ## 8. Acceptance for the 3D (the reviewer judges these with screenshots)
 1. A stranger can describe the hero 3D in one sentence that isn't "spheres and lines".

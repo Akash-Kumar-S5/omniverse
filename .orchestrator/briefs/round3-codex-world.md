@@ -1,5 +1,5 @@
 # Brief: codex-world, round 3 (Signal Field particles)
-Read first: `.orchestrator/research/3D-PLAYBOOK.md` (sections 3, 4, 5), `.orchestrator/briefs/round3-contract.md`, `src/state/signal.ts`. Reference code in `.orchestrator/research/refs/` (gitignored, read-only).
+Read first: `.orchestrator/research/3D-PLAYBOOK.md` (3a, 3, 4, 8), `.orchestrator/briefs/round3-contract.md`, `src/state/signal.ts`. Anchors arrive via SignalFieldProps.anchors (from sanctum.spots.json); fall back to origin until it exists.
 Work in your worktree `.worktrees/codex-world` (branch r3/codex-world). Run `git merge --ff-only main` first.
 
 ## Outcome

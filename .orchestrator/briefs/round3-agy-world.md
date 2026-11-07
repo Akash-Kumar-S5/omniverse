@@ -1,5 +1,5 @@
 # Brief: agy-world, round 3 (stage: floor, light, camera, post)
-Read first: `.orchestrator/research/3D-PLAYBOOK.md` (sections 1, 3, 4, 8), `.orchestrator/briefs/round3-contract.md`, `src/state/signal.ts`.
+Read first: `.orchestrator/research/3D-PLAYBOOK.md` (3a, 4, 7b, 8), `.orchestrator/briefs/round3-contract.md`, `src/state/signal.ts`.
 Work in your worktree `.worktrees/agy-world` (branch r3/agy-world). Run `git merge --ff-only main` before each step. Keep all outputs inside the repo.
 
 ## Outcome

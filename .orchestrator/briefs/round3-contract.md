@@ -1,23 +1,20 @@
-# Round 3 contract (orchestrator-owned). Read with .orchestrator/research/3D-PLAYBOOK.md
+# Round 3 contract (orchestrator-owned). Direction: "Sanctum + Signal Field". Read `.orchestrator/research/3D-PLAYBOOK.md` (3a, 3, 4, 7b, 8).
 
-UI, typography, copy, HUD and overlay are FROZEN. Round 3 touches only `src/scene/**`, `public/assets/**`, `CREDITS.md`.
-Shared types live in `src/state/signal.ts` (ShapeId, CHAPTER_SHAPE, SIM_SIZE, TIERS, `signal` bus, SignalFieldProps). `store.quality` is now high | medium | lite.
-Do not edit `src/state/**`, `src/App.tsx`, `src/ui/**`. If you need a contract change, write it in your report and stop.
+UI, typography, copy, HUD, overlay are FROZEN. Do not edit `src/ui/**`, `src/state/**`, `src/App.tsx`, root configs. Need a contract change? Say so in your report and stop.
+Shared types/constants: `src/state/signal.ts` (ShapeId, CHAPTER_SHAPE, CHAPTER_SPOTS, SanctumSpots, SANCTUM_FILES, SIM_SIZE, TIERS, `signal` bus). `store.quality` = high | medium | lite.
 
-## Ownership
-- codex-world (r3/codex-world, `.worktrees/codex-world`): `src/scene/particles/**`, `src/scene/shaders/**` (curl.glsl etc). Writes `signal.focus/radius/morph`. Mounts nothing outside particles; exports `SignalField` from `src/scene/particles/index.ts`.
-- agy-world (r3/agy-world, `.worktrees/agy-world`): `src/scene/world/Floor.tsx`, `VolumeCone.tsx`, `src/scene/camera/CameraRig.tsx`, `src/scene/fx/Effects.tsx`, `src/scene/Experience.tsx`.
-  Reads `signal.*`. Removes wireframe icosphere nodes (`constellation/`) and flat cones. Keeps Starfield (dim), LoadProgress, AnchorWriters.
-- Experience.tsx mounts `<SignalField />` from `./particles`. agy-world adds that import and mount; until codex-world merges, it stubs with a local `null` component behind the same import path via a placeholder `src/scene/particles/index.ts` that codex-world replaces (agy-world must NOT create it; just wait-import after merge, or guard with a TODO and keep build green by mounting after the first codex-world merge).
+## The shared names
+- **Camera spots** (`CHAPTER_SPOTS`): boot_wide, boot_under_oculus, about_niche, exp_role_0..3, proj_gallery, proj_0..7, contact_sky. In Blender: cameras named `CAM_<spot>`.
+- **Shape anchors**: Blender empties named `ANCHOR_core`, `ANCHOR_bust`, `ANCHOR_helix`, `ANCHOR_glyph`, `ANCHOR_beacon` (radius = empty display size). The glyph anchor is where all 8 project glyphs form.
+- **Manifest**: blender-sanctum exports `public/assets/models/sanctum.spots.json` matching `SanctumSpots` (positions in glTF space, Y up, metres; target = point 3 m ahead along the camera forward axis unless a `TARGET_<spot>` empty exists; fov in degrees vertical).
+- **Files** (`SANCTUM_FILES`): `sanctum.glb` (HIGH/MEDIUM), `sanctum-lite.glb` (1k textures, SAME node names), `sanctum.spots.json`. Budget: GLB + lightmaps <= 4 MB total HIGH.
+- **Node names in the GLB**: `sanctum_architecture` (baked static mesh, unlit basic material is fine), `floor` (separate mesh so the runtime reflector can replace its material), `oculus_shaft` (empty at the oculus centre + `shaft_axis` direction), `bust_pedestal`. The marble bust stays its own file `marble_bust_01.glb`.
 
-## Anchors (existing bridge, keep working)
-`about.object` = bust head point, `hero.core` = core centre, `projects.active` = current glyph centre, `contact.beacon`. SignalField or AnchorWriters writes them (codex-world owns the particle-side values once SignalField exists).
+## Ownership (worktrees under .worktrees/, branches r3/<name>)
+- **blender-sanctum**: `blender/**`, `public/assets/models/sanctum*`, CREDITS.md rows for new assets. Cycles stills per chapter camera to `.orchestrator/reference/r3-blender-<spot>.png` BEFORE any export; STOP after stills and report so the orchestrator can show Akash. Then export.
+- **codex-world**: `src/scene/particles/**`, `src/scene/shaders/**`. Exports `SignalField` from `src/scene/particles/index.ts`. Reads anchors from props (falls back to origin until the manifest exists).
+- **agy-world**: loading `sanctum.glb`, `src/scene/world/**` (Floor reflector, VolumeCone shaft, dust motes), `src/scene/camera/CameraRig.tsx` (splines through the CHAPTER_SPOTS from the manifest), `src/scene/fx/Effects.tsx`, `src/scene/Experience.tsx`. Removes `src/scene/constellation/` and flat cones.
+- agy-review judges playbook section 8 with screenshots.
 
-## Quality and motion
-Tiers per `TIERS`/`SIM_SIZE`. Reduced motion: no morph animation, no turbulence. No-WebGL: existing fallback. Both builders honor `?lite` and `?nogl`.
-
-## Merge order
-codex-world first (particles + shaders), then agy-world (mount + world/camera/fx). Builders `git merge --ff-only main` before each step. Reports go to `.orchestrator/reports/round3-<name>.md`.
-
-## Acceptance
-Playbook section 8. Build + lint clean. Initial JS gzip budget unchanged +-15%.
+## Rules
+Merge order: codex-world step 1 -> blender-sanctum export -> agy-world integrates. Builders `git merge --ff-only main` first. Reports: `.orchestrator/reports/round3-<name>.md` (<=40 lines). Build + lint clean at every commit. Co-Authored-By trailer. No push. Blender runs headless only: `/Applications/Blender.app/Contents/MacOS/Blender -b -P blender/scripts/<x>.py`. No BlenderMCP, no global installs (local npx OK). Reduced motion: no flights/morph/turbulence. No-WebGL fallback unchanged.
