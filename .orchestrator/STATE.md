@@ -137,3 +137,6 @@ Section 0 of the playbook + paragraph in round3-contract.md sent to codex-world 
 - agy-world (w2:pK, flash): STARTED, steps 1-3 + mount SignalField + slot for sanctum GLB, reuse-first.
 - blender-sanctum (w2:pJ, claude sonnet): commit e1727bb (scripted build). Stills boot_wide and boot_under_oculus exist in its worktree; full-quality render of the rest was still running. Report at its worktree .orchestrator/reports/round3-blender-sanctum.md. NO export until Akash sees stills and says go.
 - Monitor armed (agent status, commits, stills count). Sonnet pool shows 100% on the status line; Claude 5H 52%, weekly 70%.
+
+## 16:27 UTC
+Morph visual check at 4fe37fa: SignalField not visible; old spheres/cones/floor remain. agy-world told its first commit must mount SignalField and delete constellation + cones + old floor, with a hero screenshot as proof. Note: a stale Vite dep cache after merges gives a blank page; restart dev server with --force.
