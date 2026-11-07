@@ -1,0 +1,11 @@
+# Round 2 — codex-chapters
+- Files: `src/state/chapters.ts`, `src/state/smooth.ts`, `src/state/useScrollSync.ts`.
+- Files: `src/scene/camera/CameraRig.tsx`, `src/scene/camera/chapterLook.ts`, `src/scene/Experience.tsx`.
+- Works: single active chapter with boundary hysteresis and serialized exit/enter phases; phases skip for reduced motion.
+- Works: Lenis 1.3 wheel smoothing, one rAF loop, `scrollToSection(id)`, native scroll sync retained.
+- Works: distinct five chapter camera compositions; reduced-motion camera changes snap; hero push-in follows `entered` only in HIGH mode.
+- Works: Canvas mounts `World`, `AnchorWriters`, and `LoadProgress`; rendering pauses while hidden; build and lint pass.
+- Known issue: `World` hard-codes lighting and fog instead of reading `chapterLook`.
+- Known issue: merged UI has no `setEntered()` caller, so the high-quality hero push-in currently remains gated off.
+- Requests: codex-world, read `chapterLook` for chapter lighting/fog; agy-type, wire the Enter action to `setEntered()`.
+- Commits: chapter state and Lenis are in `main`; integration `6f2de5e`.

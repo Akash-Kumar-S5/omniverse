@@ -7,14 +7,17 @@ import Constellation from "./constellation/Constellation";
 import CameraRig from "./camera/CameraRig";
 import Starfield from "./fx/Starfield";
 import Effects from "./fx/Effects";
+import { World, LoadProgress } from "./world";
+import { AnchorWriters } from "./anchors";
 
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
   const [dpr, setDpr] = useState(2);
-  const [visible, setVisible] = useState(() => !document.hidden);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const onVisibilityChange = () => setVisible(!document.hidden);
+    onVisibilityChange();
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
@@ -24,7 +27,7 @@ export default function Experience() {
       frameloop={visible ? "always" : "never"}
       dpr={quality === "lite" ? 1 : [1, dpr]}
       gl={{ antialias: quality !== "lite", powerPreference: "high-performance" }}
-      camera={{ fov: 50, near: 0.1, far: 200, position: [0, 4, 24] }}
+      camera={{ fov: 50, near: 0.1, far: 200, position: [-3, -1.5, 31] }}
     >
       {quality !== "lite" && (
         <>
@@ -40,6 +43,9 @@ export default function Experience() {
       <color attach="background" args={["#05060a"]} />
       <Starfield />
       <Constellation />
+      <World />
+      <AnchorWriters />
+      <LoadProgress />
       <CameraRig />
       <Effects />
     </Canvas>
