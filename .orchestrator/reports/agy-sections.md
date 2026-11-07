@@ -5,7 +5,8 @@
   - Staggered letter reveal, activeRole sync, sticky projects carousel, and contact CTA.
   - 2D Fallback with self-contained CSS cosmic gradient backdrop and 0 three.js imports.
 - **Fix round 1:** Fixed #1 (targetRef guard), #7 (panel id + roving + role tabs), #8 (pips + region), #9 (inline heights), #10 (self-contained fallback.css).
-- **Fix round 2:** Fixed #13 (clear guard only on scrollend/arrival with 2000ms safety timeout), #15 (dynamic short-role tab labels), #14 (tabIndex={-1} on About section for skip link).
+- **Fix round 2:** Fixed #13 (scroll guard timeout 2000ms), #15 (dynamic short-role tab labels), #14 (tabIndex={-1} on About section).
+- **Fix round 3:** Fixed #16 (capped desktop panel max-height to clear bottom-left HUD, compact spacing for viewports <860px).
 - **Known issues:** None. Build and ESLint pass cleanly.
 - **Requests:** None.
-- **Commit hash:** `13e6897`
+- **Commit hash:** `b04bc7e`
