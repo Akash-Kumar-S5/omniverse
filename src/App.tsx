@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useLayoutEffect, useState } from "react";
 import { useOmni } from "./state/store";
 import { detectWebGL, prefersReducedMotion } from "./state/env";
 import { useScrollSync } from "./state/useScrollSync";
@@ -9,20 +9,23 @@ const Experience = lazy(() => import("./scene/Experience"));
 
 export default function App() {
   const webgl = useOmni((s) => s.webgl);
-  // Env is detected in an effect (no matchMedia/WebGL probing during render).
+  // Env is detected in a layout effect (before first paint, never during render).
   // Render nothing until then so the 3D chunk is never requested on no-WebGL devices.
   const [envReady, setEnvReady] = useState(false);
-  useScrollSync();
+  useScrollSync(envReady);
 
-  useEffect(() => {
-    const forceNoGL = new URLSearchParams(location.search).has("nogl");
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => useOmni.getState().setEnv({ reducedMotion: prefersReducedMotion(), webgl: !forceNoGL && detectWebGL() });
-    apply();
-    if (new URLSearchParams(location.search).has("lite")) useOmni.getState().setQuality("lite");
+  useLayoutEffect(() => {
+    const params = new URLSearchParams(location.search);
+    // WebGL support is probed once; only reduced motion can change at runtime.
+    const webglOk = !params.has("nogl") && detectWebGL();
+    useOmni.getState().setEnv({ reducedMotion: prefersReducedMotion(), webgl: webglOk });
+    if (params.has("lite")) useOmni.getState().setQuality("lite");
     setEnvReady(true);
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
+
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionChange = () => useOmni.getState().setEnv({ reducedMotion: mq.matches, webgl: webglOk });
+    mq.addEventListener("change", onMotionChange);
+    return () => mq.removeEventListener("change", onMotionChange);
   }, []);
 
   if (!envReady) return null;

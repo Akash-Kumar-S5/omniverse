@@ -6,8 +6,10 @@ import { SECTIONS, useOmni, type SectionId } from "./store";
  * Sections are DOM elements with data-section="<SectionId>" rendered by the overlay.
  * Writes to the store via getState() so the scene can read it per frame without re-renders.
  */
-export function useScrollSync() {
+export function useScrollSync(enabled = true) {
   useEffect(() => {
+    // Sections only exist once the app renders its content; measure then, not before.
+    if (!enabled) return;
     let raf = 0;
     const update = () => {
       raf = 0;
@@ -44,5 +46,5 @@ export function useScrollSync() {
       window.removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [enabled]);
 }
