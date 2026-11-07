@@ -1,0 +1,85 @@
+/* Callout & Leader Lines Layer CSS */
+
+.callout-svg-root {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 12;
+  overflow: visible;
+}
+
+.callout-labels-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 14;
+  overflow: hidden;
+}
+
+.callout-leader-line {
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-opacity: 0.45;
+  fill: none;
+  stroke-dasharray: 3 2;
+}
+
+.callout-anchor-dot {
+  fill: var(--accent);
+  stroke: rgba(226, 180, 114, 0.4);
+  stroke-width: 2;
+}
+
+.callout-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--fg);
+  background: rgba(18, 16, 13, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 180, 114, 0.28);
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(226, 180, 114, 0.12);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  will-change: transform, opacity;
+}
+
+.callout-chip-title {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.callout-chip-sub {
+  color: var(--fg-dim);
+  font-size: 0.62rem;
+}
+
+@media (max-width: 767px) {
+  .callout-chip {
+    padding: 3px 6px;
+    font-size: 0.62rem;
+  }
+
+  .callout-chip-title {
+    font-size: 0.64rem;
+  }
+
+  .callout-chip-sub {
+    font-size: 0.58rem;
+  }
+}
