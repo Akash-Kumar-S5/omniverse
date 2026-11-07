@@ -13,3 +13,12 @@ export function detectWebGL(): boolean {
 export function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+export function readTestOverrides(search: string) {
+  const params = new URLSearchParams(search);
+  const index = Number(params.get("chapter"));
+  return {
+    skipGate: params.has("skipgate"),
+    chapter: params.has("chapter") && Number.isInteger(index) && index >= 0 && index <= 4 ? index : null,
+  };
+}
