@@ -11,6 +11,78 @@ export interface ParticleSimulation {
   dispose: () => void;
 }
 
+type ComputeDataType = typeof THREE.FloatType | typeof THREE.HalfFloatType;
+const dataTypeCache = new WeakMap<THREE.WebGLRenderer, ComputeDataType | null>();
+const probeShader = `
+void main() {
+  vec2 uv = gl_FragCoord.xy / resolution.xy;
+  gl_FragColor = texture2D(textureProbe, uv) * 2.0;
+}`;
+
+function halfToFloat(value: number) {
+  const sign = (value & 0x8000) ? -1 : 1;
+  const exponent = (value >> 10) & 0x1f;
+  const fraction = value & 0x03ff;
+  if (exponent === 0) return sign * Math.pow(2, -14) * (fraction / 1024);
+  if (exponent === 0x1f) return fraction ? Number.NaN : sign * Infinity;
+  return sign * Math.pow(2, exponent - 15) * (1 + fraction / 1024);
+}
+
+function sanityCheckTarget(renderer: THREE.WebGLRenderer, type: ComputeDataType) {
+  const probe = new GPUComputationRenderer(2, 2, renderer);
+  probe.setDataType(type);
+  const initial = probe.createTexture();
+  (initial.image.data as Float32Array).set([
+    0.125, 0.25, 0.375, 1, 0.125, 0.25, 0.375, 1,
+    0.125, 0.25, 0.375, 1, 0.125, 0.25, 0.375, 1,
+  ]);
+  initial.needsUpdate = true;
+  const variable = probe.addVariable("textureProbe", probeShader, initial);
+  probe.setVariableDependencies(variable, [variable]);
+  try {
+    if (probe.init()) return false;
+    probe.compute();
+    const target = probe.getCurrentRenderTarget(variable);
+    const data = type === THREE.HalfFloatType ? new Uint16Array(16) : new Float32Array(16);
+    renderer.readRenderTargetPixels(target, 0, 0, 2, 2, data);
+    const red = type === THREE.HalfFloatType ? halfToFloat(data[0]) : data[0];
+    const green = type === THREE.HalfFloatType ? halfToFloat(data[1]) : data[1];
+    const blue = type === THREE.HalfFloatType ? halfToFloat(data[2]) : data[2];
+    return Number.isFinite(red) && Math.abs(red - 0.25) < 0.025 && Math.abs(green - 0.5) < 0.025 && Math.abs(blue - 0.75) < 0.025;
+  } catch {
+    return false;
+  } finally {
+    initial.dispose();
+    probe.dispose();
+  }
+}
+
+/** Check both WebGL2 render-target extensions and verify one compute/readback pass. */
+export function getSupportedComputeDataType(renderer: THREE.WebGLRenderer) {
+  if (dataTypeCache.has(renderer)) return dataTypeCache.get(renderer) ?? null;
+  let supported: ComputeDataType | null = null;
+  if (renderer.capabilities.isWebGL2) {
+    const candidates: ComputeDataType[] = [];
+    if (renderer.extensions.has("EXT_color_buffer_float")) candidates.push(THREE.FloatType);
+    if (renderer.extensions.has("EXT_color_buffer_half_float")) candidates.push(THREE.HalfFloatType);
+    for (const type of candidates) {
+      if (sanityCheckTarget(renderer, type)) {
+        supported = type;
+        break;
+      }
+    }
+  }
+  dataTypeCache.set(renderer, supported);
+  return supported;
+}
+
+export function hasFloatRenderTargetSupport(renderer: THREE.WebGLRenderer) {
+  return renderer.capabilities.isWebGL2 && (
+    renderer.extensions.has("EXT_color_buffer_float") ||
+    renderer.extensions.has("EXT_color_buffer_half_float")
+  );
+}
+
 export function createParticleSimulation(
   renderer: THREE.WebGLRenderer,
   size: number,
@@ -18,7 +90,10 @@ export function createParticleSimulation(
   radius: number,
   target: THREE.Texture,
 ): ParticleSimulation | null {
+  const dataType = getSupportedComputeDataType(renderer);
+  if (dataType === null) return null;
   const compute = new GPUComputationRenderer(size, size, renderer);
+  compute.setDataType(dataType);
   const initial = compute.createTexture();
   const values = initial.image.data as Float32Array;
   for (let i = 0; i < values.length; i += 4) {
