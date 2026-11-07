@@ -1,15 +1,16 @@
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import {
   Environment,
-  Lightformer,
   MeshReflectorMaterial,
   MeshTransmissionMaterial,
   Sparkles,
+  useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { projects } from "../../content";
 import { useOmni } from "../../state/store";
 import { beacon, projectNodes } from "../layout";
+import { chapterLook } from "./chapterLook";
 
 function AgentCore() {
   const quality = useOmni((s) => s.quality);
@@ -81,11 +82,11 @@ function ProjectMonoliths() {
   </group>;
 }
 
-function AboutSculpture() {
+function ProceduralAboutFallback() {
   const quality = useOmni((s) => s.quality);
-  const object = useMemo(() => new THREE.TorusKnotGeometry(1.28, 0.29, 160, 16, 2, 5), []);
-  return <group position={[0, 0, 0]} rotation={[0.16, -0.2, 0.12]}>
-    <mesh geometry={object}>
+  return <group rotation={[0.16, -0.2, 0.12]}>
+    <mesh>
+      <torusKnotGeometry args={[1.28, 0.29, 160, 16, 2, 5]} />
       {quality === "lite" ? <meshPhysicalMaterial color="#9c8061" roughness={0.2} metalness={0.3} clearcoat={1} /> : <MeshTransmissionMaterial backside samples={4} resolution={256} thickness={0.52} chromaticAberration={0.012} roughness={0.14} transmission={0.92} ior={1.42} color="#dfcfb8" />}
     </mesh>
     <mesh scale={1.32}>
@@ -96,18 +97,25 @@ function AboutSculpture() {
   </group>;
 }
 
+function MarbleBust() {
+  const { scene } = useGLTF("/assets/models/marble_bust_01.glb", false);
+  return <primitive object={scene} scale={7} position={[0, -1.8, 0]} />;
+}
+
+function AboutObject() {
+  return <Suspense fallback={<ProceduralAboutFallback />}><MarbleBust /></Suspense>;
+}
+
 function WorldLighting() {
   const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
+  const look = chapterLook[section];
   return <>
-    <ambientLight intensity={0.22} color="#d7c5ae" />
+    <ambientLight intensity={look.ambientIntensity} color="#d7c5ae" />
     <hemisphereLight args={["#b8a58b", "#171310", 0.42]} />
-    <directionalLight position={[-7, 10, 5]} intensity={2.1} color="#f0dbc0" />
+    <directionalLight position={[-7, 10, 5]} intensity={look.keyLightIntensity} color="#f0dbc0" />
     <pointLight position={[5, 3, -5]} intensity={quality === "lite" ? 1 : 1.8} color="#c8a77e" distance={28} />
-    {quality === "high" && <Environment resolution={128} background={false}>
-      <Lightformer form="rect" intensity={1.5} color="#f3e5d2" position={[-4, 4, 3]} scale={[5, 2, 1]} />
-      <Lightformer form="rect" intensity={1.1} color="#bf9a70" position={[4, 2, -3]} scale={[4, 3, 1]} />
-      <Lightformer form="ring" intensity={0.8} color="#e3d4c0" position={[0, 6, -1]} rotation={[Math.PI / 2, 0, 0]} scale={3} />
-    </Environment>}
+    <Environment files="/assets/hdri/studio_small_09_1k.exr" resolution={quality === "lite" ? 128 : 256} background={false} />
   </>;
 }
 
@@ -135,13 +143,14 @@ function LightShafts() {
 
 export default function World() {
   const section = useOmni((s) => s.section);
+  const look = chapterLook[section];
   return <>
     <WorldLighting />
-    <fog attach="fog" args={["#0b0a09", 24, 78]} />
+    <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
     <ReflectiveFloor />
     <LightShafts />
     <group visible={section === "boot"}><AgentCore /></group>
-    <group visible={section === "about"}><AboutSculpture /></group>
+    <group visible={section === "about"}><AboutObject /></group>
     <group visible={section === "projects"}><ProjectMonoliths /></group>
     <mesh position={beacon} visible={section === "contact"}>
       <icosahedronGeometry args={[0.55, 1]} />
@@ -149,3 +158,5 @@ export default function World() {
     </mesh>
   </>;
 }
+
+useGLTF.preload("/assets/models/marble_bust_01.glb", false);
