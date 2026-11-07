@@ -1,0 +1,30 @@
+uniform float uDelta;
+uniform float uTime;
+uniform vec3 uCursor;
+uniform float uCursorActive;
+uniform float uCursorRadius;
+uniform sampler2D uTarget;
+uniform sampler2D uFromTarget;
+uniform float uMorphProgress;
+uniform float uTurbulence;
+uniform float uBeacon;
+uniform vec3 uFocus;
+void main() {
+  vec2 uv = gl_FragCoord.xy / resolution.xy;
+  vec4 target = texture2D(uTarget, uv);
+  vec4 from = texture2D(uFromTarget, uv);
+  float progress = smoothstep(0.0, 1.0, uMorphProgress);
+  vec3 position = mix(from.xyz, target.xyz, progress);
+  vec3 beaconDirection = normalize(target.xyz - uFocus + vec3(0.0001));
+  position += beaconDirection * sin(uTime * 2.2) * 0.035 * uBeacon * uTurbulence;
+  float transitionNoise = sin(3.14159265 * progress);
+  vec3 noise = curlNoise(position * 0.62 + vec3(uTime * 0.12));
+  position += noise * (0.075 * uTurbulence + transitionNoise * 0.72);
+  vec3 cursorDelta = position - uCursor;
+  float cursorDistance = length(cursorDelta);
+  float influence = (1.0 - smoothstep(0.0, uCursorRadius, cursorDistance)) * uCursorActive;
+  vec3 repel = normalize(cursorDelta + vec3(0.0001)) * influence * 5.0;
+  position += repel * min(1.0, uDelta * 9.0);
+  position += vec3(0.0, sin(uTime * 0.7) * 0.018 * uTurbulence, 0.0);
+  gl_FragColor = vec4(position, target.a);
+}
