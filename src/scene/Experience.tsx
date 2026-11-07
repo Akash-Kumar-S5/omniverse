@@ -71,7 +71,7 @@ export default function Experience() {
         onDecline={handleDecline}
         onFallback={handleFallback}
       />
-      <color attach="background" args={["#05060a"]} />
+      <color attach="background" args={["#060505"]} />
       <Starfield />
       <SignalField anchors={SCENE_ANCHORS} />
       <World />

@@ -20,29 +20,32 @@ export default function VolumeCone() {
 
   return (
     <group>
+      {/* Target object added to the scene hierarchy so Three.js updates its world position */}
       <primitive object={targetRef.current} />
-      {/* Volumetric sun shaft anchored at ceiling oculus, aimed directly at the core */}
+
+      {/* Volumetric sunbeam anchored at ceiling oculus [1.8, 12.5, 0], aiming down at the core */}
       <SpotLight
-        position={[1.8, 14, 0]}
+        position={[1.8, 12.5, 0]}
         target={targetRef.current}
-        color="#fff4e0"
-        intensity={quality === "high" ? 7.5 : 4.8}
-        distance={26}
-        angle={0.65}
-        attenuation={26}
-        anglePower={2.8}
+        color="#fff0d4"
+        intensity={quality === "high" ? 8.5 : 6.0}
+        distance={22}
+        angle={0.68}
+        attenuation={34}
+        anglePower={1.2}
         volumetric
-        opacity={1.35}
+        opacity={2.4}
         radiusTop={0.9}
         radiusBottom={4.6}
       />
+
       {/* Floating dust motes within the volumetric beam */}
       <Sparkles
         position={[1.8, 5, 0]}
-        count={quality === "high" ? 60 : 30}
-        scale={[4.2, 11, 4.2]}
+        count={quality === "high" ? 60 : 35}
+        scale={[4.2, 10, 4.2]}
         size={quality === "high" ? 2.8 : 2.0}
-        speed={0.18}
+        speed={0.16}
         color="#ffe8c2"
         opacity={0.65}
       />
