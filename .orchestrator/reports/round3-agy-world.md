@@ -1,24 +1,30 @@
-# Round 3: agy-world (stage, camera, post, perf pass, visual verification)
+# Round 3: agy-world (Sanctum GLB, stage, camera rig, perf & visual verification)
 
-## Stage, Floor & Volumetrics
-- Drei `<SpotLight volumetric>` anchored at ceiling oculus [1.8, 12.5, 0], aiming down at the core with high opacity (2.4), wide angle (0.68), long attenuation (34), and dust `<Sparkles>`.
-- Drei `<MeshReflectorMaterial>` floor with Poly Haven roughness map, high mixStrength (2.6) and mirror (0.88) for wet concrete reflections. 200m plane + scene fog matching `#060505` background dissolves the floor by 28m with ZERO horizon line.
-- Removed constellation wireframe nodes; slot preserved for `sanctum.glb`.
+## Sanctum Integration & Floor
+- Rebased on main and loaded `sanctum.glb` (`sanctum-lite.glb` on LITE) with local Draco decoder (`public/draco/`).
+- Removed procedural floor plane; rendering authored Brutalist Pantheon architecture, floor, and pedestal with baked Cycles lightmaps.
+- Drei volumetric `<SpotLight>` anchored at the ceiling oculus [0, 8.8, 0], aiming directly at the core [0, 2.3, 0] with attenuation 26 and opacity 2.4.
 
-## CameraRig & Composition
-- CatmullRomCurve3 paths per chapter with maath damp3; swarm framed prominently at 35-45% in right half.
-- Gaze follows `signal.focus` with desktop offset; dynamic FOV per chapter; reduced motion preserved.
+## CameraRig & CHAPTER_SPOTS
+- Bound `CameraRig.tsx` directly to `public/assets/models/sanctum.spots.json`:
+  - `boot`: interpolated between `boot_wide` and `boot_under_oculus`.
+  - `about`: `about_niche` framed on `bust_pedestal`.
+  - `experience`: CatmullRom corridor spline through `exp_role_0..3`.
+  - `projects`: `proj_gallery` and `proj_0..7`.
+  - `contact`: `contact_sky` looking up through the open roof.
+- Configured `store.ts` with `?skipgate` and `?chapter=0..4` query parameter support.
 
-## Performance Pass & HUD
-- Default tier set to `medium`; promotes to `high` only when `PerformanceMonitor` sees stable 60fps for ~3s.
+## Performance & HUD
+- Default tier set to `medium`; promotes to `high` only upon stable 60fps for ~3s.
 - `onDecline` steps `high -> medium -> lite`; `dpr` capped at 1.5 on high and 1.0 on medium/lite.
-- Canvas `antialias=false` with multisampling 0 and `<SMAA />` in `Effects.tsx`.
-- MeshReflectorMaterial resolution 512 on HIGH, 256 on MEDIUM, plain fallback on LITE. DepthOfField on HIGH only.
-- Added `MED` button to HUD PERF toggle, fully bound to `store.quality`.
+- Canvas `antialias=false` with multisampling 0 and SMAA edge smoothing.
+- HUD PERF toggle updated with `MED` default tier bound to `store.quality`.
 
-## Screenshot Proof
-- Proofs saved in `.orchestrator/reference/`:
-  - `r3-agyworld-floor.png`: Near-black reflective wet floor with seamless fog fade and no horizon line.
-  - `r3-agyworld-beam.png`: Volumetric sunbeam clearly visible from oculus hitting the core.
-  - `r3-agyworld-perf.png`: HUD PERF toggle showing MED active by default.
-  - `r3-agyworld-{boot,about,experience,projects,contact}.png`: All 5 chapters captured at 1440x900.
+## Screenshot Evidence (All 5 Chapters at 1440x900)
+- Verified non-gate chapter state captures in `.orchestrator/reference/`:
+  - `r3-agyworld-boot.png`: 1332 KB (under oculus, volumetric beam hitting core).
+  - `r3-agyworld-about.png`: 1417 KB (`about_niche` camera on bust pedestal).
+  - `r3-agyworld-experience.png`: 1394 KB (corridor flight through portal arches).
+  - `r3-agyworld-projects.png`: 1371 KB (monolith gallery overview).
+  - `r3-agyworld-contact.png`: 1393 KB (night sky upward perspective).
+  - `r3-agyworld-{floor,beam,perf}.png`: Detailed stage, beam, and HUD proof files.
