@@ -12,3 +12,10 @@ A brutalist concrete chamber, Pantheon-like: round oculus in the ceiling throwin
 
 ## Rules
 Keep outputs inside the repo. Never edit src/**. Co-Authored-By trailer, no push. Reply in 2 lines; report `.orchestrator/reports/round3-blender-sanctum.md`.
+
+## UPDATE (agent is now kind claude Sonnet, with the blender MCP)
+You drive the LIVE Blender (GUI listening on 127.0.0.1:9876) through the `blender` MCP tools; load them with ToolSearch first. Ask for nothing from Akash. Rules that still hold:
+- Every modelling/material/light/camera step you run live MUST also be saved as a reproducible script in `blender/scripts/*.py` (the build must be re-runnable headless with `-b -P`). Save the .blend to `blender/sanctum.blend` (gitignore it if large).
+- Render Cycles stills per chapter camera (via the MCP or the saved scripts) to `.orchestrator/reference/r3-blender-<spot>.png`. STOP after the stills and report. No GLB export until the orchestrator says go.
+- Live viewport screenshots via MCP are for your own checking; only Cycles stills count for review.
+- Do not read huge JSON/base64 into context; write files and refer to paths. Keep replies to 2 lines.

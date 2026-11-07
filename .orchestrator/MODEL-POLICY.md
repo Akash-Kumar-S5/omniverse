@@ -8,6 +8,14 @@
   **Claude Opus 4.6 Thinking**, **Claude Sonnet 4.6 Thinking**, and GPT-OSS 120B. This is the roomy pool.
   It gives Claude-family quality without touching Akash's Claude Pro limits.
 
+## Update 21:00 IST
+- agy's Claude Opus 4.6 has its OWN individual quota, and it ran out (resets ~01:40 IST). While it's out,
+  agy agents use `gemini-3.8-flash-high`. Return to Opus 4.6 for review after the reset.
+- BlenderMCP is installed for the omniverse project only (`claude mcp list` → blender ✔ Connected;
+  Blender GUI listening on 127.0.0.1:9876, telemetry off). Only **claude** agents started in the omniverse
+  dir see it. Exactly ONE agent drives the live Blender at a time. It saves every scene step as a script in
+  `blender/scripts/` so the build stays reproducible headless.
+
 ## Lanes: who does what
 | Work | Lane | Why |
 |---|---|---|
