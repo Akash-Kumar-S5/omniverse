@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { experiences } from "../../content";
 import { useOmni } from "../../state/store";
+import SplitHeading from "../common/SplitHeading";
 
 export default function ExperienceSection() {
   const activeRole = useOmni((s) => s.activeRole);
@@ -102,25 +103,6 @@ export default function ExperienceSection() {
     }
   };
 
-  // Derive short role label dynamically from exp.role
-  const getRoleTabLabel = (exp: (typeof experiences)[number], idx: number) => {
-    const num = `0${idx + 1}`;
-    const r = exp.role.toLowerCase();
-    let short = exp.role;
-    if (r.includes("senior") || r.includes("sr.")) short = "Sr. Eng";
-    else if (r.includes("associate")) short = "Assoc. Eng";
-    else if (r.includes("full-stack") || r.includes("fullstack")) short = "Full-Stack";
-    else if (r.includes("intern")) short = "Intern";
-    else if (r.includes("lead")) short = "Lead Eng";
-    else if (r.includes("engineer")) short = "Engineer";
-    else if (r.includes("developer")) short = "Developer";
-    else {
-      const words = exp.role.split(" ");
-      short = words.length > 2 ? words.slice(0, 2).join(" ") : exp.role;
-    }
-    return `${num} ${short}`;
-  };
-
   const currentRole = experiences[activeRole] || experiences[0];
 
   return (
@@ -128,16 +110,15 @@ export default function ExperienceSection() {
       className="chapter-view chapter-experience"
       aria-label="Work experience trajectory"
     >
-      <div className="section-panel">
-        <div className="sheet-handle" aria-hidden="true" />
+      <div className="experience-glass-panel">
         <div className="section-eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          <span>Waypoint 02 // Experience ({activeRole + 1} of {experiences.length})</span>
+          <span>02 // CAREER TRAJECTORY ({activeRole + 1} OF {experiences.length})</span>
         </div>
 
-        <h2 className="section-title">Career Trajectory</h2>
+        <SplitHeading text="Engineering Experience" as="h2" className="glass-title" />
 
-        {/* Interactive role tabs with left/right roving navigation */}
+        {/* Interactive role tabs with roving navigation */}
         <div
           className="exp-tabs"
           role="tablist"
@@ -158,12 +139,12 @@ export default function ExperienceSection() {
               className={`exp-tab-btn ${activeRole === idx ? "active" : ""}`}
               onClick={() => scrollToRole(idx)}
             >
-              {getRoleTabLabel(exp, idx)}
+              {`0${idx + 1} ${exp.company}`}
             </button>
           ))}
         </div>
 
-        {/* Single fixed tabpanel id for the active Role Card */}
+        {/* Active Role Card */}
         <article
           id="role-panel-active"
           role="tabpanel"
@@ -176,22 +157,18 @@ export default function ExperienceSection() {
           </div>
           <div className="role-title">{currentRole.role}</div>
           <div className="role-location">{currentRole.location}</div>
-          <p style={{ margin: "0 0 10px 0", fontSize: "0.85rem", color: "var(--fg-dim)" }}>
-            {currentRole.description}
-          </p>
+          <p className="role-desc">{currentRole.description}</p>
 
-          <strong style={{ fontSize: "0.8rem", color: "var(--accent)", fontFamily: "var(--font-mono)" }}>
-            Key Achievements:
-          </strong>
+          <strong className="achievements-heading">KEY CONTRIBUTIONS:</strong>
           <ul className="achievements-list">
-            {currentRole.achievements.map((item, i) => (
+            {currentRole.achievements.slice(0, 2).map((item, i) => (
               <li key={i}>{item}</li>
             ))}
           </ul>
         </article>
 
-        {/* Other Role Cards in Compact Overview format */}
-        <div style={{ marginTop: "12px" }}>
+        {/* Other Roles Quick Jump */}
+        <div className="roles-compact-list">
           {experiences.map((exp, idx) => {
             if (idx === activeRole) return null;
             return (
@@ -202,12 +179,8 @@ export default function ExperienceSection() {
                 onClick={() => scrollToRole(idx)}
                 aria-label={`Switch to role ${idx + 1}: ${exp.role} at ${exp.company}`}
               >
-                <div>
-                  <strong>{exp.company}</strong> — {exp.role}
-                </div>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem" }}>
-                  {exp.period} →
-                </span>
+                <span><strong>{exp.company}</strong> — {exp.role}</span>
+                <span className="role-compact-period">{exp.period} →</span>
               </button>
             );
           })}

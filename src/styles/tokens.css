@@ -1,40 +1,44 @@
 /* Design tokens for Omniverse (Agent Constellation).
    All UI components consume these variables. */
 :root {
-  /* Core palette */
-  --bg: #05060a;
-  --bg-elev: #0c0f17;
-  --bg-card: rgba(12, 15, 23, 0.75);
-  --bg-overlay: rgba(5, 6, 10, 0.92);
-  --bg-glass: rgba(12, 15, 23, 0.55);
+  /* Core palette - Warm near-black and bronze/champagne accents matching codex-world */
+  --bg: #080706;
+  --bg-elev: #12100d;
+  --bg-card: rgba(18, 16, 13, 0.65);
+  --bg-overlay: rgba(8, 7, 6, 0.94);
+  --bg-glass: rgba(18, 16, 13, 0.45);
 
-  --fg: #e8ecf4;
-  --fg-dim: #8a93a6;
-  --fg-muted: #5a6275;
+  --fg: #ede8e1;
+  --fg-dim: #9c9488;
+  --fg-muted: #686259;
   --fg-bright: #ffffff;
 
   /* Accents */
-  --accent: #7cf7d4;      /* agent-flow mint */
-  --accent-rgb: 124, 247, 212;
-  --accent-2: #8fa7ff;    /* node glow periwinkle */
-  --accent-2-rgb: 143, 167, 255;
-  --accent-dim: rgba(124, 247, 212, 0.12);
-  --accent-glow: 0 0 16px rgba(124, 247, 212, 0.35);
+  --accent: #e2b472;      /* warm champagne / amber gold */
+  --accent-rgb: 226, 180, 114;
+  --accent-2: #c5b8a7;    /* warm titanium stone */
+  --accent-2-rgb: 197, 184, 167;
+  --accent-dim: rgba(226, 180, 114, 0.12);
+  --accent-glow: 0 0 20px rgba(226, 180, 114, 0.25);
 
   /* Borders & lines */
-  --line: rgba(232, 236, 244, 0.14);
-  --line-dim: rgba(232, 236, 244, 0.08);
-  --line-strong: rgba(232, 236, 244, 0.28);
-  --line-accent: rgba(124, 247, 212, 0.35);
+  --line: rgba(237, 232, 225, 0.1);
+  --line-dim: rgba(237, 232, 225, 0.05);
+  --line-strong: rgba(237, 232, 225, 0.22);
+  --line-accent: rgba(226, 180, 114, 0.35);
 
   /* Scrims & gradients */
-  --scrim: linear-gradient(90deg, rgba(5,6,10,.85), rgba(5,6,10,0));
-  --scrim-top: linear-gradient(180deg, rgba(5,6,10,0.85) 0%, rgba(5,6,10,0) 100%);
-  --scrim-bottom: linear-gradient(0deg, rgba(5,6,10,0.85) 0%, rgba(5,6,10,0) 100%);
-  --scrim-radial: radial-gradient(circle at center, rgba(5,6,10,0) 0%, rgba(5,6,10,0.85) 100%);
+  --scrim: linear-gradient(90deg, rgba(8, 7, 6, 0.85), rgba(8, 7, 6, 0));
+  --scrim-top: linear-gradient(180deg, rgba(8, 7, 6, 0.85) 0%, rgba(8, 7, 6, 0) 100%);
+  --scrim-bottom: linear-gradient(0deg, rgba(8, 7, 6, 0.85) 0%, rgba(8, 7, 6, 0) 100%);
+  --scrim-radial: radial-gradient(circle at center, rgba(8, 7, 6, 0) 0%, rgba(8, 7, 6, 0.85) 100%);
+
+  /* Safe zones for HUD */
+  --hud-safe-top: 90px;
+  --hud-safe-bottom: 90px;
 
   /* Typography scale */
-  --font-display: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-display: "Clash Display", "Space Grotesk", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --text-2xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);   /* 11px - 12px */
@@ -74,4 +78,11 @@
   --z-hud: 20;
   --z-boot: 30;
   --z-skip-link: 100;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --hud-safe-top: 72px;
+    --hud-safe-bottom: 72px;
+  }
 }

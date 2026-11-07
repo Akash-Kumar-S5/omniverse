@@ -1,0 +1,122 @@
+.rolling-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.rolling-cta.cta-primary {
+  background: var(--accent);
+  color: #080706;
+  border: 1px solid var(--accent);
+}
+
+.rolling-cta.cta-primary:hover {
+  background: #eed2a4;
+  border-color: #eed2a4;
+  transform: translateY(-1px);
+}
+
+.rolling-cta.cta-secondary {
+  background: rgba(237, 232, 225, 0.04);
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+
+.rolling-cta.cta-secondary:hover {
+  background: rgba(237, 232, 225, 0.09);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.rolling-cta:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.rolling-track {
+  display: inline-flex;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+.roll-char {
+  position: relative;
+  display: inline-block;
+  height: 1.2em;
+  overflow: hidden;
+}
+
+.roll-char-primary,
+.roll-char-secondary {
+  display: block;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--char-i, 0) * 14ms);
+}
+
+.roll-char-secondary {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: inherit;
+}
+
+.rolling-cta:hover .roll-char-primary {
+  transform: translateY(-100%);
+}
+
+.rolling-cta:hover .roll-char-secondary {
+  transform: translateY(-100%);
+}
+
+.rolling-icon {
+  display: inline-block;
+  transition: transform 200ms ease;
+}
+
+.rolling-cta:hover .rolling-icon {
+  transform: translate(2px, 0);
+}
+
+/* Reduced motion overrides */
+.rolling-cta.no-roll .roll-char-primary,
+.rolling-cta.no-roll .roll-char-secondary,
+.rolling-cta.no-roll .rolling-icon {
+  transition: none !important;
+  transform: none !important;
+}
+
+.rolling-cta.no-roll .roll-char-secondary {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rolling-cta {
+    transform: none !important;
+  }
+  .roll-char-primary,
+  .roll-char-secondary,
+  .rolling-icon {
+    transition: none !important;
+    transform: none !important;
+  }
+  .roll-char-secondary {
+    display: none !important;
+  }
+}

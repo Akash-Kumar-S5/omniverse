@@ -1,6 +1,8 @@
 import { useEffect, useRef, useCallback } from "react";
 import { projects } from "../../content";
 import { useOmni } from "../../state/store";
+import SplitHeading from "../common/SplitHeading";
+import RollingCta from "../common/RollingCta";
 
 export default function ProjectsSection() {
   const activeProject = useOmni((s) => s.activeProject);
@@ -13,6 +15,7 @@ export default function ProjectsSection() {
   const targetYRef = useRef<number | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const mouseStartRef = useRef<{ x: number; y: number } | null>(null);
 
   // Clear target tracking only on arrival or scrollend, with a ~2000ms safety timeout
   useEffect(() => {
@@ -49,7 +52,6 @@ export default function ProjectsSection() {
       const total = projects.length;
       const clamped = Math.max(0, Math.min(total - 1, index));
 
-      // Guard: set targetRef immediately and update store state so UI updates instantly
       targetRef.current = clamped;
       setActiveProject(clamped);
 
@@ -90,7 +92,7 @@ export default function ProjectsSection() {
     }
   }, [section, sectionProgress, activeProject, setActiveProject]);
 
-  // Arrow key navigation computed from targetRef ?? activeProject
+  // Arrow key navigation
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -116,7 +118,7 @@ export default function ProjectsSection() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activeProject, scrollToProject]);
 
-  // Horizontal touch swipe handling
+  // Touch swipe handling
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartRef.current = {
       x: e.touches[0].clientX,
@@ -140,6 +142,30 @@ export default function ProjectsSection() {
     }
   };
 
+  // Mouse drag handling
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only drag on left click and not on interactive buttons/links
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest("button, a")) return;
+    mouseStartRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!mouseStartRef.current) return;
+    const dx = e.clientX - mouseStartRef.current.x;
+    const dy = e.clientY - mouseStartRef.current.y;
+    mouseStartRef.current = null;
+
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+      const currentTarget = targetRef.current ?? activeProject;
+      if (dx < 0 && currentTarget < projects.length - 1) {
+        scrollToProject(currentTarget + 1);
+      } else if (dx > 0 && currentTarget > 0) {
+        scrollToProject(currentTarget - 1);
+      }
+    }
+  };
+
   const currentNavTarget = targetRef.current ?? activeProject;
   const project = projects[activeProject] || projects[0];
   const counterText = `${String(activeProject + 1).padStart(2, "0")} / ${String(projects.length).padStart(2, "0")}`;
@@ -148,93 +174,91 @@ export default function ProjectsSection() {
     <div
       className="chapter-view chapter-projects"
       aria-label="Featured projects constellation"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
-      <div
-        className="section-panel"
-        role="region"
-        tabIndex={0}
-        aria-label="Featured projects"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="sheet-handle" aria-hidden="true" />
-
-        <div className="projects-header-row">
+      <div className="project-editorial-layout">
+        <div className="project-meta-row">
           <div className="section-eyebrow" style={{ margin: 0 }}>
             <span className="eyebrow-dot" aria-hidden="true" />
-            <span>Waypoint 03 // Constellation</span>
+            <span>03 // CONSTELLATION NODE</span>
           </div>
-          <span className="projects-counter" aria-live="polite">
+          <span className="project-display-counter" aria-live="polite">
             {counterText}
           </span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
-          <span className="projects-category-badge">{project.category}</span>
-          {project.featured && <span className="featured-badge">★ Featured</span>}
+        <div className="project-badges">
+          <span className="project-category-tag">{project.category}</span>
+          {project.featured && <span className="project-featured-tag">★ Featured</span>}
         </div>
 
-        <h2 className="section-title">{project.title}</h2>
-        <p className="section-description">{project.description}</p>
+        <SplitHeading
+          key={project.title}
+          text={project.title}
+          as="h2"
+          className="project-display-title"
+        />
 
-        {/* Tech tags */}
-        <ul className="tags-list" aria-label="Project technologies">
+        <p className="project-display-desc">{project.description}</p>
+
+        <ul className="project-tech-tags" aria-label="Project technologies">
           {project.tags.map((tag) => (
-            <li key={tag} className="tag-item">
+            <li key={tag} className="tag-pill">
               {tag}
             </li>
           ))}
         </ul>
 
-        {/* Project Links */}
-        <div className="btn-group" style={{ marginBottom: "16px" }}>
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-              aria-label={`View source code for ${project.title} on GitHub`}
-            >
-              <span>GitHub</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-          )}
+        <div className="project-actions">
           {project.live && (
-            <a
+            <RollingCta
               href={project.live}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary"
-              aria-label={`Open live application for ${project.title}`}
-            >
-              <span>Live Demo</span>
-              <span aria-hidden="true">↗</span>
-            </a>
+              text="Live Demo"
+              icon="↗"
+              variant="primary"
+              ariaLabel={`Open live application for ${project.title}`}
+            />
+          )}
+          {project.github && (
+            <RollingCta
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              text="GitHub"
+              icon="↗"
+              variant="secondary"
+              ariaLabel={`View source code for ${project.title} on GitHub`}
+            />
           )}
         </div>
 
-        {/* Navigation Controls: Prev, Next, Pips */}
-        <div className="project-nav-row">
+        {/* Project Navigation Footer */}
+        <div className="project-nav-footer">
           <button
             type="button"
-            className="btn-secondary"
+            className="project-step-btn"
             onClick={() => scrollToProject(currentNavTarget - 1)}
             disabled={currentNavTarget === 0}
             aria-label="Previous project"
           >
-            ← Prev
+            ← PREV
           </button>
 
-          {/* Quick jump pips using plain buttons with aria-current */}
-          <div className="project-pips" aria-label="Project selectors">
+          <div className="project-pips-track" role="tablist" aria-label="Jump to project">
             {projects.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
-                aria-current={activeProject === idx ? "step" : undefined}
+                role="tab"
+                tabIndex={activeProject === idx ? 0 : -1}
+                aria-selected={activeProject === idx}
                 aria-label={`Jump to project ${idx + 1}`}
-                className={`project-pip ${activeProject === idx ? "active" : ""}`}
+                className={`project-pip-item ${activeProject === idx ? "active" : ""}`}
                 onClick={() => scrollToProject(idx)}
               />
             ))}
@@ -242,12 +266,12 @@ export default function ProjectsSection() {
 
           <button
             type="button"
-            className="btn-secondary"
+            className="project-step-btn"
             onClick={() => scrollToProject(currentNavTarget + 1)}
             disabled={currentNavTarget === projects.length - 1}
             aria-label="Next project"
           >
-            Next →
+            NEXT PROJECT →
           </button>
         </div>
       </div>

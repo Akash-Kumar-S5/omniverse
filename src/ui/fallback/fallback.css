@@ -5,11 +5,11 @@
   min-height: 100vh;
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle 800px at 15% 10%, rgba(124, 247, 212, 0.08), transparent 60%),
-    radial-gradient(circle 900px at 85% 25%, rgba(143, 167, 255, 0.09), transparent 55%),
-    radial-gradient(circle 700px at 30% 65%, rgba(124, 247, 212, 0.06), transparent 50%),
-    radial-gradient(circle 800px at 70% 85%, rgba(143, 167, 255, 0.08), transparent 50%),
-    linear-gradient(180deg, #05060a 0%, #0a0d16 25%, #0c0f17 50%, #070910 80%, #05060a 100%);
+    radial-gradient(circle 800px at 15% 10%, rgba(226, 180, 114, 0.08), transparent 60%),
+    radial-gradient(circle 900px at 85% 25%, rgba(197, 184, 167, 0.08), transparent 55%),
+    radial-gradient(circle 700px at 30% 65%, rgba(226, 180, 114, 0.05), transparent 50%),
+    radial-gradient(circle 800px at 70% 85%, rgba(197, 184, 167, 0.07), transparent 50%),
+    linear-gradient(180deg, #080706 0%, #12100d 35%, #181512 60%, #080706 100%);
   background-attachment: fixed;
   color: var(--fg);
   font-family: var(--font-display);
@@ -45,7 +45,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(5, 6, 10, 0.85);
+  background: rgba(8, 7, 6, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);

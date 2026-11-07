@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { profile } from "../../content";
+import SplitHeading from "../common/SplitHeading";
+import RollingCta from "../common/RollingCta";
 
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
@@ -22,7 +24,6 @@ export default function ContactSection() {
         setCopied(false);
       }, 2500);
     } catch {
-      // Fallback if clipboard API is restricted
       window.location.href = `mailto:${profile.email}`;
     }
   };
@@ -30,76 +31,72 @@ export default function ContactSection() {
   return (
     <div
       className="chapter-view chapter-contact"
-      aria-label="Contact and Beacon Terminal"
+      aria-label="Contact and Terminal"
     >
-      <div className="section-panel">
-        <div className="sheet-handle" aria-hidden="true" />
-
+      <div className="contact-editorial-layout">
         <div className="section-eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          <span>Final Waypoint // Beacon Terminal</span>
+          <span>04 // CONVERGENCE</span>
         </div>
 
-        <h2 className="section-title">Let&apos;s Build Together</h2>
-        <p className="section-subtitle">AI Agent Systems • Full-Stack Software</p>
-        <p className="section-description">
+        <SplitHeading
+          text="Let's Build Together"
+          as="h2"
+          className="contact-title"
+        />
+
+        <p className="contact-subtitle">AI Agent Systems • Developer Tools</p>
+        <p className="contact-desc">
           Open to software engineering roles, agentic AI architecture projects, and developer tooling collaborations.
           Reach out directly to connect.
         </p>
 
-        {/* Contact actions */}
-        <div className="contact-actions">
+        <div className="contact-action-group">
           <button
             type="button"
             onClick={handleCopyEmail}
-            className={`copy-email-btn ${copied ? "copied" : ""}`}
+            className={`contact-copy-pill ${copied ? "copied" : ""}`}
             aria-label={copied ? "Email copied to clipboard" : `Copy email address ${profile.email}`}
           >
-            <span>{copied ? "✓ Copied to clipboard!" : `✉ ${profile.email}`}</span>
-            <span style={{ fontSize: "0.75rem", opacity: 0.8 }}>{copied ? "Success" : "Click to copy"}</span>
+            <span className="copy-label">{copied ? "✓ Copied to clipboard" : `✉ ${profile.email}`}</span>
+            <span className="copy-hint">{copied ? "Copied" : "Click to copy"}</span>
           </button>
-          <div className="sr-only" aria-live="polite">
-            {copied ? "Email address copied to clipboard." : ""}
-          </div>
 
-          <div className="btn-group">
-            <a
+          <div className="contact-links-row">
+            <RollingCta
               href={`mailto:${profile.email}`}
-              className="btn-primary"
-              aria-label={`Send email directly to ${profile.email}`}
-            >
-              <span>Send Direct Email</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a
+              text="Direct Email"
+              icon="↗"
+              variant="primary"
+              ariaLabel={`Send direct email to ${profile.email}`}
+            />
+            <RollingCta
               href={profile.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary"
-              aria-label="Akash Kumar's GitHub profile"
-            >
-              <span>GitHub</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a
+              text="GitHub"
+              icon="↗"
+              variant="secondary"
+              ariaLabel="Akash Kumar's GitHub profile"
+            />
+            <RollingCta
               href={profile.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary"
-              aria-label="Akash Kumar's LinkedIn profile"
-            >
-              <span>LinkedIn</span>
-              <span aria-hidden="true">↗</span>
-            </a>
+              text="LinkedIn"
+              icon="↗"
+              variant="secondary"
+              ariaLabel="Akash Kumar's LinkedIn profile"
+            />
           </div>
         </div>
 
-        <div className="contact-meta">
+        <div className="contact-meta-info">
           <div>
-            <strong style={{ color: "var(--fg)" }}>Based in:</strong> {profile.location} ({profile.timezone})
+            <strong style={{ color: "var(--fg)" }}>LOCATION:</strong> {profile.location} ({profile.timezone})
           </div>
           <div>
-            <strong style={{ color: "var(--fg)" }}>Status:</strong> Beacon converged • Available for work
+            <strong style={{ color: "var(--fg)" }}>AVAILABILITY:</strong> Open to Senior / Staff engineering roles
           </div>
         </div>
       </div>
