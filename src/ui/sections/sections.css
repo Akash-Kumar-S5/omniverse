@@ -59,7 +59,7 @@
 /* Sticky Panel: Desktop left 40%, Mobile bottom sheet */
 .section-panel {
   position: sticky;
-  top: clamp(80px, 14vh, 130px);
+  top: clamp(68px, 11vh, 100px);
   width: min(520px, calc(42vw - var(--gutter)));
   margin-left: var(--gutter);
   background: rgba(12, 15, 23, 0.88);
@@ -72,6 +72,123 @@
   color: var(--fg);
   z-index: 2;
   box-sizing: border-box;
+}
+
+/* Desktop: cap every content panel so it clears both top and bottom HUD corners */
+@media (min-width: 768px) {
+  .section-panel {
+    --panel-top: clamp(68px, 11vh, 100px);
+    top: var(--panel-top);
+    max-height: calc(100dvh - var(--panel-top) - 96px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
+
+  .section-panel::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .section-panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .section-panel::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 4px;
+  }
+
+  .section-panel::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-2);
+  }
+}
+
+/* Compact spacing for short desktop viewports (<860px height) */
+@media (min-width: 768px) and (max-height: 860px) {
+  .section-panel {
+    --panel-top: clamp(56px, 8vh, 76px);
+    top: var(--panel-top);
+    max-height: calc(100dvh - var(--panel-top) - 96px);
+    padding: clamp(14px, 1.8vw, 20px);
+  }
+
+  .section-eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    margin: 0 0 6px 0;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+    margin: 0 0 8px 0;
+  }
+
+  .section-description {
+    font-size: 0.85rem;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+  }
+
+  .role-card-active {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+
+  .achievements-list {
+    margin: 6px 0 0 0;
+  }
+
+  .achievements-list li {
+    margin-bottom: 3px;
+    font-size: 0.8rem;
+  }
+
+  .role-card-compact {
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+  }
+
+  .exp-tabs {
+    margin-bottom: 10px;
+  }
+
+  .exp-tab-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .tags-list {
+    margin: 8px 0 12px 0;
+    gap: 4px;
+  }
+
+  .tag-item {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+  }
+
+  .project-nav-row {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+
+  .contact-actions {
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .copy-email-btn {
+    padding: 9px 12px;
+  }
+
+  .contact-meta {
+    margin-top: 10px;
+  }
 }
 
 /* Mobile bottom sheet */
