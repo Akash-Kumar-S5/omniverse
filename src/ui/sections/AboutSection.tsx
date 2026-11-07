@@ -1,5 +1,7 @@
 import { profile, education } from "../../content";
 import { useOmni } from "../../state/store";
+import SplitHeading from "../common/SplitHeading";
+import RollingCta from "../common/RollingCta";
 
 export default function AboutSection() {
   const reducedMotion = useOmni((s) => s.reducedMotion);
@@ -12,76 +14,45 @@ export default function AboutSection() {
   };
 
   return (
-    <section
-      data-section="about"
-      tabIndex={-1}
-      className="section-container section-about"
-      aria-label="About Akash Kumar"
-    >
-      <div className="section-panel">
-        <div className="sheet-handle" aria-hidden="true" />
+    <div className="chapter-view chapter-about" aria-label="About Akash Kumar">
+      <div className="about-content">
         <div className="section-eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          <span>Waypoint 01 // Profile</span>
+          <span>01 // PRINCIPAL IDENTITY</span>
         </div>
 
-        {reducedMotion ? (
-          <>
-            <h2 className="section-title reveal-fade">{profile.name}</h2>
-            <p className="section-subtitle reveal-fade">{profile.role}</p>
-          </>
-        ) : (
-          <>
-            <h2 className="section-title" aria-label={profile.name}>
-              {profile.name.split("").map((char, i) => (
-                <span
-                  key={i}
-                  className="reveal-char"
-                  style={{ animationDelay: `${i * 35}ms` }}
-                  aria-hidden="true"
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </h2>
-            <p className="section-subtitle" aria-label={profile.role}>
-              {profile.role.split("").map((char, i) => (
-                <span
-                  key={i}
-                  className="reveal-char"
-                  style={{ animationDelay: `${profile.name.length * 20 + i * 25}ms` }}
-                  aria-hidden="true"
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </p>
-          </>
-        )}
+        <SplitHeading
+          text="Engineering Autonomous Agent Systems"
+          as="h2"
+          className="about-title"
+        />
 
-        <p className="section-description">{profile.pitch}</p>
+        <p className="about-pitch">{profile.pitch}</p>
 
-        <div className="contact-meta" style={{ marginBottom: "18px" }}>
-          <div>
-            <strong style={{ color: "var(--fg)" }}>Location:</strong> {profile.location} ({profile.timezone})
+        <div className="about-meta">
+          <div className="about-meta-row">
+            <span className="about-meta-label">LOCATION:</span>
+            <span className="about-meta-val">{profile.location} (13.08° N, 80.27° E)</span>
           </div>
-          <div>
-            <strong style={{ color: "var(--fg)" }}>Education:</strong> {education.institution}
+          <div className="about-meta-row">
+            <span className="about-meta-label">FOCUS:</span>
+            <span className="about-meta-val">Harnesses, Evaluation, Tooling</span>
+          </div>
+          <div className="about-meta-row">
+            <span className="about-meta-label">EDUCATION:</span>
+            <span className="about-meta-val">{education.institution} — {education.degree}</span>
           </div>
         </div>
 
-        <div className="btn-group">
-          <button
-            type="button"
+        <div className="about-actions">
+          <RollingCta
+            text="View Experience"
+            icon="↓"
             onClick={handleScrollToExperience}
-            className="btn-secondary"
-            aria-label="View work experience"
-          >
-            <span>View Experience</span>
-            <span aria-hidden="true">↓</span>
-          </button>
+            ariaLabel="View work experience. Scroll to Experience section."
+          />
         </div>
       </div>
-    </section>
+    </div>
   );
 }

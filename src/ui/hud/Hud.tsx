@@ -174,16 +174,15 @@ export default function Hud({ inert }: HudProps = {}) {
         </button>
       </div>
 
-      {/* Top-Right Corner: Desktop (Clock + Status) / Mobile <=767px (Section Index + Quality Toggle) */}
+      {/* Top-Right Corner: Desktop (Clock + Coordinates) / Mobile <=767px (Section Index + Quality Toggle) */}
       <div className="hud-corner top-right" aria-live="off">
         <div className="hud-desktop-status">
           <div className="hud-status-row">
             <span className="hud-status-dot" aria-hidden="true" />
-            <span>STATUS:</span>
-            <span className="hud-status-label">ONLINE</span>
+            <span className="hud-status-label">{clockTime} IST</span>
           </div>
           <div className="hud-clock-row">
-            <span>{clockTime} IST</span>
+            <span>CHENNAI [13.08° N, 80.27° E]</span>
           </div>
         </div>
 
@@ -203,7 +202,7 @@ export default function Hud({ inert }: HudProps = {}) {
           </span>
           <span className="hud-section-name">{sectionName}</span>
         </div>
-        <span className="hud-section-sub">CONSTELLATION HARNESS</span>
+        <span className="hud-section-sub">AGENT SYSTEMS // TOOLING</span>
       </div>
 
       {/* Bottom-Right Corner: Quality Toggle + Scroll Cue (Desktop) */}
