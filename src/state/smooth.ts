@@ -11,6 +11,9 @@ export function scrollToSection(id: SectionId, immediate = false) {
   if (!element) return;
 
   if (immediate) {
+    if (activeLenis) {
+      activeLenis.scrollTo(element, { immediate: true });
+    }
     element.scrollIntoView({ block: "start", behavior: "instant" });
     return;
   }
