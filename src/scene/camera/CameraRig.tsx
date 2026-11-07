@@ -43,7 +43,7 @@ export default function CameraRig() {
 
   useFrame((_, delta) => {
     const state = useOmni.getState();
-    const { section, sectionProgress, activeProject, reducedMotion } = state;
+    const { section, sectionProgress, activeProject, reducedMotion, entered, quality } = state;
     const p = clamp(sectionProgress, 0, 1);
     const pos = positionTarget.current;
     const look = lookDesired.current;
@@ -73,8 +73,8 @@ export default function CameraRig() {
     } else {
       switch (section) {
         case "boot":
-          // Low, wide approach; looking upward while the core sits to the right of the title.
-          pos.set(-3, -1.5 - 0.4 * p, 31 - 4 * p);
+          // Hold the low, wide pose until the user enters; only HIGH mode pushes toward the core.
+          pos.set(-3, -1.5, 31 - (entered && quality === "high" ? 7 : 0));
           look.set(-5, 3.5, 0);
           break;
         case "about": {
