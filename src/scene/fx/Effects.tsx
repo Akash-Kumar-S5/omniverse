@@ -39,11 +39,11 @@ export default function Effects() {
       {/* Efficient SMAA edge smoothing without expensive MSAA */}
       <SMAA />
 
-      {/* Subtle bloom on luminous highlights */}
+      {/* Subtle bloom on luminous highlights, threshold tuned to keep particle swarm crisp */}
       <Bloom
-        intensity={0.38}
-        luminanceThreshold={0.82}
-        luminanceSmoothing={0.2}
+        intensity={0.16}
+        luminanceThreshold={0.94}
+        luminanceSmoothing={0.15}
         mipmapBlur
       />
 

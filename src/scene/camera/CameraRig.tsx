@@ -29,6 +29,7 @@ export default function CameraRig() {
   const pointer = useRef(new Vector2());
   const pointerTarget = useRef(new Vector2());
   const touchDevice = useRef(false);
+  const initialized = useRef(false);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
@@ -77,6 +78,12 @@ export default function CameraRig() {
           wide.target[1] + (oculus.target[1] - wide.target[1]) * t,
           wide.target[2] + (oculus.target[2] - wide.target[2]) * t,
         );
+        // Morph composition rule: keep swarm footprint to the RIGHT of ~55% width
+        // and below the nav by panning look-at left on desktop.
+        if (!isPortrait) {
+          look.x -= 1.6;
+          look.y -= 0.3;
+        }
         break;
       }
       case "about": {
@@ -122,12 +129,20 @@ export default function CameraRig() {
       look.y += pointer.current.y * 0.1;
     }
 
-    if (reducedMotion) {
+    if (!initialized.current) {
+      camera.position.copy(pos);
+      lookTarget.current.copy(look);
+      if (camera instanceof PerspectiveCamera) {
+        camera.fov = targetFov;
+        camera.updateProjectionMatrix();
+      }
+      initialized.current = true;
+    } else if (reducedMotion) {
       camera.position.copy(pos);
       lookTarget.current.copy(look);
     } else {
-      easing.damp3(camera.position, pos, 1.6, delta);
-      easing.damp3(lookTarget.current, look, 1.8, delta);
+      easing.damp3(camera.position, pos, 0.45, delta);
+      easing.damp3(lookTarget.current, look, 0.45, delta);
     }
     camera.lookAt(lookTarget.current);
 
