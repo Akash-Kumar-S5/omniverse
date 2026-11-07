@@ -12,4 +12,6 @@
 | concrete_wall_003 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/concrete_wall_003 | CC0 |
 | concrete_floor_worn_001 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/concrete_floor_worn_001 | CC0 |
 | marble_01 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/marble_01 | CC0 |
+| boulder_01 (model, corridor rubble) | Rico Cilliers, Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 |
+| bronze_whale_statue (model, gallery statue) | Tina, Poly Haven | https://polyhaven.com/a/bronze_whale_statue | CC0 |
 | simplex noise GLSL (src/scene/shaders/lib) | Ashima Arts / Stefan Gustavson | https://github.com/ashima/webgl-noise | MIT |

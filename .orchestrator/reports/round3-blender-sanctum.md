@@ -13,7 +13,8 @@ Layout (Blender Z-up): rotunda r9 h12 (oculus r2.2 offset y=-1.5 so the 7deg-til
 
 ## Reused vs built
 Reused: blender/textures (Poly Haven CC0), repo marble_bust_01.glb, smoke_bake_export.py pipeline, Cycles/AgX, Blender's Voronoi for stars.
-Built from scratch: architecture shell (as instructed), lights, cameras. No props were pulled from Poly Haven: the BlenderMCP Poly Haven library is switched OFF in the addon sidebar (N panel > MCP for Blender); I cannot toggle it. Tick it and I will add props (boulder/statues) via search_assets.
+Poly Haven props (enabled via scene.blendermcp_use_polyhaven=True): boulder_01 x4 (corridor rubble), bronze_whale_statue (gallery end), sources in blender/props (gitignored), step sanctum_07. Logged in CREDITS.md. Also reused: marble_bust_01.glb as preview bust.
+Built from scratch: architecture shell (as instructed), lights, cameras.
 
 ## Known issues / next
 Corridor + gallery lit by area lights in the ceiling slits (fake sky fill); both read flat-ish at the far end. Wall tile pattern is visible on the court walls. Floor reflection is Cycles-only; runtime uses the reflector. Bake step (UV unwrap, combine into sanctum_architecture, export) not started.

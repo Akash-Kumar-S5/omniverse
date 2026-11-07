@@ -27,3 +27,4 @@ dist-ssr
 .tsbuild/
 .orchestrator/research/refs/
 blender/sanctum.blend
+blender/props/*.glb

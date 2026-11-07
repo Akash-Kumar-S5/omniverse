@@ -29,7 +29,7 @@ hi = mathutils.Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for
 h = hi.z - lo.z
 k = 0.85 / h
 bust.scale = (k, k, k)
-bust.rotation_euler = (0, 0, math.radians(BUST_YAW if "BUST_YAW" in globals() else 90))
+bust.rotation_euler = (0, 0, math.radians(BUST_YAW if "BUST_YAW" in globals() else 250))  # niche opens toward -X; 250 deg = faces camera, turned ~20 deg for a 3/4 read
 bust.location = (11.0 - k * (lo.x + hi.x) / 2, 0 - k * (lo.y + hi.y) / 2, 1.25 - k * lo.z)
 for o in meshes: o.name = "BUST_" + o.name
 

@@ -26,6 +26,26 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
     nn = _img(nt, f"{prefix}_nor_gl_2k.jpg", True, (-400, -300))
     ao = _img(nt, f"{prefix}_ao_2k.jpg", True, (-400, 600))
     for t in (d, r, nn, ao): nt.links.new(mp.outputs["Vector"], t.inputs["Vector"])
+    # anti-tiling: sample diffuse/rough/AO a second time at a different scale + rotation and blend with a low-frequency noise mask
+    mp2 = nt.nodes.new("ShaderNodeMapping"); mp2.location = (-700, -500)
+    s2 = s * 0.41; mp2.inputs["Scale"].default_value = (s2, s2, s2); mp2.inputs["Rotation"].default_value = (0.35, 0.28, 0.9)
+    mp2.inputs["Location"].default_value = (0.37, 0.61, 0.19)
+    nt.links.new(tc.outputs["Object"], mp2.inputs["Vector"])
+    nz = nt.nodes.new("ShaderNodeTexNoise"); nz.location = (-700, -800); nz.inputs["Scale"].default_value = 0.35; nz.inputs["Detail"].default_value = 3
+    nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+    ramp = nt.nodes.new("ShaderNodeValToRGB"); ramp.location = (-500, -800)
+    ramp.color_ramp.elements[0].position = 0.35; ramp.color_ramp.elements[1].position = 0.65
+    nt.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    def _aa(a, nc, fname, loc):
+        b = _img(nt, fname, nc, (loc[0], loc[1] - 250)); nt.links.new(mp2.outputs["Vector"], b.inputs["Vector"])
+        m = nt.nodes.new("ShaderNodeMix"); m.data_type = "RGBA"; m.location = (loc[0] + 200, loc[1])
+        nt.links.new(ramp.outputs["Color"], m.inputs["Factor"])
+        nt.links.new(a.outputs["Color"], m.inputs[6]); nt.links.new(b.outputs["Color"], m.inputs[7]); return m
+    d_m = _aa(d, False, f"{prefix}_diff_2k.jpg", (-150, 800)); r_m = _aa(r, True, f"{prefix}_rough_2k.jpg", (-150, 100))
+    ao_m = _aa(ao, True, f"{prefix}_ao_2k.jpg", (-150, 1300))
+    class _O:  # adapter so the rest of the function can keep calling .outputs["Color"]
+        def __init__(self, m): self.outputs = {"Color": m.outputs[2]}
+    d, r, ao = _O(d_m), _O(r_m), _O(ao_m)
     # colour = diffuse * tint * mix(1, ao, ao_mix)
     mixao = nt.nodes.new("ShaderNodeMix"); mixao.data_type = "RGBA"; mixao.blend_type = "MULTIPLY"; mixao.location = (-100, 400)
     mixao.inputs["Factor"].default_value = ao_mix
@@ -50,7 +70,8 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
 wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
 slab = pbr("mat_monolith", "concrete_wall_003", 0.6, tint=(0.28, 0.29, 0.33), rough_mul=0.8, flat=0.7)
 floor = pbr("mat_floor_wet", "concrete_floor_worn_001", 0.6, tint=(0.55, 0.56, 0.60), rough_mul=0.30, flat=0.6)
-marble = pbr("mat_marble", "marble_01", 0.9, tint=(0.9, 0.9, 0.95), rough_mul=0.35, flat=0.3)
+# pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
+marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
 plinth = pbr("mat_plinth_polished", "concrete_floor_worn_001", 0.8, tint=(0.75, 0.77, 0.82), rough_mul=0.18, flat=0.85)
 _b = next(n for n in plinth.node_tree.nodes if n.type == "BSDF_PRINCIPLED")

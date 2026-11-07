@@ -77,15 +77,16 @@ blk = box("SUNBLOCK_court", -10, 10, -27, -9, 17, 17.05)
 blk.visible_camera = False; blk.visible_glossy = False; blk.visible_diffuse = False  # still casts the sun's shadow
 
 # ---- niche accent for the bust: warm, soft ----
-nd = bpy.data.lights.new("NICHE_light", "AREA"); nd.energy = 90; nd.size = 1.0; nd.color = (1.0, 0.78, 0.55); nd.spread = math.radians(100)
-nl = bpy.data.objects.new("NICHE_light", nd); sc.collection.objects.link(nl); nl.location = (9.0, 0, 6.2)
-look_at(nl, (11.0, 0, 1.6))
+# (the flat even NICHE_light fill was removed: key + rim spots only, so the niche edges fall into shadow)
 # bust key (front-right, warm) + rim (behind-left, cool) so the head reads as a head from the wide shot
 def spot(name, loc, tgt, watts, col, deg, blend=0.6):
     d = bpy.data.lights.new(name, "SPOT"); d.energy = watts; d.color = col; d.spot_size = math.radians(deg); d.spot_blend = blend; d.shadow_soft_size = 0.15
     o = bpy.data.objects.new(name, d); sc.collection.objects.link(o); o.location = loc; look_at(o, tgt); return o
-spot("BUST_key", (8.4, -1.6, 3.4), (11.0, 0, 1.95), 220, (1.0, 0.86, 0.7), 28)
-spot("BUST_rim", (11.9, 1.3, 3.0), (11.0, 0, 1.95), 260, (0.65, 0.78, 1.0), 24)
+# camera at -X looking +X: screen-left is +Y. Key: warm, upper left, tight cone (walls vignette to shadow). Rim: cool, behind the bust.
+spot("BUST_key", (8.6, 1.5, 4.4), (11.0, 0, 1.5), 700, (1.0, 0.82, 0.62), 36, 1.0)
+spot("BUST_rim", (12.1, -1.0, 3.1), (10.95, 0, 1.95), 200, (0.6, 0.76, 1.0), 14, 0.6)
+_fd = bpy.data.lights.new("NICHE_fill", "AREA"); _fd.energy = 45; _fd.size = 3.0; _fd.color = (0.6, 0.7, 1.0)
+_fo = bpy.data.objects.new("NICHE_fill", _fd); sc.collection.objects.link(_fo); _fo.location = (6.0, 0.5, 3.0); look_at(_fo, (11.0, 0, 1.6))
 
 # ---- world volume scatter: very faint, so the whole sanctum carries air and the oculus beam reads in wide shots ----
 # NOTE: a true World volume is infinite, so Cycles attenuates the sun through it to zero (the shaft vanishes).
