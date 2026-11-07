@@ -23,7 +23,7 @@ export function useScrollSync(enabled = true) {
       for (const id of SECTIONS) {
         const el = document.querySelector<HTMLElement>(`[data-section="${id}"]`);
         if (!el) continue;
-        const top = el.offsetTop;
+        const top = window.scrollY + el.getBoundingClientRect().top;
         const h = Math.max(1, el.offsetHeight);
         if (mid >= top) {
           section = id;
