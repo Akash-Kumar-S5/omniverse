@@ -44,6 +44,18 @@ const particleFragment = `
     #include <colorspace_fragment>
   }
 `;
+const haloVertex = `varying vec3 vNormal; varying vec3 vView; void main(){ vNormal=normalize(normalMatrix*normal); vec4 mv=modelViewMatrix*vec4(position,1.0); vView=-mv.xyz; gl_Position=projectionMatrix*mv; }`;
+const haloFragment = `
+  varying vec3 vNormal;
+  varying vec3 vView;
+  void main(){
+    float fresnel=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),2.2);
+    float alpha=0.24*smoothstep(0.0,0.9,fresnel);
+    gl_FragColor=vec4(vec3(0.12,0.62,1.0),alpha);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
 
 export default function Constellation() {
   const quality = useOmni((s) => s.quality);
@@ -60,6 +72,16 @@ export default function Constellation() {
   const color = useMemo(() => new THREE.Color(), []);
   const igniteElapsed = useRef(0);
   const nodeMats = useMemo(() => ({ coreColor: { value: new THREE.Color("#153a55") }, rimPower: { value: 2.0 } }), []);
+  const edgeUniforms = useMemo(() => projectEdges.map(() => ({
+    uTime: { value: 0 },
+    uSpeed: { value: 0.12 },
+    uOpacity: { value: 0.4 },
+  })), []);
+  const particleUniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uSpeed: { value: 0.075 },
+    uPointSize: { value: 3 },
+  }), []);
 
   const edgeData = useMemo(() => projectEdges.map(([a, b]) => {
     const start = new THREE.Vector3(...projectNodes[a].position);
@@ -140,7 +162,7 @@ export default function Constellation() {
     }
     const beaconScale = s.section === "contact" ? 0.55 + s.sectionProgress * 1.5 : 0.05;
     if (beaconCore.current) beaconCore.current.scale.setScalar(beaconScale);
-    if (beaconHalo.current) { beaconHalo.current.scale.setScalar(beaconScale * 1.75); (beaconHalo.current.material as THREE.MeshBasicMaterial).opacity = s.section === "contact" ? 0.2 : 0; }
+    if (beaconHalo.current) beaconHalo.current.scale.setScalar(beaconScale * 1.75);
   });
 
   return <>
@@ -158,10 +180,10 @@ export default function Constellation() {
       <meshBasicMaterial color="#a8dfff" />
     </instancedMesh>
     {edgeData.map((edge, i) => <mesh key={i} geometry={edge.geometry}>
-      <shaderMaterial ref={(m) => { if (m) edgeMaterials.current[i] = m; }} vertexShader={edgeVertex} fragmentShader={edgeFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={{ uTime: { value: 0 }, uSpeed: { value: 0.12 }, uOpacity: { value: 0.4 } }} />
+      <shaderMaterial ref={(m) => { if (m) edgeMaterials.current[i] = m; }} vertexShader={edgeVertex} fragmentShader={edgeFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={edgeUniforms[i]} />
     </mesh>)}
     <points geometry={particleGeometry} visible={quality !== "lite"}>
-      <shaderMaterial ref={particleMaterial} vertexShader={particleVertex} fragmentShader={particleFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={{ uTime: { value: 0 }, uSpeed: { value: 0.075 }, uPointSize: { value: 3 } }} />
+      <shaderMaterial ref={particleMaterial} vertexShader={particleVertex} fragmentShader={particleFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={particleUniforms} />
     </points>
   </group>
   <mesh ref={beaconCore} position={beacon}>
@@ -170,7 +192,7 @@ export default function Constellation() {
   </mesh>
   <mesh ref={beaconHalo} position={beacon} visible={quality !== "lite" && section === "contact"}>
     <sphereGeometry args={[0.62, 20, 20]} />
-    <meshBasicMaterial color="#38bfff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} />
+    <shaderMaterial vertexShader={haloVertex} fragmentShader={haloFragment} transparent blending={THREE.AdditiveBlending} depthWrite={false} />
   </mesh>
   </>;
 }
