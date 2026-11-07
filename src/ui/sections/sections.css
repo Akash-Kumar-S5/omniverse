@@ -1,4 +1,17 @@
-/* Omniverse Sections CSS - agy-sections */
+/* Omniverse Sections CSS - agy-sections & agy-type */
+
+/* HUD Safe Zones */
+:root {
+  --hud-safe-top: 90px;
+  --hud-safe-bottom: 90px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --hud-safe-top: 72px;
+    --hud-safe-bottom: 72px;
+  }
+}
 
 /* Scrim layers to ensure legibility over 3D scene */
 .sections-scrim-left {
@@ -22,44 +35,125 @@
   }
 }
 
-/* Base section container */
-.section-container {
+/* Empty Scroll Spacers: establish scroll length for useScrollSync */
+.scroll-spacers {
   position: relative;
   width: 100%;
-  box-sizing: border-box;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.spacer-section {
+  width: 100%;
+  display: block;
+}
+
+.spacer-boot {
+  height: 100vh;
+}
+
+.spacer-about {
+  height: 120vh;
+}
+
+.spacer-experience {
+  min-height: 240vh;
+}
+
+.spacer-projects {
+  min-height: 800vh;
+}
+
+.spacer-contact {
+  height: 100vh;
+}
+
+/* Single Fixed Overlay Layer: renders ONLY useChapter().active */
+.chapter-overlay-root {
+  position: fixed;
+  top: var(--hud-safe-top);
+  bottom: var(--hud-safe-bottom);
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: var(--z-overlay);
   display: flex;
   flex-direction: column;
 }
 
-/* Heights according to brief */
-.section-boot {
-  min-height: 100vh;
+.chapter-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
 }
 
-.section-about {
-  min-height: 120vh;
+.chapter-active {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
-.section-about:focus {
-  outline: none;
+.chapter-active.phase-enter {
+  animation: chapterEnterAnim 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.section-experience {
-  min-height: 240vh; /* Base fallback; overridden inline by experiences.length * 60vh */
+.chapter-active.phase-exit {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.section-projects {
-  min-height: 800vh; /* Base fallback; overridden inline by projects.length * 100vh */
+@keyframes chapterEnterAnim {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.section-contact {
-  min-height: 100vh;
+.chapter-active.no-motion {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
 
-/* Sticky Panel: Desktop left 40%, Mobile bottom sheet */
+@media (prefers-reduced-motion: reduce) {
+  .chapter-active,
+  .chapter-active.phase-enter,
+  .chapter-active.phase-exit {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.chapter-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* Content Panel within the safe zone */
 .section-panel {
-  position: sticky;
-  top: clamp(68px, 11vh, 100px);
+  position: relative;
   width: min(520px, calc(42vw - var(--gutter)));
   margin-left: var(--gutter);
   background: rgba(12, 15, 23, 0.88);
@@ -72,16 +166,15 @@
   color: var(--fg);
   z-index: 2;
   box-sizing: border-box;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: auto;
 }
 
-/* Desktop: cap every content panel so it clears both top and bottom HUD corners */
+/* Desktop scroll styling */
 @media (min-width: 768px) {
   .section-panel {
-    --panel-top: clamp(68px, 11vh, 100px);
-    top: var(--panel-top);
-    max-height: calc(100dvh - var(--panel-top) - 96px);
-    overflow-y: auto;
-    overscroll-behavior: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--line) transparent;
   }
@@ -107,9 +200,6 @@
 /* Compact spacing for short desktop viewports (<860px height) */
 @media (min-width: 768px) and (max-height: 860px) {
   .section-panel {
-    --panel-top: clamp(72px, 8vh, 80px);
-    top: var(--panel-top);
-    max-height: calc(100dvh - var(--panel-top) - 96px);
     padding: clamp(14px, 1.8vw, 20px);
   }
 
@@ -193,12 +283,16 @@
 
 /* Mobile bottom sheet */
 @media (max-width: 767px) {
+  .chapter-stage,
+  .chapter-active,
+  .chapter-view {
+    align-items: flex-end;
+  }
+
   .section-panel {
-    top: calc(100dvh - 54dvh);
     width: calc(100% - 24px);
     margin: 0 12px;
-    height: 52dvh;
-    max-height: 52dvh;
+    max-height: 100%;
     border-radius: 20px 20px 12px 12px;
     padding: 16px 18px 20px;
     overflow-y: auto;

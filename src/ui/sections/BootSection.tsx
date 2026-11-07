@@ -12,7 +12,7 @@ export default function BootSection() {
   };
 
   return (
-    <section data-section="boot" className="section-container section-boot" aria-label="Introduction and Boot sequence">
+    <div className="chapter-view chapter-boot" aria-label="Introduction and Boot sequence">
       <div className="section-panel">
         <div className="sheet-handle" aria-hidden="true" />
         <div className="section-eyebrow">
@@ -37,6 +37,6 @@ export default function BootSection() {
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

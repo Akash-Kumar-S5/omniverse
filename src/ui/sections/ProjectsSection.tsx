@@ -145,10 +145,8 @@ export default function ProjectsSection() {
   const counterText = `${String(activeProject + 1).padStart(2, "0")} / ${String(projects.length).padStart(2, "0")}`;
 
   return (
-    <section
-      data-section="projects"
-      className="section-container section-projects"
-      style={{ minHeight: `${projects.length * 100}vh` }}
+    <div
+      className="chapter-view chapter-projects"
       aria-label="Featured projects constellation"
     >
       <div
@@ -253,6 +251,6 @@ export default function ProjectsSection() {
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

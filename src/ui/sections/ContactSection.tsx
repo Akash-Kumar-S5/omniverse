@@ -28,9 +28,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section
-      data-section="contact"
-      className="section-container section-contact"
+    <div
+      className="chapter-view chapter-contact"
       aria-label="Contact and Beacon Terminal"
     >
       <div className="section-panel">
@@ -104,6 +103,6 @@ export default function ContactSection() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -12,10 +12,8 @@ export default function AboutSection() {
   };
 
   return (
-    <section
-      data-section="about"
-      tabIndex={-1}
-      className="section-container section-about"
+    <div
+      className="chapter-view chapter-about"
       aria-label="About Akash Kumar"
     >
       <div className="section-panel">
@@ -82,6 +80,6 @@ export default function AboutSection() {
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -124,10 +124,8 @@ export default function ExperienceSection() {
   const currentRole = experiences[activeRole] || experiences[0];
 
   return (
-    <section
-      data-section="experience"
-      className="section-container section-experience"
-      style={{ minHeight: `${experiences.length * 60}vh` }}
+    <div
+      className="chapter-view chapter-experience"
       aria-label="Work experience trajectory"
     >
       <div className="section-panel">
@@ -215,6 +213,6 @@ export default function ExperienceSection() {
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
