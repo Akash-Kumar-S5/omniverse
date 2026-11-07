@@ -89,8 +89,14 @@ export default function CameraRig() {
         case "experience": {
           curve.getPointAt(p, pathPosition.current);
           curve.getPointAt(Math.min(1, p + 0.015), pathLook.current);
-          pos.copy(pathPosition.current);
-          look.set(pathLook.current.x * 0.42, pathLook.current.y - 1, pathLook.current.z - 7);
+          if (size.width / Math.max(1, size.height) < 1) {
+            pos.copy(pathPosition.current);
+            look.set(pathLook.current.x * 0.42, pathLook.current.y - 1, pathLook.current.z - 7);
+          } else {
+            // Back the camera away so the active point lands in the open area beside the panel.
+            pos.set(pathPosition.current.x, pathPosition.current.y + 5, pathPosition.current.z + 16);
+            look.set(pathPosition.current.x - 3.6, pathPosition.current.y - 0.8, pathPosition.current.z - 8);
+          }
           break;
         }
         case "projects": {
@@ -100,8 +106,9 @@ export default function CameraRig() {
             pos.set(x, y + 12, z + 15);
             look.set(x, y - 2, z);
           } else {
-            pos.set(x, y + 5, z + 15);
-            look.set(x - 4, y, z);
+            // Keep the focused node near 68% x / 45% y within the panel-free area.
+            pos.set(x, y + 5, z + 18);
+            look.set(x - 5.2, y - 0.8, z);
           }
           break;
         }
