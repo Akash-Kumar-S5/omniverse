@@ -13,11 +13,11 @@ function mulberry32(seed: number) {
 }
 const rand = mulberry32(20485);
 
-/** Project nodes on a tilted ring-ish galaxy, radius ~6..10. Index matches content `projects`. */
+/** Project nodes on a tilted ring-ish galaxy. Index matches content `projects`. */
 export const projectNodes: { position: Vec3; size: number }[] = projects.map((p, i) => {
   const a = (i / projects.length) * Math.PI * 2 + rand() * 0.4;
   const r = 6 + rand() * 4;
-  return { position: [Math.cos(a) * r, (rand() - 0.5) * 3, Math.sin(a) * r], size: p.featured ? 0.55 : 0.35 };
+  return { position: [Math.cos(a) * r, (rand() - 0.5) * 3, Math.sin(a) * r], size: p.featured ? 0.62 : 0.4 };
 });
 
 /** Tech satellites. `parent` = index of the nearest-related project node. */
