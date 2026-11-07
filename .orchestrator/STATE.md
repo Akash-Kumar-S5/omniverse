@@ -185,3 +185,13 @@ DONE criteria = .orchestrator/NONSTOP.md (3D, anti-slop, perf, quality, 2 review
 10. [ ] Fix rounds from reviews (max 2), re-review.
 11. [ ] FINAL: merge all to local main, remove worktrees (non-destructive: git worktree remove, no rm -rf), screenshot strip in .orchestrator/reports/FINAL.md, publish private Artifact for Akash.
 Forbidden unchanged: push/deploy/rm -rf/reset --hard/clean/sudo/global installs. OPS FAILOVER from Morph -> update STATE.md, reply HANDOVER-READY.
+
+## 19:55 UTC TOOLS ROLLOUT (Akash: use the new skills and MCP)
+Merged r3/toolsmith to main (.mcp.json pinned, .claude/settings.json, .codex/config.toml). Brief: briefs/TOOLS-MANDATORY.md.
+Rolling restarts (only at task boundaries, fresh context, same model, main merged into the branch first):
+- DONE: copilot-review restarted with --additional-mcp-config @.mcp.json (log: '4 servers connected'); ui-editor and toolsmith closed (tasks merged).
+- PENDING at their next boundary: copilot-ui (mid-task), codex-world (mid-task; Chrome DevTools perf), agy-world (mid-task), agy-review (idle: restart when Task starts), orchestrator itself last.
+Copilot reads MCP via --additional-mcp-config (project .mcp.json is passed explicitly; native .mcp.json pickup unverified).
+
+## BACKLOG ITEM 12: IMPROVEMENT LOOP (NONSTOP.md 'Improvement loop'; added 19:45 UTC)
+After DONE criteria pass: benchmark the 5 chapters vs aengel.io + 4 current landing.love 3D sites. agy-review and copilot-review each score every chapter 1-10 (3D craft, art direction, motion, type, originality, perf). If any chapter <8 or overall <8.5: write .orchestrator/ROUND-N-PLAN.md (3 highest-impact upgrades), implement at once, re-benchmark. Stop when it passes, after 4 rounds, or when two rounds in a row gain <0.5. SEND MORPH THE SCORE TABLE after each benchmark (Morph makes the final call). Round log: none yet.

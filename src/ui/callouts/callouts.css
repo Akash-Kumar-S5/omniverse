@@ -54,3 +54,8 @@
 .callout-chip-sub {
   color: var(--fg-dim);
 }
+
+@media (max-width: 599px) {
+  .callout-svg-root,
+  .callout-labels-root { display: none; }
+}

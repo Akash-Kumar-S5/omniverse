@@ -37,3 +37,10 @@ Still checkpoint with Akash before big direction changes; he is watching.
   artifact, not a bug. `data-darkreader-*` mismatches come from Akash's Dark Reader extension:
   add `<meta name="darkreader-lock" content="true">` (non-empty content) in index.html.
 - Never branch render output on useReducedMotion()/matchMedia during first render (SSR/hydration).
+
+## Tools added by toolsmith (r3/toolsmith) — restart agents to load them
+- **playwright** (headed system Chrome, GPU): `browser_navigate`, `browser_take_screenshot` (save under .orchestrator/reference/), `browser_console_messages`, `browser_start_tracing`. Use `?skipgate=1&chapter=N`.
+- **chrome-devtools**: `performance_start_trace`/`performance_stop_trace`/`performance_analyze_insight`, `lighthouse_audit`, `list_console_messages` (needs pageId). Telemetry off.
+- **context7**: `resolve-library-id` then `query-docs` (e.g. /pmndrs/drei) for version-correct three/r3f/drei docs. Never put secrets in queries.
+- blender: claude (live) and codex (.codex/config.toml); only ONE agent drives live Blender at a time.
+- Claude project servers are pre-approved via committed .claude/settings.json (enabledMcpjsonServers); restart agents to load them.

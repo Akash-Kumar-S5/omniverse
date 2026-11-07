@@ -16,6 +16,17 @@
   dir see it. Exactly ONE agent drives the live Blender at a time. It saves every scene step as a script in
   `blender/scripts/` so the build stays reproducible headless.
 
+## Update 00:55 IST: GitHub Copilot CLI added (Akash's Copilot Pro)
+- `copilot` 1.0.107 is installed and signed in (herdr kind `copilot`). Verified models: **claude-sonnet-5.5** and
+  **gpt-6-luna**. Not available: opus-5.5, gpt-6.1-sol, gemini. It bills GitHub AI credits (a test prompt cost 0.13),
+  a SEPARATE pool from Claude Pro, the ChatGPT plan and Google.
+- Use it to take Sonnet-class work OFF the Claude Pro pool: UI/type polish, copy, focused fixes, and a second-opinion
+  code review. Keep claude agents for BlenderMCP work (MCP is project-scoped to claude for now).
+- Start: `herdr agent start <name> --kind copilot --pane <id> -- --model claude-sonnet-5.5 --allow-all-tools
+  --deny-tool 'shell(rm)' --deny-tool 'shell(git push)' --deny-tool 'shell(sudo)'` (deny wins over allow).
+  Scope it to its own worktree. Never `--allow-all-paths`.
+- Budget: Pro has a monthly AI-credit allowance. Don't run it as an always-on watcher; give it bounded tasks.
+
 ## Lanes: who does what
 | Work | Lane | Why |
 |---|---|---|
