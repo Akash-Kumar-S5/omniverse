@@ -13,8 +13,8 @@ const nodeFragment = `
   varying vec3 vView;
   void main(){
     float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),rimPower);
-    vec3 c=mix(coreColor*vColor,vec3(0.42,0.82,1.0),rim*0.88);
-    gl_FragColor=vec4(c*(0.8+rim*2.4),1.0);
+    vec3 c=mix(coreColor*vColor,vec3(0.91,0.77,0.62),rim*0.54);
+    gl_FragColor=vec4(c*(0.76+rim*0.72),1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
@@ -29,7 +29,7 @@ const edgeFragment = `
   void main(){
     float flow=pow(max(0.0,sin((vUv.x*7.0-uTime*uSpeed)*6.28318)),10.0);
     float halo=0.2+0.35*(0.5+0.5*sin(vUv.x*44.0-uTime*uSpeed*2.0));
-    gl_FragColor=vec4(vec3(0.08,0.48,0.8)*(halo+flow*2.2),uOpacity*(halo+flow));
+    gl_FragColor=vec4(vec3(0.72,0.54,0.38)*(halo+flow*0.8),uOpacity*(halo+flow));
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
@@ -39,7 +39,7 @@ const particleFragment = `
   void main(){
     vec2 p=gl_PointCoord-0.5;
     float a=1.0-smoothstep(0.12,0.5,length(p));
-    gl_FragColor=vec4(0.35,0.82,1.0,a);
+    gl_FragColor=vec4(0.91,0.78,0.64,a*0.72);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
@@ -51,7 +51,7 @@ const haloFragment = `
   void main(){
     float fresnel=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),2.2);
     float alpha=0.24*smoothstep(0.0,0.9,fresnel);
-    gl_FragColor=vec4(vec3(0.12,0.62,1.0),alpha);
+    gl_FragColor=vec4(vec3(0.83,0.68,0.51),alpha*0.62);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
@@ -71,11 +71,11 @@ export default function Constellation() {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const color = useMemo(() => new THREE.Color(), []);
   const igniteElapsed = useRef(0);
-  const nodeMats = useMemo(() => ({ coreColor: { value: new THREE.Color("#153a55") }, rimPower: { value: 2.0 } }), []);
+  const nodeMats = useMemo(() => ({ coreColor: { value: new THREE.Color("#514335") }, rimPower: { value: 2.4 } }), []);
   const edgeUniforms = useMemo(() => projectEdges.map(() => ({
     uTime: { value: 0 },
     uSpeed: { value: 0.12 },
-    uOpacity: { value: 0.4 },
+    uOpacity: { value: 0.25 },
   })), []);
   const particleUniforms = useMemo(() => ({
     uTime: { value: 0 },
@@ -173,11 +173,11 @@ export default function Constellation() {
     </instancedMesh>
     <instancedMesh ref={rims} args={[undefined, undefined, projectNodes.length]}>
       <icosahedronGeometry args={[1, 2]} />
-      <meshBasicMaterial color="#4bc8ff" wireframe transparent opacity={0.42} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <meshBasicMaterial color="#b69a78" wireframe transparent opacity={0.2} depthWrite={false} />
     </instancedMesh>
     <instancedMesh ref={satellites} args={[undefined, undefined, techNodes.length]}>
       <octahedronGeometry args={[1, 0]} />
-      <meshBasicMaterial color="#a8dfff" />
+      <meshStandardMaterial color="#c5b8a7" roughness={0.52} metalness={0.24} />
     </instancedMesh>
     {edgeData.map((edge, i) => <mesh key={i} geometry={edge.geometry}>
       <shaderMaterial ref={(m) => { if (m) edgeMaterials.current[i] = m; }} vertexShader={edgeVertex} fragmentShader={edgeFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={edgeUniforms[i]} />
@@ -187,8 +187,8 @@ export default function Constellation() {
     </points>
   </group>
   <mesh ref={beaconCore} position={beacon}>
-    <sphereGeometry args={[0.38, 24, 24]} />
-    <meshBasicMaterial color="#c6f6ff" />
+    <dodecahedronGeometry args={[0.34, 1]} />
+    <meshStandardMaterial color="#f0dec5" emissive="#8b6c4b" emissiveIntensity={0.3} roughness={0.24} metalness={0.38} />
   </mesh>
   <mesh ref={beaconHalo} position={beacon} visible={quality !== "lite" && section === "contact"}>
     <sphereGeometry args={[0.62, 20, 20]} />
