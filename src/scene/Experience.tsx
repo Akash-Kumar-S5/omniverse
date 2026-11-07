@@ -1,14 +1,14 @@
-// Orchestrator-owned composition. Builders edit only their own folders.
+// Orchestrator-owned composition.
 import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { AdaptiveDpr, PerformanceMonitor } from "@react-three/drei";
 import { useOmni } from "../state/store";
-import Constellation from "./constellation/Constellation";
 import CameraRig from "./camera/CameraRig";
 import Starfield from "./fx/Starfield";
 import Effects from "./fx/Effects";
 import { World, LoadProgress } from "./world";
 import { AnchorWriters } from "./anchors";
+import { SignalField } from "./particles";
 
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
@@ -42,7 +42,7 @@ export default function Experience() {
       )}
       <color attach="background" args={["#05060a"]} />
       <Starfield />
-      <Constellation />
+      <SignalField />
       <World />
       <AnchorWriters />
       <LoadProgress />
