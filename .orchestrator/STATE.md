@@ -162,3 +162,6 @@ Monitor expired; re-arm if needed (script polls herdr agent list + r3 branch com
 
 ## RULE (18:05 UTC): evidence = a screenshot of the actual chapter state; gate screenshots don't count.
 Test params (codex-world adding): ?skipgate and ?chapter=0..4. Merged r3/blender-sanctum at efc6b0b (sanctum.glb 1.2 MB, lite 0.3 MB, spots json). ui-editor (w2:pN, r3/ui-editor) running the anti-slop pass. agy-world: e603f1d evidence rejected (gate screens).
+
+## 2026-11-08 18:35 UTC
+Merged to main: r3/codex-world b11a056, r3/ui-editor 84a217c (build+lint clean). Pending: agy-world rebase (Hud.tsx: ui-editor wins) + beam haze + swarm tint + per-chapter shots; then agy-review on main (?skipgate&chapter=0..4, 1440+390, anti-slop audit).
