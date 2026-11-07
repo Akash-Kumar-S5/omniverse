@@ -87,3 +87,16 @@ Review OUTPUT only (screenshots, behaviour, measurements), not code. Brief brief
 - Merged agy-type copy rewrite (gap 8) and claude-assets author check (all 3 authors verified correct, no change). Main build+lint clean. claude-assets pane closed.
 - All four builders merged. agy-review prompted for output-only review; report at .orchestrator/review/round2-review.md.
 - Next: read verdict, route fixes to owners (max ~2 rounds), then Artifact screenshot strip for Akash, final verification, close panes, remove worktrees.
+
+## ROUND 3 (2026-11-07 15:30 UTC) — supersedes Round 2 plan above
+Akash: UI/type/copy/HUD/overlay FROZEN ("everything except the 3D is good; 3D is very average"). Round 3 = 3D only per `research/3D-PLAYBOOK.md` (Signal Field GPGPU swarm). Contract: `briefs/round3-contract.md` + `src/state/signal.ts` (store.quality now high|medium|lite).
+Main HEAD after round 2: all four builders merged; round 3 briefs committed.
+| Name | Lane | Pane | Tab | Branch | Owns |
+|---|---|---|---|---|---|
+| codex-world | codex gpt-6-luna HIGH effort | w2:pE | t9 r3-scene | r3/codex-world | src/scene/particles/**, src/scene/shaders/** |
+| agy-world | agy auto, claude-opus-4-6-thinking | w2:pF | t9 r3-scene | r3/agy-world | Floor, VolumeCone, CameraRig, fx/Effects, Experience.tsx |
+| agy-review | agy auto, claude-opus-4-6-thinking | w2:pD | t8 r2-review | none | judges against playbook section 8 (output only) |
+Retired + closed: codex-chapters, agy-type, claude-assets (+ old worktrees removed). Old r2 branches are merged.
+Order: codex-world step 1 (SignalField exported) -> merge -> tell agy-world step 4 (mount). agy-review still finishing a round-2 baseline (overlap check); after it reports, re-point it at the playbook section 8 review once round 3 merges.
+Checkpoint: screenshot strip Artifact for Akash BEFORE the final merge. Akash is away: Artifact links only.
+Next 3: (1) wait for codex-world step-1 report, merge, notify agy-world; (2) merge agy-world steps 1-3; (3) agy-review vs playbook s8, fix rounds (max 2), Artifact strip, final verify (fps, ?nogl, ?lite, 390px).
