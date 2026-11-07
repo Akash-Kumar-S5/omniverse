@@ -170,3 +170,18 @@ Merged to main: r3/codex-world b11a056, r3/ui-editor 84a217c (build+lint clean).
 
 ## 19:35 UTC copilot lane
 copilot-review (w2:pQ, copilot claude-sonnet-5.5, worktree .worktrees/copilot-review, branch r3/copilot-review): task 1 anti-slop audit on current UI (?skipgate&chapter=0..4, 1440+390). Task 2 (3D vs playbook s8) after agy-world merges. Rule: future UI/copy fix rounds go to copilot, not claude agents; bounded tasks only.
+
+## BACKLOG (NON-STOP, written 19:40 UTC). Take the top open item whenever an agent idles. Mark [x] when verified by screenshot.
+DONE criteria = .orchestrator/NONSTOP.md (3D, anti-slop, perf, quality, 2 reviewers, FINAL.md).
+1. [ ] agy-world: rebase on main (ui-editor wins), swarm right of 55% width on ch0, ch2 lit niche, re-shoot ch0..4; then MERGE. (owner agy-world, w2:pK, working)
+2. [ ] ui-editor b567b53: review + merge (hero pitch/project nav clear of swarm, fallback page). (me)
+3. [ ] toolsmith report: review + merge r3/toolsmith; restart agents at a natural break (after item 1). (toolsmith w2:pP)
+4. [ ] copilot-review task 1: anti-slop audit of UI, report copilot-anti-slop-audit.md. (w2:pQ, working)
+5. [ ] 3D completeness (playbook s8): per-chapter swarm shapes, cursor disturbance, camera travels through the building between chapters, no hard horizon. (codex-world swarm shapes+cursor; agy-world camera)
+6. [ ] Perf: >=55fps HIGH 1440x900 measured, LITE smooth 390px, payload <=8 MB, tier auto-step, ?nogl fallback, reduced motion. (codex-world measures; agy-world fixes effects)
+7. [ ] Quality: console errors none, CLS on font load, AA contrast, keyboard nav, meta/OG, favicon. (copilot UI fix round)
+8. [ ] Review 1: agy-review on main, ch0..4 at 1440+390, playbook s8. (agy-review w2:pM, flash)
+9. [ ] Review 2: copilot-review task 2 (3D vs s8 + competitive vs aengel.io refs). 
+10. [ ] Fix rounds from reviews (max 2), re-review.
+11. [ ] FINAL: merge all to local main, remove worktrees (non-destructive: git worktree remove, no rm -rf), screenshot strip in .orchestrator/reports/FINAL.md, publish private Artifact for Akash.
+Forbidden unchanged: push/deploy/rm -rf/reset --hard/clean/sudo/global installs. OPS FAILOVER from Morph -> update STATE.md, reply HANDOVER-READY.
