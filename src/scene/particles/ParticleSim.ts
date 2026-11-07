@@ -13,6 +13,7 @@ export function createParticleSimulation(
   size: number,
   center: THREE.Vector3,
   radius: number,
+  target: THREE.Texture,
 ): ParticleSimulation | null {
   const compute = new GPUComputationRenderer(size, size, renderer);
   const initial = compute.createTexture();
@@ -35,6 +36,7 @@ export function createParticleSimulation(
   positionVariable.material.uniforms.uCursor = { value: new THREE.Vector3() };
   positionVariable.material.uniforms.uCursorActive = { value: 0 };
   positionVariable.material.uniforms.uCursorRadius = { value: radius * 0.72 };
+  positionVariable.material.uniforms.uTarget = { value: target };
 
   const error = compute.init();
   initial.dispose();
