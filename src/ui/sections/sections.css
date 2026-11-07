@@ -81,7 +81,7 @@
     top: var(--panel-top);
     max-height: calc(100dvh - var(--panel-top) - 96px);
     overflow-y: auto;
-    overscroll-behavior: contain;
+    overscroll-behavior: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--line) transparent;
   }
@@ -107,7 +107,7 @@
 /* Compact spacing for short desktop viewports (<860px height) */
 @media (min-width: 768px) and (max-height: 860px) {
   .section-panel {
-    --panel-top: clamp(56px, 8vh, 76px);
+    --panel-top: clamp(72px, 8vh, 80px);
     top: var(--panel-top);
     max-height: calc(100dvh - var(--panel-top) - 96px);
     padding: clamp(14px, 1.8vw, 20px);

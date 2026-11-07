@@ -7,6 +7,7 @@
 - **Fix round 1:** Fixed #1 (targetRef guard), #7 (panel id + roving + role tabs), #8 (pips + region), #9 (inline heights), #10 (self-contained fallback.css).
 - **Fix round 2:** Fixed #13 (scroll guard timeout 2000ms), #15 (dynamic short-role tab labels), #14 (tabIndex={-1} on About section).
 - **Fix round 3:** Fixed #16 (capped desktop panel max-height to clear bottom-left HUD, compact spacing for viewports <860px).
+- **Fix round 4:** Fixed #17 (overscroll-behavior: auto to allow wheel scroll over panels), #18 (raised short-viewport panel-top to clamp(72px, 8vh, 80px)).
 - **Known issues:** None. Build and ESLint pass cleanly.
 - **Requests:** None.
-- **Commit hash:** `b04bc7e`
+- **Commit hash:** `2b954a4`
