@@ -159,3 +159,6 @@ Monitor expired; re-arm if needed (script polls herdr agent list + r3 branch com
 ## 17:00 UTC Morph visual check of 6d25e0d: DO NOT MERGE r3/agy-world until: SignalField mounted filling 35-45% of right half; near-black MeshReflectorMaterial floor with fog, no horizon; drei SpotLight volumetric visible; agy-world must screenshot all 5 chapters itself. Requirements sent to agy-world.
 
 ## RULE (18:00 UTC): evidence = a screenshot of the actual chapter state; gate screenshots don't count. Use ?skipgate&chapter=0..4 (codex-world adding). Merged r3/blender-sanctum (sanctum.glb 1.2 MB). Next: agy-world loads it; ui-editor (w2:pN, r3/ui-editor) running anti-slop pass.
+
+## RULE (18:05 UTC): evidence = a screenshot of the actual chapter state; gate screenshots don't count.
+Test params (codex-world adding): ?skipgate and ?chapter=0..4. Merged r3/blender-sanctum at efc6b0b (sanctum.glb 1.2 MB, lite 0.3 MB, spots json). ui-editor (w2:pN, r3/ui-editor) running the anti-slop pass. agy-world: e603f1d evidence rejected (gate screens).
