@@ -128,7 +128,6 @@ export default function CameraRig() {
     if (reducedMotion) {
       camera.position.copy(pos);
       lookTarget.current.copy(look);
-      reducedTransition.current = false;
     } else {
       easing.damp3(camera.position, pos, 1.5, delta);
       easing.damp3(lookTarget.current, look, 1.8, delta);
