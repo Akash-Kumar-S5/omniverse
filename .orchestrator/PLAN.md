@@ -7,7 +7,7 @@
 - Fonts: Space Grotesk (display) and JetBrains Mono (HUD), loaded from Google Fonts in index.html.
 
 ## Architecture contract
-The orchestrator owns these files. Everyone else may read them but not edit them.
+Contract overview. File ownership is in the Team table below.
 - `src/content/*`: projects, experiences, education, techStack and profile, copied from the 2D portfolio.
 - `src/state/store.ts` exports `useOmni` (zustand) with:
   - `section`, one of `boot | about | experience | projects | contact`
@@ -37,15 +37,14 @@ The team was expanded at Akash's request, passed on by Morph (see OPS-NOTES.md).
 
 | Name | Kind | Owns (only) | Tab |
 |---|---|---|---|
-| scene | codex | `src/scene/constellation/**`: nodes, satellites, edges with a flow shader, GPU agent particles, beacon | scene |
-| camera | codex | `src/scene/camera/**`: scroll rig, experience spline, project focus, parallax, reduced-motion poses | scene |
-| fx | codex | `src/scene/fx/**`: starfield, bloom/post, lite switches, perf budget | scene |
-| hud | agy | `src/ui/hud/**`, `src/ui/boot/**`: boot log, HUD frame, clock, section index, lite toggle | ui |
-| sections | agy | `src/ui/sections/**`: About, Experience, Projects navigation, Contact | ui |
-| fallback | agy | `src/ui/fallback/**`, `src/ui/Fallback.tsx`: the no-WebGL page | ui |
-| rv-scene | claude | read-only review of scene, camera and fx, written to `review/scene.md` | review |
-| rv-ui | claude | read-only review of hud, sections and fallback, written to `review/ui.md` | review |
-| qa | claude | browser QA of the merged main, written to `review/qa.md` | review |
+| codex-scene | codex | `src/scene/constellation/**`, `src/scene/fx/**`, `src/scene/layout.ts`: nodes, satellites, edge flow shader, GPU agent particles, beacon, starfield, bloom | scene |
+| codex-camera | codex | `src/scene/camera/**`, `src/scene/Experience.tsx`: scroll rig, spline, project focus, parallax, reduced-motion poses, perf (dpr, adaptive) | scene |
+| agy-hud | agy | `src/ui/boot/**`, `src/ui/hud/**`, `src/ui/Overlay.tsx`, `src/styles/**`, `index.html` head: boot log, HUD, quality toggle, global styles | ui |
+| agy-sections | agy | `src/ui/sections/**`, `src/ui/fallback/**`, `src/ui/Fallback.tsx`: About, Experience, Projects nav, Contact, no-WebGL page, responsive | ui |
+| rv-scene | claude | read-only review of codex-scene and codex-camera, written to `review/rv-scene.md` | review |
+| rv-ui | claude | read-only review of agy-hud and agy-sections plus browser QA, written to `review/rv-ui.md` | review |
+
+The orchestrator owns `src/state/**`, `src/content/**`, `src/App.tsx`, `src/main.tsx` and the root configs. It does not write scene or UI code.
 
 No agent reviews its own work. Briefs are in `briefs/<name>.md`, and builder reports go to `reports/<name>.md` (15 lines max).
 
