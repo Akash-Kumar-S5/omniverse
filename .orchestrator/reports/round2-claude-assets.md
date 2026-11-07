@@ -9,3 +9,7 @@ Known issues:
 - npm run build / lint not run (no source changes made).
 Requests: add @gltf-transform/cli as a devDependency or allow npx for it.
 Commit: f6054f0 (assets batch 1)
+
+## Author check (after ff-merge to main)
+- Verified against api.polyhaven.com/info: studio_small_09 = Sergej Majboroda; moonless_golf = Greg Zaal; marble_bust_01 = Rico Cilliers. All match CREDITS.md, no changes.
+- src/content not touched (reassigned to agy-type). Build exit 0, lint exit 0 on merged tree.
