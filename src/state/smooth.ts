@@ -6,15 +6,20 @@ import { useOmni, type SectionId } from "./store";
 let activeLenis: Lenis | undefined;
 
 /** Scroll to a chapter element, using the active Lenis instance when available. */
-export function scrollToSection(id: SectionId) {
+export function scrollToSection(id: SectionId, immediate = false) {
   const element = document.querySelector<HTMLElement>(`[data-section="${id}"]`);
   if (!element) return;
+
+  if (immediate) {
+    element.scrollIntoView({ block: "start", behavior: "instant" });
+    return;
+  }
 
   if (activeLenis) {
     activeLenis.scrollTo(element, { duration: 1.1 });
   } else {
     const top = window.scrollY + element.getBoundingClientRect().top;
-    window.scrollTo({ top, behavior: "auto" });
+    window.scrollTo({ top, behavior: "smooth" });
   }
 }
 
