@@ -127,3 +127,6 @@ Akash installed it himself: Claude MCP server "blender" (uvx mcp-for-blender==2.
 - agy-world -> agy gemini-3.8-flash-high, pane w2:pK, still HELD until codex-world step 1 merges.
 - agy-review -> agy gemini-3.8-flash-high, pane w2:pM, idle (its round-2 baseline was lost to the quota; re-run later vs playbook s8).
 - codex-world unchanged (w2:pE).
+
+## Reuse-first (15:50 UTC)
+Section 0 of the playbook + paragraph in round3-contract.md sent to codex-world and blender-sanctum. agy-world (still held) gets it with its start prompt: drei SpotLight volumetric / MeshReflectorMaterial / Sparkles / Environment before any custom shader; extend CameraRig, do not replace.
