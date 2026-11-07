@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useOmni } from "../../state/store";
+import { profile } from "../../content";
 import RollingCta from "../common/RollingCta";
 import "./Boot.css";
 
@@ -116,7 +117,7 @@ export default function Boot() {
 
         <h1 className="gate-display-name">AKASH KUMAR</h1>
         <p className="gate-role-pitch">
-          Software Engineer // Harnesses, Orchestration & AI Developer Tools
+          {profile.role} — Harnesses, Orchestration & AI Developer Tools
         </p>
 
         {/* Dynamic Progress or Enter Gate */}

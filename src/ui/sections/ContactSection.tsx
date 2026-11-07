@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { profile } from "../../content";
+import { profile, copy } from "../../content";
 import SplitHeading from "../common/SplitHeading";
 import RollingCta from "../common/RollingCta";
 
@@ -36,36 +36,33 @@ export default function ContactSection() {
       <div className="contact-editorial-layout">
         <div className="section-eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          <span>04 // CONVERGENCE</span>
+          <span>{copy.contact.eyebrow}</span>
         </div>
 
         <SplitHeading
-          text="Let's Build Together"
+          text={copy.contact.title}
           as="h2"
           className="contact-title"
         />
 
-        <p className="contact-subtitle">AI Agent Systems • Developer Tools</p>
-        <p className="contact-desc">
-          Open to software engineering roles, agentic AI architecture projects, and developer tooling collaborations.
-          Reach out directly to connect.
-        </p>
+        <p className="contact-subtitle">{copy.contact.subtitle}</p>
+        <p className="contact-desc">{copy.contact.pitch}</p>
 
         <div className="contact-action-group">
           <button
             type="button"
             onClick={handleCopyEmail}
             className={`contact-copy-pill ${copied ? "copied" : ""}`}
-            aria-label={copied ? "Email copied to clipboard" : `Copy email address ${profile.email}`}
+            aria-label={copied ? copy.contact.copiedEmail : `Copy email address ${profile.email}`}
           >
-            <span className="copy-label">{copied ? "✓ Copied to clipboard" : `✉ ${profile.email}`}</span>
-            <span className="copy-hint">{copied ? "Copied" : "Click to copy"}</span>
+            <span className="copy-label">{copied ? `✓ ${copy.contact.copiedEmail}` : `✉ ${profile.email}`}</span>
+            <span className="copy-hint">{copied ? "Success" : "Click to copy"}</span>
           </button>
 
           <div className="contact-links-row">
             <RollingCta
               href={`mailto:${profile.email}`}
-              text="Direct Email"
+              text={copy.contact.cta}
               icon="↗"
               variant="primary"
               ariaLabel={`Send direct email to ${profile.email}`}
@@ -96,7 +93,7 @@ export default function ContactSection() {
             <strong style={{ color: "var(--fg)" }}>LOCATION:</strong> {profile.location} ({profile.timezone})
           </div>
           <div>
-            <strong style={{ color: "var(--fg)" }}>AVAILABILITY:</strong> Open to Senior / Staff engineering roles
+            <strong style={{ color: "var(--fg)" }}>AVAILABILITY:</strong> Open to AI tooling & systems engineering roles
           </div>
         </div>
       </div>

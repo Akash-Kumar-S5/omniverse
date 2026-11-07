@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { projects } from "../../content";
+import { projects, copy } from "../../content";
 import { useOmni } from "../../state/store";
 import SplitHeading from "../common/SplitHeading";
 import RollingCta from "../common/RollingCta";
@@ -183,7 +183,7 @@ export default function ProjectsSection() {
         <div className="project-meta-row">
           <div className="section-eyebrow" style={{ margin: 0 }}>
             <span className="eyebrow-dot" aria-hidden="true" />
-            <span>03 // CONSTELLATION NODE</span>
+            <span>{copy.projects.eyebrow}</span>
           </div>
           <span className="project-display-counter" aria-live="polite">
             {counterText}
@@ -201,6 +201,8 @@ export default function ProjectsSection() {
           as="h2"
           className="project-display-title"
         />
+
+        {project.hook && <p className="project-hook">{project.hook}</p>}
 
         <p className="project-display-desc">{project.description}</p>
 
@@ -246,7 +248,7 @@ export default function ProjectsSection() {
             disabled={currentNavTarget === 0}
             aria-label="Previous project"
           >
-            ← PREV
+            {copy.projects.ctaPrev}
           </button>
 
           <div className="project-pips-track" role="tablist" aria-label="Jump to project">
@@ -271,7 +273,7 @@ export default function ProjectsSection() {
             disabled={currentNavTarget === projects.length - 1}
             aria-label="Next project"
           >
-            NEXT PROJECT →
+            {copy.projects.ctaNext}
           </button>
         </div>
       </div>
