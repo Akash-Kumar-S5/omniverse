@@ -1,5 +1,4 @@
-/* Callout & Leader Lines Layer CSS */
-
+/* Callouts: a hairline leader and a plain label. No panel, no blur, no glow. */
 .callout-svg-root {
   position: fixed;
   inset: 0;
@@ -19,17 +18,14 @@
 }
 
 .callout-leader-line {
-  stroke: var(--accent);
+  stroke: var(--fg);
   stroke-width: 1;
-  stroke-opacity: 0.45;
+  stroke-opacity: 0.5;
   fill: none;
-  stroke-dasharray: 3 2;
 }
 
 .callout-anchor-dot {
-  fill: var(--accent);
-  stroke: rgba(226, 180, 114, 0.4);
-  stroke-width: 2;
+  fill: var(--fg);
 }
 
 .callout-chip {
@@ -37,20 +33,14 @@
   top: 0;
   left: 0;
   pointer-events: none;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: var(--fg);
-  background: rgba(18, 16, 13, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 180, 114, 0.28);
-  border-radius: 4px;
-  padding: 4px 8px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(226, 180, 114, 0.12);
+  gap: 1px;
+  font-family: var(--font-text);
+  font-size: var(--step--1);
+  line-height: 1.25;
+  color: var(--fg);
+  text-shadow: 0 1px 8px rgba(8, 7, 6, 0.9);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 150ms ease;
@@ -58,28 +48,9 @@
 }
 
 .callout-chip-title {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 0.68rem;
-  text-transform: uppercase;
+  font-weight: 500;
 }
 
 .callout-chip-sub {
   color: var(--fg-dim);
-  font-size: 0.62rem;
-}
-
-@media (max-width: 767px) {
-  .callout-chip {
-    padding: 3px 6px;
-    font-size: 0.62rem;
-  }
-
-  .callout-chip-title {
-    font-size: 0.64rem;
-  }
-
-  .callout-chip-sub {
-    font-size: 0.58rem;
-  }
 }

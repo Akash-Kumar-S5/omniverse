@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { projects, copy } from "../../content";
 import { useOmni } from "../../state/store";
 import SplitHeading from "../common/SplitHeading";
-import RollingCta from "../common/RollingCta";
+import TextLink from "../common/TextLink";
 
 export default function ProjectsSection() {
   const activeProject = useOmni((s) => s.activeProject);
@@ -168,114 +168,82 @@ export default function ProjectsSection() {
 
   const currentNavTarget = targetRef.current ?? activeProject;
   const project = projects[activeProject] || projects[0];
-  const counterText = `${String(activeProject + 1).padStart(2, "0")} / ${String(projects.length).padStart(2, "0")}`;
+  const total = projects.length;
 
   return (
     <div
       className="chapter-view chapter-projects"
-      aria-label="Featured projects constellation"
+      aria-label="Projects"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <div className="project-editorial-layout">
-        <div className="project-meta-row">
-          <div className="section-eyebrow" style={{ margin: 0 }}>
-            <span className="eyebrow-dot" aria-hidden="true" />
-            <span>{copy.projects.eyebrow}</span>
-          </div>
-          <span className="project-display-counter" aria-live="polite">
-            {counterText}
-          </span>
-        </div>
+      <p className="project-count" aria-live="polite">
+        <span className="project-count-now">{activeProject + 1}</span> of {total}
+      </p>
 
-        <div className="project-badges">
-          <span className="project-category-tag">{project.category}</span>
-          {project.featured && <span className="project-featured-tag">★ Featured</span>}
-        </div>
+      <SplitHeading key={project.title} text={project.title} as="h2" className="project-display-title" />
 
-        <SplitHeading
-          key={project.title}
-          text={project.title}
-          as="h2"
-          className="project-display-title"
+      {project.hook && <p className="project-hook">{project.hook}</p>}
+
+      <p className="project-display-desc">{project.description}</p>
+
+      <p className="project-stack">
+        <span className="sr-only">Built with: </span>
+        {project.tags.join(", ")}
+      </p>
+
+      <div className="project-actions">
+        {project.live && (
+          <TextLink
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            text="Open the site"
+            ariaLabel={`Open the live site for ${project.title}`}
+          />
+        )}
+        {project.github && (
+          <TextLink
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            text="Read the code"
+            ariaLabel={`Read the code for ${project.title} on GitHub`}
+          />
+        )}
+      </div>
+
+      <div className="project-nav-footer">
+        <TextLink
+          text={copy.projects.ctaPrev}
+          onClick={() => scrollToProject(currentNavTarget - 1)}
+          disabled={currentNavTarget === 0}
+          ariaLabel="Previous project"
         />
 
-        {project.hook && <p className="project-hook">{project.hook}</p>}
-
-        <p className="project-display-desc">{project.description}</p>
-
-        <ul className="project-tech-tags" aria-label="Project technologies">
-          {project.tags.map((tag) => (
-            <li key={tag} className="tag-pill">
-              {tag}
-            </li>
+        <div className="project-pips-track" role="tablist" aria-label="Jump to project">
+          {projects.map((p, idx) => (
+            <button
+              key={p.title}
+              type="button"
+              role="tab"
+              tabIndex={activeProject === idx ? 0 : -1}
+              aria-selected={activeProject === idx}
+              aria-label={`Project ${idx + 1}: ${p.title}`}
+              className="project-pip-item"
+              onClick={() => scrollToProject(idx)}
+            />
           ))}
-        </ul>
-
-        <div className="project-actions">
-          {project.live && (
-            <RollingCta
-              href={project.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              text="Live Demo"
-              icon="↗"
-              variant="primary"
-              ariaLabel={`Open live application for ${project.title}`}
-            />
-          )}
-          {project.github && (
-            <RollingCta
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              text="GitHub"
-              icon="↗"
-              variant="secondary"
-              ariaLabel={`View source code for ${project.title} on GitHub`}
-            />
-          )}
         </div>
 
-        {/* Project Navigation Footer */}
-        <div className="project-nav-footer">
-          <button
-            type="button"
-            className="project-step-btn"
-            onClick={() => scrollToProject(currentNavTarget - 1)}
-            disabled={currentNavTarget === 0}
-            aria-label="Previous project"
-          >
-            {copy.projects.ctaPrev}
-          </button>
-
-          <div className="project-pips-track" role="tablist" aria-label="Jump to project">
-            {projects.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                role="tab"
-                tabIndex={activeProject === idx ? 0 : -1}
-                aria-selected={activeProject === idx}
-                aria-label={`Jump to project ${idx + 1}`}
-                className={`project-pip-item ${activeProject === idx ? "active" : ""}`}
-                onClick={() => scrollToProject(idx)}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className="project-step-btn"
-            onClick={() => scrollToProject(currentNavTarget + 1)}
-            disabled={currentNavTarget === projects.length - 1}
-            aria-label="Next project"
-          >
-            {copy.projects.ctaNext}
-          </button>
-        </div>
+        <TextLink
+          text={copy.projects.ctaNext}
+          onClick={() => scrollToProject(currentNavTarget + 1)}
+          disabled={currentNavTarget === total - 1}
+          ariaLabel="Next project"
+        />
       </div>
     </div>
   );

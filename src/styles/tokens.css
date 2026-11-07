@@ -66,7 +66,7 @@
 
 @media (max-width: 767px) {
   :root {
-    --hud-safe-top: 64px;
+    --hud-safe-top: 92px;
     --hud-safe-bottom: 56px;
     --step-0: 1.0625rem;
   }

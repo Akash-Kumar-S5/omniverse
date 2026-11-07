@@ -1,0 +1,7 @@
+.text-link:disabled {
+  color: var(--fg-muted);
+  cursor: default;
+}
+.text-link:disabled::after {
+  transform: scaleX(0);
+}
