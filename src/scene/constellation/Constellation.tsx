@@ -1,18 +1,53 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { beacon, projectEdges, projectNodes, techNodes } from "../layout";
 import { useOmni } from "../../state/store";
 
-const nodeVertex = `attribute vec3 instanceColor; varying vec3 vColor; varying vec3 vNormal; varying vec3 vView; void main(){ vColor=instanceColor; vNormal=normalize(normalMatrix*normal); vec4 mv=modelViewMatrix*instanceMatrix*vec4(position,1.0); vView=-mv.xyz; gl_Position=projectionMatrix*mv; }`;
-const nodeFragment = `uniform vec3 coreColor; uniform float rimPower; varying vec3 vColor; varying vec3 vNormal; varying vec3 vView; void main(){ float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),rimPower); vec3 c=mix(coreColor*vColor,vec3(0.42,0.82,1.0),rim*0.88); gl_FragColor=vec4(c*(0.8+rim*2.4),1.0); }`;
+const nodeVertex = `varying vec3 vColor; varying vec3 vNormal; varying vec3 vView; void main(){ vColor=instanceColor; vNormal=normalize(normalMatrix*normal); vec4 mv=modelViewMatrix*instanceMatrix*vec4(position,1.0); vView=-mv.xyz; gl_Position=projectionMatrix*mv; }`;
+const nodeFragment = `
+  uniform vec3 coreColor;
+  uniform float rimPower;
+  varying vec3 vColor;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  void main(){
+    float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),rimPower);
+    vec3 c=mix(coreColor*vColor,vec3(0.42,0.82,1.0),rim*0.88);
+    gl_FragColor=vec4(c*(0.8+rim*2.4),1.0);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
 
-const edgeVertex = `attribute float lineDistance; varying float vDistance; void main(){ vDistance=lineDistance; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`;
-const edgeFragment = `uniform float uTime; uniform float uSpeed; uniform float uOpacity; varying float vDistance; void main(){ float flow=pow(max(0.0,sin((vDistance*0.48-uTime*uSpeed)*6.28318)),10.0); float halo=0.2+0.35*(0.5+0.5*sin(vDistance*2.2-uTime*uSpeed*2.0)); gl_FragColor=vec4(vec3(0.08,0.48,0.8)*(halo+flow*2.2),uOpacity*(halo+flow)); }`;
+const edgeVertex = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`;
+const edgeFragment = `
+  uniform float uTime;
+  uniform float uSpeed;
+  uniform float uOpacity;
+  varying vec2 vUv;
+  void main(){
+    float flow=pow(max(0.0,sin((vUv.x*7.0-uTime*uSpeed)*6.28318)),10.0);
+    float halo=0.2+0.35*(0.5+0.5*sin(vUv.x*44.0-uTime*uSpeed*2.0));
+    gl_FragColor=vec4(vec3(0.08,0.48,0.8)*(halo+flow*2.2),uOpacity*(halo+flow));
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
 const particleVertex = `attribute vec3 start; attribute vec3 control; attribute vec3 end; attribute float phase; uniform float uTime; uniform float uSpeed; uniform float uPointSize; void main(){ float t=fract(phase+uTime*uSpeed); vec3 p=mix(mix(start,control,t),mix(control,end,t),t); vec4 mv=modelViewMatrix*vec4(p,1.0); gl_Position=projectionMatrix*mv; gl_PointSize=uPointSize*(1.0+2.0/max(1.0,-mv.z)); }`;
-const particleFragment = `void main(){ vec2 p=gl_PointCoord-0.5; float a=1.0-smoothstep(0.12,0.5,length(p)); gl_FragColor=vec4(0.35,0.82,1.0,a); }`;
+const particleFragment = `
+  void main(){
+    vec2 p=gl_PointCoord-0.5;
+    float a=1.0-smoothstep(0.12,0.5,length(p));
+    gl_FragColor=vec4(0.35,0.82,1.0,a);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
 
 export default function Constellation() {
+  const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
   const root = useRef<THREE.Group>(null);
   const nodes = useRef<THREE.InstancedMesh>(null);
   const rims = useRef<THREE.InstancedMesh>(null);
@@ -32,10 +67,7 @@ export default function Constellation() {
     const control = start.clone().add(end).multiplyScalar(0.5);
     control.y += 2.7;
     const curve = new THREE.QuadraticBezierCurve3(start, control, end);
-    const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(64));
-    const distances = new Float32Array(65);
-    for (let i = 0; i < 65; i++) distances[i] = i / 64 * curve.getLength();
-    geometry.setAttribute("lineDistance", new THREE.BufferAttribute(distances, 1));
+    const geometry = new THREE.TubeGeometry(curve, 64, 0.025, 5, false);
     return { geometry, start: start.toArray(), control: control.toArray(), end: end.toArray() };
   }), []);
 
@@ -55,6 +87,11 @@ export default function Constellation() {
     return geometry;
   }, [edgeData]);
 
+  useEffect(() => () => {
+    for (let i = 0; i < edgeData.length; i++) edgeData[i].geometry.dispose();
+    particleGeometry.dispose();
+  }, [edgeData, particleGeometry]);
+
   useFrame((state, delta) => {
     const s = useOmni.getState();
     const t = state.clock.elapsedTime;
@@ -72,7 +109,7 @@ export default function Constellation() {
     if (particleMaterial.current) {
       particleMaterial.current.uniforms.uTime.value = s.reducedMotion ? 0 : t;
       particleMaterial.current.uniforms.uSpeed.value = s.reducedMotion ? 0.008 : 0.075;
-      particleMaterial.current.uniforms.uPointSize.value = s.quality === "lite" ? 0 : 3.0;
+      particleMaterial.current.uniforms.uPointSize.value = 3.0;
     }
     if (nodes.current && rims.current) {
       const active = s.activeProject;
@@ -89,9 +126,14 @@ export default function Constellation() {
     }
     if (satellites.current) {
       for (let i = 0; i < techNodes.length; i++) {
-        const base = techNodes[i].position;
+        const { position: base, parent } = techNodes[i];
+        const parentPos = projectNodes[parent].position;
         const spin = s.reducedMotion ? 0 : t * 0.08 + i * 2.1;
-        dummy.position.set(base[0] + Math.cos(spin) * 0.24, base[1] + Math.sin(spin * 1.3) * 0.18, base[2] + Math.sin(spin) * 0.24);
+        const dx = base[0] - parentPos[0];
+        const dz = base[2] - parentPos[2];
+        const cos = Math.cos(spin);
+        const sin = Math.sin(spin);
+        dummy.position.set(parentPos[0] + dx * cos - dz * sin, base[1], parentPos[2] + dx * sin + dz * cos);
         dummy.scale.setScalar(s.quality === "lite" ? 0.065 : 0.075); dummy.updateMatrix(); satellites.current.setMatrixAt(i, dummy.matrix);
       }
       satellites.current.instanceMatrix.needsUpdate = true;
@@ -101,7 +143,8 @@ export default function Constellation() {
     if (beaconHalo.current) { beaconHalo.current.scale.setScalar(beaconScale * 1.75); (beaconHalo.current.material as THREE.MeshBasicMaterial).opacity = s.section === "contact" ? 0.2 : 0; }
   });
 
-  return <group ref={root}>
+  return <>
+  <group ref={root}>
     <instancedMesh ref={nodes} args={[undefined, undefined, projectNodes.length]}>
       <icosahedronGeometry args={[1, 2]} />
       <shaderMaterial vertexShader={nodeVertex} fragmentShader={nodeFragment} uniforms={nodeMats} />
@@ -117,18 +160,17 @@ export default function Constellation() {
     {edgeData.map((edge, i) => <mesh key={i} geometry={edge.geometry}>
       <shaderMaterial ref={(m) => { if (m) edgeMaterials.current[i] = m; }} vertexShader={edgeVertex} fragmentShader={edgeFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={{ uTime: { value: 0 }, uSpeed: { value: 0.12 }, uOpacity: { value: 0.4 } }} />
     </mesh>)}
-    <points geometry={particleGeometry}>
+    <points geometry={particleGeometry} visible={quality !== "lite"}>
       <shaderMaterial ref={particleMaterial} vertexShader={particleVertex} fragmentShader={particleFragment} transparent depthWrite={false} blending={THREE.AdditiveBlending} uniforms={{ uTime: { value: 0 }, uSpeed: { value: 0.075 }, uPointSize: { value: 3 } }} />
     </points>
-    <mesh ref={beaconCore} position={beacon}>
-      <sphereGeometry args={[0.38, 24, 24]} />
-      <meshBasicMaterial color="#c6f6ff" />
-    </mesh>
-    <mesh ref={beaconHalo} position={beacon}>
-      <sphereGeometry args={[0.62, 20, 20]} />
-      <meshBasicMaterial color="#38bfff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} />
-    </mesh>
-    <ambientLight intensity={0.5} />
-    <pointLight position={[0, 5, 0]} color="#45bfff" intensity={16} distance={32} />
-  </group>;
+  </group>
+  <mesh ref={beaconCore} position={beacon}>
+    <sphereGeometry args={[0.38, 24, 24]} />
+    <meshBasicMaterial color="#c6f6ff" />
+  </mesh>
+  <mesh ref={beaconHalo} position={beacon} visible={quality !== "lite" && section === "contact"}>
+    <sphereGeometry args={[0.62, 20, 20]} />
+    <meshBasicMaterial color="#38bfff" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} />
+  </mesh>
+  </>;
 }

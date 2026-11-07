@@ -4,5 +4,6 @@
 - Reduced motion freezes particle and edge flow and skips ignite; lite mode reduces star count and disables bloom.
 - Verification: `npm run build` and `npm run lint` pass.
 - Known issues: Vite warns the scene chunk is 1,026.60 kB minified.
+- Fix round 1: addressed findings 1, 2, 4, 6, 7, 8, 9, 10, 11; build and lint pass. Browser console verification unavailable because the CUA browser host is offline.
 - Requests: None.
-- Commit hash: `87b5c6d3d1d86a50c1e65b9792df2cee6f0fe451`.
+- Commit hash: `dd5c9a41ae2ca6b222846d40bc218e666033ec2e`.
