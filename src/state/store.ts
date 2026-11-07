@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export const SECTIONS = ["boot", "about", "experience", "projects", "contact"] as const;
 export type SectionId = (typeof SECTIONS)[number];
-export type Quality = "high" | "lite";
+export type Quality = "high" | "medium" | "lite";
 
 export interface OmniState {
   section: SectionId;
