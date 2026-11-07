@@ -14,11 +14,15 @@ export default function ProjectsSection() {
   const scrollTimerRef = useRef<number | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Clear target tracking on arrival, manual wheel/touch, or scrollend
+  // Clear target tracking only on arrival or scrollend, with a ~2000ms safety timeout
   useEffect(() => {
     const clearTarget = () => {
       targetRef.current = null;
       targetYRef.current = null;
+      if (scrollTimerRef.current) {
+        window.clearTimeout(scrollTimerRef.current);
+        scrollTimerRef.current = null;
+      }
     };
 
     const onScroll = () => {
@@ -28,14 +32,10 @@ export default function ProjectsSection() {
     };
 
     window.addEventListener("scrollend", clearTarget);
-    window.addEventListener("wheel", clearTarget, { passive: true });
-    window.addEventListener("touchmove", clearTarget, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scrollend", clearTarget);
-      window.removeEventListener("wheel", clearTarget);
-      window.removeEventListener("touchmove", clearTarget);
       window.removeEventListener("scroll", onScroll);
       if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
     };
@@ -70,7 +70,7 @@ export default function ProjectsSection() {
       scrollTimerRef.current = window.setTimeout(() => {
         targetRef.current = null;
         targetYRef.current = null;
-      }, 800);
+      }, 2000);
     },
     [reducedMotion, setActiveProject]
   );

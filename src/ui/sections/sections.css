@@ -40,6 +40,10 @@
   min-height: 120vh;
 }
 
+.section-about:focus {
+  outline: none;
+}
+
 .section-experience {
   min-height: 240vh; /* Base fallback; overridden inline by experiences.length * 60vh */
 }
