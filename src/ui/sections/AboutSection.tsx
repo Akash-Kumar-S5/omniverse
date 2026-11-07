@@ -1,4 +1,4 @@
-import { profile, education } from "../../content";
+import { profile, education, copy } from "../../content";
 import { useOmni } from "../../state/store";
 import SplitHeading from "../common/SplitHeading";
 import RollingCta from "../common/RollingCta";
@@ -18,16 +18,16 @@ export default function AboutSection() {
       <div className="about-content">
         <div className="section-eyebrow">
           <span className="eyebrow-dot" aria-hidden="true" />
-          <span>01 // PRINCIPAL IDENTITY</span>
+          <span>{copy.about.eyebrow}</span>
         </div>
 
         <SplitHeading
-          text="Engineering Autonomous Agent Systems"
+          text={copy.about.title}
           as="h2"
           className="about-title"
         />
 
-        <p className="about-pitch">{profile.pitch}</p>
+        <p className="about-pitch">{copy.about.lead}</p>
 
         <div className="about-meta">
           <div className="about-meta-row">
@@ -40,16 +40,16 @@ export default function AboutSection() {
           </div>
           <div className="about-meta-row">
             <span className="about-meta-label">EDUCATION:</span>
-            <span className="about-meta-val">{education.institution} — {education.degree}</span>
+            <span className="about-meta-val">{education.institution}</span>
           </div>
         </div>
 
         <div className="about-actions">
           <RollingCta
-            text="View Experience"
+            text={copy.about.cta}
             icon="↓"
             onClick={handleScrollToExperience}
-            ariaLabel="View work experience. Scroll to Experience section."
+            ariaLabel={`${copy.about.cta}. Scroll to Experience section.`}
           />
         </div>
       </div>

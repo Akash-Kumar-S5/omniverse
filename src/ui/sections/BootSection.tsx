@@ -1,4 +1,4 @@
-import { profile } from "../../content";
+import { profile, copy } from "../../content";
 import { useOmni } from "../../state/store";
 import SplitHeading from "../common/SplitHeading";
 import RollingCta from "../common/RollingCta";
@@ -13,16 +13,12 @@ export default function BootSection() {
     }
   };
 
-  const pitchText =
-    profile.pitch ||
-    "I build the tooling that lets AI agents do real work: harnesses, orchestration, developer tools.";
-
   return (
     <div className="chapter-view chapter-hero" aria-label="Hero Introduction">
       <div className="hero-content">
         <div className="hero-eyebrow">
           <span className="hero-dot" aria-hidden="true" />
-          <span>{profile.role} // AGENT HARNESS ARCHITECT</span>
+          <span>{copy.hero.eyebrow}</span>
         </div>
 
         <SplitHeading
@@ -31,14 +27,14 @@ export default function BootSection() {
           className="hero-title"
         />
 
-        <p className="hero-pitch">{pitchText}</p>
+        <p className="hero-pitch">{copy.hero.tagline}</p>
 
         <div className="hero-actions">
           <RollingCta
-            text="Explore Constellation"
+            text={copy.hero.cta}
             icon="↓"
             onClick={handleScrollToAbout}
-            ariaLabel="Explore Constellation. Scroll to About section."
+            ariaLabel={`${copy.hero.cta}. Scroll to About section.`}
           />
         </div>
       </div>

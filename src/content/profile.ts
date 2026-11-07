@@ -1,7 +1,7 @@
 export const profile = {
   name: "Akash Kumar",
-  role: "Software Engineer",
-  pitch: "I build software that solves real problems, and lately the tooling that lets AI agents do real work: harnesses, orchestration and developer tools.",
+  role: "Software Engineer — AI tooling",
+  pitch: "I build the tooling that lets AI agents do real work: harnesses, orchestration, developer tools.",
   location: "Chennai, India",
   timezone: "Asia/Kolkata",
   email: "akashkumar20485@gmail.com",

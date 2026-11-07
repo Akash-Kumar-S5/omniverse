@@ -16,9 +16,8 @@ export const experiences: Experience[] = [
     description:
       "Building and maintaining scalable web applications, collaborating with cross-functional teams to deliver end-to-end solutions.",
     achievements: [
-      "Developing full stack features using modern JavaScript frameworks",
-      "Designing and implementing RESTful APIs for seamless front-to-back communication",
-      "Collaborating in Agile sprints to ship production-ready features",
+      "Designing and implementing RESTful APIs for production full-stack features",
+      "Collaborating in Agile sprints to ship production-ready web application features",
     ],
   },
   {
@@ -29,9 +28,8 @@ export const experiences: Experience[] = [
     description:
       "Contributed to enterprise-grade applications with a focus on front-end development and API integration.",
     achievements: [
-      "Built responsive UIs with React and Tailwind CSS for internal tools",
+      "Built responsive internal tool interfaces with React and Tailwind CSS",
       "Integrated third-party APIs and optimized data fetching workflows",
-      "Participated in code reviews and improved code quality standards",
     ],
   },
   {
@@ -42,9 +40,8 @@ export const experiences: Experience[] = [
     description:
       "Completed intensive training and contributed to live projects during the internship program.",
     achievements: [
-      "Gained hands-on experience with the MERN stack in a production environment",
-      "Built reusable components and contributed to the component library",
-      "Learned enterprise development workflows including Git, CI/CD, and Agile",
+      "Developed reusable components for enterprise UI component libraries",
+      "Built production features with the MERN stack in enterprise CI/CD workflows",
     ],
   },
   {
@@ -55,9 +52,8 @@ export const experiences: Experience[] = [
     description:
       "Worked on full-stack web development projects using PHP (Laravel) and JavaScript.",
     achievements: [
-      "Developed features using Laravel for back-end and Bootstrap for front-end",
-      "Managed SQL and NoSQL databases for multiple project modules",
-      "Delivered end-to-end features from database design to UI implementation",
+      "Developed full-stack web modules using Laravel and Bootstrap",
+      "Designed and managed relational and NoSQL database schemas for live project features",
     ],
   },
 ];
