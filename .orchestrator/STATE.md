@@ -192,3 +192,6 @@ Rolling restarts (only at task boundaries, fresh context, same model, main merge
 - DONE: copilot-review restarted with --additional-mcp-config @.mcp.json (log: '4 servers connected'); ui-editor and toolsmith closed (tasks merged).
 - PENDING at their next boundary: copilot-ui (mid-task), codex-world (mid-task; Chrome DevTools perf), agy-world (mid-task), agy-review (idle: restart when Task starts), orchestrator itself last.
 Copilot reads MCP via --additional-mcp-config (project .mcp.json is passed explicitly; native .mcp.json pickup unverified).
+
+## BACKLOG ITEM 12: IMPROVEMENT LOOP (NONSTOP.md 'Improvement loop'; added 19:45 UTC)
+After DONE criteria pass: benchmark the 5 chapters vs aengel.io + 4 current landing.love 3D sites. agy-review and copilot-review each score every chapter 1-10 (3D craft, art direction, motion, type, originality, perf). If any chapter <8 or overall <8.5: write .orchestrator/ROUND-N-PLAN.md (3 highest-impact upgrades), implement at once, re-benchmark. Stop when it passes, after 4 rounds, or when two rounds in a row gain <0.5. SEND MORPH THE SCORE TABLE after each benchmark (Morph makes the final call). Round log: none yet.

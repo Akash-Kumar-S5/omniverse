@@ -27,6 +27,22 @@ go to Akash via Morph.
 6. Final: everything merged to local main, worktrees cleaned up, a final screenshot strip in
    .orchestrator/reports/FINAL.md for Akash.
 
+## Improvement loop (Akash, 01:12 IST: "if the final result isn't satisfying compared to other 3D sites,
+## decide on my behalf, plan new graphics/features and implement them; don't wait for my approval")
+When the DONE criteria pass, the round is NOT over. Run this loop:
+1. BENCHMARK: capture our 5 chapters (Playwright MCP, headed Chrome, 1440x900) next to a reference set:
+   aengel.io (`.orchestrator/reference/aengel-*.png`) plus 4 current sites from
+   https://www.landing.love/categories/3d-website/ (capture fresh; study only, never copy assets/text).
+2. JUDGE: two independent reviewers (agy-review, copilot-review) score each chapter 1-10 on: 3D craft, art
+   direction, motion, typography, originality, performance. Morph makes the final call.
+3. DECIDE (no approval needed): if any chapter scores < 8 or the overall < 8.5, the orchestrator writes
+   `.orchestrator/ROUND-N-PLAN.md`: the 3 highest-impact upgrades (new graphics, effects, interactions or features),
+   each with an owner, the reuse-first resources and acceptance screenshots. Then implement immediately.
+4. Repeat from 1. Stop when: overall >= 8.5 with every chapter >= 8 (both reviewers + Morph agree), OR 4
+   improvement rounds are done, OR two rounds in a row gain < 0.5 points (diminishing returns). Then write FINAL.md.
+Guardrails stay: the approved direction can evolve but not be thrown away without Morph's sign-off; the forbidden
+list applies; perf must not regress below DONE §3 (a rejected upgrade is better than a slow site).
+
 ## Orchestrator failover (run by Morph, supervised; an unattended daemon was refused by the safety check)
 - While Claude's 5-hour usage is below 85%: the claude orchestrator (w2:p1) is ACTIVE.
 - At 85%+, or on a 'limit reached' message: the ops script asks the active orchestrator to update STATE.md
