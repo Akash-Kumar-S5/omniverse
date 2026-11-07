@@ -1,0 +1,13 @@
+# round2-agy-type report
+- files: src/ui/**, src/styles/**, index.html, public/fonts/**
+- what works:
+  - Fixed overlay layer with Spacers & safe zones (90px/72px); zero panel overlap.
+  - Self-hosted Clash Display; Hero title at clamp(64px, 11vw, 180px); full-bleed scene.
+  - Lightweight negative-space layouts, glass timeline panel, full-screen project chapter.
+  - GSAP SplitText character reveals on headings, rolling per-character CTA hovers.
+  - Asset preloader tracking loadProgress with Enter gate, camera push-in trigger.
+  - rAF SVG leader lines & callouts connecting 3D anchors without React re-renders.
+  - Mobile 390px responsive, reducedMotion / lite fast-paths, ?nogl fallback restyled.
+- known issues: none (build and lint clean).
+- requests: none.
+- commit: 18d263cad93e3ee3971d9ca7134b6fd142236fa0
