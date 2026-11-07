@@ -100,3 +100,10 @@ Retired + closed: codex-chapters, agy-type, claude-assets (+ old worktrees remov
 Order: codex-world step 1 (SignalField exported) -> merge -> tell agy-world step 4 (mount). agy-review still finishing a round-2 baseline (overlap check); after it reports, re-point it at the playbook section 8 review once round 3 merges.
 Checkpoint: screenshot strip Artifact for Akash BEFORE the final merge. Akash is away: Artifact links only.
 Next 3: (1) wait for codex-world step-1 report, merge, notify agy-world; (2) merge agy-world steps 1-3; (3) agy-review vs playbook s8, fix rounds (max 2), Artifact strip, final verify (fps, ?nogl, ?lite, 390px).
+
+## HOLD (2026-11-07 15:18 UTC) from Morph
+Playbook being revised (deeper internet research, Blender in the pipeline), ETA ~20 min. DO NOT brief or start 3D builders until Morph says go and the new 3D-PLAYBOOK.md is read.
+- codex-world (w2:pE) and agy-world (w2:pF) had been started and briefed before the hold arrived. Both were stopped and told to hold; their worktrees (.worktrees/codex-world, .worktrees/agy-world) have no edits and no commits, so nothing to revert.
+- Done under the hold: round-2 work all merged, research files committed, contract written (`briefs/round3-contract.md`, `src/state/signal.ts`; may need revising for the new playbook).
+- Round 3 briefs (`briefs/round3-codex-world.md`, `round3-agy-world.md`) are STALE until the playbook update. Rewrite them after reading the new playbook.
+- Next: wait for Morph's go, re-read the playbook, revise contract and briefs, re-prompt both held agents.
