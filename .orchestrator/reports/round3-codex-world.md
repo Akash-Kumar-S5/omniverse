@@ -18,3 +18,7 @@
 - Reduced motion cuts directly to the final shape and disables turbulence; the beacon pulses when motion is enabled.
 - Publishes the active shape focus/radius/morph and projected hero, bust, glyph, and beacon screen anchors.
 - Build and lint pass. A target change on the helix now only changes the active-role highlight; it does not regenerate the shape.
+
+## Step 4
+- HIGH uses the 512×512 simulation (262k particles). Override with `<SignalField quality="medium" />` to use 256×256 without writing to the store.
+- Build and lint pass. Frame time was not measured here: `SignalField` is intentionally not mounted in this worktree, and agy-review owns the headless visual checks.
