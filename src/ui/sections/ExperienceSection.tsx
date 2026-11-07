@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from "react";
-import { experiences } from "../../content";
+import { experiences, copy } from "../../content";
 import { useOmni } from "../../state/store";
 import SplitHeading from "../common/SplitHeading";
 
@@ -90,102 +90,66 @@ export default function ExperienceSection() {
 
   // Arrow-key roving on the tablist
   const handleTablistKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      const nextIdx = (activeRole + 1) % experiences.length;
-      scrollToRole(nextIdx);
-      tabRefs.current[nextIdx]?.focus();
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      const prevIdx = (activeRole - 1 + experiences.length) % experiences.length;
-      scrollToRole(prevIdx);
-      tabRefs.current[prevIdx]?.focus();
-    }
+    const forward = e.key === "ArrowRight" || e.key === "ArrowDown";
+    const backward = e.key === "ArrowLeft" || e.key === "ArrowUp";
+    if (!forward && !backward) return;
+    e.preventDefault();
+    const nextIdx = (activeRole + (forward ? 1 : -1) + experiences.length) % experiences.length;
+    scrollToRole(nextIdx);
+    tabRefs.current[nextIdx]?.focus();
   };
 
   const currentRole = experiences[activeRole] || experiences[0];
 
   return (
-    <div
-      className="chapter-view chapter-experience"
-      aria-label="Work experience trajectory"
-    >
-      <div className="experience-glass-panel">
-        <div className="section-eyebrow">
-          <span className="eyebrow-dot" aria-hidden="true" />
-          <span>02 // CAREER TRAJECTORY ({activeRole + 1} OF {experiences.length})</span>
-        </div>
+    <div className="chapter-view chapter-experience" aria-label="Work history">
+      <SplitHeading text={copy.experience.title} as="h2" className="exp-title" />
 
-        <SplitHeading text="Engineering Experience" as="h2" className="glass-title" />
-
-        {/* Interactive role tabs with roving navigation */}
-        <div
-          className="exp-tabs"
-          role="tablist"
-          aria-label="Experience role selector"
-          onKeyDown={handleTablistKeyDown}
-        >
-          {experiences.map((exp, idx) => (
-            <button
-              key={idx}
-              ref={(el) => {
-                tabRefs.current[idx] = el;
-              }}
-              type="button"
-              role="tab"
-              tabIndex={activeRole === idx ? 0 : -1}
-              aria-selected={activeRole === idx}
-              aria-controls="role-panel-active"
-              className={`exp-tab-btn ${activeRole === idx ? "active" : ""}`}
-              onClick={() => scrollToRole(idx)}
-            >
-              {`0${idx + 1} ${exp.company}`}
-            </button>
-          ))}
-        </div>
-
-        {/* Active Role Card */}
-        <article
-          id="role-panel-active"
-          role="tabpanel"
-          className="role-card-active"
-          aria-label={`${currentRole.role} at ${currentRole.company}`}
-        >
-          <div className="role-header">
-            <span className="role-company">{currentRole.company}</span>
-            <span className="role-period">{currentRole.period}</span>
-          </div>
-          <div className="role-title">{currentRole.role}</div>
-          <div className="role-location">{currentRole.location}</div>
-          <p className="role-desc">{currentRole.description}</p>
-
-          <strong className="achievements-heading">KEY CONTRIBUTIONS:</strong>
-          <ul className="achievements-list">
-            {currentRole.achievements.slice(0, 2).map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        </article>
-
-        {/* Other Roles Quick Jump */}
-        <div className="roles-compact-list">
-          {experiences.map((exp, idx) => {
-            if (idx === activeRole) return null;
-            return (
-              <button
-                key={idx}
-                type="button"
-                className="role-card-compact"
-                onClick={() => scrollToRole(idx)}
-                aria-label={`Switch to role ${idx + 1}: ${exp.role} at ${exp.company}`}
-              >
-                <span><strong>{exp.company}</strong> — {exp.role}</span>
-                <span className="role-compact-period">{exp.period} →</span>
-              </button>
-            );
-          })}
-        </div>
+      <div
+        className="exp-tabs"
+        role="tablist"
+        aria-label="Roles"
+        aria-orientation="vertical"
+        onKeyDown={handleTablistKeyDown}
+      >
+        {experiences.map((exp, idx) => (
+          <button
+            key={idx}
+            ref={(el) => {
+              tabRefs.current[idx] = el;
+            }}
+            type="button"
+            role="tab"
+            tabIndex={activeRole === idx ? 0 : -1}
+            aria-selected={activeRole === idx}
+            aria-controls="role-panel-active"
+            className="exp-tab-btn"
+            onClick={() => scrollToRole(idx)}
+          >
+            <span className="exp-tab-role">{exp.role}</span>
+            <span className="exp-tab-company">{exp.company}</span>
+          </button>
+        ))}
       </div>
+
+      <article
+        id="role-panel-active"
+        role="tabpanel"
+        className="role-card-active"
+        aria-label={`${currentRole.role} at ${currentRole.company}`}
+      >
+        <p className="role-period">{currentRole.period}</p>
+        <h3 className="role-title">
+          {currentRole.role}, <em>{currentRole.company}</em>
+        </h3>
+        <p className="role-location">{currentRole.location}</p>
+        <p className="role-desc">{currentRole.description}</p>
+        <ul className="achievements-list">
+          {currentRole.achievements.slice(0, 2).map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+      </article>
     </div>
   );
 }

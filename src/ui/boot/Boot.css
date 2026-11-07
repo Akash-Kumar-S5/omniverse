@@ -1,5 +1,4 @@
-/* Omniverse Enter Gate & Preloader CSS */
-
+/* Entry gate: name bottom-left across seven columns, a sentence and one link in the right five. */
 .gate-overlay {
   position: fixed;
   inset: 0;
@@ -7,234 +6,95 @@
   background-color: var(--bg);
   color: var(--fg);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
   padding: var(--gutter);
-  box-sizing: border-box;
   opacity: 1;
-  transform: scale(1);
-  transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1), transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
-  user-select: none;
+  transition: opacity 350ms var(--ease);
 }
 
 .gate-overlay.gate-fading {
   opacity: 0;
-  transform: scale(1.02);
   pointer-events: none;
 }
 
-/* Corner Metadata Readouts */
-.gate-corner {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  pointer-events: none;
-  color: var(--fg-muted);
-  letter-spacing: 0.08em;
-}
-
-.gate-corner.top-left {
-  top: clamp(16px, 3vw, 36px);
-  left: clamp(20px, 3.5vw, 48px);
-}
-
-.gate-corner.top-right {
-  top: clamp(16px, 3vw, 36px);
-  right: clamp(20px, 3.5vw, 48px);
-  text-align: right;
-}
-
-.gate-corner.bottom-left {
-  bottom: clamp(16px, 3vw, 36px);
-  left: clamp(20px, 3.5vw, 48px);
-}
-
-.gate-corner.bottom-right {
-  bottom: clamp(16px, 3vw, 36px);
-  right: clamp(20px, 3.5vw, 48px);
-  text-align: right;
-}
-
-.gate-meta-title {
-  color: var(--fg-dim);
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.gate-meta-sub {
-  color: var(--fg-muted);
-}
-
-/* Center Stage Content */
-.gate-center-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 680px;
+.gate-grid {
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  align-items: end;
 }
 
-.gate-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 20px;
-}
-
-.gate-eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-
-.gate-display-name {
-  font-family: var(--font-display);
-  font-size: clamp(48px, 9vw, 110px);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.04em;
+.gate-name {
+  grid-column: 1 / span 8;
+  font-size: var(--step-hero);
   line-height: 0.92;
-  color: var(--fg-bright);
-  margin: 0 0 16px 0;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.02em;
+  font-weight: 300;
+  margin-bottom: -0.06em;
 }
 
-.gate-role-pitch {
-  font-family: var(--font-display);
-  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
-  color: var(--fg-dim);
-  line-height: 1.45;
-  max-width: 520px;
-  margin: 0 0 40px 0;
+.gate-name em {
+  font-style: italic;
+  font-weight: 300;
 }
 
-/* Action Area */
-.gate-action-area {
+.gate-side {
+  grid-column: 9 / span 4;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 80px;
-  width: 100%;
+  gap: var(--space-6);
+  padding-bottom: 0.4em;
 }
 
-.gate-progress-box {
+.gate-line {
+  font-size: var(--step-0);
+  color: var(--fg-dim);
+  max-width: 36ch;
+}
+
+.gate-progress {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: min(340px, 85vw);
-}
-
-.gate-progress-header {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-  color: var(--fg-dim);
-}
-
-.gate-progress-pct {
-  color: var(--accent);
-  font-weight: 700;
+  gap: var(--space-2);
 }
 
 .gate-bar-track {
-  width: 100%;
-  height: 2px;
-  background-color: rgba(237, 232, 225, 0.1);
-  overflow: hidden;
-  border-radius: 1px;
+  height: 1px;
+  background: var(--line);
 }
 
 .gate-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent));
-  box-shadow: 0 0 10px rgba(226, 180, 114, 0.6);
-  transition: width 100ms linear;
+  background: var(--fg);
+  transition: width 120ms linear;
 }
 
-/* Enter Button State */
-.gate-enter-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  animation: gateFadeUp 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes gateFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.gate-enter-btn {
-  padding: 12px 28px !important;
-  font-size: 0.85rem !important;
-  box-shadow: 0 0 24px rgba(226, 180, 114, 0.25) !important;
-}
-
-.gate-enter-shortcut {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
+.gate-pct {
+  font-size: var(--step--1);
   color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
 }
 
-.gate-enter-shortcut kbd {
-  font-family: inherit;
-  background: rgba(237, 232, 225, 0.08);
-  border: 1px solid var(--line);
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: var(--fg-dim);
+.gate-enter {
+  align-self: flex-start;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-2);
 }
 
-/* Mobile Screens */
-@media (max-width: 767px) {
-  .gate-corner.bottom-left,
-  .gate-corner.bottom-right {
-    display: none;
+@media (max-width: 899px) {
+  .gate-name {
+    grid-column: 1 / -1;
+    margin-bottom: var(--space-8);
   }
-
-  .gate-corner.top-left,
-  .gate-corner.top-right {
-    top: 18px;
-  }
-
-  .gate-display-name {
-    font-size: clamp(38px, 12vw, 56px);
-  }
-
-  .gate-role-pitch {
-    font-size: 0.88rem;
-    margin-bottom: 30px;
+  .gate-side {
+    grid-column: 1 / span 10;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gate-overlay,
-  .gate-enter-box {
-    transition: none !important;
-    animation: none !important;
+  .gate-overlay {
+    transition: none;
   }
 }

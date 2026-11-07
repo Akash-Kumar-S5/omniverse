@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useOmni } from "../../state/store";
-import { profile } from "../../content";
-import RollingCta from "../common/RollingCta";
+import { copy } from "../../content";
 import "./Boot.css";
 
 export default function Boot() {
@@ -20,12 +19,10 @@ export default function Boot() {
     setIsFading(true);
     useOmni.getState().setEntered();
     useOmni.getState().setBooted();
-    window.setTimeout(() => {
-      setMounted(false);
-    }, 400);
+    window.setTimeout(() => setMounted(false), 400);
   }, [isFading]);
 
-  // Fast-path: Skip the gate automatically for reduced motion and lite mode
+  // Skip the gate for reduced motion and lite mode.
   useEffect(() => {
     if (reducedMotion || quality === "lite") {
       useOmni.getState().setEntered();
@@ -34,44 +31,32 @@ export default function Boot() {
     }
   }, [reducedMotion, quality]);
 
-  // Smooth counter animation interpolating toward loadProgress (0 to 100)
+  // Ease the shown percentage toward the real load progress.
   useEffect(() => {
     if (entered) return;
-
-    const target = Math.max(loadProgress, 0);
-    // If scene loadProgress hasn't started yet, advance to at least simulated progress
     const startTime = performance.now();
-
     const tick = (now: number) => {
-      const elapsed = now - startTime;
-      // Ensure steady progress reaches 100 within ~1.2s if assets finish quickly
-      const floorProgress = Math.min(100, Math.floor((elapsed / 1200) * 100));
-      const currentTarget = Math.max(target, floorProgress, loadProgress);
-
+      const floorProgress = Math.min(100, Math.floor(((now - startTime) / 1200) * 100));
+      const target = Math.max(loadProgress, floorProgress);
       setDisplayProgress((prev) => {
         if (prev >= 100) return 100;
-        const next = prev + Math.max(1, Math.ceil((currentTarget - prev) * 0.1));
-        return Math.min(100, next);
+        return Math.min(100, prev + Math.max(1, Math.ceil((target - prev) * 0.1)));
       });
-
       animFrameRef.current = requestAnimationFrame(tick);
     };
-
     animFrameRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [loadProgress, entered]);
 
-  // Keyboard listener: Enter, Escape, or Space to enter/skip
+  // Enter, Space or Escape lets you in.
   useEffect(() => {
     if (entered) return;
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === "Escape" || e.key === " ") {
         e.preventDefault();
         handleEnter();
       }
     };
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [entered, handleEnter]);
@@ -85,78 +70,38 @@ export default function Boot() {
       className={`gate-overlay ${isFading ? "gate-fading" : ""}`}
       role="dialog"
       aria-modal="true"
-      aria-label="Preloader and Enter Experience gate"
+      aria-label="Welcome"
     >
-      {/* Corner editorial readouts */}
-      <div className="gate-corner top-left" aria-hidden="true">
-        <span className="gate-meta-title">AKASH KUMAR</span>
-        <span className="gate-meta-sub">2026 ARCHIVE</span>
-      </div>
+      <div className="gate-grid">
+        <h1 className="gate-name">
+          Akash
+          <br />
+          <em>Kumar</em>
+        </h1>
 
-      <div className="gate-corner top-right" aria-hidden="true">
-        <span className="gate-meta-title">HOST: CHENNAI</span>
-        <span className="gate-meta-sub">13.08° N, 80.27° E</span>
-      </div>
+        <div className="gate-side">
+          <p className="gate-line">{copy.hero.tagline}</p>
 
-      <div className="gate-corner bottom-left" aria-hidden="true">
-        <span className="gate-meta-title">OMNIVERSE RUNTIME</span>
-        <span className="gate-meta-sub">AGENT CONSTELLATION</span>
-      </div>
-
-      <div className="gate-corner bottom-right" aria-hidden="true">
-        <span className="gate-meta-title">INTERACTION</span>
-        <span className="gate-meta-sub">PRESS [ENTER] OR CLICK</span>
-      </div>
-
-      {/* Main Center Editorial Stage */}
-      <div className="gate-center-content">
-        <div className="gate-eyebrow">
-          <span className="gate-eyebrow-dot" aria-hidden="true" />
-          <span>INITIALIZING AGENT SYSTEMS</span>
-        </div>
-
-        <h1 className="gate-display-name">AKASH KUMAR</h1>
-        <p className="gate-role-pitch">
-          {profile.role} — Harnesses, Orchestration & AI Developer Tools
-        </p>
-
-        {/* Dynamic Progress or Enter Gate */}
-        <div className="gate-action-area">
           {!isReady ? (
-            <div className="gate-progress-box">
-              <div className="gate-progress-header">
-                <span className="gate-progress-label">SYNCHRONIZING SCENE</span>
-                <span className="gate-progress-pct" aria-live="polite">
-                  {displayProgress}%
-                </span>
-              </div>
+            <div className="gate-progress">
               <div
                 className="gate-bar-track"
                 role="progressbar"
+                aria-label="Loading the 3D scene"
                 aria-valuenow={displayProgress}
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <div
-                  className="gate-bar-fill"
-                  style={{ width: `${displayProgress}%` }}
-                />
+                <div className="gate-bar-fill" style={{ width: `${displayProgress}%` }} />
               </div>
-            </div>
-          ) : (
-            <div className="gate-enter-box">
-              <RollingCta
-                text="Enter Experience"
-                icon="→"
-                onClick={handleEnter}
-                variant="primary"
-                className="gate-enter-btn"
-                ariaLabel="Enter Experience. Start 3D cosmos."
-              />
-              <span className="gate-enter-shortcut">
-                PRESS <kbd>ENTER</kbd> OR <kbd>SPACE</kbd> TO ENTER
+              <span className="gate-pct" aria-hidden="true">
+                Loading {displayProgress}%
               </span>
             </div>
+          ) : (
+            <button type="button" className="text-link gate-enter" onClick={handleEnter}>
+              Come in
+            </button>
           )}
         </div>
       </div>

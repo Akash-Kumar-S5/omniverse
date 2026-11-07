@@ -1,58 +1,47 @@
-/* Design tokens for Omniverse (Agent Constellation).
-   All UI components consume these variables. */
+/* Design tokens. Editorial / museum-signage direction.
+   Type: Newsreader (display), Schibsted Grotesk (text), IBM Plex Mono (dates only). */
 :root {
-  /* Core palette - Warm near-black and bronze/champagne accents matching codex-world */
+  /* Palette: warm near-black, bone text, one bronze accent */
   --bg: #080706;
   --bg-elev: #12100d;
-  --bg-card: rgba(18, 16, 13, 0.65);
   --bg-overlay: rgba(8, 7, 6, 0.94);
-  --bg-glass: rgba(18, 16, 13, 0.45);
 
   --fg: #ede8e1;
-  --fg-dim: #9c9488;
-  --fg-muted: #686259;
+  --fg-dim: #a8a094;   /* about 7.6:1 on --bg */
+  --fg-muted: #8c8478; /* about 5.4:1 on --bg, AA for small text */
   --fg-bright: #ffffff;
 
-  /* Accents */
-  --accent: #e2b472;      /* warm champagne / amber gold */
+  --accent: #e2b472;   /* about 10:1 on --bg */
   --accent-rgb: 226, 180, 114;
-  --accent-2: #c5b8a7;    /* warm titanium stone */
-  --accent-2-rgb: 197, 184, 167;
-  --accent-dim: rgba(226, 180, 114, 0.12);
-  --accent-glow: 0 0 20px rgba(226, 180, 114, 0.25);
 
-  /* Borders & lines */
-  --line: rgba(237, 232, 225, 0.1);
-  --line-dim: rgba(237, 232, 225, 0.05);
-  --line-strong: rgba(237, 232, 225, 0.22);
-  --line-accent: rgba(226, 180, 114, 0.35);
+  --line: rgba(237, 232, 225, 0.14);
+  --line-dim: rgba(237, 232, 225, 0.07);
+  --line-strong: rgba(237, 232, 225, 0.3);
 
-  /* Scrims & gradients */
-  --scrim: linear-gradient(90deg, rgba(8, 7, 6, 0.85), rgba(8, 7, 6, 0));
-  --scrim-top: linear-gradient(180deg, rgba(8, 7, 6, 0.85) 0%, rgba(8, 7, 6, 0) 100%);
-  --scrim-bottom: linear-gradient(0deg, rgba(8, 7, 6, 0.85) 0%, rgba(8, 7, 6, 0) 100%);
-  --scrim-radial: radial-gradient(circle at center, rgba(8, 7, 6, 0) 0%, rgba(8, 7, 6, 0.85) 100%);
+  /* Safe zones for the fixed chrome */
+  --hud-safe-top: 84px;
+  --hud-safe-bottom: 72px;
 
-  /* Safe zones for HUD */
-  --hud-safe-top: 90px;
-  --hud-safe-bottom: 90px;
+  /* Families. Fallbacks are metric-adjusted (see index.css) so the swap does not shift layout. */
+  --font-display: "Newsreader", "Newsreader Fallback", Georgia, "Times New Roman", serif;
+  --font-text: "Schibsted Grotesk", "Schibsted Grotesk Fallback", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
-  /* Typography scale */
-  --font-display: "Clash Display", "Space Grotesk", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Modular scale, ratio 1.25, base 17.6px */
+  --step--1: 0.88rem;
+  --step-0: 1.1rem;
+  --step-1: 1.375rem;
+  --step-2: 1.72rem;
+  --step-3: 2.15rem;
+  --step-4: clamp(2.15rem, 1.6rem + 2.2vw, 3.36rem);
+  --step-5: clamp(2.7rem, 1.8rem + 3.6vw, 4.2rem);
+  --step-hero: clamp(3.6rem, 11.5vw, 12rem);
 
-  --text-2xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);   /* 11px - 12px */
-  --text-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);      /* 12px - 13px */
-  --text-sm: clamp(0.8125rem, 0.78rem + 0.25vw, 0.875rem);   /* 13px - 14px */
-  --text-base: clamp(0.9375rem, 0.88rem + 0.3vw, 1rem);      /* 15px - 16px */
-  --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);      /* 18px - 20px */
-  --text-xl: clamp(1.25rem, 1.15rem + 0.6vw, 1.5rem);        /* 20px - 24px */
-  --text-2xl: clamp(1.5rem, 1.35rem + 1vw, 2rem);            /* 24px - 32px */
-  --text-3xl: clamp(2rem, 1.7rem + 1.6vw, 2.75rem);          /* 32px - 44px */
-  --text-4xl: clamp(2.5rem, 2rem + 2.5vw, 4rem);             /* 40px - 64px */
+  /* 12-column grid */
+  --gutter: clamp(20px, 4.5vw, 72px);
+  --col-gap: clamp(12px, 1.6vw, 28px);
+  --measure: 62ch;
 
-  /* Spacing & Gutters */
-  --gutter: clamp(16px, 4vw, 48px);
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -62,17 +51,12 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* Radii */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 2px;
 
-  /* Transitions */
-  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms var(--ease);
+  --transition-base: 250ms var(--ease);
 
-  /* Z-indices */
   --z-scene: 0;
   --z-overlay: 10;
   --z-hud: 20;
@@ -82,7 +66,8 @@
 
 @media (max-width: 767px) {
   :root {
-    --hud-safe-top: 72px;
-    --hud-safe-bottom: 72px;
+    --hud-safe-top: 92px;
+    --hud-safe-bottom: 56px;
+    --step-0: 1.0625rem;
   }
 }
