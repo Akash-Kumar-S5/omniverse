@@ -9,7 +9,7 @@
   left: 0;
   bottom: 0;
   width: min(760px, 56vw);
-  background: linear-gradient(90deg, rgba(8, 7, 6, 0.78) 0%, rgba(8, 7, 6, 0.5) 62%, rgba(8, 7, 6, 0) 100%);
+  background: linear-gradient(90deg, rgba(8, 7, 6, 0.86) 0%, rgba(8, 7, 6, 0.72) 58%, rgba(8, 7, 6, 0) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -156,13 +156,13 @@
 }
 
 .about-pitch {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   max-width: var(--measure);
   color: var(--fg);
 }
 
 .about-facts {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   margin: 0;
   display: grid;
   row-gap: var(--space-3);
@@ -178,7 +178,7 @@
 .about-facts dt { color: var(--fg-muted); font-size: var(--step--1); padding-top: 0.12em; }
 .about-facts dd { margin: 0; color: var(--fg); }
 
-.about-actions { grid-column: 3 / span 5; }
+.about-actions { grid-column: 3 / span 4; }
 
 /* ---------- 3. Experience ---------- */
 .chapter-experience { row-gap: var(--space-8); align-content: center; }
@@ -220,7 +220,7 @@
 .exp-tab-company { font-size: var(--step--1); }
 
 .role-card-active {
-  grid-column: 5 / span 5;
+  grid-column: 5 / span 4;
   grid-row: 2;
   align-self: start;
   max-width: var(--measure);
@@ -244,22 +244,14 @@
 .role-title em { font-style: italic; }
 .role-location { color: var(--fg-muted); font-size: var(--step--1); margin: var(--space-2) 0 var(--space-4); }
 .role-desc { color: var(--fg); margin-bottom: var(--space-4); }
-.achievements-list { margin: 0; padding-left: 1.1em; color: var(--fg-dim); }
-.achievements-list li { margin-bottom: var(--space-2); padding-left: 0.2em; }
-.achievements-list li::marker { color: var(--fg-muted); }
+.achievements-list { margin: 0; padding: 0; list-style: none; color: var(--fg-dim); }
+.achievements-list li { margin-bottom: var(--space-2); }
+.achievements-list li::before { content: "– "; color: var(--fg-muted); }
 
 /* ---------- 4. Projects ---------- */
 .chapter-projects { row-gap: var(--space-6); cursor: grab; }
 .chapter-projects:active { cursor: grabbing; }
 
-.project-count {
-  grid-column: 1 / span 4;
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  color: var(--fg-muted);
-  font-variant-numeric: tabular-nums;
-}
-.project-count-now { color: var(--fg); }
 
 .project-display-title {
   grid-column: 1 / span 9;
@@ -281,19 +273,19 @@
 }
 
 .project-display-desc {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   max-width: var(--measure);
   color: var(--fg-dim);
 }
 
 .project-stack {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   color: var(--fg-muted);
   font-size: var(--step--1);
 }
 
 .project-actions {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-8);
@@ -345,7 +337,7 @@
 }
 
 .contact-desc {
-  grid-column: 3 / span 5;
+  grid-column: 3 / span 4;
   max-width: var(--measure);
   color: var(--fg);
 }

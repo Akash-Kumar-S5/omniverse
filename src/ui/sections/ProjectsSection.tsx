@@ -179,9 +179,6 @@ export default function ProjectsSection() {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <p className="project-count" aria-live="polite">
-        <span className="project-count-now">{activeProject + 1}</span> of {total}
-      </p>
 
       <SplitHeading key={project.title} text={project.title} as="h2" className="project-display-title" />
 
