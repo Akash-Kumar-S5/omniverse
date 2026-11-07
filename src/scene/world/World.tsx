@@ -1,7 +1,7 @@
 import { Environment } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 import { chapterLook } from "./chapterLook";
-import Floor from "./Floor";
+import Sanctum from "./Sanctum";
 import VolumeCone from "./VolumeCone";
 
 function WorldLighting() {
@@ -9,8 +9,8 @@ function WorldLighting() {
 
   return (
     <>
-      <ambientLight intensity={0.12} color="#0c0e14" />
-      <directionalLight position={[-5, 12, -4]} intensity={0.2} color="#d0c4b4" />
+      <ambientLight intensity={0.16} color="#0c0e14" />
+      <directionalLight position={[-5, 12, -4]} intensity={0.25} color="#d0c4b4" />
       <Environment
         files="/assets/hdri/studio_small_09_1k.exr"
         resolution={quality === "lite" ? 128 : 256}
@@ -28,20 +28,14 @@ export default function World() {
   return (
     <>
       <WorldLighting />
-      {/* Fog precisely matching background (#05060a) to dissolve the floor before 26 units */}
+      {/* Fog precisely matching background (#060505) */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 
-      {/* Near-black reflective wet floor with seamless fog fade */}
-      <Floor />
+      {/* Authored Brutalist Sanctum Architecture & Floor with baked Cycles lightmaps */}
+      <Sanctum />
 
-      {/* Clearly visible volumetric sunlight beam from oculus hitting the swarm */}
+      {/* Volumetric sunbeam descending through the ceiling oculus onto the core */}
       <VolumeCone />
-
-      {/* =========================================================================
-          SLOT: Sanctum Architecture GLB
-          Delivered by blender-sanctum: public/assets/models/sanctum.glb
-          ========================================================================= */}
-      <group name="sanctum-architecture-slot" />
     </>
   );
 }
