@@ -2,6 +2,7 @@ import { Suspense, useMemo } from "react";
 import { MeshReflectorMaterial, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useOmni } from "../../state/store";
+import { TIERS } from "../../state/signal";
 
 function ReflectorFloorMesh() {
   const quality = useOmni((s) => s.quality);
@@ -16,7 +17,7 @@ function ReflectorFloorMesh() {
   }, [roughnessMap]);
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.2, 0]} receiveShadow>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
       <planeGeometry args={[200, 200]} />
       <MeshReflectorMaterial
         color="#ffffff"
@@ -39,7 +40,7 @@ function ReflectorFloorMesh() {
 
 function FallbackFloor() {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.2, 0]} receiveShadow>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
       <planeGeometry args={[200, 200]} />
       <meshStandardMaterial color="#060505" roughness={0.94} metalness={0.04} />
     </mesh>
@@ -49,8 +50,8 @@ function FallbackFloor() {
 export default function Floor() {
   const quality = useOmni((s) => s.quality);
 
-  // MeshReflectorMaterial resolution 512 on HIGH, 256 on MEDIUM; plain on LITE
-  if (quality === "lite") {
+  // MeshReflectorMaterial on HIGH tier; plain matte #060505 floor on MEDIUM/LITE for 60fps
+  if (!TIERS[quality].reflector) {
     return <FallbackFloor />;
   }
 

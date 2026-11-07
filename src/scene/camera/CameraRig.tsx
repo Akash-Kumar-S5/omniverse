@@ -2,12 +2,71 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CatmullRomCurve3, PerspectiveCamera, Vector2, Vector3 } from "three";
 import { easing } from "maath";
-import { useOmni } from "../../state/store";
+import { useOmni, type SectionId } from "../../state/store";
 import spotsData from "../../../public/assets/models/sanctum.spots.json";
 import type { SanctumSpots } from "../../state/signal";
 
 const spots = spotsData as unknown as SanctumSpots;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+// Architectural waypoints connecting rooms through open portals and rotunda hub
+const WAYPOINTS = {
+  rotundaOculus: new Vector3(0.0, 1.2, 3.8),
+  eastDoorway: new Vector3(3.0, 1.65, 1.2),
+  eastExit: new Vector3(3.0, 1.65, 0.6),
+  rotundaHub: new Vector3(0.0, 1.75, 0.3),
+  westPortal: new Vector3(-4.8, 1.75, 0.0),
+  corridorMid: new Vector3(-12.0, 1.8, 0.0),
+  northCorner: new Vector3(-2.2, 1.85, -2.4),
+  northEntry: new Vector3(-0.6, 1.95, -6.0),
+  galleryExit: new Vector3(0.0, 1.85, -3.0),
+  southPortal: new Vector3(0.0, 1.2, 9.0),
+  courtSky: new Vector3(0.0, 0.8, 14.6),
+};
+
+function getTransitionWaypoints(from: SectionId, to: SectionId): Vector3[] {
+  const SECTION_INDEX: Record<SectionId, number> = {
+    boot: 0,
+    about: 1,
+    experience: 2,
+    projects: 3,
+    contact: 4,
+  };
+  const iFrom = SECTION_INDEX[from];
+  const iTo = SECTION_INDEX[to];
+  if (iFrom === iTo) return [];
+
+  const forwardTransitions: Record<string, Vector3[]> = {
+    "boot->about": [WAYPOINTS.rotundaOculus, WAYPOINTS.eastDoorway],
+    "about->experience": [WAYPOINTS.eastExit, WAYPOINTS.rotundaHub, WAYPOINTS.westPortal],
+    "experience->projects": [WAYPOINTS.corridorMid, WAYPOINTS.northCorner, WAYPOINTS.northEntry],
+    "projects->contact": [WAYPOINTS.galleryExit, WAYPOINTS.rotundaHub, WAYPOINTS.southPortal],
+  };
+
+  const backwardTransitions: Record<string, Vector3[]> = {
+    "about->boot": [WAYPOINTS.eastDoorway, WAYPOINTS.rotundaOculus],
+    "experience->about": [WAYPOINTS.westPortal, WAYPOINTS.rotundaHub, WAYPOINTS.eastExit],
+    "projects->experience": [WAYPOINTS.northEntry, WAYPOINTS.northCorner, WAYPOINTS.corridorMid],
+    "contact->projects": [WAYPOINTS.southPortal, WAYPOINTS.rotundaHub, WAYPOINTS.galleryExit],
+  };
+
+  const result: Vector3[] = [];
+  const list: SectionId[] = ["boot", "about", "experience", "projects", "contact"];
+  if (iFrom < iTo) {
+    for (let i = iFrom; i < iTo; i++) {
+      const key = `${list[i]}->${list[i + 1]}`;
+      const pts = forwardTransitions[key];
+      if (pts) result.push(...pts);
+    }
+  } else {
+    for (let i = iFrom; i > iTo; i--) {
+      const key = `${list[i]}->${list[i - 1]}`;
+      const pts = backwardTransitions[key];
+      if (pts) result.push(...pts);
+    }
+  }
+  return result;
+}
 
 export default function CameraRig() {
   const { camera, size } = useThree();
@@ -30,6 +89,11 @@ export default function CameraRig() {
   const pointerTarget = useRef(new Vector2());
   const touchDevice = useRef(false);
   const initialized = useRef(false);
+
+  // Transition spline through the architectural openings
+  const activeSpline = useRef<CatmullRomCurve3 | null>(null);
+  const splineProgress = useRef({ value: 1 });
+  const prevSection = useRef<SectionId | null>(null);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
@@ -79,7 +143,6 @@ export default function CameraRig() {
           wide.target[2] + (oculus.target[2] - wide.target[2]) * t,
         );
         // Morph composition rule: keep swarm footprint to the RIGHT of ~55% width
-        // and below the nav by panning look-at left on desktop.
         if (!isPortrait) {
           look.x -= 1.6;
           look.y -= 0.3;
@@ -87,10 +150,16 @@ export default function CameraRig() {
         break;
       }
       case "about": {
-        const niche = spots.cameras.about_niche;
-        targetFov = niche.fov;
-        pos.set(...niche.position);
-        look.set(...niche.target);
+        targetFov = 38;
+        // Position camera to frame the marble bust on the RIGHT side of desktop viewport,
+        // completely clear of the left-side text column
+        if (!isPortrait) {
+          pos.set(5.5, 1.65, -1.8);
+          look.set(10.8, 1.48, -1.5);
+        } else {
+          pos.set(5.8, 1.7, 0.0);
+          look.set(11.0, 1.45, 0.0);
+        }
         break;
       }
       case "experience": {
@@ -129,6 +198,17 @@ export default function CameraRig() {
       look.y += pointer.current.y * 0.1;
     }
 
+    // On chapter change after initialization, build a spline through open doorways
+    if (initialized.current && prevSection.current && prevSection.current !== section) {
+      const waypoints = getTransitionWaypoints(prevSection.current, section);
+      if (waypoints.length > 0) {
+        const splinePoints = [camera.position.clone(), ...waypoints, pos.clone()];
+        activeSpline.current = new CatmullRomCurve3(splinePoints);
+        splineProgress.current.value = 0;
+      }
+    }
+    prevSection.current = section;
+
     if (!initialized.current) {
       camera.position.copy(pos);
       lookTarget.current.copy(look);
@@ -140,7 +220,15 @@ export default function CameraRig() {
     } else if (reducedMotion) {
       camera.position.copy(pos);
       lookTarget.current.copy(look);
+      activeSpline.current = null;
+    } else if (activeSpline.current && splineProgress.current.value < 0.99) {
+      // Visibly travel through the building spline connecting rooms
+      easing.damp(splineProgress.current, "value", 1, 0.45, delta);
+      activeSpline.current.getPointAt(splineProgress.current.value, sampledPosition.current);
+      camera.position.copy(sampledPosition.current);
+      easing.damp3(lookTarget.current, look, 0.45, delta);
     } else {
+      activeSpline.current = null;
       easing.damp3(camera.position, pos, 0.45, delta);
       easing.damp3(lookTarget.current, look, 0.45, delta);
     }
