@@ -5,3 +5,4 @@ Requests: None.
 Commit hash: `7802916bc343c3c3dc050483227f79d438f6f92f` (implementation)
 Fix round 1: findings 3, 5, and 12 fixed in `00543a4`.
 Fix round 2: removed CameraRig activeRole writes; UI owns that state.
+Fix round 3: reframed desktop Experience and Projects views; mobile framing preserved.
