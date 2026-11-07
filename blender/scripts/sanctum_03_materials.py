@@ -12,7 +12,7 @@ def _img(nt, fname, nc, loc):
     n.projection = "BOX"; n.projection_blend = 0.25; n.location = loc
     return n
 
-def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metallic=0.0, flat=0.6):
+def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metallic=0.0, flat=0.6, normal=0.8):
     mat = bpy.data.materials.new(name); mat.use_nodes = True
     nt = mat.node_tree; nt.nodes.clear()
     out = nt.nodes.new("ShaderNodeOutputMaterial"); out.location = (900, 0)
@@ -60,7 +60,7 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
     rm = nt.nodes.new("ShaderNodeMath"); rm.operation = "MULTIPLY"; rm.location = (150, 0)
     rm.inputs[1].default_value = rough_mul; rm.use_clamp = True
     nt.links.new(r.outputs["Color"], rm.inputs[0]); nt.links.new(rm.outputs[0], bsdf.inputs["Roughness"])
-    nm = nt.nodes.new("ShaderNodeNormalMap"); nm.location = (150, -300); nm.inputs["Strength"].default_value = 0.8
+    nm = nt.nodes.new("ShaderNodeNormalMap"); nm.location = (150, -300); nm.inputs["Strength"].default_value = normal
     nt.links.new(nn.outputs["Color"], nm.inputs["Color"]); nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
     bsdf.inputs["Metallic"].default_value = metallic
     nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
@@ -68,7 +68,7 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
 
 # tile sizes ~5x smaller than the first pass, diffuse contrast flattened (flat=0.6-0.75) so no rust-blotch read
 wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
-slab = pbr("mat_monolith", "concrete_wall_003", 0.6, tint=(0.28, 0.29, 0.33), rough_mul=0.8, flat=0.7)
+slab = pbr("mat_monolith", "concrete_wall_003", 1.1, tint=(0.30, 0.32, 0.37), rough_mul=0.8, flat=0.8, normal=0.4)  # larger tile + softer relief: no rocky/dirt read under the warm spots
 floor = pbr("mat_floor_wet", "concrete_floor_worn_001", 0.6, tint=(0.55, 0.56, 0.60), rough_mul=0.30, flat=0.6)
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)

@@ -72,17 +72,27 @@ sky.visible_shadow = False; sky.visible_glossy = False
 
 # ---- faint moon in the sky dome, framed by the court's round opening from CAM_contact_sky ----
 import bmesh as _bm
-_b = _bm.new(); _bm.ops.create_uvsphere(_b, u_segments=32, v_segments=16, radius=4.5); _me = bpy.data.meshes.new("SKY_moon"); _b.to_mesh(_me); _b.free()
+_b = _bm.new(); _bm.ops.create_uvsphere(_b, u_segments=48, v_segments=24, radius=3.0); _me = bpy.data.meshes.new("SKY_moon"); _b.to_mesh(_me); _b.free()
 moon_ob = bpy.data.objects.new("SKY_moon", _me); sc.collection.objects.link(moon_ob); moon_ob.location = (5.0, -24.0, 140.0)
 _mm = bpy.data.materials.new("mat_moon"); _mm.use_nodes = True; _mt = _mm.node_tree; _mt.nodes.clear()
 _mo = _mt.nodes.new("ShaderNodeOutputMaterial"); _me2 = _mt.nodes.new("ShaderNodeEmission")
-_me2.inputs["Color"].default_value = (0.82, 0.88, 1.0, 1); _me2.inputs["Strength"].default_value = 5.0
+_me2.inputs["Color"].default_value = (0.82, 0.88, 1.0, 1)
+# soft limb: emission falls off toward the disc edge (Layer Weight facing -> ramp -> strength)
+_lw = _mt.nodes.new("ShaderNodeLayerWeight"); _lw.inputs["Blend"].default_value = 0.5
+_rp = _mt.nodes.new("ShaderNodeValToRGB"); _rp.color_ramp.elements[0].position = 0.25; _rp.color_ramp.elements[1].position = 0.85   # Facing is 0 at disc centre, 1 at the limb
+_rp.color_ramp.elements[0].color = (1, 1, 1, 1); _rp.color_ramp.elements[1].color = (0, 0, 0, 1)
+_mt.links.new(_lw.outputs["Facing"], _rp.inputs["Fac"])
+_sm = _mt.nodes.new("ShaderNodeMath"); _sm.operation = "MULTIPLY"; _sm.inputs[1].default_value = 3.0
+_mt.links.new(_rp.outputs["Color"], _sm.inputs[0]); _mt.links.new(_sm.outputs[0], _me2.inputs["Strength"])
 _mt.links.new(_me2.outputs["Emission"], _mo.inputs["Surface"]); _me.materials.append(_mm); moon_ob.visible_shadow = False
 sc.render.dither_intensity = 2.0   # break up gradient banding in 8-bit output
 
 # ---- moon: cool soft light over the open court; blocker plane stops the sun there (shadow-only, invisible to camera) ----
 md = bpy.data.lights.new("MOON_court", "AREA"); md.energy = 1000; md.size = 12; md.color = (0.55, 0.68, 1.0)
 moon = bpy.data.objects.new("MOON_court", md); sc.collection.objects.link(moon); moon.location = (0, -17.5, 16)
+bd = bpy.data.lights.new("COURT_bounce", "AREA"); bd.energy = 110; bd.size = 10; bd.color = (0.55, 0.68, 1.0); bd.spread = math.radians(160)
+bo = bpy.data.objects.new("COURT_bounce", bd); sc.collection.objects.link(bo); bo.location = (0, -17.5, 0.1); bo.rotation_euler = (math.pi, 0, 0)  # faces up
+bo.visible_camera = False   # lights the roof underside / walls; never seen directly
 blk = box("SUNBLOCK_court", -10, 10, -27, -9, 17, 17.05)
 blk.visible_camera = False; blk.visible_glossy = False; blk.visible_diffuse = False  # still casts the sun's shadow
 
@@ -118,7 +128,7 @@ haze.data.materials.append(hm); haze.visible_shadow = False
 for i in range(8):
     side = -1 if i % 2 == 0 else 1
     y = 13.5 + (i // 2) * 5.0
-    spot(f"SPOT_proj_{i}", (side * 1.3, y - 0.2, 9.2), (side * 2.5, y, 2.8), 4500, (1.0, 0.74, 0.45), 22, 0.6)
+    spot(f"SPOT_proj_{i}", (side * 1.3, y - 0.2, 9.2), (side * 2.5, y, 2.8), 3200, (1.0, 0.85, 0.68), 18, 0.6)
 
 # ---- sky fill leaking through the ceiling slits (corridor + gallery): soft cool area lights sitting in each slit ----
 def slit_light(name, loc, size):

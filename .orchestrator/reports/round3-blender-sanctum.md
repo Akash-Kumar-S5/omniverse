@@ -18,3 +18,9 @@ Built from scratch: architecture shell (as instructed), lights, cameras.
 
 ## Known issues / next
 Corridor + gallery lit by area lights in the ceiling slits (fake sky fill); both read flat-ish at the far end. Wall tile pattern is visible on the court walls. Floor reflection is Cycles-only; runtime uses the reflector. Bake step (UV unwrap, combine into sanctum_architecture, export) not started.
+
+## EXPORT (after go) — public/assets/models/
+sanctum.glb 1,218,832 B (3 JPEG atlases: arch 4096² 984 KB, floor 2048² 128 KB, pedestal 512² 15 KB) | sanctum-lite.glb 302,616 B (1k/1k/256 same maps downscaled, same node names) | sanctum.spots.json 2.8 KB. Total high 1.22 MB (<= 4 MB).
+Nodes: sanctum_architecture (19.7k verts, boulders decimated 66k->2.5k tris each, props + slabs + frames + plinth + court roof joined), floor, bust_pedestal, oculus_shaft (empty at (0,12,1.5) glTF, radius 2.2) with child shaft_axis (unit direction of the sun, glTF (0,-0.993,-0.122)).
+Bake: Cycles COMBINED 256 spl, margin 8 (extend), AgX + exposure baked in, VOL_*/haze not baked. Materials: baseColor = emissive = baked map, roughness 1, extras {toneMapped:false}: runtime should render them unlit with material.toneMapped = false (colour is already tonemapped), swap `floor` for the reflector. Draco level 7 (Draco decode verified via gltf-transform inspect).
+Spots: 17 cameras (glTF Y-up, TARGET_ empties as targets, vertical fov deg) + 5 anchors. Re-run: build_sanctum.py then sanctum_08_bake_export.py (~25 min bake on this Mac). Final tweak round (contact_sky roof, softer moon, slab material) is in the export; stills for those two cameras re-rendered after export.

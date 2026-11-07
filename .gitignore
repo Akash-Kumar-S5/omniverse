@@ -28,3 +28,4 @@ dist-ssr
 .orchestrator/research/refs/
 blender/sanctum.blend
 blender/props/*.glb
+blender/bake/

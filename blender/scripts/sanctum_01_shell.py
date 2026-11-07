@@ -74,7 +74,7 @@ for v in voids:
     if v.name.startswith("v_sl"): boolean(shell, v)
 
 # ---- court roof: a thick slab with a ROUND opening, so the night sky is framed like the main oculus ----
-roof = cyl("court_roof", 6.6, 8.2, 9.3, 0, -17.5)
+roof = box("court_roof", -7.6, 7.6, -24.0, -11.0, 8.2, 9.3)   # full ceiling so concrete surrounds the round opening
 rh = cyl("court_hole", 3.7, 7.0, 10.5, 0, -17.5)
 boolean(roof, rh); delete(rh)
 boolean(shell, roof, "UNION"); delete(roof)
