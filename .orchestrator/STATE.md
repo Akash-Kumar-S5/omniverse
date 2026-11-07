@@ -3,8 +3,8 @@
 | Agent | Pane | Status | Next |
 |---|---|---|---|
 | codex-world | w2:pE | 7889e54 MERGED to main (build+lint clean); idle/hold | tune swarm if agy-world screenshots show it weak |
-| agy-world | w2:pK | bd75597 (step 2 splines); working, BLOCKED from merge; fixes + rebase prompted | rebase on main, 5 chapter screenshots (SignalField 35-45% right half, near-black reflector floor+fog, volumetric SpotLight) |
-| blender-sanctum | w2:pJ | 6 stills exist; fix prompt sent (contact_sky banding+round oculus, proj_gallery statue 2.5x+slab spots) | re-render, then export GLB <=4 MB after my OK |
+| agy-world | w2:pK | 19c2795 (step 3 Effects); BLOCKED from merge; my rebase + visual-fix prompt is queued behind its running build | rebase on main, 5 chapter screenshots (SignalField 35-45% right half, near-black reflector floor+fog, volumetric SpotLight) |
+| blender-sanctum | w2:pJ | d135a4f stills fixed, APPROVED 17:27; GLB export (<=4 MB) prompted | merge after size + build check |
 | agy-review | w2:pM | idle, waiting | full review vs playbook s8 once agy-world + export merged |
 
 
