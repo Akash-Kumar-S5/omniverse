@@ -70,6 +70,16 @@ sky.data.materials.append(sm)
 sky.visible_shadow = False; sky.visible_glossy = False
 # flip normals so inside faces are front-facing (not needed for Cycles, harmless)
 
+# ---- faint moon in the sky dome, framed by the court's round opening from CAM_contact_sky ----
+import bmesh as _bm
+_b = _bm.new(); _bm.ops.create_uvsphere(_b, u_segments=32, v_segments=16, radius=4.5); _me = bpy.data.meshes.new("SKY_moon"); _b.to_mesh(_me); _b.free()
+moon_ob = bpy.data.objects.new("SKY_moon", _me); sc.collection.objects.link(moon_ob); moon_ob.location = (5.0, -24.0, 140.0)
+_mm = bpy.data.materials.new("mat_moon"); _mm.use_nodes = True; _mt = _mm.node_tree; _mt.nodes.clear()
+_mo = _mt.nodes.new("ShaderNodeOutputMaterial"); _me2 = _mt.nodes.new("ShaderNodeEmission")
+_me2.inputs["Color"].default_value = (0.82, 0.88, 1.0, 1); _me2.inputs["Strength"].default_value = 5.0
+_mt.links.new(_me2.outputs["Emission"], _mo.inputs["Surface"]); _me.materials.append(_mm); moon_ob.visible_shadow = False
+sc.render.dither_intensity = 2.0   # break up gradient banding in 8-bit output
+
 # ---- moon: cool soft light over the open court; blocker plane stops the sun there (shadow-only, invisible to camera) ----
 md = bpy.data.lights.new("MOON_court", "AREA"); md.energy = 1000; md.size = 12; md.color = (0.55, 0.68, 1.0)
 moon = bpy.data.objects.new("MOON_court", md); sc.collection.objects.link(moon); moon.location = (0, -17.5, 16)
@@ -104,6 +114,12 @@ ho = hn.nodes.new("ShaderNodeOutputMaterial"); pv = hn.nodes.new("ShaderNodeVolu
 pv.inputs["Density"].default_value = 0.012; pv.inputs["Anisotropy"].default_value = 0.55
 hn.links.new(pv.outputs["Volume"], ho.inputs["Volume"])
 haze.data.materials.append(hm); haze.visible_shadow = False
+# ---- project "stations": a narrow warm spot from the ceiling onto each monolith (slab geometry from step 2) ----
+for i in range(8):
+    side = -1 if i % 2 == 0 else 1
+    y = 13.5 + (i // 2) * 5.0
+    spot(f"SPOT_proj_{i}", (side * 1.3, y - 0.2, 9.2), (side * 2.5, y, 2.8), 4500, (1.0, 0.74, 0.45), 22, 0.6)
+
 # ---- sky fill leaking through the ceiling slits (corridor + gallery): soft cool area lights sitting in each slit ----
 def slit_light(name, loc, size):
     d = bpy.data.lights.new(name, "AREA"); d.shape = "RECTANGLE"; d.size, d.size_y = size

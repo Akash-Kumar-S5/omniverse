@@ -73,6 +73,12 @@ for y in (11.5, 16.5, 21.5, 26.5, 31):
 for v in voids:
     if v.name.startswith("v_sl"): boolean(shell, v)
 
+# ---- court roof: a thick slab with a ROUND opening, so the night sky is framed like the main oculus ----
+roof = cyl("court_roof", 6.6, 8.2, 9.3, 0, -17.5)
+rh = cyl("court_hole", 3.7, 7.0, 10.5, 0, -17.5)
+boolean(roof, rh); delete(rh)
+boolean(shell, roof, "UNION"); delete(roof)
+
 # ---- floor (separate mesh) ----
 floor = cyl("floor", 9.2, -0.4, 0.03)
 for o in [box("f1", -34, -8, -3, 3, -0.4, 0.03), box("f2", -4.5, 4.5, 8, 33, -0.4, 0.03),

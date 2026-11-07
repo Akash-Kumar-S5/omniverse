@@ -43,8 +43,9 @@ for i, (x, y, yaw, sc) in enumerate(spots):
     ground(m, x, y, 0.0, yaw, sc)
 
 # --- bronze statue on a low block at the far end of the gallery ---
-blk = box("PROP_statue_block", -0.9, 0.9, 31.0, 32.6, 0, 0.5)
+blk = box("PROP_statue_block", -1.5, 1.5, 30.6, 32.9, 0, 0.7)
 meshes, extra = load_glb("bronze_whale_statue.glb"); drop_empties(extra)
 w = meshes[0]; w.name = "PROP_bronze_whale"
-ground(w, 0.0, 31.8, 0.5, 180, 1.2)
+ground(w, 0.0, 31.75, 0.7, 180, 3.0)   # ~2.5x the first pass (was 1.2)
+spot("SPOT_statue", (0.0, 28.2, 9.0), (0.0, 31.75, 1.8), 5000, (1.0, 0.8, 0.55), 22, 0.5)
 print("PROPS7_OK")

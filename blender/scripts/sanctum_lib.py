@@ -67,3 +67,8 @@ def empty(name, loc, size=0.5, kind="PLAIN_AXES"):
     e.empty_display_type = kind; e.empty_display_size = size; e.location = loc
     bpy.context.scene.collection.objects.link(e)
     return e
+
+def spot(name, loc, tgt, watts, col, deg, blend=0.6):
+    d = bpy.data.lights.new(name, "SPOT"); d.energy = watts; d.color = col
+    d.spot_size = math.radians(deg); d.spot_blend = blend; d.shadow_soft_size = 0.15
+    o = bpy.data.objects.new(name, d); bpy.context.scene.collection.objects.link(o); o.location = loc; look_at(o, tgt); return o

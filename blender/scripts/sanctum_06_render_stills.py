@@ -5,7 +5,7 @@ REPO = os.environ.get("SANCTUM_REPO") or "/Users/akashkumars/Documents/Personal/
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 spots = args or ["boot_wide", "boot_under_oculus", "about_niche", "exp_role_0", "proj_gallery", "contact_sky"]
 sc = bpy.context.scene
-sc.render.image_settings.file_format = "PNG"
+sc.render.image_settings.file_format = "PNG"; sc.render.image_settings.color_depth = "16"
 if os.environ.get("SAMPLES"): sc.cycles.samples = int(os.environ["SAMPLES"])
 if os.environ.get("OUT"): REPO_OUT = os.environ["OUT"]
 else: REPO_OUT = os.path.join(REPO, ".orchestrator", "reference")
