@@ -75,3 +75,10 @@ All worktrees are at `.worktrees/<name>`, with `node_modules` symlinked to `../.
 
 ## Akash directive (2026-11-07 13:14 UTC)
 Review OUTPUT only (screenshots, behaviour, measurements), not code. Brief briefs/round2-claude-review.md updated; agy-review (w2:pD, t8) is the reviewer.
+
+## Update 2026-11-07 14:35 UTC
+- Merged to main (no-ff, build+lint clean): r2/codex-world (asset load), r2/codex-chapters (mount World/AnchorWriters/LoadProgress, push-in), r2/agy-type (preloader, Enter gate, callouts). Experience chunk 330 kB gzip, shell 120 kB.
+- Lanes: claude-assets is now Haiku (pane w2:pB; someone ran /model haiku in it; global default is still "opus", verified). Haiku does HDRI author verification only.
+- Copy rewrite (gap 8) reassigned to agy-type (owns src/content/** now). claude-assets no longer owns it.
+- Builders codex-world and codex-chapters are idle, done with step 2. Close them once review confirms no fixes needed.
+- Next: when agy-type and claude-assets report, merge, then prompt agy-review (output-only review, brief round2-claude-review.md).
