@@ -202,3 +202,9 @@ Restarted: agy-world (fresh, w2:pK, gemini flash; task: camera travels through b
 In flight: codex-world (commit swarm shapes, merge main, DevTools MCP perf trace of main -> reports/perf-main-trace.md), copilot-review (fallback recheck -> reports/copilot-fallback-recheck.md).
 Gotcha: agy queued prompts sit unsent while agy shows 'done'; alt+m sends them. A loop that auto-approves dialogs was blocked by the safety classifier: approve dialogs one at a time after reading what they allow.
 Backlog: 1 DONE, 2 DONE, 3 DONE, 4 DONE; 5 (3D completeness) + 6 (perf) running; 7 quality mostly copilot-ui; 8/9 reviewers next.
+
+## 21:20 UTC
+MERGED: copilot-review (audit+recheck), codex-world swarm shapes (9f18daa), agy-world 9be7400 (camera through building, lit sanctum, bust fix, midtones) -> main 0cdfdf8, build+lint clean. codex-world OUT OF QUOTA until Dec 7: do not assign.
+OPEN BUG (blocks DONE 3D): swarm does not render on main (agy-review: GL_INVALID_OPERATION glDrawArrays 'Vertex buffer is not big enough'). Owner: copilot-swarm (w2:pS, r3/copilot-swarm, copilot sonnet-5.5, ~100 AIC used so far: watch copilot credits). Uncommitted diff in SignalField.tsx/targets.ts/VolumeCone.tsx.
+agy-review baseline (commit 9f18daa, before swarm fix and agy-world 9be7400): per chapter overall 0:7.3 1:7.3 2:7.8 3:7.8 4:8.0; 3D craft 5-6, art direction 8-9, type 8-9, perf 9. Verdict 'not yet competitive' (swarm missing).
+Next: swarm fix merge -> agy-review + copilot-review re-score (Playwright headed) -> score table to Morph -> improvement loop round 1. agy-world idle (next: motion polish per round plan).
