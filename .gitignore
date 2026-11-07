@@ -26,3 +26,4 @@ dist-ssr
 .worktrees/
 .tsbuild/
 .orchestrator/research/refs/
+blender/sanctum.blend
