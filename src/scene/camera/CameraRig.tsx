@@ -22,8 +22,6 @@ export default function CameraRig() {
   const pointerTarget = useRef(new Vector2());
   const touchDevice = useRef(false);
   const reducedSection = useRef("");
-  const reducedTransition = useRef(false);
-  const wasReducedMotion = useRef(false);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
@@ -51,15 +49,14 @@ export default function CameraRig() {
     const look = lookDesired.current;
 
     if (reducedMotion) {
-      // The five fixed poses keep the scene legible without scroll-driven motion.
-      if (!wasReducedMotion.current || reducedSection.current !== section) {
+      // Fixed poses keep the scene legible without camera flights.
+      if (reducedSection.current !== section) {
         reducedSection.current = section;
-        reducedTransition.current = true;
       }
       switch (section) {
-        case "boot": pos.set(0, 5, 28); look.set(0, 0, 0); break;
-        case "about": pos.set(0, 15, 23); look.set(0, 0, 0); break;
-        case "experience": pos.set(0, 6, 19); look.set(0, 1, 0); break;
+        case "boot": pos.set(-3, -1.5, 29); look.set(-5, 3.5, 0); break;
+        case "about": pos.set(18, 10, 17); look.set(-4.5, 0.5, 0); break;
+        case "experience": pos.set(0, 7, 20); look.set(-3.6, 1, 6); break;
         case "projects": {
           const node = projectNodes[clamp(activeProject, 0, projectNodes.length - 1)];
           const [x, y, z] = node.position;
@@ -71,19 +68,20 @@ export default function CameraRig() {
           }
           break;
         }
-        case "contact": pos.set(beacon[0], beacon[1] + 5, beacon[2] + 28); look.set(beacon[0], beacon[1], beacon[2]); break;
+        case "contact": pos.set(beacon[0], beacon[1] + 14, beacon[2] + 40); look.set(beacon[0], beacon[1], beacon[2]); break;
       }
     } else {
-      reducedTransition.current = false;
       switch (section) {
         case "boot":
-          pos.set(0, 7 - 3 * p, 34 - 9 * p);
-          look.set(0, 0, 0);
+          // Low, wide approach; looking upward while the core sits to the right of the title.
+          pos.set(-3, -1.5 - 0.4 * p, 31 - 4 * p);
+          look.set(-5, 3.5, 0);
           break;
         case "about": {
-          const angle = p * Math.PI * 0.5 + performance.now() * 0.000035;
-          pos.set(Math.sin(angle) * 22, 11 + Math.sin(angle * 0.6) * 1.5, Math.cos(angle) * 22);
-          look.set(0, 0, 0);
+          // A slow cutaway orbit keeps the constellation on the right and leaves the left open.
+          const angle = 0.42 + p * 0.55 + performance.now() * 0.000018;
+          pos.set(20 * Math.sin(angle), 9 + Math.sin(angle * 0.6) * 1.2, 18 * Math.cos(angle));
+          look.set(-4.5, 0.5, 0);
           break;
         }
         case "experience": {
@@ -113,7 +111,8 @@ export default function CameraRig() {
           break;
         }
         case "contact":
-          pos.set(beacon[0], beacon[1] + 7, beacon[2] + 30 - 8 * p);
+          // Pull upward and backward until the constellation gathers around its beacon.
+          pos.set(beacon[0], beacon[1] + 6 + 10 * p, beacon[2] + 22 + 18 * p);
           look.set(beacon[0], beacon[1], beacon[2]);
           break;
       }
@@ -126,14 +125,14 @@ export default function CameraRig() {
       }
     }
 
-    if (!reducedMotion || reducedTransition.current || camera.position.distanceToSquared(pos) >= 1e-4 || lookTarget.current.distanceToSquared(look) >= 1e-4) {
-      easing.damp3(camera.position, pos, reducedMotion ? 0.3 : 1.5, delta);
-      easing.damp3(lookTarget.current, look, reducedMotion ? 0.3 : 1.8, delta);
-      if (reducedMotion && camera.position.distanceToSquared(pos) < 1e-4 && lookTarget.current.distanceToSquared(look) < 1e-4) {
-        reducedTransition.current = false;
-      }
+    if (reducedMotion) {
+      camera.position.copy(pos);
+      lookTarget.current.copy(look);
+      reducedTransition.current = false;
+    } else {
+      easing.damp3(camera.position, pos, 1.5, delta);
+      easing.damp3(lookTarget.current, look, 1.8, delta);
     }
-    wasReducedMotion.current = reducedMotion;
     camera.lookAt(lookTarget.current);
   });
 
