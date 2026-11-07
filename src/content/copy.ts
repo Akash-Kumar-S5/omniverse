@@ -1,31 +1,29 @@
 export const copy = {
   hero: {
-    eyebrow: "Software Engineer — AI tooling",
-    tagline: "I build the tooling that lets AI agents do real work: harnesses, orchestration, developer tools.",
-    cta: "Explore Constellation",
+    role: "Software engineer, Chennai",
+    tagline:
+      "I build web applications at Presidio, and I’m spending my own time on tools that help AI agents finish a job.",
+    cta: "See the work",
   },
   about: {
-    eyebrow: "01 // Principal Identity",
-    title: "Engineering Autonomous Agent Systems",
-    lead: "I focus on the layer between models and real-world execution: deterministic harnesses, tool-use protocols, and evaluation pipelines that make agents reliable.",
-    cta: "View Experience",
+    title: "Mostly web apps, lately agent tools.",
+    lead: "Most of my work is React, Node and Laravel: internal tools, REST APIs, forms that have to be right. On the side I write Python experiments with language models, including a research agent from a Presidio innovation sprint.",
+    cta: "Where I’ve worked",
   },
   experience: {
-    eyebrow: "02 // Career Trajectory",
-    title: "Engineering Experience",
+    title: "Where I’ve worked",
   },
   projects: {
-    eyebrow: "03 // Constellation Node",
-    ctaPrev: "← Prev",
-    ctaNext: "Next Project →",
+    title: "Selected projects",
+    ctaPrev: "Previous",
+    ctaNext: "Next",
   },
   contact: {
-    eyebrow: "04 // Direct Channel",
-    title: "Let's Build Together",
-    subtitle: "AI Agent Systems • Developer Tools",
-    pitch: "Open to software engineering roles, agentic AI architecture projects, and developer tooling collaborations. Reach out directly to connect.",
-    cta: "Direct Email",
-    copyEmail: "Copy Email",
-    copiedEmail: "Copied to clipboard",
+    title: "Say hello.",
+    pitch:
+      "I’m open to software engineering roles, and to side projects that involve AI tooling. Email is the quickest way to reach me.",
+    cta: "Email me",
+    copyEmail: "Copy address",
+    copiedEmail: "Copied",
   },
 } as const;

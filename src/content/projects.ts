@@ -13,9 +13,9 @@ export interface Project {
 export const projects: Project[] = [
   {
     title: "SalarySync",
-    hook: "Role-based Laravel payroll system with automated salary processing.",
+    hook: "A payroll system where admins pay and employees only see their own records.",
     description:
-      "A Laravel-based payroll management system with role-based access. Admins can create employee records, assign and process salaries. Employees view payment history and personal details.",
+      "Built with Laravel. Admins create employee records and process salaries. Employees see their payment history and personal details, and nothing else.",
     tags: ["Laravel", "PHP", "Blade", "Tailwind CSS", "Vite"],
     category: "fullstack",
     github: "https://github.com/Akash-Kumar-S5/SalarySync",
@@ -23,9 +23,9 @@ export const projects: Project[] = [
   },
   {
     title: "Rentify",
-    hook: "Full-stack rental property portal with dedicated client and server services.",
+    hook: "A rental listings site, split into a client and a server.",
     description:
-      "A full-stack rental platform with a client-server architecture. Built with JavaScript featuring a dedicated frontend client and backend server for managing rental listings.",
+      "A full-stack rental platform in JavaScript. The frontend client and the backend server are separate services that manage the listings.",
     tags: ["JavaScript", "Node.js", "HTML", "CSS"],
     category: "fullstack",
     github: "https://github.com/Akash-Kumar-S5/Rentify",
@@ -33,9 +33,9 @@ export const projects: Project[] = [
   },
   {
     title: "Website Performance Monitor",
-    hook: "Real-time performance analytics dashboard and metric tracking service.",
+    hook: "A dashboard that tracks how fast a website loads.",
     description:
-      "A full-stack tool for monitoring website performance metrics. Features a separate frontend dashboard and backend service for tracking and analyzing site performance data.",
+      "A frontend dashboard and a backend service that collect a site’s performance numbers and show how they change.",
     tags: ["JavaScript", "Node.js", "CSS"],
     category: "fullstack",
     github: "https://github.com/Akash-Kumar-S5/website-performance-monitor",
@@ -43,9 +43,9 @@ export const projects: Project[] = [
   },
   {
     title: "Innovation Sprint 2025",
-    hook: "Python research agent and AI automation tools developed over 5-week sprints.",
+    hook: "A research agent in Python, built over five weekly sprints at Presidio.",
     description:
-      "A sprint-based innovation project at Presidio organized across 5 weeks, including a research agent built with Python. Combines Python and JavaScript for AI-driven tooling.",
+      "A sprint project at Presidio, organised across five weeks. It includes a research agent written in Python, with some JavaScript around it.",
     tags: ["Python", "JavaScript", "AI", "Research"],
     category: "opensource",
     github: "https://github.com/Akash-Kumar-S5/Innovation-sprint-2025",
@@ -53,9 +53,9 @@ export const projects: Project[] = [
   },
   {
     title: "MediHub",
-    hook: "Healthcare portal with appointment inquiry workflows and medical service directory.",
+    hook: "A clinic website with sign-in, a contact form and a list of services.",
     description:
-      "A healthcare services web application with user authentication, contact forms, and a clean UI for medical service information and patient interaction.",
+      "A healthcare services site with user authentication, contact forms, and a plain layout for medical service information.",
     tags: ["HTML", "CSS", "JavaScript"],
     category: "frontend",
     github: "https://github.com/Akash-Kumar-S5/MediHub.github.io",
@@ -64,9 +64,9 @@ export const projects: Project[] = [
   },
   {
     title: "Finaca",
-    hook: "Financial services portal with interactive loan calculators and lead intake.",
+    hook: "A lender’s website with loan products, an FAQ and a contact form.",
     description:
-      "A financial services website featuring loan products, FAQ, contact forms with PHP processing, and a dashboard. Built with SCSS and responsive design.",
+      "A financial services site with loan products, an FAQ, contact forms handled in PHP, and a dashboard. Styled with SCSS and responsive.",
     tags: ["HTML", "SCSS", "JavaScript", "PHP"],
     category: "frontend",
     github: "https://github.com/Akash-Kumar-S5/finaca.github.io",
@@ -75,9 +75,9 @@ export const projects: Project[] = [
   },
   {
     title: "Fuel Dispenser RFID App",
-    hook: "Cross-platform Flutter mobile application controlling fuel dispensers via RFID.",
+    hook: "A Flutter app that starts a fuel dispenser from an RFID card.",
     description:
-      "A cross-platform Flutter mobile app for managing fuel dispensers using RFID technology. Supports Android, Windows, and web platforms.",
+      "A Flutter app for managing fuel dispensers with RFID. It runs on Android, Windows and the web.",
     tags: ["Flutter", "Dart", "C++", "RFID"],
     category: "fullstack",
     github: "https://github.com/Akash-Kumar-S5/fuel-dispenser-using-RFID-app",
@@ -85,9 +85,9 @@ export const projects: Project[] = [
   },
   {
     title: "GenAI Experiments",
-    hook: "Exploratory Python implementations of generative AI and LLM workflows.",
+    hook: "Small Python experiments with language models.",
     description:
-      "A collection of generative AI experiments and explorations built with Python, covering various AI/ML concepts and implementations.",
+      "A collection of generative AI experiments in Python. Each one tries out a single idea.",
     tags: ["Python", "AI", "Machine Learning"],
     category: "opensource",
     github: "https://github.com/Akash-Kumar-S5/GenAI",
