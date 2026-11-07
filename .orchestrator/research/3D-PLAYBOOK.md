@@ -37,6 +37,28 @@ Igloo Inc stack (from its case study): Three.js, three-mesh-bvh, Svelte, GSAP, V
 exporter and a fluid sim, with Houdini/Blender for assets. **The look comes from the custom simulation,
 not from the framework.**
 
+## 0. REUSE-FIRST RULE (Akash, 21:18): use already available resources as much as possible
+Before writing anything new, an agent must check these and say in its report what it reused:
+1. **Ready-made drei/postprocessing components instead of custom shaders**:
+   - `<SpotLight volumetric>` (drei's depth-aware volumetric beam) instead of a custom VolumeCone.
+   - `<MeshReflectorMaterial>` for the wet floor.
+   - `<Sparkles>` for dust motes in the beam.
+   - `<Environment files=...>` with our HDRIs.
+   - `<ContactShadows>`, `<Float>`, `<MeshTransmissionMaterial>`, `<Sampler>`, `useFBO`, `PerformanceMonitor`, `AdaptiveDpr`.
+   - postprocessing's built-in Bloom/DOF/ToneMapping(AgX)/Noise/Vignette.
+2. **Cloned MIT reference code: adapt, don't rewrite**:
+   - `refs/nextjs-webgl-templates` (Nova = scroll-driven particle morph): port its sim/morph shaders for the Signal Field.
+   - `refs/r3f-flow-field-particles` (GPGPU flow field in R3F): use for the turbulence/curl sim.
+   - `refs/codrops-surface-sampling`: bust → points.
+   Keep each licence header and list reused files in CREDITS.md.
+3. **Assets already on disk**:
+   - `public/assets/models/marble_bust_01.glb`
+   - `public/assets/hdri/*`
+   - `blender/textures/*` (concrete wall, worn concrete floor, marble)
+4. **BlenderMCP's built-in Poly Haven integration**: pull CC0 models, textures and HDRIs straight into Blender instead of modelling props. Useful CC0 Poly Haven models for the sanctum: `boulder_01`, `concrete_cat_statue`, `coast_rocks_*` (rubble/stone), `bronze_*_statue` (project chapter sculptures), `antique_ceramic_vase_01`, `brass_diya_lantern` (warm practical light). Model only the architecture shell (walls, oculus, plinths, corridor), which is simple Blender geometry plus our concrete textures.
+5. **Existing round 1-2 code**: chapter state machine, Lenis, anchors bridge, LoadProgress and CameraRig. Extend these; don't replace them.
+Only build from scratch when none of the above fits, and say why in the report.
+
 ## 3a. UPDATE (Akash, 20:45): Blender is approved and installed. Direction = "Sanctum + Signal Field"
 Blender 5.2.3 LTS is at `/Applications/Blender.app/Contents/MacOS/Blender`. It runs headless; verified:
 `blender/scripts/smoke_bake_export.py` builds geometry, Cycles-bakes a COMBINED lightmap, and exports
