@@ -47,11 +47,6 @@ export default function CameraRig() {
     const state = useOmni.getState();
     const { section, sectionProgress, activeProject, reducedMotion } = state;
     const p = clamp(sectionProgress, 0, 1);
-    const lastRole = Math.max(0, roleWaypoints.length - 1);
-    const passedRole = clamp(Math.floor(p * lastRole + 0.5), 0, lastRole);
-    if (section === "experience" && state.activeRole !== passedRole) {
-      state.setActiveRole(passedRole);
-    }
     const pos = positionTarget.current;
     const look = lookDesired.current;
 
