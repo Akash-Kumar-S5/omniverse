@@ -6,16 +6,17 @@ import VolumeCone from "./VolumeCone";
 
 function WorldLighting() {
   const quality = useOmni((s) => s.quality);
-  const section = useOmni((s) => s.section);
-  const look = chapterLook[section];
 
   return (
     <>
-      <ambientLight intensity={look.ambientIntensity} color="#d7c5ae" />
-      <hemisphereLight args={["#b8a58b", "#171310", 0.42]} />
-      <directionalLight position={[-7, 10, 5]} intensity={look.keyLightIntensity} color="#f0dbc0" />
-      <pointLight position={[5, 3, -5]} intensity={quality === "lite" ? 1 : 1.8} color="#c8a77e" distance={28} />
-      <Environment files="/assets/hdri/studio_small_09_1k.exr" resolution={quality === "lite" ? 128 : 256} background={false} />
+      <ambientLight intensity={0.12} color="#0c0e14" />
+      <directionalLight position={[-5, 12, -4]} intensity={0.2} color="#d0c4b4" />
+      <Environment
+        files="/assets/hdri/studio_small_09_1k.exr"
+        resolution={quality === "lite" ? 128 : 256}
+        background={false}
+        environmentIntensity={0.25}
+      />
     </>
   );
 }
@@ -27,22 +28,20 @@ export default function World() {
   return (
     <>
       <WorldLighting />
+      {/* Fog precisely matching background (#05060a) to dissolve the floor before 26 units */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 
-      {/* Dark reflective floor blending seamlessly into fog */}
+      {/* Near-black reflective wet floor with seamless fog fade */}
       <Floor />
 
-      {/* Volumetric light shaft from the ceiling oculus with floating dust motes */}
+      {/* Clearly visible volumetric sunlight beam from oculus hitting the swarm */}
       <VolumeCone />
 
       {/* =========================================================================
           SLOT: Sanctum Architecture GLB
           Delivered by blender-sanctum: public/assets/models/sanctum.glb
-          Nodes: sanctum_architecture, floor, oculus_shaft, bust_pedestal
           ========================================================================= */}
-      <group name="sanctum-architecture-slot">
-        {/* Placeholder group awaiting sanctum.glb delivery from blender-sanctum */}
-      </group>
+      <group name="sanctum-architecture-slot" />
     </>
   );
 }

@@ -39,7 +39,7 @@ export const useOmni = create<OmniState>()((set) => ({
   booted: false,
   entered: false,
   loadProgress: 0,
-  quality: "high",
+  quality: "medium", // Default tier MEDIUM for smooth 60fps start
   reducedMotion: false,
   webgl: true,
   setScroll: (s) => set(s),

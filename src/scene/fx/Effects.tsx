@@ -6,26 +6,26 @@ import {
   ChromaticAberration,
   DepthOfField,
   Noise,
+  SMAA,
   ToneMapping,
   Vignette,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
 import { Vector2, Vector3 } from "three";
 import { useOmni } from "../../state/store";
-import { TIERS, signal } from "../../state/signal";
+import { signal } from "../../state/signal";
 
-const fringe = new Vector2(0.0008, 0.0008);
+const fringe = new Vector2(0.0006, 0.0006);
 
 export default function Effects() {
   const quality = useOmni((s) => s.quality);
-  const tier = TIERS[quality];
   const dofTarget = useRef(new Vector3(signal.focus[0], signal.focus[1], signal.focus[2]));
 
   useFrame(() => {
     dofTarget.current.set(signal.focus[0], signal.focus[1], signal.focus[2]);
   });
 
-  // LITE tier: tone mapping only (no heavy post passes)
+  // LITE tier: tone mapping only
   if (quality === "lite") {
     return (
       <EffectComposer multisampling={0}>
@@ -35,31 +35,34 @@ export default function Effects() {
   }
 
   return (
-    <EffectComposer multisampling={quality === "high" ? 2 : 0}>
-      {/* Subtle cinematic bloom with high threshold */}
+    <EffectComposer multisampling={0}>
+      {/* Efficient SMAA edge smoothing without expensive MSAA */}
+      <SMAA />
+
+      {/* Subtle bloom on luminous highlights */}
       <Bloom
-        intensity={0.42}
-        luminanceThreshold={0.8}
-        luminanceSmoothing={0.18}
+        intensity={0.38}
+        luminanceThreshold={0.82}
+        luminanceSmoothing={0.2}
         mipmapBlur
       />
 
-      {/* Depth of field enabled on HIGH tier; focus follows signal.focus */}
-      {tier.dof && (
+      {/* Depth of field enabled on HIGH only */}
+      {quality === "high" && (
         <DepthOfField
           target={dofTarget.current}
-          bokehScale={2.4}
+          bokehScale={2.2}
           focalLength={0.02}
         />
       )}
 
-      {/* AgX tone mapping for rich brutalist filmic contrast */}
+      {/* AgX tone mapping for brutalist filmic contrast */}
       <ToneMapping mode={ToneMappingMode.AGX} />
 
-      {/* Micro chromatic fringe, subtle film grain, and lens vignette */}
+      {/* Subtle chromatic fringe, grain, and vignette */}
       <ChromaticAberration offset={fringe} />
-      <Noise opacity={0.035} />
-      <Vignette eskil={false} offset={0.14} darkness={0.44} />
+      <Noise opacity={0.03} />
+      <Vignette eskil={false} offset={0.14} darkness={0.42} />
     </EffectComposer>
   );
 }

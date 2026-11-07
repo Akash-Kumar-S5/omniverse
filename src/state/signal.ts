@@ -68,7 +68,7 @@ export interface TierFlags {
 }
 export const TIERS: Record<Quality, TierFlags> = {
   high: { dof: true, reflector: true, postFx: true, volumetrics: true },
-  medium: { dof: false, reflector: true, postFx: true, volumetrics: true },
+  medium: { dof: false, reflector: false, postFx: true, volumetrics: true },
   lite: { dof: false, reflector: false, postFx: false, volumetrics: false },
 };
 

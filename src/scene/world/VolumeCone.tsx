@@ -21,30 +21,30 @@ export default function VolumeCone() {
   return (
     <group>
       <primitive object={targetRef.current} />
-      {/* Volumetric shaft shining down from the oculus */}
+      {/* Volumetric sun shaft anchored at ceiling oculus, aimed directly at the core */}
       <SpotLight
-        position={[0, 15, 0]}
+        position={[1.8, 14, 0]}
         target={targetRef.current}
-        color="#ede0cc"
-        intensity={quality === "high" ? 3.6 : 2.4}
+        color="#fff4e0"
+        intensity={quality === "high" ? 7.5 : 4.8}
         distance={26}
-        angle={0.42}
-        attenuation={7.5}
-        anglePower={4.5}
+        angle={0.65}
+        attenuation={26}
+        anglePower={2.8}
         volumetric
-        opacity={0.32}
-        radiusTop={0.5}
-        radiusBottom={3.4}
+        opacity={1.35}
+        radiusTop={0.9}
+        radiusBottom={4.6}
       />
-      {/* Floating dust motes inside the volumetric beam */}
+      {/* Floating dust motes within the volumetric beam */}
       <Sparkles
-        position={[0, 5, 0]}
-        count={quality === "high" ? 45 : 20}
-        scale={[4.2, 12, 4.2]}
-        size={quality === "high" ? 2.2 : 1.6}
-        speed={0.15}
-        color="#eedcbe"
-        opacity={0.36}
+        position={[1.8, 5, 0]}
+        count={quality === "high" ? 60 : 30}
+        scale={[4.2, 11, 4.2]}
+        size={quality === "high" ? 2.8 : 2.0}
+        speed={0.18}
+        color="#ffe8c2"
+        opacity={0.65}
       />
     </group>
   );
