@@ -185,3 +185,10 @@ DONE criteria = .orchestrator/NONSTOP.md (3D, anti-slop, perf, quality, 2 review
 10. [ ] Fix rounds from reviews (max 2), re-review.
 11. [ ] FINAL: merge all to local main, remove worktrees (non-destructive: git worktree remove, no rm -rf), screenshot strip in .orchestrator/reports/FINAL.md, publish private Artifact for Akash.
 Forbidden unchanged: push/deploy/rm -rf/reset --hard/clean/sudo/global installs. OPS FAILOVER from Morph -> update STATE.md, reply HANDOVER-READY.
+
+## 19:55 UTC TOOLS ROLLOUT (Akash: use the new skills and MCP)
+Merged r3/toolsmith to main (.mcp.json pinned, .claude/settings.json, .codex/config.toml). Brief: briefs/TOOLS-MANDATORY.md.
+Rolling restarts (only at task boundaries, fresh context, same model, main merged into the branch first):
+- DONE: copilot-review restarted with --additional-mcp-config @.mcp.json (log: '4 servers connected'); ui-editor and toolsmith closed (tasks merged).
+- PENDING at their next boundary: copilot-ui (mid-task), codex-world (mid-task; Chrome DevTools perf), agy-world (mid-task), agy-review (idle: restart when Task starts), orchestrator itself last.
+Copilot reads MCP via --additional-mcp-config (project .mcp.json is passed explicitly; native .mcp.json pickup unverified).
