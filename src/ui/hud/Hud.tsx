@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { SECTIONS, useOmni, type Quality } from "../../state/store";
 import "./Hud.css";
 
+export interface HudProps {
+  inert?: boolean;
+}
+
 function getKolkataTime(): string {
   try {
     return new Intl.DateTimeFormat("en-GB", {
@@ -20,7 +24,7 @@ function getKolkataTime(): string {
   }
 }
 
-export default function Hud() {
+export default function Hud({ inert }: HudProps = {}) {
   const section = useOmni((s) => s.section);
   const quality = useOmni((s) => s.quality);
   const setQuality = useOmni((s) => s.setQuality);
@@ -59,12 +63,14 @@ export default function Hud() {
 
   const handleSkipToContent = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.focus({ preventScroll: true });
+    }
     const target =
-      document.querySelector<HTMLElement>('[data-section="about"]') ||
-      document.querySelector<HTMLElement>("main");
+      document.querySelector<HTMLElement>('[data-section="about"]') || mainContent;
     if (target) {
       target.scrollIntoView({ behavior: "smooth" });
-      target.focus?.();
     }
   };
 
@@ -76,8 +82,40 @@ export default function Hud() {
     setQuality(newQuality);
   };
 
+  const renderQualityToggle = () => (
+    <div
+      className="hud-quality-toggle"
+      role="group"
+      aria-label="Visual Quality mode"
+    >
+      <span className="hud-quality-label">PERF:</span>
+      <button
+        type="button"
+        className={`hud-quality-btn ${quality === "lite" ? "active" : ""}`}
+        onClick={() => handleQualityChange("lite")}
+        aria-pressed={quality === "lite"}
+        aria-label="Set quality mode to Lite"
+      >
+        LITE
+      </button>
+      <button
+        type="button"
+        className={`hud-quality-btn ${quality === "high" ? "active" : ""}`}
+        onClick={() => handleQualityChange("high")}
+        aria-pressed={quality === "high"}
+        aria-label="Set quality mode to High"
+      >
+        HIGH
+      </button>
+    </div>
+  );
+
   return (
-    <aside className="hud-root" aria-label="Constellation HUD overlay">
+    <aside
+      className="hud-root"
+      aria-label="Constellation HUD overlay"
+      inert={inert}
+    >
       {/* Keyboard-accessible skip link */}
       <a
         href="#main-content"
@@ -133,15 +171,24 @@ export default function Hud() {
         </button>
       </div>
 
-      {/* Top-Right Corner: Clock in Asia/Kolkata + Status "online" */}
+      {/* Top-Right Corner: Desktop (Clock + Status) / Mobile <=767px (Section Index + Quality Toggle) */}
       <div className="hud-corner top-right" aria-live="off">
-        <div className="hud-status-row">
-          <span className="hud-status-dot" aria-hidden="true" />
-          <span>STATUS:</span>
-          <span className="hud-status-label">ONLINE</span>
+        <div className="hud-desktop-status">
+          <div className="hud-status-row">
+            <span className="hud-status-dot" aria-hidden="true" />
+            <span>STATUS:</span>
+            <span className="hud-status-label">ONLINE</span>
+          </div>
+          <div className="hud-clock-row">
+            <span>{clockTime} IST</span>
+          </div>
         </div>
-        <div className="hud-clock-row">
-          <span>{clockTime} IST</span>
+
+        <div className="hud-mobile-controls">
+          <span className="hud-mobile-section" aria-hidden="true">
+            {sectionNumber}/05 {sectionName}
+          </span>
+          {renderQualityToggle()}
         </div>
       </div>
 
@@ -156,7 +203,7 @@ export default function Hud() {
         <span className="hud-section-sub">CONSTELLATION HARNESS</span>
       </div>
 
-      {/* Bottom-Right Corner: Quality Toggle + Scroll Cue */}
+      {/* Bottom-Right Corner: Quality Toggle + Scroll Cue (Desktop) */}
       <div className="hud-corner bottom-right">
         {/* Scroll Cue (hides after about) */}
         <div
@@ -167,38 +214,8 @@ export default function Hud() {
           <span className="hud-scroll-icon" aria-hidden="true">↓</span>
         </div>
 
-        {/* Quality Controls */}
-        <div className="hud-controls-group">
-          {/* Mobile section badge */}
-          <span className="hud-mobile-section" aria-hidden="true">
-            {sectionNumber}/05 {sectionName}
-          </span>
-
-          <div
-            className="hud-quality-toggle"
-            role="group"
-            aria-label="Visual Quality mode"
-          >
-            <span className="hud-quality-label">PERF:</span>
-            <button
-              type="button"
-              className={`hud-quality-btn ${quality === "lite" ? "active" : ""}`}
-              onClick={() => handleQualityChange("lite")}
-              aria-pressed={quality === "lite"}
-              aria-label="Set quality mode to Lite"
-            >
-              LITE
-            </button>
-            <button
-              type="button"
-              className={`hud-quality-btn ${quality === "high" ? "active" : ""}`}
-              onClick={() => handleQualityChange("high")}
-              aria-pressed={quality === "high"}
-              aria-label="Set quality mode to High"
-            >
-              HIGH
-            </button>
-          </div>
+        <div className="hud-desktop-controls">
+          {renderQualityToggle()}
         </div>
       </div>
     </aside>
