@@ -167,3 +167,6 @@ Test params (codex-world adding): ?skipgate and ?chapter=0..4. Merged r3/blender
 
 ## 2026-11-08 18:35 UTC
 Merged to main: r3/codex-world b11a056, r3/ui-editor 84a217c (build+lint clean). Pending: agy-world rebase (Hud.tsx: ui-editor wins) + beam haze + swarm tint + per-chapter shots; then agy-review on main (?skipgate&chapter=0..4, 1440+390, anti-slop audit).
+
+## 19:35 UTC copilot lane
+copilot-review (w2:pQ, copilot claude-sonnet-5.5, worktree .worktrees/copilot-review, branch r3/copilot-review): task 1 anti-slop audit on current UI (?skipgate&chapter=0..4, 1440+390). Task 2 (3D vs playbook s8) after agy-world merges. Rule: future UI/copy fix rounds go to copilot, not claude agents; bounded tasks only.
