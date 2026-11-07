@@ -22,3 +22,9 @@
 ## Step 4
 - HIGH uses the 512×512 simulation (262k particles). Override with `<SignalField quality="medium" />` to use 256×256 without writing to the store.
 - Build and lint pass. Frame time was not measured here: `SignalField` is intentionally not mounted in this worktree, and agy-review owns the headless visual checks.
+
+## Reuse-first audit
+- Reused the installed Three.js `GPUComputationRenderer` and `MeshSurfaceSampler`, existing `noise3D.glsl`, existing `marble_bust_01.glb`, shared chapter/store types, and the anchors bridge; details are in `CREDITS.md`.
+- This particle subsystem has no matching drei/postprocessing component; its GPGPU simulation and point-sprite rendering require compute and point shaders.
+- Built target packing, cursor interaction, and morph orchestration for the existing signal contract. The requested Nova, flow-field, and Codrops clones are absent from all available worktrees, so no ref files were copied or adapted; the custom curl uses the existing MIT simplex source.
+- Used existing Poly Haven textures and HDRIs remain with the Blender/world owners; no new asset or package was added here.
