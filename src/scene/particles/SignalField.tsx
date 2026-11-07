@@ -26,6 +26,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const morphProgress = useRef(1);
   const [ready, setReady] = useState(false);
   const cursor = useMemo(() => new THREE.Vector3(), []);
+  const previousPointer = useRef(new THREE.Vector2());
   const plane = useMemo(() => new THREE.Plane(), []);
   const center = useMemo(() => new THREE.Vector3(...(anchors?.core?.position ?? [0, 0, 0])), [anchors]);
   const radius = anchors?.core?.radius ?? 1.6;
@@ -103,7 +104,8 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
       activeTarget.current = target;
       morphProgress.current = motionReduced ? 1 : 0;
     }
-    morphProgress.current = motionReduced ? 1 : Math.min(1, morphProgress.current + delta / 1.2);
+    morphProgress.current = motionReduced ? 1 : THREE.MathUtils.damp(morphProgress.current, 1, 4.8, delta);
+    if (morphProgress.current > 0.997) morphProgress.current = 1;
     computeUniforms.uMorphProgress.value = morphProgress.current;
     computeUniforms.uTurbulence.value = motionReduced ? 0 : 1;
     computeUniforms.uBeacon.value = shape === "beacon" ? 1 : 0;
@@ -112,8 +114,11 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     raycaster.setFromCamera(pointer, camera);
     plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), focus);
     const hasCursor = !motionReduced && raycaster.ray.intersectPlane(plane, cursor) !== null;
+    const pointerSpeed = delta > 0 ? pointer.distanceTo(previousPointer.current) / delta : 0;
+    previousPointer.current.copy(pointer);
     computeUniforms.uCursor.value.copy(cursor);
     computeUniforms.uCursorActive.value = hasCursor ? 1 : 0;
+    computeUniforms.uCursorStrength.value = motionReduced ? 0 : Math.min(1, pointerSpeed * 0.18);
     sim.compute.compute();
     uniforms.uPositions.value = sim.compute.getCurrentRenderTarget(sim.positionVariable).texture;
     uniforms.uTarget.value = target;

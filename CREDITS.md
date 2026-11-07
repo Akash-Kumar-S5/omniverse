@@ -12,7 +12,7 @@
 | concrete_wall_003 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/concrete_wall_003 | CC0 |
 | concrete_floor_worn_001 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/concrete_floor_worn_001 | CC0 |
 | marble_01 (2k diff/nor_gl/rough/ao) | Poly Haven | https://polyhaven.com/a/marble_01 | CC0 |
-| simplex noise GLSL (`src/scene/shaders/lib/noise3D.glsl`) | Ashima Arts / Stefan Gustavson | https://github.com/ashima/webgl-noise | MIT | Curl turbulence in Signal Field |
+| Simplex noise GLSL (`src/scene/shaders/lib/noise3D.glsl`, `noise4D.glsl`) | Ashima Arts / Stefan Gustavson | https://github.com/ashima/webgl-noise | MIT | Existing shader library; 4D simplex drives Signal Field turbulence |
 
 ## Reused code
 
@@ -20,4 +20,7 @@
 |---|---|---|---|
 | `GPUComputationRenderer` (`three/addons/misc/GPUComputationRenderer.js`) | Three.js | MIT | GPGPU position simulation and GPU snapshot |
 | `MeshSurfaceSampler` (`three/addons/math/MeshSurfaceSampler.js`) | Three.js | MIT | Sampling the existing marble bust mesh |
-| `noise3D.glsl` (`src/scene/shaders/lib/noise3D.glsl`) | Ashima Arts / Stefan Gustavson | MIT | Simplex basis used by the curl field |
+| `noise4D.glsl` (`src/scene/shaders/lib/noise4D.glsl`) | Ashima Arts / Stefan Gustavson | MIT | Existing simplex implementation used by adapted flow field |
+| `particle-field.tsx` (`nextjs-webgl-templates/src/features/nova/components/particle-field.tsx`) | Somnath Khadanga | MIT | Adapted pseudo-curl displacement and damped morph timing |
+| `FlowFieldParticles.jsx` (`r3f-flow-field-particles/src/components/FlowFieldParticles.jsx`) | Benjamin Miles | MIT | Adapted 4D flow turbulence and movement-scaled cursor repulsion |
+| `THIRD-PARTY-NOTICES.md` (`src/scene/shaders/lib/`) | Nova and R3F Flow Field authors | MIT | Full notices for adapted shader logic |

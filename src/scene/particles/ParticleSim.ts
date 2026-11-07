@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GPUComputationRenderer } from "three/addons/misc/GPUComputationRenderer.js";
 import simulationShader from "./simulation.frag?raw";
 import curlShader from "../shaders/curl.glsl?raw";
-import noiseShader from "../shaders/lib/noise3D.glsl?raw";
+import noiseShader from "../shaders/lib/noise4D.glsl?raw";
 
 export interface ParticleSimulation {
   compute: GPUComputationRenderer;
@@ -38,7 +38,7 @@ export function createParticleSimulation(
   positionVariable.material.uniforms.uTime = { value: 0 };
   positionVariable.material.uniforms.uCursor = { value: new THREE.Vector3() };
   positionVariable.material.uniforms.uCursorActive = { value: 0 };
-  positionVariable.material.uniforms.uCursorRadius = { value: radius * 0.72 };
+  positionVariable.material.uniforms.uCursorStrength = { value: 0 };
   positionVariable.material.uniforms.uTarget = { value: target };
   positionVariable.material.uniforms.uFromTarget = { value: target };
   positionVariable.material.uniforms.uMorphProgress = { value: 1 };

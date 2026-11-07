@@ -11,7 +11,7 @@
 - Added cached-per-state target texture generation for the sampled marble bust, four-cluster experience helix, active project text glyph, and pulsing beacon.
 - The helix highlights the active role; project targets follow `activeProject`; particle positions publish the four scene anchors.
 - Build and lint pass. Target changes currently reinitialize the simulation; step 3 will replace that with continuous morph transitions.
-- Reference checkout `.orchestrator/research/refs/` is absent from this worktree, so the flow-field and Nova source could not be inspected.
+- During the reuse pass, adapted the available Nova and flow-field references; details and notices are recorded below and in `CREDITS.md`.
 
 ## Step 3
 - Added a curl-noise field and a 1.2-second eased transition from a GPU snapshot of the current swarm to each new target, including retargets mid-flight.
@@ -21,10 +21,13 @@
 
 ## Step 4
 - HIGH uses the 512×512 simulation (262k particles). Override with `<SignalField quality="medium" />` to use 256×256 without writing to the store.
-- Build and lint pass. Frame time was not measured here: `SignalField` is intentionally not mounted in this worktree, and agy-review owns the headless visual checks.
+- Temporary headless scratch mount, Apple M3 Pro / Metal, 1440×900 at DPR 1: 262,144 points, one draw call; 120 synchronized render samples after 30 warmup frames gave 3.94 ms mean, 3.6 ms p50, 6.2 ms p95 (about 161 FPS at p95).
+- Timing synchronized the compute/render queue with `finish()` plus a 1-pixel readback; it is a GPU completion probe, not an end-user RAF cadence result. The scratch Experience and scripts were removed.
+- Build and lint pass; agy-review retains the visual checks.
 
 ## Reuse-first audit
-- Reused the installed Three.js `GPUComputationRenderer` and `MeshSurfaceSampler`, existing `noise3D.glsl`, existing `marble_bust_01.glb`, shared chapter/store types, and the anchors bridge; details are in `CREDITS.md`.
+- Reused the installed Three.js `GPUComputationRenderer` and `MeshSurfaceSampler`, existing `noise4D.glsl`, existing `marble_bust_01.glb`, shared chapter/store types, and the anchors bridge; details are in `CREDITS.md`.
 - This particle subsystem has no matching drei/postprocessing component; its GPGPU simulation and point-sprite rendering require compute and point shaders.
-- Built target packing, cursor interaction, and morph orchestration for the existing signal contract. The requested Nova, flow-field, and Codrops clones are absent from all available worktrees, so no ref files were copied or adapted; the custom curl uses the existing MIT simplex source.
+- Adapted `nextjs-webgl-templates/src/features/nova/components/particle-field.tsx` for pseudo-curl displacement and damped morph timing, plus `r3f-flow-field-particles/src/components/FlowFieldParticles.jsx` for 4D noise flow and movement-scaled cursor repulsion. Full MIT notices are retained in `src/scene/shaders/lib/THIRD-PARTY-NOTICES.md`.
+- Built target packing and signal-bus orchestration for this app's chapter/anchor contract; Three.js `MeshSurfaceSampler` handles bust sampling. No Codrops implementation code was copied.
 - Used existing Poly Haven textures and HDRIs remain with the Blender/world owners; no new asset or package was added here.
