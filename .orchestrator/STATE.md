@@ -26,7 +26,7 @@ Round 1 is complete and reviewed clean, tagged in history at `3b98f7d`.
 | codex-chapters | codex (default effort) | w2:pA | t5 r2-scene | r2/codex-chapters | step 2: mount World, AnchorWriters and LoadProgress in `Experience.tsx`; push-in off `store.entered` |
 | agy-type | agy `--mode auto` (gemini flash) | w2:p9 | t6 r2-ui | r2/agy-type | still on brief steps 3–4 (preloader/Enter gate, callouts). Steps 1–2 are merged. |
 | claude-assets | claude auto (Opus default!) | w2:pB | t6 r2-ui | r2/claude-assets | Outcome B copy rewrite plus verifying HDRI authors in CREDITS.md via the Poly Haven API |
-| claude-review | claude auto (Opus default!) | w2:pC | t7 r2-review | none | idle, never prompted. Per MODEL-POLICY, REPLACE it with agy `--model claude-opus-4-6-thinking`. |
+| agy-review | agy auto, claude-opus-4-6-thinking | w2:pD | t8 r2-review | none | started 13:1x UTC; waiting for builders before review (w2:pC Opus closed) |
 
 All worktrees are at `.worktrees/<name>`, with `node_modules` symlinked to `../../node_modules`.
 - Briefs are in `.orchestrator/briefs/round2-*.md`.
@@ -72,3 +72,6 @@ All worktrees are at `.worktrees/<name>`, with `node_modules` symlinked to `../.
 - The watcher script at `<scratchpad>/watch3.sh <names…>` auto-allows agy file dialogs and wakes on a new r2/* commit, a block or a finish. The scratchpad is `/private/tmp/claude-501/-Users-akashkumars-Documents-Personal-portfolio-omniverse/ada568f1-b238-410f-946e-2a9dc19d51f2/scratchpad`; it may not survive /clear, so recreate the script if needed.
 - The REA `capture_browser_scenario` output is huge. Extract the screenshot with jq from the saved tool-result file, and never read big JSON into context.
 - Akash is away from this Mac: anything he must see goes in an Artifact link, never a localhost URL.
+
+## Akash directive (2026-11-07 13:14 UTC)
+Review OUTPUT only (screenshots, behaviour, measurements), not code. Brief briefs/round2-claude-review.md updated; agy-review (w2:pD, t8) is the reviewer.

@@ -1,4 +1,6 @@
-# Brief: claude-review (kind claude). Reviewer only, round 2
+# Brief: agy-review (kind agy, claude-opus-4-6-thinking). Output-only reviewer, round 2
+
+**OUTPUT ONLY (Akash's instruction): do NOT review source code.** Judge what a visitor sees and experiences: screenshots, scroll behaviour, measured DOM rects, console errors, load/fps, fallbacks. Do not read src/ to critique style or structure. Findings cite the screenshot or the measurement, name the likely owner agent, and describe the visible fix. Only open source if needed to name the owner.
 
 You never edit source code, commit, or review your own work. You review the four builders: codex-world, codex-chapters, agy-type and claude-assets.
 
@@ -35,5 +37,5 @@ Stop the preview server when you finish.
 ## Output
 Write `.orchestrator/review/round2-review.md`, at most 60 lines.
 - Findings are ranked: blocker / major / minor.
-- Each finding gives `file:line`, the owner agent and a concrete fix.
+- Each finding gives the evidence (screenshot name or measurement), the owner agent and a concrete visible fix.
 - End with `VERDICT: CLEAN` or `VERDICT: CHANGES`.
