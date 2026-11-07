@@ -12,7 +12,12 @@ export default function AboutSection() {
   };
 
   return (
-    <section data-section="about" className="section-container section-about" aria-label="About Akash Kumar">
+    <section
+      data-section="about"
+      tabIndex={-1}
+      className="section-container section-about"
+      aria-label="About Akash Kumar"
+    >
       <div className="section-panel">
         <div className="sheet-handle" aria-hidden="true" />
         <div className="section-eyebrow">

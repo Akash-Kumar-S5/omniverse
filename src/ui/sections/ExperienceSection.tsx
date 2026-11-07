@@ -14,11 +14,15 @@ export default function ExperienceSection() {
   const scrollTimerRef = useRef<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Clear target tracking on arrival, manual wheel/touch, or scrollend
+  // Clear target tracking only on arrival or scrollend, with a ~2000ms safety timeout
   useEffect(() => {
     const clearTarget = () => {
       targetRef.current = null;
       targetYRef.current = null;
+      if (scrollTimerRef.current) {
+        window.clearTimeout(scrollTimerRef.current);
+        scrollTimerRef.current = null;
+      }
     };
 
     const onScroll = () => {
@@ -28,14 +32,10 @@ export default function ExperienceSection() {
     };
 
     window.addEventListener("scrollend", clearTarget);
-    window.addEventListener("wheel", clearTarget, { passive: true });
-    window.addEventListener("touchmove", clearTarget, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.removeEventListener("scrollend", clearTarget);
-      window.removeEventListener("wheel", clearTarget);
-      window.removeEventListener("touchmove", clearTarget);
       window.removeEventListener("scroll", onScroll);
       if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
     };
@@ -67,7 +67,7 @@ export default function ExperienceSection() {
       scrollTimerRef.current = window.setTimeout(() => {
         targetRef.current = null;
         targetYRef.current = null;
-      }, 800);
+      }, 2000);
     },
     [reducedMotion, setActiveRole]
   );
@@ -102,14 +102,23 @@ export default function ExperienceSection() {
     }
   };
 
-  // Distinct role labels for tabs
+  // Derive short role label dynamically from exp.role
   const getRoleTabLabel = (exp: (typeof experiences)[number], idx: number) => {
     const num = `0${idx + 1}`;
-    if (idx === 0) return `${num} Engineer`;
-    if (idx === 1) return `${num} Assoc. Eng`;
-    if (idx === 2) return `${num} Intern`;
-    if (idx === 3) return `${num} Full-Stack`;
-    return `${num} ${exp.role}`;
+    const r = exp.role.toLowerCase();
+    let short = exp.role;
+    if (r.includes("senior") || r.includes("sr.")) short = "Sr. Eng";
+    else if (r.includes("associate")) short = "Assoc. Eng";
+    else if (r.includes("full-stack") || r.includes("fullstack")) short = "Full-Stack";
+    else if (r.includes("intern")) short = "Intern";
+    else if (r.includes("lead")) short = "Lead Eng";
+    else if (r.includes("engineer")) short = "Engineer";
+    else if (r.includes("developer")) short = "Developer";
+    else {
+      const words = exp.role.split(" ");
+      short = words.length > 2 ? words.slice(0, 2).join(" ") : exp.role;
+    }
+    return `${num} ${short}`;
   };
 
   const currentRole = experiences[activeRole] || experiences[0];
