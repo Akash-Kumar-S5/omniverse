@@ -41,11 +41,11 @@
 }
 
 .section-experience {
-  min-height: 240vh; /* 60vh per role * 4 */
+  min-height: 240vh; /* Base fallback; overridden inline by experiences.length * 60vh */
 }
 
 .section-projects {
-  min-height: 800vh; /* 100vh per project * 8 */
+  min-height: 800vh; /* Base fallback; overridden inline by projects.length * 100vh */
 }
 
 .section-contact {

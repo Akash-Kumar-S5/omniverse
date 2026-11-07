@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { experiences } from "../../content";
 import { useOmni } from "../../state/store";
 
@@ -9,9 +9,74 @@ export default function ExperienceSection() {
   const sectionProgress = useOmni((s) => s.sectionProgress);
   const reducedMotion = useOmni((s) => s.reducedMotion);
 
-  // Sync scroll progress through experience section to activeRole
+  const targetRef = useRef<number | null>(null);
+  const targetYRef = useRef<number | null>(null);
+  const scrollTimerRef = useRef<number | null>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Clear target tracking on arrival, manual wheel/touch, or scrollend
+  useEffect(() => {
+    const clearTarget = () => {
+      targetRef.current = null;
+      targetYRef.current = null;
+    };
+
+    const onScroll = () => {
+      if (targetYRef.current !== null && Math.abs(window.scrollY - targetYRef.current) <= 2) {
+        clearTarget();
+      }
+    };
+
+    window.addEventListener("scrollend", clearTarget);
+    window.addEventListener("wheel", clearTarget, { passive: true });
+    window.addEventListener("touchmove", clearTarget, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scrollend", clearTarget);
+      window.removeEventListener("wheel", clearTarget);
+      window.removeEventListener("touchmove", clearTarget);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+    };
+  }, []);
+
+  const scrollToRole = useCallback(
+    (idx: number) => {
+      const el = document.querySelector<HTMLElement>('[data-section="experience"]');
+      if (!el) return;
+      const clamped = Math.max(0, Math.min(experiences.length - 1, idx));
+
+      targetRef.current = clamped;
+      setActiveRole(clamped);
+
+      const targetProgress = (clamped + 0.5) / experiences.length;
+      const top = el.offsetTop;
+      const h = el.offsetHeight;
+      const targetY = top + targetProgress * h - window.innerHeight * 0.5;
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const clampedY = Math.max(0, Math.min(maxScroll, targetY));
+      targetYRef.current = clampedY;
+
+      window.scrollTo({
+        top: clampedY,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = window.setTimeout(() => {
+        targetRef.current = null;
+        targetYRef.current = null;
+      }, 800);
+    },
+    [reducedMotion, setActiveRole]
+  );
+
+  // Sync scroll progress through experience section to activeRole, skipping while targetRef is active
   useEffect(() => {
     if (section === "experience") {
+      if (targetRef.current !== null) return;
+
       const currentRoleIdx = Math.min(
         experiences.length - 1,
         Math.max(0, Math.floor(sectionProgress * experiences.length))
@@ -22,21 +87,29 @@ export default function ExperienceSection() {
     }
   }, [section, sectionProgress, activeRole, setActiveRole]);
 
-  const scrollToRole = (idx: number) => {
-    const el = document.querySelector<HTMLElement>('[data-section="experience"]');
-    if (!el) return;
-    const clamped = Math.max(0, Math.min(experiences.length - 1, idx));
-    const targetProgress = (clamped + 0.5) / experiences.length;
-    const top = el.offsetTop;
-    const h = el.offsetHeight;
-    const targetY = top + targetProgress * h - window.innerHeight * 0.5;
-    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    const clampedY = Math.max(0, Math.min(maxScroll, targetY));
-    window.scrollTo({
-      top: clampedY,
-      behavior: reducedMotion ? "auto" : "smooth",
-    });
-    setActiveRole(clamped);
+  // Arrow-key roving on the tablist
+  const handleTablistKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      const nextIdx = (activeRole + 1) % experiences.length;
+      scrollToRole(nextIdx);
+      tabRefs.current[nextIdx]?.focus();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      const prevIdx = (activeRole - 1 + experiences.length) % experiences.length;
+      scrollToRole(prevIdx);
+      tabRefs.current[prevIdx]?.focus();
+    }
+  };
+
+  // Distinct role labels for tabs
+  const getRoleTabLabel = (exp: (typeof experiences)[number], idx: number) => {
+    const num = `0${idx + 1}`;
+    if (idx === 0) return `${num} Engineer`;
+    if (idx === 1) return `${num} Assoc. Eng`;
+    if (idx === 2) return `${num} Intern`;
+    if (idx === 3) return `${num} Full-Stack`;
+    return `${num} ${exp.role}`;
   };
 
   const currentRole = experiences[activeRole] || experiences[0];
@@ -45,6 +118,7 @@ export default function ExperienceSection() {
     <section
       data-section="experience"
       className="section-container section-experience"
+      style={{ minHeight: `${experiences.length * 60}vh` }}
       aria-label="Work experience trajectory"
     >
       <div className="section-panel">
@@ -56,26 +130,35 @@ export default function ExperienceSection() {
 
         <h2 className="section-title">Career Trajectory</h2>
 
-        {/* Interactive role tabs */}
-        <div className="exp-tabs" role="tablist" aria-label="Experience role selector">
+        {/* Interactive role tabs with left/right roving navigation */}
+        <div
+          className="exp-tabs"
+          role="tablist"
+          aria-label="Experience role selector"
+          onKeyDown={handleTablistKeyDown}
+        >
           {experiences.map((exp, idx) => (
             <button
               key={idx}
+              ref={(el) => {
+                tabRefs.current[idx] = el;
+              }}
               type="button"
               role="tab"
+              tabIndex={activeRole === idx ? 0 : -1}
               aria-selected={activeRole === idx}
-              aria-controls={`role-panel-${idx}`}
+              aria-controls="role-panel-active"
               className={`exp-tab-btn ${activeRole === idx ? "active" : ""}`}
               onClick={() => scrollToRole(idx)}
             >
-              0{idx + 1} {exp.company.split(" ")[0]}
+              {getRoleTabLabel(exp, idx)}
             </button>
           ))}
         </div>
 
-        {/* Active Role Card */}
+        {/* Single fixed tabpanel id for the active Role Card */}
         <article
-          id={`role-panel-${activeRole}`}
+          id="role-panel-active"
           role="tabpanel"
           className="role-card-active"
           aria-label={`${currentRole.role} at ${currentRole.company}`}
@@ -100,7 +183,7 @@ export default function ExperienceSection() {
           </ul>
         </article>
 
-        {/* Other 3 Role Cards in Compact Overview format */}
+        {/* Other Role Cards in Compact Overview format */}
         <div style={{ marginTop: "12px" }}>
           {experiences.map((exp, idx) => {
             if (idx === activeRole) return null;
