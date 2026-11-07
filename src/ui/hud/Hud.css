@@ -387,7 +387,7 @@
   .hud-mobile-controls {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
 
   .hud-mobile-section {
@@ -398,9 +398,9 @@
     display: none;
   }
 
-  /* In top-left corner: compact display */
+  /* In top-left corner: compact display; hide redundant mobile status dot to avoid collisions */
   .hud-mobile-status-dot {
-    display: inline-block;
+    display: none !important;
   }
 
   .hud-name-sub {
@@ -410,5 +410,14 @@
   /* Hide scroll cue on mobile */
   .hud-scroll-cue {
     display: none !important;
+  }
+}
+
+/* Extra narrow screens (<= 360px): stack mobile badge and toggle vertically to guarantee zero collision */
+@media (max-width: 360px) {
+  .hud-mobile-controls {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
   }
 }

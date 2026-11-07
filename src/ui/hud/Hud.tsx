@@ -63,14 +63,17 @@ export default function Hud({ inert }: HudProps = {}) {
 
   const handleSkipToContent = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const mainContent = document.getElementById("main-content");
-    if (mainContent) {
-      mainContent.focus({ preventScroll: true });
-    }
-    const target =
-      document.querySelector<HTMLElement>('[data-section="about"]') || mainContent;
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+    const aboutSection =
+      document.querySelector<HTMLElement>('[data-section="about"]');
+    if (aboutSection) {
+      aboutSection.focus({ preventScroll: true });
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      const mainContent = document.getElementById("main-content");
+      if (mainContent) {
+        mainContent.focus({ preventScroll: true });
+        mainContent.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -118,7 +121,7 @@ export default function Hud({ inert }: HudProps = {}) {
     >
       {/* Keyboard-accessible skip link */}
       <a
-        href="#main-content"
+        href="#about"
         className="hud-skip-link"
         onClick={handleSkipToContent}
       >
@@ -186,7 +189,7 @@ export default function Hud({ inert }: HudProps = {}) {
 
         <div className="hud-mobile-controls">
           <span className="hud-mobile-section" aria-hidden="true">
-            {sectionNumber}/05 {sectionName}
+            {sectionNumber}/05
           </span>
           {renderQualityToggle()}
         </div>
