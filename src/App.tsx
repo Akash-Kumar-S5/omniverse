@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useOmni } from "./state/store";
 import { detectWebGL, prefersReducedMotion } from "./state/env";
 import { useScrollSync } from "./state/useScrollSync";
@@ -9,6 +9,9 @@ const Experience = lazy(() => import("./scene/Experience"));
 
 export default function App() {
   const webgl = useOmni((s) => s.webgl);
+  // Env is detected in an effect (no matchMedia/WebGL probing during render).
+  // Render nothing until then so the 3D chunk is never requested on no-WebGL devices.
+  const [envReady, setEnvReady] = useState(false);
   useScrollSync();
 
   useEffect(() => {
@@ -17,10 +20,12 @@ export default function App() {
     const apply = () => useOmni.getState().setEnv({ reducedMotion: prefersReducedMotion(), webgl: !forceNoGL && detectWebGL() });
     apply();
     if (new URLSearchParams(location.search).has("lite")) useOmni.getState().setQuality("lite");
+    setEnvReady(true);
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
 
+  if (!envReady) return null;
   if (!webgl) return <Fallback />;
 
   return (
