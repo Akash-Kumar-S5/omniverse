@@ -16,6 +16,10 @@
   dir see it. Exactly ONE agent drives the live Blender at a time. It saves every scene step as a script in
   `blender/scripts/` so the build stays reproducible headless.
 
+## Update 02:58 IST: CODEX LOCKED until Mon 13:54 IST (30-day quota at 0%)
+codex agents can't run. Their lanes (3D/shaders/particles/perf) go to copilot claude-sonnet-5.5 (or gpt-6-luna for
+simple fixes) and agy gemini-3.8-flash-high. Return to codex after the reset.
+
 ## Update 00:55 IST: GitHub Copilot CLI added (Akash's Copilot Pro)
 - `copilot` 1.0.107 is installed and signed in (herdr kind `copilot`). Verified models: **claude-sonnet-5.5** and
   **gpt-6-luna**. Not available: opus-5.5, gpt-6.1-sol, gemini. It bills GitHub AI credits (a test prompt cost 0.13),
@@ -32,7 +36,7 @@
 |---|---|---|
 | Orchestration (briefs, merges, status) | claude **Sonnet 5.5** (`/model sonnet`) | Coordination is mostly reading and writing; Opus here burned the 5h window |
 | Hard judgment (concept pick, final art-direction call, a stuck bug after 2 failed fixes) | claude **Opus 5.5**, one turn, then back to Sonnet | Spend Opus only where judgment is the work |
-| 3D, shaders, R3F perf | codex **gpt-6-luna medium** (high only for shader/perf bugs) | Strong coder, but its 30-day pool is at 87% |
+| 3D, shaders, R3F perf | copilot **claude-sonnet-5.5** (codex LOCKED until Mon 13:54 IST) | Separate GitHub credit pool; watch AIC burn |
 | UI, typography, layout, CSS, copy | agy **gemini-3.8-flash-high** | Fast and cheap, on the separate pool |
 | Code review / QA / second look | agy **claude-opus-4-6-thinking** (`agy --model claude-opus-4-6-thinking`) | Opus-class review on Google quota; a different lineage from the builders |
 | Mechanical work (asset download, compression, renames, CREDITS.md) | claude **Haiku** (`--model haiku`) or agy **gemini-3.8-flash-low** | Near-script work |

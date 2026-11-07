@@ -1,13 +1,13 @@
 # Omniverse orchestrator STATE
-## STATUS TABLE (18:45 UTC 2026-11-07)
+## STATUS TABLE (21:30 UTC 2026-11-07; main 36cf150, build+lint clean)
 | Agent | Pane | Status | Next |
 |---|---|---|---|
-| codex-world | w2:pE | b11a056 MERGED (params, CPU fallback, tiers) | idle; perf measurement after agy-world lands |
-| ui-editor | w2:pN | 84a217c MERGED (type, quiet chrome); continuing HUD/chapter panels | screenshots per chapter 1440+390, then merge |
-| agy-world | w2:pK | UNMERGED; rebase + beam haze + swarm tint + composition rule (swarm right of 55% width) prompted | replace old constellation, shots ?skipgate&chapter=0..4, then merge |
-| blender-sanctum | w2:pJ | MERGED efc6b0b (sanctum.glb 1.2 MB) | done; close pane at a break |
-| toolsmith | w2:pP | started by Morph (claude Sonnet, r3/toolsmith, brief briefs/toolsmith.md); project scope, pinned, telemetry off | review report, merge; restart agents at a natural break |
-| agy-review | w2:pM | idle | review main after agy-world merges (chapters 0..4 at 1440+390, anti-slop audit) |
+| copilot-swarm | w2:pS | WORKING: fixing swarm not rendering (GL 'vertex buffer not big enough'); uncommitted SignalField/targets/VolumeCone; ~120 AIC used | headed proof ch0-4 (cs-ch*.png), commit, I merge |
+| agy-world | w2:pK | idle; last merged 9be7400 (camera through building, lit sanctum, bust fix) | ROUND-1 plan items (motion/camera polish) after swarm merges |
+| agy-review | w2:pM | idle; baseline report agy-review-main.md (scores 7.3-8.0, swarm missing) | re-score after swarm fix |
+| copilot-review | w2:pQ | idle; audit + fallback recheck merged | re-score + benchmark vs aengel/landing.love after swarm fix |
+| codex-world | w2:pE | LOCKED (quota 0% until Mon 13:54): lanes moved to copilot/agy | none |
+| ui-editor, toolsmith, blender-sanctum, copilot-ui | closed | merged | none |
 
 
 ## Phase
