@@ -11,10 +11,11 @@ import Effects from "./fx/Effects";
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
   const [dpr, setDpr] = useState(2);
-  const [visible, setVisible] = useState(() => !document.hidden);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const onVisibilityChange = () => setVisible(!document.hidden);
+    onVisibilityChange();
     document.addEventListener("visibilitychange", onVisibilityChange);
     return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, []);
