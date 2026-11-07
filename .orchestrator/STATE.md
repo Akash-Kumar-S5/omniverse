@@ -107,3 +107,14 @@ Playbook being revised (deeper internet research, Blender in the pipeline), ETA 
 - Done under the hold: round-2 work all merged, research files committed, contract written (`briefs/round3-contract.md`, `src/state/signal.ts`; may need revising for the new playbook).
 - Round 3 briefs (`briefs/round3-codex-world.md`, `round3-agy-world.md`) are STALE until the playbook update. Rewrite them after reading the new playbook.
 - Next: wait for Morph's go, re-read the playbook, revise contract and briefs, re-prompt both held agents.
+
+## ROUND 3 GO (2026-11-07 15:30 UTC) — hold lifted, direction "Sanctum + Signal Field"
+Contract: `briefs/round3-contract.md` + `src/state/signal.ts` (CHAPTER_SPOTS names shared by Blender `CAM_*` and CameraRig; ANCHOR_* empties; SanctumSpots manifest; tiers). Committed on main.
+| Name | Lane | Pane | Branch | Status |
+|---|---|---|---|---|
+| blender-sanctum | agy claude-opus-4-6-thinking (codex pool is 87% used) | w2:pG | r3/blender-sanctum | step 1-2 (scripted scene + Cycles stills), STOP at stills: show Akash BEFORE export |
+| codex-world | codex gpt-6-luna high | w2:pE | r3/codex-world | step 1 (SignalField minimal) |
+| agy-world | agy opus-4-6-thinking | w2:pF | r3/agy-world | HOLDING, start after codex-world step 1 (needs SignalField export) and sanctum stills |
+| agy-review | agy opus-4-6-thinking | w2:pD | none | idle/finishing round-2 baseline; judges playbook s8 later |
+Rules: BlenderMCP needs Akash's OK (not installed). Cycles stills per chapter before export. Akash away: stills go in an Artifact.
+Next 3: (1) wait for blender stills -> publish Artifact of stills for Akash (private) -> on go, tell blender-sanctum to export; (2) merge codex-world step 1, then prompt agy-world; (3) integrate, agy-review, strip Artifact, final verify.
