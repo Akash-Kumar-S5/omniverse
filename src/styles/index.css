@@ -1,0 +1,3 @@
+/* agy owns this file. Minimal base so the scaffold runs. */
+html, body { margin: 0; background: #05060a; color: #e8ecf4; }
+.scene-layer { position: fixed; inset: 0; z-index: 0; }
