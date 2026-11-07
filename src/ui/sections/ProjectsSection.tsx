@@ -9,33 +9,77 @@ export default function ProjectsSection() {
   const sectionProgress = useOmni((s) => s.sectionProgress);
   const reducedMotion = useOmni((s) => s.reducedMotion);
 
+  const targetRef = useRef<number | null>(null);
+  const targetYRef = useRef<number | null>(null);
+  const scrollTimerRef = useRef<number | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Scroll window to match the target project position in the 800vh section
+  // Clear target tracking on arrival, manual wheel/touch, or scrollend
+  useEffect(() => {
+    const clearTarget = () => {
+      targetRef.current = null;
+      targetYRef.current = null;
+    };
+
+    const onScroll = () => {
+      if (targetYRef.current !== null && Math.abs(window.scrollY - targetYRef.current) <= 2) {
+        clearTarget();
+      }
+    };
+
+    window.addEventListener("scrollend", clearTarget);
+    window.addEventListener("wheel", clearTarget, { passive: true });
+    window.addEventListener("touchmove", clearTarget, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scrollend", clearTarget);
+      window.removeEventListener("wheel", clearTarget);
+      window.removeEventListener("touchmove", clearTarget);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+    };
+  }, []);
+
+  // Scroll window to match target project position in projects section
   const scrollToProject = useCallback(
     (index: number) => {
       const el = document.querySelector<HTMLElement>('[data-section="projects"]');
       if (!el) return;
       const total = projects.length;
       const clamped = Math.max(0, Math.min(total - 1, index));
+
+      // Guard: set targetRef immediately and update store state so UI updates instantly
+      targetRef.current = clamped;
+      setActiveProject(clamped);
+
       const targetProgress = (clamped + 0.5) / total;
       const top = el.offsetTop;
       const h = el.offsetHeight;
       const targetY = top + targetProgress * h - window.innerHeight * 0.5;
       const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
       const clampedY = Math.max(0, Math.min(maxScroll, targetY));
+      targetYRef.current = clampedY;
+
       window.scrollTo({
         top: clampedY,
         behavior: reducedMotion ? "auto" : "smooth",
       });
-      setActiveProject(clamped);
+
+      if (scrollTimerRef.current) window.clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = window.setTimeout(() => {
+        targetRef.current = null;
+        targetYRef.current = null;
+      }, 800);
     },
     [reducedMotion, setActiveProject]
   );
 
-  // Sync scroll progress through projects section to activeProject
+  // Sync scroll progress through projects section to activeProject, skipping while targetRef is active
   useEffect(() => {
     if (section === "projects") {
+      if (targetRef.current !== null) return;
+
       const targetIdx = Math.min(
         projects.length - 1,
         Math.max(0, Math.floor(sectionProgress * projects.length))
@@ -46,24 +90,24 @@ export default function ProjectsSection() {
     }
   }, [section, sectionProgress, activeProject, setActiveProject]);
 
-  // Arrow key navigation when in projects section
+  // Arrow key navigation computed from targetRef ?? activeProject
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
 
       const currentSection = useOmni.getState().section;
       if (currentSection !== "projects") return;
 
+      const currentTarget = targetRef.current ?? activeProject;
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        if (activeProject > 0) {
-          scrollToProject(activeProject - 1);
+        if (currentTarget > 0) {
+          scrollToProject(currentTarget - 1);
         }
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        if (activeProject < projects.length - 1) {
-          scrollToProject(activeProject + 1);
+        if (currentTarget < projects.length - 1) {
+          scrollToProject(currentTarget + 1);
         }
       }
     };
@@ -86,16 +130,17 @@ export default function ProjectsSection() {
     const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
     touchStartRef.current = null;
 
-    // Detect horizontal swipe
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0 && activeProject < projects.length - 1) {
-        scrollToProject(activeProject + 1);
-      } else if (dx > 0 && activeProject > 0) {
-        scrollToProject(activeProject - 1);
+      const currentTarget = targetRef.current ?? activeProject;
+      if (dx < 0 && currentTarget < projects.length - 1) {
+        scrollToProject(currentTarget + 1);
+      } else if (dx > 0 && currentTarget > 0) {
+        scrollToProject(currentTarget - 1);
       }
     }
   };
 
+  const currentNavTarget = targetRef.current ?? activeProject;
   const project = projects[activeProject] || projects[0];
   const counterText = `${String(activeProject + 1).padStart(2, "0")} / ${String(projects.length).padStart(2, "0")}`;
 
@@ -103,12 +148,14 @@ export default function ProjectsSection() {
     <section
       data-section="projects"
       className="section-container section-projects"
+      style={{ minHeight: `${projects.length * 100}vh` }}
       aria-label="Featured projects constellation"
     >
       <div
         className="section-panel"
+        role="region"
         tabIndex={0}
-        aria-label={`Project ${counterText}: ${project.title}. Use left and right arrow keys to navigate.`}
+        aria-label="Featured projects"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -174,21 +221,20 @@ export default function ProjectsSection() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => scrollToProject(activeProject - 1)}
-            disabled={activeProject === 0}
+            onClick={() => scrollToProject(currentNavTarget - 1)}
+            disabled={currentNavTarget === 0}
             aria-label="Previous project"
           >
             ← Prev
           </button>
 
-          {/* Quick jump pips */}
-          <div className="project-pips" role="tablist" aria-label="Project selectors">
+          {/* Quick jump pips using plain buttons with aria-current */}
+          <div className="project-pips" aria-label="Project selectors">
             {projects.map((_, idx) => (
               <button
                 key={idx}
                 type="button"
-                role="tab"
-                aria-selected={activeProject === idx}
+                aria-current={activeProject === idx ? "step" : undefined}
                 aria-label={`Jump to project ${idx + 1}`}
                 className={`project-pip ${activeProject === idx ? "active" : ""}`}
                 onClick={() => scrollToProject(idx)}
@@ -199,8 +245,8 @@ export default function ProjectsSection() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => scrollToProject(activeProject + 1)}
-            disabled={activeProject === projects.length - 1}
+            onClick={() => scrollToProject(currentNavTarget + 1)}
+            disabled={currentNavTarget === projects.length - 1}
             aria-label="Next project"
           >
             Next →
