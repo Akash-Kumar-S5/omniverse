@@ -29,10 +29,12 @@ export default function Experience() {
       {quality !== "lite" && (
         <>
           <PerformanceMonitor
+            flipflops={3}
             onDecline={() => setDpr(1)}
             onIncline={() => setDpr(2)}
+            onFallback={() => setDpr(1)}
           />
-          <AdaptiveDpr pixelated />
+          <AdaptiveDpr />
         </>
       )}
       <color attach="background" args={["#05060a"]} />

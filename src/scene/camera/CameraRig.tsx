@@ -20,10 +20,10 @@ export default function CameraRig() {
   const pathLook = useRef(new Vector3());
   const pointer = useRef(new Vector2());
   const pointerTarget = useRef(new Vector2());
-  const activeRole = useRef(-1);
   const touchDevice = useRef(false);
   const reducedSection = useRef("");
-  const reducedTransition = useRef(0);
+  const reducedTransition = useRef(false);
+  const wasReducedMotion = useRef(false);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
@@ -47,14 +47,19 @@ export default function CameraRig() {
     const state = useOmni.getState();
     const { section, sectionProgress, activeProject, reducedMotion } = state;
     const p = clamp(sectionProgress, 0, 1);
+    const lastRole = Math.max(0, roleWaypoints.length - 1);
+    const passedRole = clamp(Math.floor(p * lastRole + 0.5), 0, lastRole);
+    if (section === "experience" && state.activeRole !== passedRole) {
+      state.setActiveRole(passedRole);
+    }
     const pos = positionTarget.current;
     const look = lookDesired.current;
 
     if (reducedMotion) {
       // The five fixed poses keep the scene legible without scroll-driven motion.
-      if (reducedSection.current !== section) {
+      if (!wasReducedMotion.current || reducedSection.current !== section) {
         reducedSection.current = section;
-        reducedTransition.current = 0.65;
+        reducedTransition.current = true;
       }
       switch (section) {
         case "boot": pos.set(0, 5, 28); look.set(0, 0, 0); break;
@@ -74,7 +79,7 @@ export default function CameraRig() {
         case "contact": pos.set(beacon[0], beacon[1] + 5, beacon[2] + 28); look.set(beacon[0], beacon[1], beacon[2]); break;
       }
     } else {
-      reducedTransition.current = 0;
+      reducedTransition.current = false;
       switch (section) {
         case "boot":
           pos.set(0, 7 - 3 * p, 34 - 9 * p);
@@ -87,17 +92,10 @@ export default function CameraRig() {
           break;
         }
         case "experience": {
-          const last = Math.max(0, roleWaypoints.length - 1);
-          const waypointProgress = p * last;
           curve.getPointAt(p, pathPosition.current);
           curve.getPointAt(Math.min(1, p + 0.015), pathLook.current);
           pos.copy(pathPosition.current);
           look.set(pathLook.current.x * 0.42, pathLook.current.y - 1, pathLook.current.z - 7);
-          const passedRole = clamp(Math.floor(waypointProgress + 0.5), 0, last);
-          if (activeRole.current !== passedRole) {
-            activeRole.current = passedRole;
-            state.setActiveRole(passedRole);
-          }
           break;
         }
         case "projects": {
@@ -126,11 +124,14 @@ export default function CameraRig() {
       }
     }
 
-    if (!reducedMotion || reducedTransition.current > 0) {
-      easing.damp3(camera.position, pos, reducedMotion ? 5 : 1.5, delta);
-      easing.damp3(lookTarget.current, look, reducedMotion ? 5 : 1.8, delta);
-      if (reducedMotion) reducedTransition.current = Math.max(0, reducedTransition.current - delta);
+    if (!reducedMotion || reducedTransition.current || camera.position.distanceToSquared(pos) >= 1e-4 || lookTarget.current.distanceToSquared(look) >= 1e-4) {
+      easing.damp3(camera.position, pos, reducedMotion ? 0.3 : 1.5, delta);
+      easing.damp3(lookTarget.current, look, reducedMotion ? 0.3 : 1.8, delta);
+      if (reducedMotion && camera.position.distanceToSquared(pos) < 1e-4 && lookTarget.current.distanceToSquared(look) < 1e-4) {
+        reducedTransition.current = false;
+      }
     }
+    wasReducedMotion.current = reducedMotion;
     camera.lookAt(lookTarget.current);
   });
 
