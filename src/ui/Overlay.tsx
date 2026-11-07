@@ -4,17 +4,17 @@ import Hud from "./hud/Hud";
 import Sections from "./sections/Sections";
 
 export default function Overlay() {
-  const booted = useOmni((s) => s.booted);
+  const entered = useOmni((s) => s.entered);
 
   return (
     <>
       <Boot />
-      <Hud inert={!booted} />
+      <Hud inert={!entered} />
       <main
         className="overlay"
         id="main-content"
         tabIndex={-1}
-        inert={!booted}
+        inert={!entered}
       >
         <Sections />
       </main>
