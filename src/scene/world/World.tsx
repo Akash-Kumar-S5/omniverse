@@ -134,7 +134,6 @@ function LightShafts() {
 }
 
 export default function World() {
-  const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
   return <>
     <WorldLighting />
