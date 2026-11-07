@@ -1,0 +1,3 @@
+{
+  "enabledMcpjsonServers": ["playwright", "chrome-devtools", "context7"]
+}
