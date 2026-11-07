@@ -20,7 +20,7 @@
   `claude mcp add --scope project playwright -- npx -y @playwright/mcp@0.0.84 --isolated --executable-path "<Chrome>" --caps=devtools`
   `claude mcp add --scope project chrome-devtools -e CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS=1 -e CHROME_DEVTOOLS_MCP_NO_UPDATE_CHECKS=1 -- npx -y chrome-devtools-mcp@1.12.0 --no-usage-statistics --isolated --executablePath "<Chrome>"`
   `claude mcp add --scope project context7 -- npx -y @upstash/context7-mcp@4.5.1`
-  `claude mcp list` shows all three as "Pending approval". **Akash must start `claude` in omniverse once and approve the project servers** (I did not touch approval settings).
+  Approved on Akash's word via committed `.claude/settings.json` `enabledMcpjsonServers`; `claude mcp list` now shows all three Connected.
 - Codex: `.codex/config.toml` (project scope, same pins, plus blender). Loads only if codex trusts the project. Not run-verified through codex itself.
 - agy: installed GLOBALLY with Akash's approval (agy has no project scope): playwright, context7, chrome-devtools, blender, same pins. `agy mcp list` shows all enabled. Not run-verified through agy itself.
   `agy mcp add playwright npx -y @playwright/mcp@0.0.84 --isolated --executable-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`

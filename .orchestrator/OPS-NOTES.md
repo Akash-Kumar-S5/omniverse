@@ -43,4 +43,4 @@ Still checkpoint with Akash before big direction changes; he is watching.
 - **chrome-devtools**: `performance_start_trace`/`performance_stop_trace`/`performance_analyze_insight`, `lighthouse_audit`, `list_console_messages` (needs pageId). Telemetry off.
 - **context7**: `resolve-library-id` then `query-docs` (e.g. /pmndrs/drei) for version-correct three/r3f/drei docs. Never put secrets in queries.
 - blender: claude (live) and codex (.codex/config.toml); only ONE agent drives live Blender at a time.
-- Claude must approve the project servers once (`claude` in omniverse). agy servers installed (global, approved); see .orchestrator/reports/toolsmith.md.
+- Claude project servers are pre-approved via committed .claude/settings.json (enabledMcpjsonServers); restart agents to load them.
