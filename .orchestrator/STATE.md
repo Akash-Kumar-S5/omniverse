@@ -130,3 +130,10 @@ Akash installed it himself: Claude MCP server "blender" (uvx mcp-for-blender==2.
 
 ## Reuse-first (15:50 UTC)
 Section 0 of the playbook + paragraph in round3-contract.md sent to codex-world and blender-sanctum. agy-world (still held) gets it with its start prompt: drei SpotLight volumetric / MeshReflectorMaterial / Sparkles / Environment before any custom shader; extend CameraRig, do not replace.
+
+## 2026-11-07 16:30 UTC watch update
+- Merged r3/codex-world (Signal Field steps 1-4: SignalField, targets, curl morph, tiers). eslint now ignores .orchestrator and blender (cloned refs made lint fail). Build+lint clean on main.
+- codex-world (w2:pE): sent a reuse pass (refs live at the MAIN repo path .orchestrator/research/refs, absent from worktrees): adapt Nova morph + flow-field, then measure frame time, report.
+- agy-world (w2:pK, flash): STARTED, steps 1-3 + mount SignalField + slot for sanctum GLB, reuse-first.
+- blender-sanctum (w2:pJ, claude sonnet): commit e1727bb (scripted build). Stills boot_wide and boot_under_oculus exist in its worktree; full-quality render of the rest was still running. Report at its worktree .orchestrator/reports/round3-blender-sanctum.md. NO export until Akash sees stills and says go.
+- Monitor armed (agent status, commits, stills count). Sonnet pool shows 100% on the status line; Claude 5H 52%, weekly 70%.
