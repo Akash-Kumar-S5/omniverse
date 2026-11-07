@@ -2,6 +2,7 @@ import { lazy, Suspense, useLayoutEffect, useState } from "react";
 import { useOmni } from "./state/store";
 import { detectWebGL, prefersReducedMotion } from "./state/env";
 import { useScrollSync } from "./state/useScrollSync";
+import { useSmoothScroll } from "./state/smooth";
 import Overlay from "./ui/Overlay";
 import Fallback from "./ui/Fallback";
 
@@ -13,6 +14,7 @@ export default function App() {
   // Render nothing until then so the 3D chunk is never requested on no-WebGL devices.
   const [envReady, setEnvReady] = useState(false);
   useScrollSync(envReady);
+  useSmoothScroll();
 
   useLayoutEffect(() => {
     const params = new URLSearchParams(location.search);

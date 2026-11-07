@@ -61,3 +61,26 @@ No agent reviews its own work. Briefs are in `briefs/<name>.md`, and builder rep
 - The reduced-motion and no-WebGL paths both work.
 - Both reviews and QA are clean.
 - Desktop holds 60fps.
+
+---
+
+# Round 2 (see ROUND2-BRIEF.md)
+New contract on main:
+- `store.entered` / `setEntered`, plus `store.loadProgress` / `setLoadProgress`
+- `src/state/chapters.ts` with `useChapter()`
+- `src/state/smooth.ts` with `useSmoothScroll()`
+- `src/state/anchors.ts`, the 3D→DOM label bridge
+- vite watch now ignores `.worktrees`
+
+| Name | Kind | Owns (only) | Gaps |
+|---|---|---|---|
+| codex-world | codex | `src/scene/{world,constellation,fx,anchors}/**`, `src/scene/layout.ts` | 3, anchors, loadProgress |
+| codex-chapters | codex | `src/state/{chapters,smooth,useScrollSync}.ts`, `src/scene/camera/**`, `src/scene/Experience.tsx` | 1 (state), 6 |
+| agy-type | agy | `src/ui/**`, `src/styles/**`, `index.html` head, `public/fonts/**` | 1 (overlay), 2, 4, 5, 7 |
+| claude-assets | claude | `public/assets/**`, `CREDITS.md`, `src/content/**` | assets, 8 |
+| claude-review | claude | read-only; writes `review/round2-review.md` and `reference/r2-*.png` | all, acceptance |
+
+Order:
+1. The overlap fix goes first: agy-type's step 1, backed by codex-chapters' state machine.
+2. claude-assets' first batch is merged early so codex-world can use it.
+3. Screenshot-strip checkpoint with Akash before the final merge.
