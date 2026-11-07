@@ -1,13 +1,10 @@
 # agy-sections Report
 - **Files changed:** `src/ui/sections/*`, `src/ui/fallback/*`, `src/ui/Fallback.tsx`
 - **What works:**
-  - Rendered boot (100vh), about (120vh), experience (240vh), projects (800vh), contact (100vh) in exact SectionId order.
-  - Desktop left 40% layout and mobile bottom sheets (<768px) with gradient scrims and WCAG AA contrast.
-  - About: staggered letter reveal for name/role; simple fade on reduced motion.
-  - Experience: 4 role cards with activeRole synchronization, accordion highlights, and waypoint scrolling.
-  - Projects: sticky panel, 03 / 08 counter, scroll sync, prev/next buttons, arrow keys, and touch swipe.
-  - Contact: CTA, email copy with clipboard feedback, mailto, and external links.
-  - 2D Fallback: complete responsive page with CSS-only gradient backdrop; 0 three.js imports.
-- **Known issues:** None. Tested build and lint cleanly.
+  - Sections rendered in exact order with left 40% desktop and mobile bottom sheet.
+  - Staggered letter reveal, activeRole sync, sticky projects carousel, and contact CTA.
+  - 2D Fallback with self-contained CSS cosmic gradient backdrop and 0 three.js imports.
+- **Fix round 1:** Fixed #1 (targetRef scroll guard), #7 (panel id + roving + role tabs), #8 (pips aria-current + role=region), #9 (inline dynamic heights), #10 (self-contained fallback.css).
+- **Known issues:** None. Build and ESLint pass cleanly.
 - **Requests:** None.
-- **Commit hash:** `15830a2`
+- **Commit hash:** `3dc7336`
