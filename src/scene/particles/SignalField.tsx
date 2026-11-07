@@ -46,11 +46,13 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const cpuMorphProgress = useRef(1);
   const cursor = useMemo(() => new THREE.Vector3(), []);
   const previousPointer = useRef(new THREE.Vector2());
+  const lastPointerMotion = useRef(-1);
   const plane = useMemo(() => new THREE.Plane(), []);
   const previousDebugFrame = useRef(0);
   const debugSamples = useRef<number[]>([]);
   const simSize = backend === "cpu" ? CPU_SIM_SIZE : GPU_SIM_SIZE[resolvedQuality];
   const count = simSize * simSize;
+  const cpuCursorOffsets = useMemo(() => new Float32Array(count * 3), [count]);
   const { scene: bust } = useGLTF("/assets/models/marble_bust_01.glb", false);
   const center = useMemo(() => new THREE.Vector3(...(anchors?.core?.position ?? [0, 0, 0])), [anchors]);
   const radius = anchors?.core?.radius ?? 1.6;
@@ -131,6 +133,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     const shapeAnchor = anchors?.[anchorName]
       ? new THREE.Vector3(...anchors[anchorName].position)
       : shape === "beacon" ? new THREE.Vector3(0, 0, 0) : center;
+    if (shape === "core") shapeAnchor.x += 5.5;
     const shapeRadius = anchors?.[anchorName]?.radius ?? (shape === "bust" ? 1.35 : shape === "beacon" ? 0.16 : radius);
     signal.focus[0] = shapeAnchor.x;
     signal.focus[1] = shapeAnchor.y;
@@ -140,9 +143,13 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     raycaster.setFromCamera(pointer, camera);
     plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), shapeAnchor);
     const hasCursor = !motionReduced && raycaster.ray.intersectPlane(plane, cursor) !== null;
-    const pointerSpeed = delta > 0 ? pointer.distanceTo(previousPointer.current) / delta : 0;
+    const pointerDistance = pointer.distanceTo(previousPointer.current);
+    const pointerSpeed = delta > 0 ? pointerDistance / delta : 0;
+    if (pointerDistance > 0.001) lastPointerMotion.current = state.clock.elapsedTime;
     previousPointer.current.copy(pointer);
-    const cursorStrength = motionReduced ? 0 : Math.min(1, pointerSpeed * 0.18);
+    const cursorAge = state.clock.elapsedTime - lastPointerMotion.current;
+    const cursorPulse = cursorAge >= 0 && cursorAge < 0.35 ? 0.65 * (1 - cursorAge / 0.35) : 0;
+    const cursorStrength = motionReduced ? 0 : Math.min(1, Math.max(pointerSpeed * 0.45, cursorPulse));
 
     if (backend === "gpu") {
       const sim = simulation.current;
@@ -199,6 +206,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
       const scatter = Math.sin(Math.PI * progress);
       const from = cpuFromPositions.current ?? positions;
       const time = motionReduced ? 0 : state.clock.elapsedTime;
+      const cursorDecay = motionReduced ? 0 : Math.exp(-Math.max(0, delta) * 2.6);
       for (let i = 0; i < count; i++) {
         const p = i * 3;
         const t = i * 4;
@@ -214,13 +222,22 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
           x += flowX * (0.018 + seed * 0.012 + scatter * 0.1);
           y += flowY * (0.018 + seed * 0.012 + scatter * 0.1);
           z += flowZ * (0.018 + seed * 0.012 + scatter * 0.1);
+          cpuCursorOffsets[p] *= cursorDecay;
+          cpuCursorOffsets[p + 1] *= cursorDecay;
+          cpuCursorOffsets[p + 2] *= cursorDecay;
           if (hasCursor) {
             const dx = x - cursor.x, dy = y - cursor.y, dz = z - cursor.z;
             const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            const force = cursorStrength / Math.max(0.08, distance * (distance + 1));
-            const step = force * Math.min(1, delta * 12) / Math.max(0.001, distance);
-            x += dx * step; y += dy * step; z += dz * step;
+            const reach = Math.max(0.7, shapeRadius * 0.62);
+            const influence = THREE.MathUtils.clamp(1 - distance / reach, 0, 1);
+            const impulse = cursorStrength * influence * Math.min(1, delta * 18) / Math.max(0.5, distance);
+            cpuCursorOffsets[p] += dx * impulse;
+            cpuCursorOffsets[p + 1] += dy * impulse;
+            cpuCursorOffsets[p + 2] += dz * impulse;
           }
+          x += cpuCursorOffsets[p];
+          y += cpuCursorOffsets[p + 1];
+          z += cpuCursorOffsets[p + 2];
           if (shape === "beacon") {
             const pulse = Math.sin(time * 2.2) * 0.035;
             x += pulse * (x - shapeAnchor.x);
