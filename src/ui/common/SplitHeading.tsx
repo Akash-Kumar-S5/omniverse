@@ -33,6 +33,7 @@ export default function SplitHeading({
       duration: 0.55,
       delay,
       ease: "power3.out",
+      clearProps: "opacity,transform",
     });
 
     return () => {
