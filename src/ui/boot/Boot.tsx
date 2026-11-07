@@ -124,7 +124,7 @@ export default function Boot() {
       aria-live="polite"
       aria-label="Boot preloader. Click or press Escape to skip."
     >
-      <div className="boot-window" onClick={(e) => e.stopPropagation()}>
+      <div className="boot-window">
         <div className="boot-header">
           <div className="boot-header-dots" aria-hidden="true">
             <span className="boot-dot active" />

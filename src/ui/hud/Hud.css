@@ -95,7 +95,7 @@
   height: 100%;
 }
 
-/* Four Corner Readouts */
+/* Corner Readouts Container */
 .hud-corner {
   position: fixed;
   display: flex;
@@ -154,10 +154,17 @@
   box-shadow: 0 0 6px var(--accent);
 }
 
-/* Top-Right: Clock + Status */
+/* Top-Right: Clock + Status (Desktop) & Controls (Mobile) */
 .hud-corner.top-right {
   top: clamp(12px, 2.5vw, 28px);
   right: clamp(34px, 4.5vw, 54px);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.hud-desktop-status {
+  display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 3px;
@@ -203,6 +210,19 @@
   color: var(--fg-dim);
 }
 
+/* Mobile Controls in Top-Right */
+.hud-mobile-controls {
+  display: none;
+}
+
+.hud-mobile-section {
+  display: none;
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
 /* Bottom-Left: Section Index & Name */
 .hud-corner.bottom-left {
   bottom: clamp(12px, 2.5vw, 28px);
@@ -238,7 +258,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Bottom-Right: Quality Toggle + Scroll Cue */
+/* Bottom-Right: Quality Toggle + Scroll Cue (Desktop) */
 .hud-corner.bottom-right {
   bottom: clamp(12px, 2.5vw, 28px);
   right: clamp(34px, 4.5vw, 54px);
@@ -275,21 +295,13 @@
   50% { transform: translateY(4px); }
 }
 
-/* Quality Toggle */
-.hud-controls-group {
+/* Desktop controls wrapper in bottom-right */
+.hud-desktop-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
-.hud-mobile-section {
-  display: none;
-  font-size: var(--text-2xs);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-}
-
+/* Quality Toggle Buttons */
 .hud-quality-toggle {
   pointer-events: auto;
   display: inline-flex;
@@ -304,7 +316,7 @@
 
 .hud-quality-label {
   font-size: var(--text-2xs);
-  color: var(--fg-muted);
+  color: var(--fg-dim);
   letter-spacing: 0.05em;
   padding: 0 4px;
 }
@@ -338,43 +350,65 @@
   outline-offset: 1px;
 }
 
-/* Mobile 390px-wide screens: minimal two-corner layout */
-@media (max-width: 640px) {
-  /* Hide Top-Right corner & bracket */
+/* Reduced motion preference: disable infinite animations */
+@media (prefers-reduced-motion: reduce) {
+  .hud-status-dot,
+  .hud-scroll-icon {
+    animation: none !important;
+  }
+}
+
+/* Mobile screens (<= 767px): move controls/index to top-right, keep bottom completely free for bottom sheet */
+@media (max-width: 767px) {
+  /* Hide bottom corners and bottom brackets so nothing overlaps the bottom sheet */
+  .hud-bracket.bottom-left,
+  .hud-bracket.bottom-right,
+  .hud-corner.bottom-left,
+  .hud-corner.bottom-right {
+    display: none !important;
+  }
+
+  /* Keep top-right bracket visible */
   .hud-bracket.top-right {
-    display: none;
+    display: block;
   }
+
+  /* In top-right corner: hide desktop clock/status, display mobile section badge + quality toggle */
   .hud-corner.top-right {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
-  /* Hide Bottom-Left corner & bracket */
-  .hud-bracket.bottom-left {
-    display: none;
-  }
-  .hud-corner.bottom-left {
-    display: none;
+  .hud-desktop-status {
+    display: none !important;
   }
 
-  /* Hide scroll cue on mobile to keep it minimal and uncluttered */
-  .hud-scroll-cue {
-    display: none;
+  .hud-mobile-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  /* Top-Left Corner (Corner 1) */
-  .hud-mobile-status-dot {
-    display: inline-block;
-  }
-  .hud-name-sub {
-    font-size: 10px;
-  }
-
-  /* Bottom-Right Corner (Corner 2): include compact section index */
   .hud-mobile-section {
     display: inline-block;
   }
 
   .hud-quality-label {
     display: none;
+  }
+
+  /* In top-left corner: compact display */
+  .hud-mobile-status-dot {
+    display: inline-block;
+  }
+
+  .hud-name-sub {
+    font-size: 10px;
+  }
+
+  /* Hide scroll cue on mobile */
+  .hud-scroll-cue {
+    display: none !important;
   }
 }
