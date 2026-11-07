@@ -121,3 +121,9 @@ Next 3: (1) wait for blender stills -> publish Artifact of stills for Akash (pri
 
 ## BlenderMCP (2026-11-07 15:32 UTC)
 Akash installed it himself: Claude MCP server "blender" (uvx mcp-for-blender==2.2.7) shows Connected; addon file in ~/Library/Application Support/Blender/5.2/scripts/addons/blender_mcp_addon.py. Only Claude-kind agents can call it; blender-sanctum (agy) keeps using headless scripts. Needs Blender GUI open with the addon connected to drive a live scene. I did not read the addon source; it can execute arbitrary Python in Blender by design.
+
+## Lane swap (2026-11-07 15:35 UTC): agy Opus 4.6 quota exhausted (~4.5h)
+- blender-sanctum -> kind claude Sonnet, auto, pane w2:pJ, cwd .worktrees/blender-sanctum (r3/blender-sanctum), uses blender MCP; steps saved as blender/scripts/*.py; STOP at Cycles stills.
+- agy-world -> agy gemini-3.8-flash-high, pane w2:pK, still HELD until codex-world step 1 merges.
+- agy-review -> agy gemini-3.8-flash-high, pane w2:pM, idle (its round-2 baseline was lost to the quota; re-run later vs playbook s8).
+- codex-world unchanged (w2:pE).
