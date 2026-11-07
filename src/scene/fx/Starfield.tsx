@@ -33,6 +33,6 @@ export default function Starfield() {
     <bufferGeometry>
       <bufferAttribute attach="attributes-position" args={[positions, 3]} />
     </bufferGeometry>
-    <pointsMaterial color="#b9dfff" size={0.075} transparent opacity={0.74} sizeAttenuation depthWrite={false} />
+    <pointsMaterial color="#c5b7a5" size={0.045} transparent opacity={0.38} sizeAttenuation depthWrite={false} />
   </points>;
 }
