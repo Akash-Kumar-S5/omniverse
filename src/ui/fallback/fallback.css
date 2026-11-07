@@ -1,0 +1,314 @@
+/* Omniverse 2D Fallback Page Styles - agy-sections */
+/* Completely CSS-only, no Three.js or canvas */
+
+.fallback-page {
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle 800px at 15% 10%, rgba(124, 247, 212, 0.08), transparent 60%),
+    radial-gradient(circle 900px at 85% 25%, rgba(143, 167, 255, 0.09), transparent 55%),
+    radial-gradient(circle 700px at 30% 65%, rgba(124, 247, 212, 0.06), transparent 50%),
+    radial-gradient(circle 800px at 70% 85%, rgba(143, 167, 255, 0.08), transparent 50%),
+    linear-gradient(180deg, #05060a 0%, #0a0d16 25%, #0c0f17 50%, #070910 80%, #05060a 100%);
+  background-attachment: fixed;
+  color: var(--fg);
+  font-family: var(--font-display);
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* Subtle cosmic grid background pattern */
+.fallback-grid-bg {
+  position: fixed;
+  inset: 0;
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(232, 236, 244, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232, 236, 244, 0.02) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Inner layout container */
+.fallback-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Fallback Navigation Header */
+.fallback-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(5, 6, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+
+.fallback-nav {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fallback-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--fg);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.fallback-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: rgba(124, 247, 212, 0.1);
+  border: 1px solid rgba(124, 247, 212, 0.3);
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fallback-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .fallback-menu {
+    display: none;
+  }
+}
+
+.fallback-nav-link {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.fallback-nav-link:hover {
+  color: var(--fg);
+}
+
+/* Hero Section */
+.fallback-hero {
+  padding: clamp(48px, 10vh, 100px) 0 clamp(36px, 6vh, 64px);
+}
+
+.fallback-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fallback-title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0 0 16px 0;
+}
+
+.fallback-pitch {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  color: var(--fg-dim);
+  max-width: 720px;
+  margin: 0 0 28px 0;
+  line-height: 1.6;
+}
+
+/* Sections Base */
+.fallback-section {
+  padding: clamp(40px, 8vh, 72px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.fallback-section-header {
+  margin-bottom: 32px;
+}
+
+.fallback-section-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px 0;
+}
+
+.fallback-section-subtitle {
+  color: var(--fg-dim);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Cards */
+.fallback-card {
+  background: rgba(12, 15, 23, 0.75);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(18px, 2.5vw, 28px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* Grid Layouts */
+.fallback-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+  gap: 20px;
+}
+
+.fallback-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+
+/* Experience Timeline */
+.fallback-exp-card {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.fallback-exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.fallback-exp-company {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.fallback-exp-period {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+
+.fallback-exp-role {
+  font-size: 0.96rem;
+  color: var(--accent-2);
+  margin-bottom: 4px;
+}
+
+.fallback-exp-location {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 12px;
+}
+
+/* Projects Filters */
+.fallback-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.fallback-filter-btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: rgba(232, 236, 244, 0.04);
+  color: var(--fg-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.fallback-filter-btn:hover {
+  border-color: var(--accent-2);
+  color: var(--fg);
+}
+
+.fallback-filter-btn.active {
+  background: rgba(124, 247, 212, 0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Project Card */
+.fallback-project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.fallback-project-top {
+  margin-bottom: 16px;
+}
+
+/* Tech Category Cards */
+.fallback-tech-group {
+  margin-bottom: 16px;
+}
+
+.fallback-tech-title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin: 0 0 10px 0;
+  letter-spacing: 0.05em;
+}
+
+/* Contact Box */
+.fallback-contact-box {
+  background: rgba(143, 167, 255, 0.04);
+  border: 1px solid rgba(143, 167, 255, 0.25);
+  border-radius: 16px;
+  padding: clamp(24px, 4vw, 40px);
+  max-width: 680px;
+}
+
+/* Footer */
+.fallback-footer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--fg-dim);
+}
