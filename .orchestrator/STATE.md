@@ -1,11 +1,13 @@
 # Omniverse orchestrator STATE
-## STATUS TABLE (17:25 UTC 2026-11-07)
+## STATUS TABLE (18:45 UTC 2026-11-07)
 | Agent | Pane | Status | Next |
 |---|---|---|---|
-| codex-world | w2:pE | 7889e54 MERGED to main (build+lint clean); idle/hold | tune swarm if agy-world screenshots show it weak |
-| agy-world | w2:pK | 19c2795 (step 3 Effects); BLOCKED from merge; my rebase + visual-fix prompt is queued behind its running build | rebase on main, 5 chapter screenshots (SignalField 35-45% right half, near-black reflector floor+fog, volumetric SpotLight) |
-| blender-sanctum | w2:pJ | d135a4f stills fixed, APPROVED 17:27; GLB export (<=4 MB) prompted | merge after size + build check |
-| agy-review | w2:pM | idle, waiting | full review vs playbook s8 once agy-world + export merged |
+| codex-world | w2:pE | b11a056 MERGED (params, CPU fallback, tiers) | idle; perf measurement after agy-world lands |
+| ui-editor | w2:pN | 84a217c MERGED (type, quiet chrome); continuing HUD/chapter panels | screenshots per chapter 1440+390, then merge |
+| agy-world | w2:pK | UNMERGED; rebase + beam haze + swarm tint + composition rule (swarm right of 55% width) prompted | replace old constellation, shots ?skipgate&chapter=0..4, then merge |
+| blender-sanctum | w2:pJ | MERGED efc6b0b (sanctum.glb 1.2 MB) | done; close pane at a break |
+| toolsmith | w2:pP | started by Morph (claude Sonnet, r3/toolsmith, brief briefs/toolsmith.md); project scope, pinned, telemetry off | review report, merge; restart agents at a natural break |
+| agy-review | w2:pM | idle | review main after agy-world merges (chapters 0..4 at 1440+390, anti-slop audit) |
 
 
 ## Phase
