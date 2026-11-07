@@ -1,3 +1,7 @@
-/* agy owns this file. Minimal base so the scaffold runs. */
-html, body { margin: 0; background: #05060a; color: #e8ecf4; }
-.scene-layer { position: fixed; inset: 0; z-index: 0; }
+/* Orchestrator-owned base. UI agents put component CSS in their own folders and import it there. */
+@import "./tokens.css";
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-display); -webkit-font-smoothing: antialiased; }
+.scene-layer { position: fixed; inset: 0; z-index: var(--z-scene); }
+.overlay { position: relative; z-index: var(--z-overlay); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

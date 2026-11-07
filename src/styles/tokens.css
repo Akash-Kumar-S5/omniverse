@@ -1,0 +1,15 @@
+/* Orchestrator-owned design tokens. Builders consume, never edit. Request changes via report. */
+:root {
+  --bg: #05060a;
+  --bg-elev: #0c0f17;
+  --fg: #e8ecf4;
+  --fg-dim: #8a93a6;
+  --accent: #7cf7d4;      /* agent-flow mint */
+  --accent-2: #8fa7ff;    /* node glow periwinkle */
+  --line: rgba(232, 236, 244, 0.14);
+  --scrim: linear-gradient(90deg, rgba(5,6,10,.85), rgba(5,6,10,0));
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --gutter: clamp(16px, 4vw, 48px);
+  --z-scene: 0; --z-overlay: 10; --z-hud: 20; --z-boot: 30;
+}
