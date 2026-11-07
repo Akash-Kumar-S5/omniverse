@@ -1,4 +1,12 @@
-# Omniverse orchestrator STATE (updated 2026-11-07 13:12 UTC, before /clear)
+# Omniverse orchestrator STATE
+## STATUS TABLE (17:25 UTC 2026-11-07)
+| Agent | Pane | Status | Next |
+|---|---|---|---|
+| codex-world | w2:pE | 7889e54 MERGED to main (build+lint clean); idle/hold | tune swarm if agy-world screenshots show it weak |
+| agy-world | w2:pK | bd75597 (step 2 splines); working, BLOCKED from merge; fixes + rebase prompted | rebase on main, 5 chapter screenshots (SignalField 35-45% right half, near-black reflector floor+fog, volumetric SpotLight) |
+| blender-sanctum | w2:pJ | 6 stills exist; fix prompt sent (contact_sky banding+round oculus, proj_gallery statue 2.5x+slab spots) | re-render, then export GLB <=4 MB after my OK |
+| agy-review | w2:pM | idle, waiting | full review vs playbook s8 once agy-world + export merged |
+
 
 ## Phase
 Round 2 (ROUND2-BRIEF.md) is in progress: builders are on step 2 (integration and polish). The review rounds have not started.
