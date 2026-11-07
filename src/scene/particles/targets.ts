@@ -59,67 +59,58 @@ function sampleBust(count: number, bust: THREE.Object3D, center: THREE.Vector3, 
   }));
 }
 
-function glyphPoints(count: number, name: string, center: THREE.Vector3, random: () => number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 144;
-  const context = canvas.getContext("2d");
-  if (!context) return null;
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "white";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.font = "700 58px Arial, sans-serif";
-  let label = name;
-  while (context.measureText(label).width > 476 && label.length > 3) label = label.slice(0, -1);
-  context.fillText(label, canvas.width / 2, canvas.height / 2, 476);
-  const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-  const occupied: [number, number][] = [];
-  for (let y = 0; y < canvas.height; y += 2) {
-    for (let x = 0; x < canvas.width; x += 2) {
-      if (pixels[(y * canvas.width + x) * 4 + 3] > 80) occupied.push([x, y]);
-    }
-  }
-  if (!occupied.length) return null;
-  return Array.from({ length: count }, () => {
-    const [x, y] = occupied[Math.floor(random() * occupied.length)];
-    return { position: new THREE.Vector3(center.x + (x / 512 - 0.5) * 4.6, center.y + (0.5 - y / 144) * 1.35, center.z + (random() - 0.5) * 0.12), group: 0 };
-  });
-}
-
 export function createTargetTexture(options: TargetOptions) {
   const { shape, count, anchors, activeProject, bust } = options;
   const random = seeded((activeProject + 1) * 997 + shape.length * 131);
   const core = anchorPosition(anchors, "core", new THREE.Vector3());
-  const shapeAnchor = shape === "core" ? core : anchorPosition(anchors, shape === "project-glyph" ? "glyph" : shape, new THREE.Vector3());
+  const shapeAnchor = shape === "core"
+    ? core.add(new THREE.Vector3(5.5, 0, 0))
+    : anchorPosition(anchors, shape === "project-glyph" ? "glyph" : shape, new THREE.Vector3());
   const radius = anchors?.[shape === "project-glyph" ? "glyph" : shape]?.radius ?? (shape === "bust" ? 1.35 : 1.6);
   let points: { position: THREE.Vector3; group: number }[] | null = null;
 
   if (shape === "bust" && bust) points = sampleBust(count, bust, shapeAnchor, radius, random);
   if (shape === "helix") {
-    const centers = experiences.slice().reverse().map((_, index, all) => {
-      const progress = index / Math.max(1, all.length - 1);
-      return new THREE.Vector3(shapeAnchor.x + Math.sin(progress * Math.PI * 2) * radius * 0.48, shapeAnchor.y + (progress - 0.5) * radius * 1.45, shapeAnchor.z + Math.cos(progress * Math.PI * 2) * radius * 0.48);
-    });
     points = Array.from({ length: count }, () => {
-      const group = Math.min(centers.length - 1, Math.floor(random() * centers.length));
-      const t = random() * Math.PI * 2;
-      const r = radius * (0.12 + random() * 0.2);
-      return { position: centers[group].clone().add(new THREE.Vector3(Math.cos(t) * r, (random() - 0.5) * r * 2.6, Math.sin(t) * r)), group };
+      const group = Math.min(experiences.length - 1, Math.floor(random() * experiences.length));
+      const u = random() * 2 - 1;
+      const x = u * radius * 1.55;
+      const layer = (group - (experiences.length - 1) * 0.5) * radius * 0.42;
+      const ripple = Math.sin(u * Math.PI * 2.3 + group * 0.72) * radius * 0.055;
+      return {
+        position: new THREE.Vector3(
+          shapeAnchor.x + x,
+          shapeAnchor.y + layer + ripple + (random() - 0.5) * radius * 0.075,
+          shapeAnchor.z + Math.sin(u * Math.PI * 1.4 + group) * radius * 0.11 + (random() - 0.5) * radius * 0.09,
+        ),
+        group,
+      };
     });
   }
   if (shape === "project-glyph") {
-    const project = projects[Math.max(0, Math.min(projects.length - 1, activeProject))];
-    points = glyphPoints(count, project?.title ?? "SIGNAL", shapeAnchor, random);
+    const extent = radius * 1.32;
+    const spacing = extent * 0.34;
+    const grid = [-2, -1, 0, 1, 2];
+    points = Array.from({ length: count }, () => {
+      const axis = Math.floor(random() * 3);
+      const along = (random() * 2 - 1) * extent;
+      const first = grid[Math.floor(random() * grid.length)] * spacing;
+      const second = grid[Math.floor(random() * grid.length)] * spacing;
+      const jitter = (random() - 0.5) * radius * 0.025;
+      const coordinates = axis === 0 ? [along, first, second] : axis === 1 ? [first, along, second] : [first, second, along];
+      return {
+        position: new THREE.Vector3(shapeAnchor.x + coordinates[0] + jitter, shapeAnchor.y + coordinates[1] + jitter, shapeAnchor.z + coordinates[2] + jitter),
+        group: Math.floor(random() * projects.length),
+      };
+    });
   }
   if (shape === "beacon") {
     const point = anchors?.beacon?.position ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(...beacon);
     points = Array.from({ length: count }, () => {
-      const y = random() * 2 - 1;
       const angle = random() * Math.PI * 2;
-      const ring = Math.sqrt(1 - y * y);
-      const r = 0.025 + random() * 0.095;
-      return { position: point.clone().add(new THREE.Vector3(Math.cos(angle) * ring * r, y * r, Math.sin(angle) * ring * r)), group: 0 };
+      const major = radius * 2.4;
+      const tube = (random() - 0.5) * radius * 0.22;
+      return { position: point.clone().add(new THREE.Vector3(Math.cos(angle) * (major + tube), Math.sin(angle) * (major + tube), (random() - 0.5) * radius * 0.09)), group: 0 };
     });
   }
   if (!points) {
@@ -127,8 +118,8 @@ export function createTargetTexture(options: TargetOptions) {
       const y = random() * 2 - 1;
       const angle = random() * Math.PI * 2;
       const ring = Math.sqrt(1 - y * y);
-      const r = radius * Math.cbrt(random());
-      return { position: shapeAnchor.clone().add(new THREE.Vector3(Math.cos(angle) * ring * r, y * r, Math.sin(angle) * ring * r)), group: 0 };
+      const r = radius * (0.28 + Math.cbrt(random()) * 0.82);
+      return { position: shapeAnchor.clone().add(new THREE.Vector3(Math.cos(angle) * ring * r * 1.18, y * r * 0.78, Math.sin(angle) * ring * r)), group: 0 };
     });
   }
 

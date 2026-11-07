@@ -1,40 +1,51 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CatmullRomCurve3, Vector2, Vector3 } from "three";
+import { CatmullRomCurve3, PerspectiveCamera, Vector2, Vector3 } from "three";
 import { easing } from "maath";
-import { beacon, projectNodes, roleWaypoints } from "../layout";
 import { useOmni } from "../../state/store";
+import spotsData from "../../../public/assets/models/sanctum.spots.json";
+import type { SanctumSpots } from "../../state/signal";
 
+const spots = spotsData as unknown as SanctumSpots;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 export default function CameraRig() {
   const { camera, size } = useThree();
-  const curve = useMemo(
-    () => new CatmullRomCurve3(roleWaypoints.map(([x, y, z]) => new Vector3(x, y, z))),
-    [],
-  );
+
+  // Experience corridor camera path through the 4 role portals
+  const expPath = useMemo(() => {
+    return new CatmullRomCurve3([
+      new Vector3(...spots.cameras.exp_role_0.position),
+      new Vector3(...spots.cameras.exp_role_1.position),
+      new Vector3(...spots.cameras.exp_role_2.position),
+      new Vector3(...spots.cameras.exp_role_3.position),
+    ]);
+  }, []);
+
   const positionTarget = useRef(new Vector3());
   const lookTarget = useRef(new Vector3());
   const lookDesired = useRef(new Vector3());
-  const pathPosition = useRef(new Vector3());
-  const pathLook = useRef(new Vector3());
+  const sampledPosition = useRef(new Vector3());
   const pointer = useRef(new Vector2());
   const pointerTarget = useRef(new Vector2());
   const touchDevice = useRef(false);
-  const reducedSection = useRef("");
+  const initialized = useRef(false);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
     if (touchDevice.current) return;
+
     const onPointerMove = (event: PointerEvent) => {
       pointerTarget.current.set(
         (event.clientX / Math.max(1, window.innerWidth)) * 2 - 1,
         1 - (event.clientY / Math.max(1, window.innerHeight)) * 2,
       );
     };
+
     const onPointerLeave = () => pointerTarget.current.set(0, 0);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerleave", onPointerLeave);
+
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerleave", onPointerLeave);
@@ -43,96 +54,108 @@ export default function CameraRig() {
 
   useFrame((_, delta) => {
     const state = useOmni.getState();
-    const { section, sectionProgress, activeProject, reducedMotion, entered, quality } = state;
+    const { section, sectionProgress, activeProject, activeRole, reducedMotion, entered } = state;
     const p = clamp(sectionProgress, 0, 1);
     const pos = positionTarget.current;
     const look = lookDesired.current;
+    const isPortrait = size.width / Math.max(1, size.height) < 1;
 
-    if (reducedMotion) {
-      // Fixed poses keep the scene legible without camera flights.
-      if (reducedSection.current !== section) {
-        reducedSection.current = section;
+    let targetFov = 62;
+
+    switch (section) {
+      case "boot": {
+        const wide = spots.cameras.boot_wide;
+        const oculus = spots.cameras.boot_under_oculus;
+        targetFov = wide.fov;
+        const t = entered ? clamp(0.5 + p * 0.5, 0, 1) : 0;
+        pos.set(
+          wide.position[0] + (oculus.position[0] - wide.position[0]) * t,
+          wide.position[1] + (oculus.position[1] - wide.position[1]) * t,
+          wide.position[2] + (oculus.position[2] - wide.position[2]) * t,
+        );
+        look.set(
+          wide.target[0] + (oculus.target[0] - wide.target[0]) * t,
+          wide.target[1] + (oculus.target[1] - wide.target[1]) * t,
+          wide.target[2] + (oculus.target[2] - wide.target[2]) * t,
+        );
+        // Morph composition rule: keep swarm footprint to the RIGHT of ~55% width
+        // and below the nav by panning look-at left on desktop.
+        if (!isPortrait) {
+          look.x -= 1.6;
+          look.y -= 0.3;
+        }
+        break;
       }
-      switch (section) {
-        case "boot": pos.set(-3, -1.5, 29); look.set(-5, 3.5, 0); break;
-        case "about": pos.set(18, 10, 17); look.set(-4.5, 0.5, 0); break;
-        case "experience": pos.set(0, 7, 20); look.set(-3.6, 1, 6); break;
-        case "projects": {
-          const node = projectNodes[clamp(activeProject, 0, projectNodes.length - 1)];
-          const [x, y, z] = node.position;
-          pos.set(x, y + 5, z + 15);
-          look.set(x - 4, y, z);
-          if (size.width / Math.max(1, size.height) < 1) {
-            pos.set(x, y + 12, z + 15);
-            look.set(x, y - 2, z);
-          }
-          break;
-        }
-        case "contact": pos.set(beacon[0], beacon[1] + 14, beacon[2] + 40); look.set(beacon[0], beacon[1], beacon[2]); break;
+      case "about": {
+        const niche = spots.cameras.about_niche;
+        targetFov = niche.fov;
+        pos.set(...niche.position);
+        look.set(...niche.target);
+        break;
       }
-    } else {
-      switch (section) {
-        case "boot":
-          // Hold the low, wide pose until the user enters; only HIGH mode pushes toward the core.
-          pos.set(-3, -1.5, 31 - (entered && quality === "high" ? 7 : 0));
-          look.set(-5, 3.5, 0);
-          break;
-        case "about": {
-          // A slow cutaway orbit keeps the constellation on the right and leaves the left open.
-          const angle = 0.42 + p * 0.55 + performance.now() * 0.000018;
-          pos.set(20 * Math.sin(angle), 9 + Math.sin(angle * 0.6) * 1.2, 18 * Math.cos(angle));
-          look.set(-4.5, 0.5, 0);
-          break;
-        }
-        case "experience": {
-          curve.getPointAt(p, pathPosition.current);
-          curve.getPointAt(Math.min(1, p + 0.015), pathLook.current);
-          if (size.width / Math.max(1, size.height) < 1) {
-            pos.copy(pathPosition.current);
-            look.set(pathLook.current.x * 0.42, pathLook.current.y - 1, pathLook.current.z - 7);
-          } else {
-            // Back the camera away so the active point lands in the open area beside the panel.
-            pos.set(pathPosition.current.x, pathPosition.current.y + 5, pathPosition.current.z + 16);
-            look.set(pathPosition.current.x - 3.6, pathPosition.current.y - 0.8, pathPosition.current.z - 8);
-          }
-          break;
-        }
-        case "projects": {
-          const node = projectNodes[clamp(activeProject, 0, projectNodes.length - 1)];
-          const [x, y, z] = node.position;
-          if (size.width / Math.max(1, size.height) < 1) {
-            pos.set(x, y + 12, z + 15);
-            look.set(x, y - 2, z);
-          } else {
-            // Keep the focused node near 68% x / 45% y within the panel-free area.
-            pos.set(x, y + 5, z + 18);
-            look.set(x - 5.2, y - 0.8, z);
-          }
-          break;
-        }
-        case "contact":
-          // Pull upward and backward until the constellation gathers around its beacon.
-          pos.set(beacon[0], beacon[1] + 6 + 10 * p, beacon[2] + 22 + 18 * p);
-          look.set(beacon[0], beacon[1], beacon[2]);
-          break;
+      case "experience": {
+        targetFov = spots.cameras.exp_role_0.fov;
+        const roleT = clamp((activeRole + p * 0.5) / 3, 0, 1);
+        expPath.getPointAt(roleT, sampledPosition.current);
+        pos.copy(sampledPosition.current);
+        const roleTargetKey = `exp_role_${clamp(activeRole, 0, 3)}` as keyof typeof spots.cameras;
+        const roleCam = spots.cameras[roleTargetKey] ?? spots.cameras.exp_role_0;
+        look.set(...roleCam.target);
+        break;
       }
-      if (!touchDevice.current) {
-        easing.damp2(pointer.current, pointerTarget.current, 2.2, delta);
-        pos.x += pointer.current.x * 0.65;
-        pos.y += pointer.current.y * 0.35;
-        look.x += pointer.current.x * 0.18;
-        look.y += pointer.current.y * 0.12;
+      case "projects": {
+        const projKey = `proj_${clamp(activeProject, 0, 7)}` as keyof typeof spots.cameras;
+        const projCam = spots.cameras[projKey] ?? spots.cameras.proj_gallery;
+        targetFov = projCam.fov;
+        pos.set(...projCam.position);
+        look.set(...projCam.target);
+        break;
+      }
+      case "contact": {
+        const sky = spots.cameras.contact_sky;
+        targetFov = sky.fov;
+        pos.set(...sky.position);
+        look.set(...sky.target);
+        break;
       }
     }
 
-    if (reducedMotion) {
+    // Parallax mouse responsiveness
+    if (!reducedMotion && !touchDevice.current) {
+      easing.damp2(pointer.current, pointerTarget.current, 2.2, delta);
+      pos.x += pointer.current.x * (isPortrait ? 0.15 : 0.4);
+      pos.y += pointer.current.y * 0.2;
+      look.x += pointer.current.x * 0.15;
+      look.y += pointer.current.y * 0.1;
+    }
+
+    if (!initialized.current) {
+      camera.position.copy(pos);
+      lookTarget.current.copy(look);
+      if (camera instanceof PerspectiveCamera) {
+        camera.fov = targetFov;
+        camera.updateProjectionMatrix();
+      }
+      initialized.current = true;
+    } else if (reducedMotion) {
       camera.position.copy(pos);
       lookTarget.current.copy(look);
     } else {
-      easing.damp3(camera.position, pos, 1.5, delta);
-      easing.damp3(lookTarget.current, look, 1.8, delta);
+      easing.damp3(camera.position, pos, 0.45, delta);
+      easing.damp3(lookTarget.current, look, 0.45, delta);
     }
     camera.lookAt(lookTarget.current);
+
+    if (camera instanceof PerspectiveCamera) {
+      if (Math.abs(camera.fov - targetFov) > 0.05) {
+        if (reducedMotion) {
+          camera.fov = targetFov;
+        } else {
+          camera.fov += (targetFov - camera.fov) * Math.min(1, delta * 3.0);
+        }
+        camera.updateProjectionMatrix();
+      }
+    }
   });
 
   return null;
