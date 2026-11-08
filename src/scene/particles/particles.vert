@@ -25,7 +25,7 @@ void main() {
 
   // Size attenuation inversely proportional to distance
   float pSize = uPointSize * agentScale * (18.0 / dist);
-  gl_PointSize = clamp(pSize, 1.0, 10.0);
+  gl_PointSize = clamp(pSize, 1.0, 3.0);
 
   gl_Position = projectionMatrix * viewPosition;
 }

@@ -165,9 +165,11 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
       shapeAnchor = anchors?.bust ? new THREE.Vector3(...anchors.bust.position) : center;
       shapeRadius = anchors?.bust?.radius ?? 1.35;
     } else if (shape === "beacon") {
-      shapeAnchor = anchors?.beacon ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(0, 0, 0);
-      shapeAnchor.x += 0.95;
-      shapeRadius = anchors?.beacon?.radius ?? 0.16;
+      shapeAnchor = new THREE.Vector3(0, 1.2, 0);
+      shapeRadius = 0.45;
+    } else if (shape === "none") {
+      shapeAnchor = center;
+      shapeRadius = 0;
     } else {
       shapeAnchor = center;
       shapeRadius = radius;
@@ -359,7 +361,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   ) : null;
 
   return <>
-    {particleField}
+    {shape === "none" ? null : particleField}
   </>;
 }
 
