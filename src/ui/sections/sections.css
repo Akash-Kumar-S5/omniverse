@@ -328,6 +328,16 @@
 /* ---------- 5. Contact ---------- */
 .chapter-contact { row-gap: var(--space-6); align-content: start; padding-top: clamp(8px, 4vh, 40px); }
 
+.contact-hearth-badge {
+  grid-column: 1 / span 6;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
 .contact-title {
   grid-column: 1 / span 8;
   font-size: clamp(3rem, 8.4vw, 8.4rem);

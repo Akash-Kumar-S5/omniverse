@@ -49,6 +49,7 @@ void main() {
   vec3 curlWake = (wakeCirculation + wakeCurl * 0.35) * uCursorWake * repelFalloff * uCursorActive;
 
   position += (repel + curlWake) * uTurbulence;
-  position += vec3(0.0, sin(uTime * 0.7) * 0.018 * uTurbulence, 0.0);
+  // Rising thermal updraft: embers drift naturally upward towards the light shaft and ceiling
+  position += vec3(0.0, (0.022 + sin(uTime * 1.5 + seed * 6.28) * 0.008) * uTurbulence, 0.0);
   gl_FragColor = vec4(position, target.a);
 }
