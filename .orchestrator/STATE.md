@@ -391,3 +391,4 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - 01:32 merged r8/blender-scenes (526c2ad). agy-world reset to chapterLook/Fire/embers; copilot-review (fusion) on r8/copilot-ui (CSS seam, ch1 heading, streak, ch3 lantern, scrollbar)
 - 01:41 merged r8 agy-world+copilot-ui; critic cycle 5 prompted (main 1b7a6d7)
 - 01:46 critic c5 = 6.0; dispatched r9/blender-scenes, r9/agy-world, r9/copilot-ui
+- 02:03 stopped stale ports 4210 4230 4320 5174 5199 4180 4181 5178; lanes told to stop own previews
