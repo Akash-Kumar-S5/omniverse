@@ -6,7 +6,7 @@ REPO = os.environ.get("SANCTUM_REPO") or os.getcwd()
 p = os.path.join(REPO, "public", "assets", "models", "sanctum-lite.glb")
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=p)
-LIM = {"props": 512, "ped": 256, "bust_pedestal": 256}
+LIM = {"props": int(os.environ.get("LITE_PROPS", 512)), "ped": 256, "bust_pedestal": 256}
 for im in bpy.data.images:
     key = next((k for k in LIM if k in im.name.lower()), None)
     print("IMG", im.name, tuple(im.size))

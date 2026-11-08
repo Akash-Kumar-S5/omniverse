@@ -61,8 +61,15 @@ export default function Sanctum() {
           const mat = mesh.material as THREE.MeshStandardMaterial;
           // Standard material with baked lightmap so runtime directional/spot/rim lights
           // can illuminate and accent the architecture and slabs without losing baked occlusion
+          const baked = mat.map ?? mat.emissiveMap;
+          // the scan props (statue, job pieces) show their baked fire/moon light directly, so they stay readable
+          // in the dark corridor; the architecture still falls to black away from the live fire
+          const isProps = mesh.name.includes("props") || mesh.parent?.name.includes("props");
           mesh.material = new THREE.MeshStandardMaterial({
-            map: mat.map ?? mat.emissiveMap,
+            map: baked,
+            emissiveMap: isProps ? baked : null,
+            emissive: isProps ? new THREE.Color(1, 1, 1) : new THREE.Color(0, 0, 0),
+            emissiveIntensity: isProps ? 0.85 : 0,
             roughness: 0.88,
             metalness: 0.04,
             toneMapped: true,
