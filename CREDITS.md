@@ -26,3 +26,14 @@
 | `particle-field.tsx` (`nextjs-webgl-templates/src/features/nova/components/particle-field.tsx`) | Somnath Khadanga | MIT | Adapted pseudo-curl displacement and damped morph timing |
 | `FlowFieldParticles.jsx` (`r3f-flow-field-particles/src/components/FlowFieldParticles.jsx`) | Benjamin Miles | MIT | Adapted 4D flow turbulence and movement-scaled cursor repulsion |
 | `THIRD-PARTY-NOTICES.md` (`src/scene/shaders/lib/`) | Nova and R3F Flow Field authors | MIT | Full notices for adapted shader logic |
+
+## Sanctum Ruins Assets (Round 4, dark fantasy sanctuary)
+
+| Asset | Author | Source | Licence | Files / Use |
+|---|---|---|---|---|
+| Ultimate Modular Ruins Pack | Quaternius | https://quaternius.com/packs/ultimatemodularruins.html | CC0 1.0 Universal | `ruins-arch-*.glb`, `ruins-wall-*.glb`, `ruins-column-*.glb`, `ruins-floor-*.glb`, `ruins-brick*.glb` (modular hall shell, arches, rubble) |
+| Castle Kit | Kenney | https://kenney.nl/assets/castle-kit | CC0 1.0 Universal | `tower-square-arch.glb`, `wall-doorway.glb`, `stairs-stone.glb`, `wall-pillar.glb` (pointed archways, buttressed walls) |
+| Graveyard Kit | Kenney | https://kenney.nl/assets/graveyard-kit | CC0 1.0 Universal | `fire-basket.glb`, `candle-multiple.glb`, `altar-stone.glb` (ritual sanctuary props) |
+| Gothic Statue | Rico Cilliers / Poly Haven | https://polyhaven.com/a/gothic_statue | CC0 1.0 Universal | `gothic_statue.glb` (chapter 1 About niche statue) |
+| Stone Fire Pit | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | `stone_fire_pit.glb` (central hearth for ch0 / ch4) |
+
