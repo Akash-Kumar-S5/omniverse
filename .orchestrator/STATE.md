@@ -373,3 +373,10 @@ Main HEAD 36b2afa-era (+ STATE commits). Build+lint clean. Critic cycle 1 = 3/10
 Cycle 2 trigger: after agy-world merges (or the cherry-pick fallback), /clear critic (w2:pX) and prompt: "cycle 2: screenshot main ch0..4 at 1440 and 390, score vs aengel/landing.love, write reports/critic-cycle-2.md with top-5 fixes". Then dispatch fixes in parallel (check pool usage). Stop on SHIP (>=8.5, no chapter <8).
 Open: ch1 plinth (pastel Kenney blocks) still visible in some shots; ch3 painting frame/props; mobile 390 check; dist 33 MB (prune unused ruins/props GLBs before FINAL).
 Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the interim orchestrator owns the loop.
+
+## Handback 20:33 progress
+- main was never moved (merges lived on r5/agy-scans); fast-forwarded main -> compress, fire, scans; merged scans2; build+lint clean.
+- agy-world-noglow NOT merged (ch4 fire gone, embers over text, ch2 regressed). Cherry-picked src/ui + LoadProgress only (81154dc).
+- Props/scans are baked into sanctum.glb (Sanctum.tsx), so no per-prop refs in src is expected. Shots r5-main-ch0..4.png in reference/.
+- Open: ch2 glitter column right edge; dist 33 MB prune; mobile 390 unchecked.
+- Critic cleared, cycle 2 prompted at 20:36.
