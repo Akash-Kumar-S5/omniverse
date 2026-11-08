@@ -77,7 +77,7 @@ def R(fn, x, y, z, yaw=0.0, s=1.0, mat="wall", sink=0.0):
     return place(fn, f"RUIN_{fn}_{n}", x, y, z, yaw, s, m, sink)
 
 # ---- 1. arches frame every chapter ----
-for x in (-14, -19, -24, -29):                    # experience: one pointed arch per role (spans Y -> yaw 90)
+for x in (-19, -24, -29):                    # r8: no arch at -14, its stepped pier hung as floating slabs at the right edge; experience: one pointed arch per role (spans Y -> yaw 90)
     R("ruins-arch-gothic", x, 0, 0, 90, 1.9)
 R("ruins-arch-gothic", -9.2, 0, 0, 90, 1.9)       # corridor mouth
 for y in (9.2, 14.4, 19.4, 24.4, 29.4):           # projects: hall mouth + between the slab pairs (spans X)
