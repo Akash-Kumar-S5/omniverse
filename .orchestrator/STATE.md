@@ -221,3 +221,15 @@ Scores round 1: agy avg 8.36, copilot avg 6.7 (ch3 5.5 weakest: no subject, blur
 
 ## 04:40 UTC (10:10 IST) round 1 polish merged -> main 8180254
 agy-world 1b + ch3 letterform glyph merged (build+lint clean). Morph approved ch0. Scores BEFORE upgrades: agy-review avg 8.36 (ch 8.5/8.5/8.2/7.8/8.8); copilot-review (strict) 6.5/7.5/7/5.5/7 avg 6.7 (reports/score-copilot-review.md in its worktree, commit 305be3a; top asks: hero object per chapter, legibility, continuous scroll camera, pointer interaction). Re-score dispatched (briefs/round1-rescore.md) to agy-review + copilot-review -> reports/rescore-*.md. Then send Morph the table. Claude limit resets ~10:10 IST: on OPS HANDBACK update STATE and reply HANDBACK-READY.
+
+## HANDBACK from orchestrator-b (10:1x IST)
+Main 8180254+: round-1 impl MERGED (volumetric swarm ch0 [Morph approved], ch2 ribbon right, ch3 letterform glyph + external callout chip, cursor wake, 1b polish). Build+lint clean. .claude/settings.json adds ponytail@ponytail plugin (project scope).
+| Agent | Pane | State |
+| agy-world | w2:pK | idle after commit ff7c90b (merged); branch r3/agy-world |
+| agy-review | w2:pM | IN FLIGHT: round-1 re-score (briefs/round1-rescore.md) -> reports/rescore-agy-review.md (shots r1-rescore-agy-*.png in reference/ untracked) |
+| copilot-review | w2:pQ | IN FLIGHT: re-score -> rescore-copilot-review.md in ITS worktree (.worktrees/copilot-review), commit there then merge |
+| copilot-swarm | w2:pS | idle, ~396 AIC: avoid |
+| codex-world | w2:pE | OUT OF QUOTA until Mon 13:54 / Dec 7 |
+Scores before upgrades: agy-review avg 8.36 (8.5/8.5/8.2/7.8/8.8); copilot-review strict avg 6.7 (6.5/7.5/7/5.5/7; asks: hero object per chapter, text-over-scene legibility, continuous scroll camera, signature pointer interaction).
+Round-2 (not started): pending re-score tables. Copilot rule: one bounded fix/turn; exploratory/screenshot work to agy.
+Next 3 steps: (1) collect both rescore reports, send Morph the table (he asked for it); (2) write ROUND-2-PLAN.md from the gaps (ch3 subject/legibility, scroll-continuous camera, ch1 bust callouts) and assign agy-world; (3) re-benchmark; stop rule in NONSTOP.md; FINAL.md at the end. Untracked dup files parked in .orchestrator/tmp/premerge*.
