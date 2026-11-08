@@ -265,3 +265,5 @@ Round 1 re-score: agy-review avg 9.01 (inflated); Morph-eye ~7.7 (ch3 ~7.5 glyph
 Round 3 "Ember & Ash" (Akash-approved, ROUND-3-DARK-FANTASY.md; OVERRIDE: assets only, no new modelling/shaders; no FromSoftware anything; no "bonfire"): lanes in briefs/round3-dark-fantasy-lanes.md. Starts after round-2 merges.
 Next 3 steps: (1) land agy-world round 2 (answer its dialog, review shots, merge); (2) read r3-asset-candidates.md, pick, send agy step 2 (download/place/headless export, CREDITS.md); then agy-world retunes SignalField to embers + drei Sparkles/Clouds + flicker pointLight; (3) after 15:10 reset blender-sanctum lights/bakes, re-score (I score visuals; reviewers perf/console), stop rules in NONSTOP.md, FINAL.md.
 Gotchas: agy dialogs "Allow creation of this file?" -> send only "1"; herdr shows agy/copilot 'done' while working: read panes; Esc on Claude settings dialogs; no push/deploy/rm -rf.
+
+## 11:10 IST copilot-review (w2:pQ) assigned: vet asset candidates -> reports/r3-asset-picks.md (bounded, one turn). Akash asked to use copilot too; keep one bounded task per turn (~110 AIC used).
