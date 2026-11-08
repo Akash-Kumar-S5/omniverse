@@ -49,3 +49,10 @@ in a fire, no Estus flask, no named characters). Licence is not a gate, but ever
 - Light only from fire, candles, moonlight. Embers stay only as a few small sparks rising from real fires.
 Lanes: agy-assets (pane w2:pM) sources+downloads; blender-sanctum places/lights/bakes; agy-world removes glyph swarm code and wires props.
 Evidence per chapter via ?skipgate=1&chapter=N, then re-score with both reviewers.
+
+## ADDENDUM 13:25 IST: two original figures (generic only)
+No ripped models, fan recreations or lookalikes of any FromSoftware character, and no such names anywhere (code, copy, credits, commits, reports).
+(a) A hooded, veiled woman kneeling or seated by the fire pit (generic "hooded woman" / "praying nun" / "mourning statue") as the quiet keeper of the hall, ch0/ch4.
+(b) A tall cloaked female knight statue with sword and cape (generic "female knight" / "valkyrie statue" / "warrior woman") in an alcove for ch2, or as the ch0 hero instead of the armoured knight.
+Reject any asset whose title, tags or design references such a character (winged helm with prosthetic arm, red hair plus golden arm, eye-cutout mask over a hooded veil).
+Same pipeline: agy-assets sources and credits, blender-sanctum places and lights by fire and moon, evidence via ?skipgate=1&chapter=N.
