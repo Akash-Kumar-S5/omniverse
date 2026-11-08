@@ -192,15 +192,15 @@ export default function CameraRig() {
         pos.set(...sky.position);
         look.set(...sky.target);
         if (!isPortrait) {
-          // ch4 low angle across coals toward dark wall, email over black, fire lower-right
-          pos.set(-1.95, 0.68, 2.35);
-          look.set(-0.42, 0.88, -0.75);
-          targetFov = 44;
+          // ch4: elevated angle across coals toward dark wall; fire lower-right; email over black
+          pos.set(-1.85, 1.55, 2.5);
+          look.set(-0.65, 0.95, -0.3);
+          targetFov = 46;
         } else {
-          // mobile 390: fire sits in bottom 30% below the CTA row
-          pos.set(-1.5, 1.5, 3.6);
-          look.set(-0.35, 1.65, 0.0);
-          targetFov = 58;
+          // mobile 390: elevated angle so fire sits in bottom 30% below the CTA row
+          pos.set(-1.3, 1.75, 3.2);
+          look.set(-0.15, 2.05, 0.0);
+          targetFov = 54;
         }
         break;
       }

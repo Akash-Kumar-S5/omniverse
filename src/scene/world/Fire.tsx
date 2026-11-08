@@ -84,12 +84,12 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  const h = quality === "lite" ? 0.55 : 0.62;
-  const w = h * 0.88;
+  const h = quality === "lite" ? 0.64 : 0.74;
+  const w = h * 0.92;
 
-  // 3 crossed additive billboards at 60 degree intervals inside the coals
+  // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
   return (
-    <group position={[0, PLINTH_TOP - 0.02, 0]}>
+    <group position={[0, 0.60, 0]}>
       <FlamePlane rotationY={0} phase={0} width={w} height={h} />
       <FlamePlane rotationY={Math.PI / 3} phase={0.33} width={w * 0.95} height={h} />
       <FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.67} width={w * 0.95} height={h} />
