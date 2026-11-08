@@ -43,14 +43,23 @@ interface FlamePlaneProps {
 
 function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
-  const tex = useMemo(() => {
+  const { tex, insetX, insetY } = useMemo(() => {
+    const image = sheet.image;
+    if (!(image instanceof HTMLImageElement)) {
+      throw new Error("Flame sprite sheet must be an image");
+    }
+    const insetX = 1 / image.naturalWidth;
+    const insetY = 1 / image.naturalHeight;
     const t = sheet.clone();
     t.needsUpdate = true;
     t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = THREE.ClampToEdgeWrapping;
     t.wrapT = THREE.ClampToEdgeWrapping;
-    t.repeat.set(1 / COLS, 1 / ROWS);
-    return t;
+    // Avoid sampling neighbouring frames when the flame is minified.
+    t.generateMipmaps = false;
+    t.minFilter = THREE.LinearFilter;
+    t.repeat.set(1 / COLS - 2 * insetX, 1 / ROWS - 2 * insetY);
+    return { tex: t, insetX, insetY };
   }, [sheet]);
 
   useEffect(() => () => tex.dispose(), [tex]);
@@ -60,7 +69,7 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
     // Invert row for standard Three.js UV origin (bottom-left)
-    tex.offset.set(col / COLS, (ROWS - 1 - row) / ROWS);
+    tex.offset.set(col / COLS + insetX, (ROWS - 1 - row) / ROWS + insetY);
   });
 
   return (
