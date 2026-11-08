@@ -233,3 +233,6 @@ Main 8180254+: round-1 impl MERGED (volumetric swarm ch0 [Morph approved], ch2 r
 Scores before upgrades: agy-review avg 8.36 (8.5/8.5/8.2/7.8/8.8); copilot-review strict avg 6.7 (6.5/7.5/7/5.5/7; asks: hero object per chapter, text-over-scene legibility, continuous scroll camera, signature pointer interaction).
 Round-2 (not started): pending re-score tables. Copilot rule: one bounded fix/turn; exploratory/screenshot work to agy.
 Next 3 steps: (1) collect both rescore reports, send Morph the table (he asked for it); (2) write ROUND-2-PLAN.md from the gaps (ch3 subject/legibility, scroll-continuous camera, ch1 bust callouts) and assign agy-world; (3) re-benchmark; stop rule in NONSTOP.md; FINAL.md at the end. Untracked dup files parked in .orchestrator/tmp/premerge*.
+
+## 10:20 IST Claude orchestrator restarted fresh (Sonnet)
+Read all briefs. copilot-review rescore (dc11a32) has PERF ONLY (111-121 fps, up from 72-76; ch3 auto-picks Medium): it could not see images, so its round-1 visual scores (6.7) are also unverified. agy-review (w2:pM) re-score in flight; agy-world (w2:pK) on ROUND-2-PLAN items 1-2. Next: collect agy rescore, I score the shots myself (copilot-review shots r1-rescore-copilot-review-ch*.png), merge agy-world, send Morph table.
