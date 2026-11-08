@@ -61,3 +61,9 @@ Every turn re-sends the whole context. A 368k-token orchestrator costs roughly 6
 4. Read agent results from report files (`.orchestrator/reports/`), not by scrolling panes; use `herdr pane read --lines 20`.
 5. Don't paste screenshots or big logs into the orchestrator. Reviewers write verdicts to files and the orchestrator reads the summary.
 6. Prefer `herdr agent wait` over polling loops.
+
+## Update 12:10 IST 08-Nov (Akash): "always check usage on agents and if available use them"
+- On every wake/dispatch, check each pool before deciding: Claude 5H/WK (usage-cache.json `.five_hour/.seven_day`; pane status lines can be stale),
+  Copilot session AIC (pane footer), agy model quota (pane errors), codex (pane errors: locked until Mon 13:54 IST).
+- If a pool has room, put idle lanes to work on it now; never park work "until the reset" when the pool already reset.
+- Claude 5H reset at ~10:40 IST today (now ~5-26%), weekly ~50% (resets 18:30 IST): Claude is AVAILABLE, use it for orchestration (Sonnet) and Blender.
