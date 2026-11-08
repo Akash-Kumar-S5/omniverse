@@ -147,9 +147,9 @@ export default function CameraRig() {
           look.x -= 1.45;
           look.y -= 0.25;
         } else {
-          // Mobile 390: drop camera target so fire sits in bottom 30% below body copy
-          look.y += 0.55;
-          pos.y += 0.25;
+          // Mobile 390: drop camera target so fire sits in bottom 30% below body copy (>=40px below CTA)
+          look.y += 1.05;
+          pos.y += 0.45;
         }
         break;
       }
@@ -192,9 +192,9 @@ export default function CameraRig() {
         pos.set(...sky.position);
         look.set(...sky.target);
         if (!isPortrait) {
-          // ch4: pulled back ~1.5x and lowered; pit <=25% of frame in lower-right; email over black
-          pos.set(-2.75, 1.15, 3.75);
-          look.set(-1.1, 0.85, 0.0);
+          // ch4: pit seen from above ~26 deg like ch0; lower-right; email text over black
+          pos.set(-2.75, 2.75, 3.75);
+          look.set(-1.1, 0.75, 0.0);
           targetFov = 44;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 30% below the CTA row

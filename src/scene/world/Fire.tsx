@@ -69,9 +69,10 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     canvas.height = 128;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const grad = ctx.createRadialGradient(64, 68, 8, 64, 68, 56);
+      const grad = ctx.createRadialGradient(64, 68, 6, 64, 68, 54);
       grad.addColorStop(0, "white");
-      grad.addColorStop(0.68, "white");
+      grad.addColorStop(0.50, "white");
+      grad.addColorStop(0.82, "rgba(255,255,255,0.3)");
       grad.addColorStop(1, "black");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
@@ -103,7 +104,7 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
           map={tex}
           alphaMap={radialMask}
           transparent
-          opacity={0.76}
+          opacity={0.38}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -134,10 +135,15 @@ function Flames() {
 /** The one warm light, on the plinth fire. */
 function FireLight() {
   const ref = useRef<THREE.PointLight>(null);
+  const section = useOmni((s) => s.section);
 
   useFrame((state) => {
     const l = ref.current;
     if (!l) return;
+    if (section === "projects" || section === "about" || section === "experience") {
+      l.intensity = 0;
+      return;
+    }
     const t = state.clock.elapsedTime;
     const flicker = 0.55 * Math.sin(t * 9.1) + 0.3 * Math.sin(t * 17.3 + 1.7) + 0.15 * Math.sin(t * 31.9 + 0.4);
     l.intensity = 8.5 * (1 + 0.15 * flicker);

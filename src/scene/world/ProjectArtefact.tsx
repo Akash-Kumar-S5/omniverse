@@ -84,10 +84,12 @@ export default function ProjectArtefact() {
             toneMapped: true,
           });
         } else {
-          // Wooden frame and easel stand
+          // Wooden frame, mat surround, and easel stand
           if (mesh.material) {
-            const m = (mesh.material as THREE.Material).clone();
+            const m = (mesh.material as THREE.MeshStandardMaterial).clone();
             m.toneMapped = true;
+            // Darken the mat to <= 40% luminance (aged paper tint, not white)
+            m.color = new THREE.Color(0.38, 0.34, 0.30);
             mesh.material = m;
           }
         }
@@ -128,11 +130,11 @@ export default function ProjectArtefact() {
       const direction = lanternDirection.current.copy(state.camera.position).sub(currentPos.current);
       direction.y = 0;
       direction.normalize().multiplyScalar(0.7);
-      lanternRef.current.position.set(0.4 + direction.x, 1.17, direction.z);
+      lanternRef.current.position.set(0.4 + direction.x, 1.45, direction.z);
     }
     if (lightRef.current) {
       const tt = performance.now() / 1000;
-      lightRef.current.intensity = 6 * (1 + 0.12 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      lightRef.current.intensity = 4.5 * (1 + 0.12 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -149,10 +151,10 @@ export default function ProjectArtefact() {
 
         </group>
       </Float>
-      {/* Lower lantern ~0.3m and move forward so it hangs clear above the frame (gap >= 40px) */}
-      <group ref={lanternRef} position={[0.35, 0.86, 0.52]}>
+      {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
+      <group ref={lanternRef} position={[0.35, 1.45, 0.52]}>
         <primitive object={lanternObj} />
-        <pointLight ref={lightRef} color="#ffb066" intensity={6} distance={3} decay={2} />
+        <pointLight ref={lightRef} color="#ffb066" intensity={4.5} distance={1.6} decay={2} />
       </group>
     </group>
   );
