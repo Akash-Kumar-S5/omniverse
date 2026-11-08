@@ -35,7 +35,7 @@ export function getHelixAnchor(activeRole?: number): THREE.Vector3 {
   const role = Math.max(0, Math.min(3, activeRole ?? 0));
   // Follow active role portal forward: role 0 -> x = -14.2, role 1 -> -19.2, etc.
   // Camera looks down -X, so negative Z shifts to screen right (x > 0) away from role card.
-  return new THREE.Vector3(-14.2 - role * 5.0, 2.05, -1.85);
+  return new THREE.Vector3(-14.2 - role * 5.0, 2.05, -1.95);
 }
 
 const seeded = (seed: number) => () => {
@@ -211,7 +211,7 @@ export function createTargetTexture(options: TargetOptions) {
 
   if (shape === "core") {
     shapeAnchor = core.add(new THREE.Vector3(...CORE_SHAPE_OFFSET));
-    radius = anchors?.core?.radius ?? 1.6;
+    radius = 0.88;
   } else if (shape === "bust") {
     shapeAnchor = anchorPosition(anchors, "bust", new THREE.Vector3());
     radius = anchors?.bust?.radius ?? 1.35;
@@ -254,36 +254,76 @@ export function createTargetTexture(options: TargetOptions) {
   }
   if (shape === "beacon") {
     const point = anchors?.beacon?.position ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(...beacon);
+    // Shift slightly to screen right (+X) so the halo ring frames in the open sky and clears the paragraph text on the left
+    point.x += 0.95;
     points = Array.from({ length: count }, () => {
       const angle = random() * Math.PI * 2;
-      const major = radius * 2.4;
+      const major = radius * 2.2;
       const tube = (random() - 0.5) * radius * 0.22;
       return { position: point.clone().add(new THREE.Vector3(Math.cos(angle) * (major + tube), Math.sin(angle) * (major + tube), (random() - 0.5) * radius * 0.09)), group: 0 };
     });
   }
   if (!points) {
-    points = Array.from({ length: count }, () => {
-      // Uniform spherical direction
-      const u = random() * 2 - 1;
-      const theta = random() * Math.PI * 2;
-      const phi = Math.acos(u);
-      const sinPhi = Math.sin(phi);
-      // Volumetric radial distribution: dense luminous core with soft outer filaments
-      const rDist = Math.pow(random(), 1.6);
-      const r = radius * (0.22 + rDist * 0.92);
-      // Gentle fractal turbulence displacement to avoid geometric banding
-      const nx = Math.sin(theta * 3.0 + rDist * 4.0) * radius * 0.08;
-      const ny = Math.cos(phi * 3.0 + rDist * 4.0) * radius * 0.08;
-      const nz = Math.sin((theta + phi) * 2.0) * radius * 0.08;
-      const pos = shapeAnchor.clone().add(
-        new THREE.Vector3(
-          r * sinPhi * Math.cos(theta) + nx,
-          r * Math.cos(phi) + ny,
-          r * sinPhi * Math.sin(theta) + nz,
-        ),
-      );
-      // Mark ~3.5% as luminous agent particles (group = 9)
-      const isAgent = random() < 0.035 ? 9 : 0;
+    // Shaped Astrolabe / Celestial Core:
+    // Composed of a dense spherical nucleus, an inclined equatorial orbit ring,
+    // a perpendicular polar meridian ring, and soft coronal filaments.
+    points = Array.from({ length: count }, (_, i) => {
+      const mode = i % 10;
+      let pos: THREE.Vector3;
+      let isAgent = 0;
+
+      if (mode < 3) {
+        // 1. Dense glowing nucleus (30%): concentrated inner core
+        const u = random() * 2 - 1;
+        const theta = random() * Math.PI * 2;
+        const sinPhi = Math.sqrt(Math.max(0, 1 - u * u));
+        const r = radius * 0.38 * Math.cbrt(random());
+        pos = shapeAnchor.clone().add(new THREE.Vector3(
+          r * sinPhi * Math.cos(theta),
+          r * u,
+          r * sinPhi * Math.sin(theta),
+        ));
+        isAgent = random() < 0.05 ? 9 : 0;
+      } else if (mode < 7) {
+        // 2. Inclined Equatorial Orbital Ring (40%): distinct planetary ring
+        const angle = random() * Math.PI * 2;
+        const ringR = radius * (0.82 + (random() - 0.5) * 0.26);
+        const thickness = (random() - 0.5) * radius * 0.08;
+        const ringVec = new THREE.Vector3(
+          Math.cos(angle) * ringR,
+          thickness,
+          Math.sin(angle) * ringR,
+        );
+        ringVec.applyAxisAngle(new THREE.Vector3(1, 0, 1).normalize(), 0.46);
+        pos = shapeAnchor.clone().add(ringVec);
+        isAgent = random() < 0.045 ? 9 : 0;
+      } else if (mode < 9) {
+        // 3. Polar Precession Meridian Ring (20%): intersecting vertical gyroscope ring
+        const angle = random() * Math.PI * 2;
+        const ringR = radius * (0.76 + (random() - 0.5) * 0.22);
+        const thickness = (random() - 0.5) * radius * 0.08;
+        const polarVec = new THREE.Vector3(
+          thickness,
+          Math.cos(angle) * ringR,
+          Math.sin(angle) * ringR,
+        );
+        polarVec.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.35);
+        pos = shapeAnchor.clone().add(polarVec);
+        isAgent = random() < 0.035 ? 9 : 0;
+      } else {
+        // 4. Ambient Coronal Filaments (10%): soft stellar halo
+        const u = random() * 2 - 1;
+        const theta = random() * Math.PI * 2;
+        const sinPhi = Math.sqrt(Math.max(0, 1 - u * u));
+        const r = radius * (0.88 + random() * 0.32);
+        pos = shapeAnchor.clone().add(new THREE.Vector3(
+          r * sinPhi * Math.cos(theta),
+          r * u,
+          r * sinPhi * Math.sin(theta),
+        ));
+        isAgent = random() < 0.02 ? 9 : 0;
+      }
+
       return { position: pos, group: isAgent };
     });
   }
