@@ -68,7 +68,23 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 | Modular Medieval Buildings (`Banner.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/banner.glb` (Ch2 corridor pillar banner) |
 | Particle Pack (Flame & Fire Sprites) | Kenney | https://kenney.nl/assets/particle-pack | CC0 1.0 Universal | `public/assets/props/textures/flame-spritesheet-6x1.png`, `flame_0*.png`, `fire_0*.png` (Ch0 & Ch4 animated flame flipbook) |
 | Graveyard Kit (`fire-basket.glb`, `candle-multiple.glb`) | Kenney | https://kenney.nl/assets/graveyard-kit | CC0 1.0 Universal | `public/assets/props/brazier-fire-basket.glb`, `candles-altar.glb` (Ch0/Ch4 brazier and Ch1 altar candles) |
-| Adventurers Character Pack (`Rogue_Hooded.glb`, `Knight.glb`) | Kay Lousberg (KayKit) | https://kaylousberg.com | CC0 1.0 Universal | `public/assets/props/statue-hooded-keeper.glb`, `public/assets/props/statue-cloaked-knight.glb` (Ch0/Ch4 kneeling keeper in long grey hooded robe with folded hands & Ch2 cloaked swordswoman statue in worn bronze-toned armour with torn cape and single blade lowered) |
+| Adventurers Character Pack (`Rogue_Hooded.glb`, `Knight.glb`) | Kay Lousberg (KayKit) | https://kaylousberg.com | CC0 1.0 Universal | `public/assets/props/statue-hooded-keeper.glb`, `public/assets/props/statue-cloaked-knight.glb` (Ch0/Ch4 kneeling keeper & Ch2 cloaked swordswoman - replaced in Critic C1 Fix 3 with photoreal scans below) |
+
+## Photoreal Scans & Cultural Heritage Photogrammetry (Critic Cycle 1 Fix 3)
+
+| Asset | Author | Source | Licence | File / Chapter / Use |
+|---|---|---|---|---|
+| Veiled Mourner (US National Gallery of Art scan) | Thomas Flynn (nebulousflynn) | https://sketchfab.com/3d-models/veiled-mourner-8cde4ece6b8041ae9e6b4bf9afff3912 | CC Attribution 4.0 | `public/assets/scans/statue-hooded-mourner.glb` (Ch0 Hero: 16th c. French follower of Germain Pilon hooded mourner sculpture by hearth; 26,267 tris, 714 KB) |
+| Lion-Head Sallet — Renaissance Helmet | viktorinsky | https://sketchfab.com/3d-models/lion-head-sallet-renaissance-helmet-9a9de021922e453d9d4728a2882c5b2e | CC Attribution 4.0 | `public/assets/scans/helmet-sallet-scan.glb` (Ch2 Work: Zamek Nowy Wiśnicz historical Renaissance helmet scan for Job 1 plinth; 34,185 tris, 519 KB) |
+| Leather Cuirass 17 | Peris Digital | https://sketchfab.com/3d-models/leather-cuirass-17-fa78d8d2ce994e889279a1b854950943 | CC Attribution 4.0 | `public/assets/scans/armour-cuirass-scan.glb` (Ch2 Work: 144 Sony Alpha camera RAW photogrammetry cuirass scan for Job 2 plinth; 30,254 tris, 1075 KB) |
+| Moonbrand (Early 14th C Arming Sword) | The Oakeshott Institute | https://sketchfab.com/3d-models/moonbrand-early-14th-c-arming-sword-80fa91fc8c974fd0acd2a55cc513edec | CC Attribution 4.0 | `public/assets/scans/sword-arming-scan.glb` (Ch2 Work: 14th c. European arming sword museum photogrammetry scan for Job 3 plinth; 11,492 tris, 860 KB) |
+| Viking Age Round Shield | Rigsters | https://sketchfab.com/3d-models/viking-age-round-shield-b6aeee50315a437fa261d20ad0e39aae | CC Attribution 4.0 | `public/assets/scans/shield-round-scan.glb` (Ch2 Work: Society for Combat Archaeology round shield scan; 9,070 tris, 225 KB) |
+| Brass Candleholders | Tina / Poly Haven | https://polyhaven.com/a/brass_candleholders | CC0 1.0 Universal | `public/assets/scans/candles-brass.glb` (Ch1 About & Ch4 Contact: antique engraved brass candleholders with real wax taper candles; 38,176 tris, 757 KB) |
+| Wooden Candlestick | Josh Dean / Poly Haven | https://polyhaven.com/a/wooden_candlestick | CC0 1.0 Universal | `public/assets/scans/candlestick-wood.glb` (Ch1 About & Ch3 Projects: turned wood candlestick with candle; 37,272 tris, 327 KB) |
+| Lantern Chandelier 01 | Kirill Sannikov / Poly Haven | https://polyhaven.com/a/lantern_chandelier_01 | CC0 1.0 Universal | `public/assets/scans/lantern-chandelier.glb` (Ch0 Hero & Ch2 Work: wrought iron lantern chandelier with candles; 5,894 tris, 315 KB) |
+| Rock Moss Set 01 | Kless Gyzen / Poly Haven | https://polyhaven.com/a/rock_moss_set_01 | CC0 1.0 Universal | `public/assets/scans/rubble-rock-moss.glb` (Ch0 & Ch2: mossy ruin rock rubble scan; 30,703 tris, 502 KB) |
+| Rock Moss Set 02 (Granite Boulder) | Kless Gyzen / Poly Haven | https://polyhaven.com/a/rock_moss_set_02 | CC0 1.0 Universal | `public/assets/scans/rubble-boulder.glb` (Ch2 Work: corridor mouth mossy granite boulder scan; 43,918 tris, 632 KB) |
+
 
 
 
