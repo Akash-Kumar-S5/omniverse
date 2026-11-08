@@ -67,3 +67,8 @@ Every turn re-sends the whole context. A 368k-token orchestrator costs roughly 6
   Copilot session AIC (pane footer), agy model quota (pane errors), codex (pane errors: locked until Mon 13:54 IST).
 - If a pool has room, put idle lanes to work on it now; never park work "until the reset" when the pool already reset.
 - Claude 5H reset at ~10:40 IST today (now ~5-26%), weekly ~50% (resets 18:30 IST): Claude is AVAILABLE, use it for orchestration (Sonnet) and Blender.
+
+## Update 20:52 IST 08-Nov (Akash): Copilot Fusion
+- When starting or dispatching a Copilot lane (copilot-review w2:pQ, copilot-swarm w2:pS or new ones), first switch it with `/model fusion`:
+  30% off Copilot Fusion usage through 2026-11-30. After 30 Nov, re-check the price before defaulting to it.
+- This applies to Copilot panes only. Never use `/model` in Claude panes.
