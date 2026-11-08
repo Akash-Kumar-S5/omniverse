@@ -62,7 +62,29 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     return { tex: t, insetX, insetY };
   }, [sheet]);
 
-  useEffect(() => () => tex.dispose(), [tex]);
+  // Radially mask the flame billboard so no straight edges or rectangular glow can ever show
+  const radialMask = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const grad = ctx.createRadialGradient(64, 68, 8, 64, 68, 56);
+      grad.addColorStop(0, "white");
+      grad.addColorStop(0.68, "white");
+      grad.addColorStop(1, "black");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+    }
+    const mask = new THREE.CanvasTexture(canvas);
+    mask.colorSpace = THREE.NoColorSpace;
+    return mask;
+  }, []);
+
+  useEffect(() => () => {
+    tex.dispose();
+    radialMask.dispose();
+  }, [tex, radialMask]);
 
   useFrame((state) => {
     const frame = Math.floor(state.clock.elapsedTime * 26 + phase * TOTAL_FRAMES) % TOTAL_FRAMES;
@@ -74,12 +96,14 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
   return (
     <group rotation={[0, rotationY, 0]}>
-      {/* Plane bottom sits at coals level and rises ~0.6m tall */}
+      {/* Plane bottom sits at coals level and rises ~0.98m tall */}
       <mesh position={[0, height * 0.5, 0]} renderOrder={5}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={tex}
+          alphaMap={radialMask}
           transparent
+          opacity={0.76}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -93,9 +117,9 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  // Scale flame billboards ~2x (1.48m tall, core #ffd29a) so the fire reads as the brightest point
-  const h = quality === "lite" ? 1.25 : 1.48;
-  const w = h * 0.88;
+  // Flame billboards ~1.3x cycle-4 size (0.98m tall, width 0.84m) with lower opacity so it reads as light
+  const h = quality === "lite" ? 0.85 : 0.98;
+  const w = h * 0.86;
 
   // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
   return (

@@ -149,7 +149,8 @@ export default function ProjectArtefact() {
 
         </group>
       </Float>
-      <group ref={lanternRef} position={[0.4, 1.17, 0]}>
+      {/* Lower lantern ~0.3m and move forward so it hangs clear above the frame (gap >= 40px) */}
+      <group ref={lanternRef} position={[0.35, 0.86, 0.52]}>
         <primitive object={lanternObj} />
         <pointLight ref={lightRef} color="#ffb066" intensity={6} distance={3} decay={2} />
       </group>
