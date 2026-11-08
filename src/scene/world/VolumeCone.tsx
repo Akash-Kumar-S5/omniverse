@@ -93,8 +93,8 @@ export default function VolumeCone() {
       <spotLight
         position={[0, 8.8, 0]}
         target={targetRef.current}
-        color="#fff2db"
-        intensity={quality === "high" ? 3.5 : 2.2}
+        color="#9fb3d1"
+        intensity={quality === "high" ? 1.0 : 0.7}
         distance={16}
         angle={0.55}
         penumbra={0.7}

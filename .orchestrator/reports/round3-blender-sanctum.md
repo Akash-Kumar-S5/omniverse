@@ -30,3 +30,23 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 3. The ch3 camera is close to the slabs, so the arches barely show there. ch4 (contact) frames only the oculus and sky, with no arch in shot.
 4. Rotunda ch0 is dark by design. The hearth only shows in wider views (`boot_wide`).
 5. The `sanctum.blend` file is a build artifact and is not committed. Rebuild: `build_sanctum.py`, then `FLOOR_PX=4096 Blender -b blender/sanctum.blend -P blender/scripts/sanctum_08_bake_export.py`.
+
+## Props pass (direction 13:05)
+`blender/scripts/sanctum_10_props.py` (after step 9). Lit by fire + moon only: the warm ceiling spots and the bust key spot are removed; fire lights sit at the pit, niche candles, corridor stands and court braziers; moonlight shaft and cool slit lights stay.
+- ch0: knight beside the pit on the plinth (facing the fire), hearth logs + flame mesh in the pit.
+- ch1: skull, two altar-candle clusters and a tall candelabra at the niche pedestal.
+- ch2: greatsword, shield, greathelm, battleaxe, one per role, each on a stone stand right of its arch.
+- ch4: two braziers (flame mesh) and tall candelabra flanking the court.
+- Exports: sanctum.glb 2.91 MB, sanctum-lite.glb 0.99 MB. Evidence: `.orchestrator/reference/r3-props-ch0..4.png` (served from this worktree on :5197).
+- Not placed: the hooded woman and the cloaked female knight statue (not in public/assets/props yet).
+- Flame meshes and logs are baked static; the runtime flame/flicker still needs to be wired by agy-world.
+- ch0 and ch4 cameras look up at the oculus/sky, so the knight, logs and braziers are out of frame there; the knight reads in the `boot_wide` still, not in the runtime ch0 shot. Camera framing is outside this lane.
+- The knight is a T-pose figure (the pack has no pose), so it reads stiff.
+- Candle wax is too bright (emission 2.5): worth halving next pass.
+
+## Round 5 (critic cycle 1, fixes 2 and 4) on branch r5/blender-fire
+- Fix 2: `src/scene/world/Fire.tsx` wires the Draco fire pit on the plinth, a 6-frame flame flipbook on a drei `<Billboard>` (plinth, plus the two court braziers in the contact chapter) and ONE warm `#ff8a3d` point light (7, distance 10, decay 2, +-15% flicker; it moves to the court for ch4). `World.tsx` now has one cold moon key `#9fb3d1` (30% of the old key intensity) plus a near-zero ambient; all per-chapter blue fills, candle lights and warm spots are deleted, and the warm point light in `ProjectArtefact.tsx` is removed. The `VolumeCone` spot is recoloured to the same cold moon.
+- ch0 and ch4 are re-framed at eye level through the camera spots (`sanctum_05_cameras.py` -> `sanctum.spots.json`): boot_under_oculus (0.3,1.45,4.4)->fire, contact_sky is now a court view at the braziers. CameraRig/chapterLook/SignalField untouched.
+- Fix 4: Kenney candles replaced by the Poly Haven `wooden_candlestick` scan (decimated to 2.5k tris); ch1 plinth/pedestal/altar use `castle_brick_broken_06`, the floor uses `cobblestone_floor_13` (box-projected with the existing anti-tile blend, no AO map shipped for it so a flat white is used); the regular floor-tile runner is gone. The pit is no longer baked (the runtime scan replaces it). Re-baked under fire + moon: sanctum.glb 2.62 MB, sanctum-lite.glb 0.89 MB.
+- Evidence: `.orchestrator/reference/r5-blender-fire-ch0..4.png` (1440x900, ?skipgate=1&chapter=N).
+- Known: ch2 and ch3 are now near black (the single fire light is at the plinth; the baked baskets only show through the dim runtime light), the ember helix is still agy-world's, the ch4 court shows one brazier at the right edge and the other behind the text, the knight reads as a stiff figure.
