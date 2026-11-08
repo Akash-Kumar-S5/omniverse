@@ -387,3 +387,4 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - 23:20 merged r7/agy-world (flame+reframes); ch4 regressed (fire occluded), sent back; waiting r7/blender-scenes
 - 00:02 merged agy-world ch4 fix (flame visible). waiting r7/blender-scenes
 - 00:02 merged r7/blender-scenes; critic cycle 4 prompted (main e4c9e6a)
+- 00:07 critic c4 = 6.0; dispatched r8/blender-scenes + r8/agy-world
