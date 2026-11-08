@@ -6,276 +6,109 @@ import { useOmni } from "../../state/store";
 import { projects, type Project } from "../../content";
 import { getProjectGlyphAnchor } from "../particles/targets";
 
-function drawSchematic(ctx: CanvasRenderingContext2D, category: string, accentColor: string) {
-  const cx = 512;
-  const cy = 410;
-
-  ctx.save();
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
-  ctx.lineWidth = 1;
-
-  // Grid backdrop
-  for (let x = 80; x <= 944; x += 40) {
-    ctx.beginPath();
-    ctx.moveTo(x, 260);
-    ctx.lineTo(x, 560);
-    ctx.stroke();
-  }
-  for (let y = 260; y <= 560; y += 30) {
-    ctx.beginPath();
-    ctx.moveTo(80, y);
-    ctx.lineTo(944, y);
-    ctx.stroke();
-  }
-
-  if (category === "fullstack") {
-    // Distributed Client-Server Architecture Diagram
-    const nodes = [
-      { x: cx - 260, y: cy, label: "CLIENT", sub: "Web/UI" },
-      { x: cx - 90, y: cy, label: "GATEWAY", sub: "Auth & Rate" },
-      { x: cx + 90, y: cy - 60, label: "CORE API", sub: "Service" },
-      { x: cx + 90, y: cy + 60, label: "WORKER", sub: "Queue/Job" },
-      { x: cx + 270, y: cy, label: "STORAGE", sub: "SQL/Cache" },
-    ];
-
-    // Connecting bus lines
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(nodes[0].x, nodes[0].y);
-    ctx.lineTo(nodes[1].x, nodes[1].y);
-    ctx.lineTo(nodes[2].x, nodes[2].y);
-    ctx.lineTo(nodes[4].x, nodes[4].y);
-    ctx.moveTo(nodes[1].x, nodes[1].y);
-    ctx.lineTo(nodes[3].x, nodes[3].y);
-    ctx.lineTo(nodes[4].x, nodes[4].y);
-    ctx.stroke();
-
-    // Nodes
-    nodes.forEach((n) => {
-      ctx.fillStyle = "#12141a";
-      ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.roundRect(n.x - 55, n.y - 28, 110, 56, 6);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 13px 'Cinzel', monospace";
-      ctx.textAlign = "center";
-      ctx.fillText(n.label, n.x, n.y - 4);
-
-      ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
-      ctx.font = "11px monospace";
-      ctx.fillText(n.sub, n.x, n.y + 14);
-    });
-  } else if (category === "opensource") {
-    // Autonomous Agent Loop / Neural Graph
-    const radius = 95;
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    const agentSteps = ["PERCEIVE", "PLAN", "TOOL CALL", "VERIFY", "SYNTHESIZE"];
-    agentSteps.forEach((step, i) => {
-      const angle = (i / agentSteps.length) * Math.PI * 2 - Math.PI / 2;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-
-      ctx.fillStyle = "#101318";
-      ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(x, y, 22, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 10px monospace";
-      ctx.textAlign = "center";
-      ctx.fillText(`0${i + 1}`, x, y + 4);
-
-      ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-      ctx.font = "11px monospace";
-      const tx = cx + Math.cos(angle) * (radius + 42);
-      const ty = cy + Math.sin(angle) * (radius + 42) + 4;
-      ctx.fillText(step, tx, ty);
-    });
-
-    // Center nucleus
-    ctx.fillStyle = accentColor;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 14, 0, Math.PI * 2);
-    ctx.fill();
-  } else {
-    // Telemetry & Latency Spectrum Waterfall
-    const bars = 28;
-    const startX = cx - 280;
-    const barW = 14;
-    const gap = 6;
-    for (let i = 0; i < bars; i++) {
-      const h = 40 + Math.sin(i * 0.45) * 35 + Math.cos(i * 0.9) * 25;
-      const x = startX + i * (barW + gap);
-      const y = cy + 70 - h;
-
-      const grad = ctx.createLinearGradient(x, y, x, cy + 70);
-      grad.addColorStop(0, accentColor);
-      grad.addColorStop(1, "rgba(255, 255, 255, 0.05)");
-
-      ctx.fillStyle = grad;
-      ctx.fillRect(x, y, barW, h);
-
-      ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, y, barW, h);
-    }
-
-    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-    ctx.font = "12px monospace";
-    ctx.textAlign = "left";
-    ctx.fillText("RESPONSE HISTOGRAM (p50: 12ms / p95: 38ms / p99: 64ms)", startX, cy - 80);
-  }
-
-  ctx.restore();
-}
-
-function buildProjectTexture(project: Project, index: number): THREE.CanvasTexture {
+/**
+ * Renders an engraved stone tablet / parchment plate for the project.
+ * Strictly anti-slop: warm muted stone, ember, and ash palette with classical
+ * typography. Zero neon, zero blue glow, zero sci-fi HUD elements.
+ */
+function buildStonePlateTexture(project: Project, index: number): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
-  canvas.height = 680;
+  canvas.height = 720;
   const ctx = canvas.getContext("2d");
   if (!ctx) return new THREE.CanvasTexture(canvas);
 
-  const accentColor = index % 2 === 0 ? "#79b8ff" : "#eed8ae";
+  // Weathered dark basalt / charcoal stone base
+  ctx.fillStyle = "#151311";
+  ctx.fillRect(0, 0, 1024, 720);
 
-  // Deep graphite base
-  ctx.fillStyle = "#0c0e12";
-  ctx.fillRect(0, 0, 1024, 680);
+  // Subtle natural stone grain
+  ctx.fillStyle = "rgba(255, 240, 220, 0.015)";
+  for (let i = 0; i < 4000; i++) {
+    const rx = Math.random() * 1024;
+    const ry = Math.random() * 720;
+    ctx.fillRect(rx, ry, 1.5, 1.5);
+  }
 
-  // Subtle vignette / inner glow
-  const radial = ctx.createRadialGradient(512, 340, 100, 512, 340, 500);
-  radial.addColorStop(0, "rgba(26, 32, 44, 0.45)");
-  radial.addColorStop(1, "rgba(8, 10, 13, 0.95)");
-  ctx.fillStyle = radial;
-  ctx.fillRect(0, 0, 1024, 680);
+  // Soft vignette simulating ambient shadow across carved surface
+  const vignette = ctx.createRadialGradient(512, 360, 120, 512, 360, 520);
+  vignette.addColorStop(0, "rgba(32, 28, 25, 0.35)");
+  vignette.addColorStop(1, "rgba(8, 7, 6, 0.85)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, 1024, 720);
 
-  // Outer border with accent corners
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(20, 20, 984, 640);
-
-  // Corner brackets
-  const cornerLen = 28;
-  ctx.strokeStyle = accentColor;
-  ctx.lineWidth = 4;
-  // Top-left
-  ctx.beginPath();
-  ctx.moveTo(20, 20 + cornerLen);
-  ctx.lineTo(20, 20);
-  ctx.lineTo(20 + cornerLen, 20);
-  ctx.stroke();
-  // Top-right
-  ctx.beginPath();
-  ctx.moveTo(1004 - cornerLen, 20);
-  ctx.lineTo(1004, 20);
-  ctx.lineTo(1004, 20 + cornerLen);
-  ctx.stroke();
-  // Bottom-left
-  ctx.beginPath();
-  ctx.moveTo(20, 660 - cornerLen);
-  ctx.lineTo(20, 660);
-  ctx.lineTo(20 + cornerLen, 660);
-  ctx.stroke();
-  // Bottom-right
-  ctx.beginPath();
-  ctx.moveTo(1004 - cornerLen, 660);
-  ctx.lineTo(1004, 660);
-  ctx.lineTo(1004, 660 - cornerLen);
-  ctx.stroke();
-
-  // Top header status bar
-  ctx.fillStyle = accentColor;
-  ctx.beginPath();
-  ctx.arc(52, 54, 5, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 14px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText(`SYS.ONLINE  |  ARTEFACT 0${index + 1} OF 0${projects.length}`, 68, 59);
-
-  ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-  ctx.textAlign = "right";
-  ctx.fillText("AKASH KUMAR  //  AI TOOLING ARCHITECTURE", 972, 59);
-
-  // Divider line
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(40, 78);
-  ctx.lineTo(984, 78);
-  ctx.stroke();
-
-  // Category pill
-  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-  ctx.strokeStyle = accentColor;
+  // Muted carved border line in weathered ash
+  ctx.strokeStyle = "rgba(180, 165, 150, 0.18)";
   ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.roundRect(50, 102, 190, 30, 4);
-  ctx.fill();
-  ctx.stroke();
+  ctx.strokeRect(36, 36, 952, 648);
 
-  ctx.fillStyle = accentColor;
-  ctx.font = "bold 12px monospace";
+  // Inner subtle border
+  ctx.strokeStyle = "rgba(180, 165, 150, 0.08)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(44, 44, 936, 632);
+
+  // Top chapter/index marker
+  ctx.fillStyle = "#8a7e72";
+  ctx.font = "14px 'Cinzel', serif";
   ctx.textAlign = "center";
-  ctx.fillText(`[ ${project.category.toUpperCase()} ]`, 145, 122);
+  ctx.letterSpacing = "0.2em";
+  ctx.fillText(`·  PROJECT 0${index + 1} OF 0${projects.length}  ·`, 512, 95);
 
-  // Project title
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "600 44px 'Playfair Display', serif";
-  ctx.textAlign = "left";
-  ctx.fillText(project.title, 50, 185);
-
-  // Tech stack pills
-  let tagX = 50;
-  const tagY = 222;
-  project.tags.slice(0, 4).forEach((tag) => {
-    ctx.font = "12px monospace";
-    const textW = ctx.measureText(tag).width;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.roundRect(tagX, tagY - 16, textW + 18, 24, 4);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-    ctx.fillText(tag, tagX + 9, tagY);
-    tagX += textW + 28;
-  });
-
-  // Schematic Diagram
-  drawSchematic(ctx, project.category, accentColor);
-
-  // Footer status
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+  // Subtle engraved divider
+  ctx.strokeStyle = "rgba(180, 165, 150, 0.15)";
   ctx.beginPath();
-  ctx.moveTo(40, 608);
-  ctx.lineTo(984, 608);
+  ctx.moveTo(380, 120);
+  ctx.lineTo(644, 120);
   ctx.stroke();
 
-  ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-  ctx.font = "12px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText(`STATUS: VERIFIED REPOSITORY  ·  ${project.github?.replace("https://github.com/", "") || "PUBLIC"}`, 50, 632);
+  // Project Title (classical serif, carved bone tone)
+  ctx.fillStyle = "#e8dfd5";
+  ctx.font = "500 52px 'Playfair Display', 'Cinzel', serif";
+  ctx.textAlign = "center";
+  ctx.fillText(project.title, 512, 215);
 
-  ctx.fillStyle = accentColor;
-  ctx.textAlign = "right";
-  ctx.fillText("60 FPS PBR REFLECTION READY", 972, 632);
+  // Category descriptor (muted warm ash)
+  ctx.fillStyle = "#a89a8a";
+  ctx.font = "13px 'Cinzel', serif";
+  ctx.letterSpacing = "0.18em";
+  ctx.fillText(project.category.toUpperCase(), 512, 260);
+
+  // Project hook / brief in classical serif
+  if (project.hook) {
+    ctx.fillStyle = "#c8beb4";
+    ctx.font = "italic 22px 'Playfair Display', serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`"${project.hook}"`, 512, 340);
+  }
+
+  // Description body copy (split into two lines if needed)
+  ctx.fillStyle = "#9a8e82";
+  ctx.font = "17px sans-serif";
+  ctx.textAlign = "center";
+  const descWords = project.description.split(" ");
+  const mid = Math.ceil(descWords.length / 2);
+  const line1 = descWords.slice(0, mid).join(" ");
+  const line2 = descWords.slice(mid).join(" ");
+  ctx.fillText(line1, 512, 430);
+  ctx.fillText(line2, 512, 465);
+
+  // Bottom divider
+  ctx.strokeStyle = "rgba(180, 165, 150, 0.12)";
+  ctx.beginPath();
+  ctx.moveTo(120, 540);
+  ctx.lineTo(904, 540);
+  ctx.stroke();
+
+  // Tech stack pills in quiet stone tones
+  ctx.fillStyle = "#8a7e72";
+  ctx.font = "14px 'Cinzel', monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(project.tags.join("   ·   "), 512, 595);
+
+  // Quiet footer
+  ctx.fillStyle = "#5c544c";
+  ctx.font = "12px monospace";
+  ctx.fillText(project.github?.replace("https://github.com/", "") || "", 512, 645);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.minFilter = THREE.LinearFilter;
@@ -294,7 +127,7 @@ export default function ProjectArtefact() {
   // Pre-generate textures for all projects to guarantee 0 runtime allocations
   const textures = useMemo(() => {
     if (typeof document === "undefined") return [];
-    return projects.map((p, idx) => buildProjectTexture(p, idx));
+    return projects.map((p, idx) => buildStonePlateTexture(p, idx));
   }, []);
 
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
@@ -302,14 +135,11 @@ export default function ProjectArtefact() {
   const isEven = safeIdx % 2 === 0;
 
   // Orient towards the camera for Chapter 3 gallery view
-  // Even camera: position [0.9, 1.8, -9.9], target [-2.7, 2.9, -13.5] -> faces right-down
-  // Odd camera: position [-0.9, 1.8, -9.9], target [2.7, 2.9, -13.5] -> faces left-down
   const rotY = isEven ? Math.PI * 0.26 : -Math.PI * 0.26;
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     const dest = getProjectGlyphAnchor(activeProject);
-    // Position framed artefact screen cleanly below the celestial letterform
     dest.y = 1.68;
     if (isEven) {
       dest.x = -1.18;
@@ -330,44 +160,43 @@ export default function ProjectArtefact() {
 
   return (
     <group ref={groupRef}>
-      <Float speed={1.5} rotationIntensity={0.12} floatIntensity={0.22} floatingRange={[-0.03, 0.03]}>
+      <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.16} floatingRange={[-0.02, 0.02]}>
         <group rotation={[0, rotY, 0]}>
-          {/* Machined Obsidian/Titanium Frame */}
+          {/* Carved Dark Stone Tablet / Ruin Easel */}
           <RoundedBox
-            args={[1.36, 0.94, 0.05]}
-            radius={0.03}
-            smoothness={4}
+            args={[1.34, 0.94, 0.07]}
+            radius={0.025}
+            smoothness={3}
             castShadow={false}
             receiveShadow={false}
           >
             <meshStandardMaterial
-              color="#131418"
-              roughness={0.28}
-              metalness={0.88}
+              color="#1a1816"
+              roughness={0.92}
+              metalness={0.05}
               toneMapped={true}
             />
           </RoundedBox>
 
-          {/* Recessed Lit Display Screen */}
-          <mesh position={[0, 0, 0.028]}>
-            <planeGeometry args={[1.30, 0.88]} />
+          {/* Inset Inscription Stone Surface */}
+          <mesh position={[0, 0, 0.036]}>
+            <planeGeometry args={[1.28, 0.88]} />
             <meshStandardMaterial
               map={activeTexture}
-              emissiveMap={activeTexture}
-              emissive="#ffffff"
-              emissiveIntensity={0.82}
-              roughness={0.16}
-              metalness={0.06}
+              roughness={0.88}
+              metalness={0.02}
+              emissive="#18120c"
+              emissiveIntensity={0.25}
               toneMapped={true}
             />
           </mesh>
 
-          {/* Local accent rim light washing the slab and floor */}
+          {/* Soft warm hearth firelight illuminating the tablet */}
           <pointLight
-            position={[0, 0, 0.6]}
-            intensity={2.2}
-            distance={4.2}
-            color={isEven ? "#a0c8ff" : "#ffdfa0"}
+            position={[0, 0, 0.7]}
+            intensity={1.6}
+            distance={4.0}
+            color="#d6782a"
             decay={1.3}
           />
         </group>
