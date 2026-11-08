@@ -23,9 +23,9 @@ export function getProjectGlyphAnchor(activeProject: number): THREE.Vector3 {
   const isEven = index % 2 === 0;
   // Slabs are at z = -13.5, -18.5, -23.5, -28.5
   const zSlab = -13.5 - pair * 5.0;
-  // Float glyph beside the active slab in clear line of sight (screen right x > 0.68).
-  const x = isEven ? -1.65 : 2.55;
-  const y = 2.65;
+  // Float ember glyph cleanly above-left of the display frame, fully clear of collision.
+  const x = isEven ? -2.05 : 2.85;
+  const y = 3.35;
   const z = isEven ? zSlab - 0.65 : zSlab + 0.85;
   return new THREE.Vector3(x, y, z);
 }
