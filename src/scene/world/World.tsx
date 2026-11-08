@@ -34,44 +34,50 @@ function WorldLighting() {
 
 function SparksAndMist() {
   const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
+  const isContact = section === "contact";
+
+  // Halve ember count and size on ch4 (Contact) as required
+  const countMult = isContact ? 0.5 : 1.0;
+  const sizeMult = isContact ? 0.5 : 1.0;
 
   return (
     <group>
-      {/* Varied natural embers (1-4px), warm colors and layered brightness above the plinth hearth */}
-      {/* 1. Fine glowing spark motes: 1-1.4px, luminous amber-gold, fast rise */}
+      {/* Warm-only embers (hue 15-40deg, zero blue/cyan): layered sizes and brightness */}
+      {/* 1. Fine glowing spark motes: warm gold (hue 36°), fast rise */}
       <Sparkles
-        count={quality === "lite" ? 16 : 32}
+        count={Math.round((quality === "lite" ? 16 : 32) * countMult)}
         scale={[0.85, 2.6, 0.85]}
         position={[0, 1.3, 0]}
-        color="#ffe08a"
+        color="#ffc46a"
         speed={0.80}
-        size={quality === "lite" ? 1.0 : 1.4}
+        size={(quality === "lite" ? 1.0 : 1.4) * sizeMult}
         noise={[0.2, 0.8, 0.2]}
-        opacity={0.92}
+        opacity={0.88}
       />
 
-      {/* 2. Mid-sized ember sparks: 2-2.5px, vibrant warm orange, steady drift */}
+      {/* 2. Mid-sized ember sparks: warm fiery orange (hue 24°), steady drift */}
       <Sparkles
-        count={quality === "lite" ? 12 : 24}
+        count={Math.round((quality === "lite" ? 12 : 24) * countMult)}
         scale={[0.9, 2.2, 0.9]}
         position={[0, 1.25, 0]}
         color="#ff761a"
         speed={0.55}
-        size={quality === "lite" ? 2.0 : 2.5}
+        size={(quality === "lite" ? 2.0 : 2.5) * sizeMult}
         noise={[0.25, 0.7, 0.25]}
-        opacity={0.78}
+        opacity={0.76}
       />
 
-      {/* 3. Larger cooling ember flakes: 3.2-3.8px, deep ember crimson-orange, slow rise */}
+      {/* 3. Larger cooling ember flakes: deep warm red-orange (hue 16°), slow rise */}
       <Sparkles
-        count={quality === "lite" ? 6 : 12}
+        count={Math.round((quality === "lite" ? 6 : 12) * countMult)}
         scale={[0.95, 1.8, 0.95]}
         position={[0, 1.15, 0]}
         color="#d6440c"
         speed={0.35}
-        size={quality === "lite" ? 3.0 : 3.8}
+        size={(quality === "lite" ? 3.0 : 3.8) * sizeMult}
         noise={[0.3, 0.6, 0.3]}
-        opacity={0.60}
+        opacity={0.55}
       />
 
       {/* Low subtle floor mist across the cold stone ruins */}
