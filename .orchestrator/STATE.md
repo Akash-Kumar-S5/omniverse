@@ -359,3 +359,17 @@ Score table: pending.
 MERGED to main: r5/copilot-compress (b9a4be4), photoreal scans + credits (ed0fae1), r5/blender-fire (1a7cf2c: real fire pit + flame billboard, one warm light, moon-only fills, brick/cobble), r5/blender-scans (36b2afa: scans placed, old figures dropped, dark plinth, ch4 fire framed). Build+lint clean.
 PENDING: agy-world fixes 1+5 (4be4d6e on r3/agy-world-noglow, evidence not yet shot) -> kills ch2 glitter column, ch4 eyebrow, callouts, console error. blender-sanctum round 3: mourner scan renders as a flat sliver, ch2 props too dark.
 Critic cycle 2 starts after agy-world merges. Score table: critic cycle 1 = 3/10 (ch0 3, ch1 4, ch2 4, ch3 3, ch4 2).
+
+## Failover 16:15 IST (Claude Sonnet orchestrator -> interim; Claude 5H at 90%)
+Main HEAD 36b2afa-era (+ STATE commits). Build+lint clean. Critic cycle 1 = 3/10 ITERATE (reports/critic-cycle-1.md).
+| Branch | Lane | Verdict | Mergeable? |
+|---|---|---|---|
+| r5/copilot-compress | copilot-review | statue 3.9->0.94 MB, fire pit 2.5->0.46 MB, ch1 shot ok | MERGED b9a4be4 |
+| r5/agy-scans (+ scans on main) | agy-review | 10 photoreal scans in public/assets/scans, credited, picks in reports/r5-scans-picks.md | MERGED (ed0fae1) |
+| r5/blender-fire | blender-sanctum | real fire pit + flame billboard, one warm light, moon-only fills, brick/cobble. ch0/ch4 good | MERGED 1a7cf2c |
+| r5/blender-scans | blender-sanctum | scans placed, old figures dropped. ch4 great. Defects: mourner scan is a flat sliver (ch0/ch4), ch2 job props too dark | MERGED 36b2afa |
+| r5/blender-scans2 | blender-sanctum | IN FLIGHT: fix mourner scale/orientation, light ch2 props; evidence r5-scans2-ch0,2,4.png | merge if shots show a whole figure and visible props; build+lint |
+| r3/agy-world-noglow | agy-world | Orchestrator review: KEEP eyebrow removal, settings gear, callout/console fixes, no glitter column. REGRESSIONS: ch4 fire missing + embers over text, ch2 camera on orange wall with spear over text. Sent back 16:10 to restore main's CameraRig/chapterLook | NOT mergeable until ch2+ch4 shots show corridor framing and fire beside text. Fallback: cherry-pick only src/ui/** + LoadProgress fix |
+Cycle 2 trigger: after agy-world merges (or the cherry-pick fallback), /clear critic (w2:pX) and prompt: "cycle 2: screenshot main ch0..4 at 1440 and 390, score vs aengel/landing.love, write reports/critic-cycle-2.md with top-5 fixes". Then dispatch fixes in parallel (check pool usage). Stop on SHIP (>=8.5, no chapter <8).
+Open: ch1 plinth (pastel Kenney blocks) still visible in some shots; ch3 painting frame/props; mobile 390 check; dist 33 MB (prune unused ruins/props GLBs before FINAL).
+Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the interim orchestrator owns the loop.
