@@ -3,7 +3,7 @@
 **Lane:** agy-assets  
 **Date:** 2026-11-08 13:17 IST  
 **Destination:** `public/assets/props/`  
-**Total Footprint:** 2.0 MB (Strictly satisfies <= 1.5 MB per file, <= 8.0 MB total)  
+**Total Footprint:** 2.8 MB (20 assets, strictly satisfies <= 1.5 MB per file, <= 8.0 MB total)  
 **Licensing Policy:** 100% Free / CC0 Public Domain. Zero FromSoftware rips, zero fan recreations.  
 
 ---
@@ -30,6 +30,8 @@
 | `public/assets/props/helmet-sallet.glb` | **Chapter 2 (Work)** | Alternate visor sallet helmet | [Quaternius Single Knight Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 51.1 KB |
 | `public/assets/props/sword-knight.glb` | **Chapter 2 (Work)** | Alternate one-handed arming sword | [Quaternius Single Knight Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 40.3 KB |
 | `public/assets/props/battleaxe.glb` | **Chapter 2 (Work)** | Alternate double-bitted battleaxe | [Quaternius Medieval Weapons Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 99.2 KB |
+| `public/assets/props/statue-hooded-keeper.glb` | **Chapter 0 & 4 (Hearth Keeper)** | Generic hooded veiled woman seated/kneeling by the fire pit | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 422.0 KB |
+| `public/assets/props/statue-cloaked-knight.glb` | **Chapter 2 (Alcove) / Chapter 0 (Hero)** | Generic tall cloaked female knight statue with sword and cape | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 440.6 KB |
 
 ---
 
@@ -61,4 +63,24 @@
 5. **Chapter 4 (Contact / Central Hearth):**
    - Central hearth fire pit with real flame (`fire-flame-3d.glb` and/or `flame-spritesheet-6x1.png`) and `hearth-logs.glb` embers.
    - Flanked by `brazier-fire-basket.glb` or `candelabra-tall.glb`.
+   - Seated beside the fire pit: `statue-hooded-keeper.glb` (hooded quiet hall keeper in seated rest pose).
    - Lit strictly by the hearth fire and dark moon ambient.
+
+---
+
+## 3. Original Generic Figures Addendum (Direction 13:25)
+
+1. **Figure (a) — `statue-hooded-keeper.glb` (422.0 KB):**
+   - **Archetype:** Generic hooded veiled woman / mourning statue / quiet hall keeper.
+   - **Placement:** Seated / kneeling beside the fire pit in Chapter 0 (Hero) or Chapter 4 (Hearth).
+   - **Source:** Kay Lousberg (KayKit Adventurers), CC0 1.0 Universal public domain.
+   - **Features:** Self-contained GLB with embedded textures and armature containing `Sit_Floor_Pose`, `Sit_Floor_Idle`, and `Idle` animation clips for immediate static or idling placement.
+   - **Compliance:** Strictly original generic design. Zero references to FromSoftware characters (no eye-cutout mask, no gold embroidery, no named lore tags).
+
+2. **Figure (b) — `statue-cloaked-knight.glb` (440.6 KB):**
+   - **Archetype:** Generic tall cloaked female knight statue with cape and greatsword.
+   - **Placement:** Ancient stone alcove in Chapter 2 (Colonnade), or alternate heroic figure in Chapter 0.
+   - **Source:** Kay Lousberg (KayKit Adventurers), CC0 1.0 Universal public domain.
+   - **Features:** Self-contained GLB with draped cape mesh, two-handed greatsword (`2H_Sword`), plate armor, and armature containing `2H_Melee_Idle` and `Idle` poses.
+   - **Compliance:** Strictly original generic design. Zero references to FromSoftware characters (no winged helm with prosthetic arm, no scarlet hair / golden prosthetic, no named lore tags).
+
