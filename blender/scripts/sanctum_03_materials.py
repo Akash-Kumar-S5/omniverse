@@ -77,7 +77,7 @@ brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.46, 0.45, 0.45),
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
-plinth = pbr("mat_plinth_polished", "cobblestone_floor_13", 0.9, tint=(0.05, 0.047, 0.045), rough_mul=1.0, flat=0.3, normal=1.0)   # weathered dark stone (was a pale pink polished coat)
+plinth = pbr("mat_plinth_polished", "cobblestone_floor_13", 0.9, tint=(0.02, 0.019, 0.018), rough_mul=1.0, flat=0.3, normal=1.0)   # weathered dark stone (was a pale pink polished coat)
 
 def assign(ob, mat):
     ob.data.materials.clear(); ob.data.materials.append(mat)
@@ -87,7 +87,7 @@ for ob in bpy.data.objects:
     n = ob.name
     if n == "floor": assign(ob, floor)
     elif n.startswith("slab"): assign(ob, slab)
-    elif n.startswith("plinth"): assign(ob, floor)   # r7: same stone as the floor, no smooth rim
+    elif n.startswith("plinth"): assign(ob, plinth)   # r7: same stone as the floor, no smooth rim
     elif n.startswith("bust_pedestal"): assign(ob, brick)
     elif n.startswith("BUST_"): pass  # keep the glb's own marble material
     else: assign(ob, wall)

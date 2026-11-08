@@ -137,3 +137,11 @@ No new third-party assets; reused CC0 files in new places.
 |---|---|---|---|---|
 | Boulder 01 (`public/assets/scans/rubble-boulder.glb`) | Rico Cilliers / Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: scanned dark rock base under the fire pit, replaces the smooth plinth puck |
 | Kite Shield, Dry Branches Medium 01, Brass Candleholders, Wall torch | see Round 8 / Props | CC0 | Re-lit and re-placed in ch1, ch2 and the pit |
+
+## Round 10 scenes (blender-scenes)
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
+| Dead Tree Trunk 02 (scan, 1k, `blender/props/dead_tree_trunk_02/`) | Poly Haven | https://polyhaven.com/a/dead_tree_trunk_02 | CC0 1.0 Universal | Ch0/ch4: three charred logs laid crosswise in the pit (albedo darkened to <= 0.3), replace the pale kindling |
+| Boulder 01 / Rubble Rock Moss (`public/assets/scans/rubble-boulder.glb`, `rubble-rock-moss.glb`) | Rico Cilliers, Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: nine dark half-sunk scanned rocks ring the pit foot |
+| Kite Shield, Brass Candleholders, wall torch | see Round 8 | CC0 | Re-lit, re-placed (ch2 shield on a taller pedestal, ch1 candles removed from the foreground) |

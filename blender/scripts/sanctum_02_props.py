@@ -8,7 +8,8 @@ from sanctum_lib import *
 
 # central plinth under the shaft: two steps
 # r6: small hearth stone, no wide step disc; flagstones (step 9) run right up to it
-# r9: no puck; the scanned boulder base is placed in step 10
+# r10: no disc (its lit top read as a tan plate); a continuous half-sunk rock ring hides the gap under the pit
+_unused = 0   # r10: very dark disc under the rock ring: no hard underside gap, hidden by the pit (base at 0.335)
 
 # bust pedestal in the E niche (proxy bust is NOT exported; real bust is marble_bust_01.glb)
 box("bust_pedestal", 10.5, 11.5, -0.5, 0.5, 0, 1.15)
