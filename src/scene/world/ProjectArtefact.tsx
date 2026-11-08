@@ -11,16 +11,9 @@ const FRAME_MODEL_URL = "/assets/models/standing_picture_frame_01.glb";
 const LANTERN_URL = "/assets/scans/lantern-chandelier.glb";
 const FRAME_SCALE = 6;
 
-const PAINTING_URLS = [
-  "/assets/paintings/painting_0.jpg",
-  "/assets/paintings/painting_1.jpg",
-  "/assets/paintings/painting_2.jpg",
-  "/assets/paintings/painting_3.jpg",
-  "/assets/paintings/painting_4.jpg",
-  "/assets/paintings/painting_5.jpg",
-  "/assets/paintings/painting_6.jpg",
-  "/assets/paintings/painting_7.jpg",
-];
+const PAINTING_URLS = projects.map(
+  (p, i) => p.image || `/assets/paintings/painting_${i % 8}.jpg`
+);
 
 export default function ProjectArtefact() {
   const section = useOmni((s) => s.section);
@@ -109,7 +102,7 @@ export default function ProjectArtefact() {
     if (!groupRef.current) return;
     const dest = getProjectGlyphAnchor(activeProject);
     // The painting is the hero: large, right-centre, where the glyph swarm hangs
-    dest.y = 2.15;
+    dest.y = 1.95;
     // slide right on screen (clear of the copy column): the chapter camera's right-hand direction in glTF xz
     if (isEven) {
       dest.x += 0.9;
@@ -148,8 +141,8 @@ export default function ProjectArtefact() {
 
         </group>
       </Float>
-      <primitive object={lanternObj} position={[0.4, 1.75, 0]} />
-      <pointLight ref={lightRef} color="#ffb066" intensity={9} distance={7} decay={2} position={[0.3, 1.4, 1.0]} />
+      <primitive object={lanternObj} position={[0.4, 1.42, 0]} />
+      <pointLight ref={lightRef} color="#ffb066" intensity={6.8} distance={7} decay={2} position={[0.3, 1.25, 1.0]} />
     </group>
   );
 }

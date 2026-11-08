@@ -146,6 +146,10 @@ export default function CameraRig() {
         if (!isPortrait) {
           look.x -= 1.45;
           look.y -= 0.25;
+        } else {
+          // Mobile 390: drop camera target so fire sits in bottom 30% below body copy
+          look.y += 0.55;
+          pos.y += 0.25;
         }
         break;
       }
@@ -178,6 +182,8 @@ export default function CameraRig() {
         targetFov = projCam.fov;
         pos.set(...projCam.position);
         look.set(...projCam.target);
+        // Tilt camera slightly down so lantern is not clipped by top nav
+        look.y -= 0.28;
         break;
       }
       case "contact": {
@@ -185,6 +191,17 @@ export default function CameraRig() {
         targetFov = sky.fov;
         pos.set(...sky.position);
         look.set(...sky.target);
+        if (!isPortrait) {
+          // ch4 low angle across coals toward dark wall, email over black, fire lower-right
+          pos.set(-1.95, 0.68, 2.35);
+          look.set(-0.42, 0.88, -0.75);
+          targetFov = 44;
+        } else {
+          // mobile 390: fire sits in bottom 30% below the CTA row
+          pos.set(-1.5, 1.5, 3.6);
+          look.set(-0.35, 1.65, 0.0);
+          targetFov = 58;
+        }
         break;
       }
     }

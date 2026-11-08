@@ -116,16 +116,16 @@ export default function VolumeCone() {
         />
       </mesh>
 
-      {/* Floating dust motes within the sunbeam */}
+      {/* Floating warm motes within the moonbeam */}
       <Sparkles
         key={quality}
-        position={[0, 4.4, 0]}
-        count={quality === "high" ? 50 : 28}
-        scale={[3.2, 7.8, 3.2]}
-        size={quality === "high" ? 2.5 : 1.8}
-        speed={0.14}
-        color="#ffe8c4"
-        opacity={0.45}
+        position={[0, 3.8, 0]}
+        count={quality === "high" ? 36 : 20}
+        scale={[2.2, 5.8, 2.2]}
+        size={quality === "high" ? 1.6 : 1.2}
+        speed={0.12}
+        color="#ff9a44"
+        opacity={0.35}
       />
     </group>
   );

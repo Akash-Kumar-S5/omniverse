@@ -1,6 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { CHAPTER_SHAPE, signal, type ShapeId, type SignalFieldProps } from "../../state/signal";
 import { useOmni } from "../../state/store";
@@ -59,10 +58,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const simSize = backend === "cpu" ? CPU_SIM_SIZE : GPU_SIM_SIZE[mountQuality];
   const count = simSize * simSize;
   const cpuCursorOffsets = useMemo(() => new Float32Array(count * 3), [count]);
-  const { scene: bust } = useGLTF("/assets/models/marble_bust_01.glb", false);
   const center = useMemo(() => new THREE.Vector3(...(anchors?.core?.position ?? [0, 0, 0])), [anchors]);
   const radius = anchors?.core?.radius ?? 1.6;
-  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, activeRole, bust }), [shape, count, anchors, activeProject, activeRole, bust]);
+  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, activeRole }), [shape, count, anchors, activeProject, activeRole]);
   const latestTarget = useRef(target);
   latestTarget.current = target;
 

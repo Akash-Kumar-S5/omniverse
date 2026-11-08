@@ -37,16 +37,16 @@ function SparksAndMist() {
 
   return (
     <group>
-      {/* A few small sparks rising from the plinth fire */}
+      {/* Small warm orange embers scoped strictly to 1m cylinder above the plinth hearth */}
       <Sparkles
-        count={quality === "lite" ? 24 : 60}
-        scale={[2.2, 4.0, 2.2]}
-        position={[0, 2.2, 0]}
-        color="#ff721a"
-        speed={0.7}
-        size={2.2}
-        noise={[0.4, 1.2, 0.4]}
-        opacity={0.8}
+        count={quality === "lite" ? 25 : 50}
+        scale={[0.9, 2.4, 0.9]}
+        position={[0, 1.2, 0]}
+        color="#ff6e1a"
+        speed={0.65}
+        size={quality === "lite" ? 1.3 : 1.7}
+        noise={[0.25, 0.8, 0.25]}
+        opacity={0.82}
       />
 
       {/* Low subtle floor mist across the cold stone ruins */}

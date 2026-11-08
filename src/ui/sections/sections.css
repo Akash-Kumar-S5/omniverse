@@ -374,7 +374,22 @@
 
 /* ---------- Mobile (390px and up) ---------- */
 @media (max-width: 767px) {
-  .chapter-view { align-content: end; row-gap: var(--space-4); padding-bottom: var(--space-2); }
+  .chapter-view {
+    position: relative;
+    align-content: end;
+    row-gap: var(--space-4);
+    padding-bottom: var(--space-2);
+  }
+  /* 0-70% black gradient directly behind text block on mobile */
+  .chapter-view::before {
+    content: "";
+    position: absolute;
+    inset: -16px -16px -8px -16px;
+    background: linear-gradient(180deg, rgba(6, 5, 5, 0.70) 0%, rgba(6, 5, 5, 0.52) 60%, rgba(6, 5, 5, 0) 100%);
+    pointer-events: none;
+    z-index: -1;
+    border-radius: 6px;
+  }
   .chapter-view > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
 
   .hero-title { font-size: clamp(2.4rem, 11vw, 3.8rem); line-height: 1.0; }

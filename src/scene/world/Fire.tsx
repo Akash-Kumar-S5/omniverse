@@ -1,24 +1,23 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Billboard, useGLTF, useTexture } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 
 /**
- * The real fire. Everything here is an existing asset or an existing drei component:
- *  - stone_fire_pit.draco.glb: Poly Haven scan (CC0), Draco-compressed with blender/scripts/compress_fire_pit.py
- *  - flame-spritesheet-6x1.png: Kenney particle pack (CC0) as a flipbook on a drei <Billboard>
- *  - ONE warm point light (#ff8a3d), the only warm source in the scene, flickering +-15%
- * Coordinates are glTF space (Y up); the sanctum bake uses the same space.
+ * Authentic hearth fire with CC0 animated flame flipbook and crossed additive billboards:
+ *  - stone_fire_pit.draco.glb: Poly Haven scan (CC0), Draco-compressed
+ *  - flame_sheet_8x8.png: OpenGameArt CC0 animated flame sprite sheet (para, 8x8 frames)
+ *  - 3 crossed additive billboards (~0.6m tall) inside the coals with warm core (#ffd29a)
+ *  - ONE warm point light (#ff8a3d) on the plinth fire with organic flicker
  */
 const PIT_URL = "/assets/ruins/stone_fire_pit.draco.glb";
-const FLAME_URL = "/assets/props/textures/flame-spritesheet-6x1.png";
+const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 const PIT_SCALE = 1.7;
 const PLINTH_TOP = 0.42;
-const FRAMES = 6;
-
-/** The one fire sits on the plinth at the origin; the contact chapter now looks at it from the side. */
-const PLINTH_FLAME: [number, number, number] = [0, 0.62, 0];
+const COLS = 8;
+const ROWS = 8;
+const TOTAL_FRAMES = 64;
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -35,38 +34,66 @@ export function FirePit() {
   return <primitive object={pit} position={[0, PLINTH_TOP - 0.085, 0]} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />;
 }
 
-function Flame({ position, size = 1.1, phase = 0 }: { position: [number, number, number]; size?: number; phase?: number }) {
+interface FlamePlaneProps {
+  rotationY: number;
+  phase: number;
+  width: number;
+  height: number;
+}
+
+function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
   const tex = useMemo(() => {
     const t = sheet.clone();
     t.needsUpdate = true;
     t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = THREE.ClampToEdgeWrapping;
-    t.repeat.set(1 / FRAMES, 1);
+    t.wrapT = THREE.ClampToEdgeWrapping;
+    t.repeat.set(1 / COLS, 1 / ROWS);
     return t;
   }, [sheet]);
+
   useEffect(() => () => tex.dispose(), [tex]);
 
   useFrame((state) => {
-    const frame = Math.floor(state.clock.elapsedTime * 12 + phase * FRAMES) % FRAMES;
-    tex.offset.x = frame / FRAMES;
+    const frame = Math.floor(state.clock.elapsedTime * 26 + phase * TOTAL_FRAMES) % TOTAL_FRAMES;
+    const col = frame % COLS;
+    const row = Math.floor(frame / COLS);
+    // Invert row for standard Three.js UV origin (bottom-left)
+    tex.offset.set(col / COLS, (ROWS - 1 - row) / ROWS);
   });
 
   return (
-    <Billboard position={position} follow lockX={false} lockY={false} lockZ={false}>
-      {/* the plane sits on its bottom edge so the flame grows up from the coals */}
-      <mesh position={[0, size / 2, 0]} renderOrder={5}>
-        <planeGeometry args={[size, size]} />
+    <group rotation={[0, rotationY, 0]}>
+      {/* Plane bottom sits at coals level and rises ~0.6m tall */}
+      <mesh position={[0, height * 0.5, 0]} renderOrder={5}>
+        <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={tex}
           transparent
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
-          color="#ffb070"
+          color="#ffd29a"
+          side={THREE.DoubleSide}
         />
       </mesh>
-    </Billboard>
+    </group>
+  );
+}
+
+function Flames() {
+  const quality = useOmni((s) => s.quality);
+  const h = quality === "lite" ? 0.55 : 0.62;
+  const w = h * 0.88;
+
+  // 3 crossed additive billboards at 60 degree intervals inside the coals
+  return (
+    <group position={[0, PLINTH_TOP - 0.02, 0]}>
+      <FlamePlane rotationY={0} phase={0} width={w} height={h} />
+      <FlamePlane rotationY={Math.PI / 3} phase={0.33} width={w * 0.95} height={h} />
+      <FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.67} width={w * 0.95} height={h} />
+    </group>
   );
 }
 
@@ -78,29 +105,28 @@ function FireLight() {
     const l = ref.current;
     if (!l) return;
     const t = state.clock.elapsedTime;
-    const flicker = 0.55 * Math.sin(t * 9.1) + 0.3 * Math.sin(t * 17.3 + 1.7) + 0.15 * Math.sin(t * 31.9 + 0.4); // |.|<=1
-    l.intensity = 7 * (1 + 0.15 * flicker);
+    const flicker = 0.55 * Math.sin(t * 9.1) + 0.3 * Math.sin(t * 17.3 + 1.7) + 0.15 * Math.sin(t * 31.9 + 0.4);
+    l.intensity = 7.5 * (1 + 0.15 * flicker);
   });
 
   return (
     <pointLight
       ref={ref}
       color="#ff8a3d"
-      intensity={7}
-      distance={10}
+      intensity={7.5}
+      distance={11}
       decay={2}
-      position={[0, 1.1, 0]}
+      position={[0, 0.85, 0]}
     />
   );
 }
 
 export default function Fire() {
-  const quality = useOmni((s) => s.quality);
   return (
     <group>
       <FirePit />
       <FireLight />
-      <Flame position={PLINTH_FLAME} size={quality === "lite" ? 1.0 : 1.2} />
+      <Flames />
     </group>
   );
 }
