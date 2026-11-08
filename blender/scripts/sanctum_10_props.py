@@ -23,7 +23,7 @@ M_FLAME = emissive("mat_flame", (1.0, 0.45, 0.12), 6.0)
 
 DEC = {"../../../blender/props/kite_shield/kite_shield_1k": 6000, "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": 3000, "../scans/candles-brass": 6000, "../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 5000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
 # r6: (saturation, value) pulled down on the albedo so scans read as aged metal under warm light, not flat orange
-TUNE = {"../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
+TUNE = {"../scans/rubble-boulder": (0.5, 0.42), "../scans/statue-hooded-mourner": (0.55, 0.5), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
 METAL = {"../scans/shield-round-scan": (0.8, 0.45)}
 _cache = {}
 def source(fn):
@@ -88,7 +88,7 @@ def bbox(m):
     return ([min(p[i] for p in pts) for i in range(3)], [max(p[i] for p in pts) for i in range(3)])
 
 n = 0
-def P(fn, x, y, z, height, yaw=0.0, mat=None, face=None, tag=None, rot=None, dyaw=0.0):
+def P(fn, x, y, z, height, yaw=0.0, mat=None, face=None, tag=None, rot=None, dyaw=0.0, fit=None):
     """Place a prop scaled so its height (bbox z) is `height` m, bbox-centred on (x,y), lowest vertex on z. face=(tx,ty) turns its front (-Y) toward that point.
     rot=(rx,ry,rz) degrees pre-rotates the mesh first (e.g. ry=90 stands a lying sword upright)."""
     global n; n += 1
@@ -99,14 +99,17 @@ def P(fn, x, y, z, height, yaw=0.0, mat=None, face=None, tag=None, rot=None, dya
     pts = [v.co.copy() for v in me.vertices]
     lo = [min(p[i] for p in pts) for i in range(3)]; hi = [max(p[i] for p in pts) for i in range(3)]
     s = height / (hi[2] - lo[2])
+    zf = 1.0
+    if fit:
+        s = fit[0] / max(hi[0] - lo[0], hi[1] - lo[1]); zf = fit[1] / ((hi[2] - lo[2]) * s)
     if face is not None:
         yaw = math.degrees(math.atan2(face[0] - x, -(face[1] - y))) + dyaw
     ob = bpy.data.objects.new(f"RUIN_prop_{tag or fn}_{n}", me)
     sc.collection.objects.link(ob)
-    ob.rotation_mode = "XYZ"; ob.scale = (s,) * 3; ob.rotation_euler = (0, 0, math.radians(yaw))
+    ob.rotation_mode = "XYZ"; ob.scale = (s, s, s * zf); ob.rotation_euler = (0, 0, math.radians(yaw))
     c = mathutils.Vector(((lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2]))
-    off = mathutils.Matrix.Rotation(math.radians(yaw), 3, "Z") @ (c * s)
-    ob.location = (x - off.x, y - off.y, z - off.z)
+    off = mathutils.Matrix.Rotation(math.radians(yaw), 3, "Z") @ mathutils.Vector((c.x * s, c.y * s, 0))
+    ob.location = (x - off.x, y - off.y, z - c.z * s * zf)
     if mat is not None:
         ob.data.materials.clear(); ob.data.materials.append(mat)
     return ob
@@ -125,7 +128,8 @@ for i, (yw, dz, ox, oy) in enumerate(((0, 0.52, 0.0, 0.0), (65, 0.60, 0.1, -0.1)
     P("../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k", ox, oy, dz, 0.22, yw, tag="scan_branch")
 # hooded mourner: the scan is a flat bas-relief slab (0.27 : 1 : 0.13 in w : h : d), so it stands as a carved stele,
 # 1.5 m from the fire on the lit (camera-right) side, front turned to camera-left, warm light from below
-P("../scans/statue-hooded-mourner", 1.35, -0.65, 0.0, 1.55, face=(-3.4, -3.8), dyaw=-26, tag="scan_mourner")
+P("../scans/rubble-boulder", 0, 0, 0.0, 0.3, 30, fit=(1.55, 0.36), tag="scan_base")   # r9: scanned dark rock under the pit (pit base at 0.335)
+P("../scans/statue-hooded-mourner", 1.35, -0.65, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
 firelight("FIRE_flame", (0, 0, 1.0), 120, (1.0, 0.5, 0.18), 0.3)
 firelight("FIRE_mourner_low", (0.6, -0.45, 0.55), 100, (1.0, 0.45, 0.15), 0.15)
 
@@ -136,24 +140,25 @@ for i, (x, y, z) in enumerate(((10.42, 0.45, 1.25), (10.42, -0.45, 1.25), (11.6,
 for i, (x, y) in enumerate(((10.6, 0.42), (11.45, -0.45), (10.7, -0.42))):
     firelight(f"FIRE_niche{i}", (x, y, 1.65), 28, (1.0, 0.6, 0.28), 0.06)
 # a candelabra in the niche corner
-P("../ruins/altar-stone", 9.7, 0.95, 0, 0.5, 90, mat=bpy.data.materials.get("mat_brick") or M_WALL, tag="stand")
-P("../scans/candles-brass", 9.7, 0.95, 0.5, 0.5, face=(5.4, 0), tag="scan_candles")
-firelight("FIRE_niche_cand", (9.7, 0.95, 1.2), 60, (1.0, 0.58, 0.25), 0.1)
+P("../scans/candles-brass", 9.7, 0.95, 0.0, 0.5, face=(5.4, 0), tag="scan_candles")
+firelight("FIRE_niche_cand", (9.7, 0.95, 0.8), 60, (1.0, 0.58, 0.25), 0.1)
 # the statue itself is a runtime model, so the light that reveals its face and folds ships inside sanctum.glb (#ffb070)
 rt = bpy.data.lights.new("RT_ch1_candle", "POINT"); rt.energy = 3.2; rt.color = (1.0, 0.434, 0.162)
-rto = bpy.data.objects.new("RT_ch1_candle", rt); sc.collection.objects.link(rto); rto.location = (9.7, 0.95, 1.3)
+rto = bpy.data.objects.new("RT_ch1_candle", rt); sc.collection.objects.link(rto); rto.location = (9.7, 0.95, 0.9)
 
 # ---- ch2: one job prop per role, on a stone stand to the right of each arch (camera at x+4.2 looks -X; +Y is screen right) ----
 # (file, height m, pre-rotation): the sword stands upright (blade up) so it reads from eye level
-JOB = (("../../../blender/props/kite_shield/kite_shield_1k", 1.0, None, 1.5), ("../scans/helmet-sallet-scan", 0.55, None, 0.75), ("../scans/sword-arming-scan", 1.3, (0, 90, 0), 0.75), ("../scans/armour-cuirass-scan", 0.8, None, 0.75))
+JOB = (("../../../blender/props/kite_shield/kite_shield_1k", 1.3, None, 1.5), ("../scans/helmet-sallet-scan", 0.55, None, 0.75), ("../scans/sword-arming-scan", 1.3, (0, 90, 0), 0.75), ("../scans/armour-cuirass-scan", 0.8, None, 0.75))
 for k, (x, (fn, h, rot, ph)) in enumerate(zip((-14, -19, -24, -29), JOB)):
-    sx, sy = x + 0.5, (1.5 if k == 0 else 2.0)   # r8: role 0 shield at screen x 1000-1300; later stands hug the right wall, clear of the bullets
+    sx, sy = (x + 1.5, 1.2) if k == 0 else (x + 0.5, 2.0)   # r8: role 0 shield at screen x 1000-1300; later stands hug the right wall, clear of the bullets
     P("../ruins/ruins-column-square" if k == 0 else "../ruins/altar-stone", sx, sy, 0, ph, 90, mat=bpy.data.materials.get("mat_brick") or M_WALL, tag="stand")
     P(fn, sx, sy, ph, h, face=(x + 4.2, 0), rot=rot, tag=f"scan_job{k}")
     firelight(f"FIRE_job{k}", (sx + 0.3, sy - 0.9, ph + 1.0), 40, (1.0, 0.62, 0.3), 0.1)
-# one wall sconce on the right-hand arch (wall at y ~ +2.4), a real torch prop + a warm practical
-P("torch-wall", -13.5, 2.3, 2.3, 0.6, face=(-13.5, 0), tag="sconce")
-firelight("FIRE_sconce", (-13.5, 1.95, 2.8), 220, (1.0, 0.6, 0.28), 0.08)
+# one wall sconce on the right-hand wall (torch prop) + a spot aimed straight at the shield face
+P("torch-wall", -11.2, 2.3, 2.6, 0.6, face=(-11.2, 0), tag="sconce")
+sp = bpy.data.lights.new("SCONCE_shield", "SPOT"); sp.energy = 700; sp.color = (1.0, 0.68, 0.36)
+sp.spot_size = math.radians(38); sp.spot_blend = 0.55; sp.shadow_soft_size = 0.1
+spo = bpy.data.objects.new("SCONCE_shield", sp); sc.collection.objects.link(spo); spo.location = (-11.4, 2.0, 2.9); look_at(spo, (-12.5, 1.2, 2.15))
 
 # ---- ch4: braziers + tall candelabra flank the court (camera at y=-14.6 looks up and away) ----
 for i, sx in enumerate((-2.3, 2.3)):

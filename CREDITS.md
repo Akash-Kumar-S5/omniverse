@@ -130,3 +130,10 @@ No new third-party assets; reused CC0 files in new places.
 | Dry Branches Medium 01 (scan, 1k, `blender/props/dry_branches_medium_01/`) | Poly Haven | https://polyhaven.com/a/dry_branches_medium_01 | CC0 1.0 Universal | Ch0/ch4: charred kindling in the fire pit, replaces the faceted hearth logs |
 | Brass Candleholders (`public/assets/scans/candles-brass.glb`) | Tina / Poly Haven | https://polyhaven.com/a/brass_candleholders | CC0 1.0 Universal | Ch1: scanned candle cluster front-left of the statue, replaces the chunky candelabra |
 | Stone fire pit scan, albedo darkened | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | Pit stones read as dark scan stone |
+
+## Round 9 scenes (blender-scenes)
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
+| Boulder 01 (`public/assets/scans/rubble-boulder.glb`) | Rico Cilliers / Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: scanned dark rock base under the fire pit, replaces the smooth plinth puck |
+| Kite Shield, Dry Branches Medium 01, Brass Candleholders, Wall torch | see Round 8 / Props | CC0 | Re-lit and re-placed in ch1, ch2 and the pit |

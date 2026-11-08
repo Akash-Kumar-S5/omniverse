@@ -116,7 +116,7 @@ for y in (11.5, 21.5):
     BASKETS += [(-3.9, y), (3.9, y)]
 for i, (x, y) in enumerate(BASKETS):
     R("fire-basket", x, y, 0, random.randint(0, 359), 2.4, mat="iron")
-    firelight(f"FIRE_basket{i}", (x, y, 0.75), 70, (1.0, 0.5, 0.2), 0.2)
+    firelight(f"FIRE_basket{i}", (x, y, 1.5), 60, (1.0, 0.5, 0.2), 0.2)
 
 # ---- 7. THE fire: warm key over the pit on cold stone (runtime adds the flicker) ----
 firelight("FIRE_hearth", (0, 0, 1.35), 150, (1.0, 0.48, 0.18), 0.35)
