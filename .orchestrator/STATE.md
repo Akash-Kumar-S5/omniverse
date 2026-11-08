@@ -354,3 +354,8 @@ Morph review 12:50 queued: (1) ch4 fire pit + Sparkles + flicker light, (2) ch0 
 | copilot-review | w2:pQ | idle, ~185 AIC; perf check after fixes |
 | codex-world | w2:pE | LOCKED to Mon 13:54 |
 Score table: pending.
+
+## 15:50 IST — critic cycle 1 dispatch progress (orchestrator, Claude Sonnet)
+MERGED to main: r5/copilot-compress (b9a4be4), photoreal scans + credits (ed0fae1), r5/blender-fire (1a7cf2c: real fire pit + flame billboard, one warm light, moon-only fills, brick/cobble), r5/blender-scans (36b2afa: scans placed, old figures dropped, dark plinth, ch4 fire framed). Build+lint clean.
+PENDING: agy-world fixes 1+5 (4be4d6e on r3/agy-world-noglow, evidence not yet shot) -> kills ch2 glitter column, ch4 eyebrow, callouts, console error. blender-sanctum round 3: mourner scan renders as a flat sliver, ch2 props too dark.
+Critic cycle 2 starts after agy-world merges. Score table: critic cycle 1 = 3/10 (ch0 3, ch1 4, ch2 4, ch3 3, ch4 2).
