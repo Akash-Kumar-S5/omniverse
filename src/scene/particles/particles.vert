@@ -1,13 +1,31 @@
 uniform sampler2D uPositions;
 uniform sampler2D uTarget;
 uniform float uPointSize;
+uniform float uTime;
 varying float vGroup;
 varying float vDepth;
+varying float vIsAgent;
+
 void main() {
+  vec4 targetData = texture2D(uTarget, uv);
   vec3 position = texture2D(uPositions, uv).xyz;
-  vGroup = texture2D(uTarget, uv).a;
+  vGroup = targetData.a;
+
+  // Agent particles are tagged with group >= 8.5
+  float isAgent = step(8.5, vGroup);
+  vIsAgent = isAgent;
+
   vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
-  vDepth = clamp((-viewPosition.z - 2.0) / 36.0, 0.0, 1.0);
-  gl_PointSize = uPointSize * (1.0 + 7.0 / max(1.0, -viewPosition.z));
+  float dist = max(0.5, -viewPosition.z);
+  vDepth = clamp((dist - 2.0) / 32.0, 0.0, 1.0);
+
+  // Size attenuation: 3-4x smaller base particles, agent particles ~2.2x larger with subtle pulse
+  float pulse = isAgent * 0.2 * sin(uTime * 2.8 + position.x * 5.0 + position.y * 3.0);
+  float agentScale = mix(1.0, 2.2 + pulse, isAgent);
+
+  // Size attenuation inversely proportional to distance
+  float pSize = uPointSize * agentScale * (18.0 / dist);
+  gl_PointSize = clamp(pSize, 1.0, 10.0);
+
   gl_Position = projectionMatrix * viewPosition;
 }

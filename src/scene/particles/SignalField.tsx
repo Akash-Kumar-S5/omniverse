@@ -6,7 +6,7 @@ import { CHAPTER_SHAPE, signal, type ShapeId, type SignalFieldProps } from "../.
 import { useOmni } from "../../state/store";
 import { anchors as screenAnchors, type AnchorId } from "../../state/anchors";
 import { createParticleSimulation, hasFloatRenderTargetSupport, type ParticleSimulation } from "./ParticleSim";
-import { CORE_SHAPE_OFFSET, createTargetTexture } from "./targets";
+import { CORE_SHAPE_OFFSET, createTargetTexture, getProjectGlyphAnchor, getHelixAnchor } from "./targets";
 import vertexShader from "./particles.vert?raw";
 import fragmentShader from "./particles.frag?raw";
 import cpuVertexShader from "./cpu.vert?raw";
@@ -46,6 +46,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const cpuFromPositions = useRef<Float32Array | null>(null);
   const cpuMorphProgress = useRef(1);
   const cursor = useMemo(() => new THREE.Vector3(), []);
+  const previousCursor = useRef(new THREE.Vector3());
+  const cursorVelocity = useMemo(() => new THREE.Vector3(), []);
+  const cursorWake = useRef(0);
   const previousPointer = useRef(new THREE.Vector2());
   const lastPointerMotion = useRef(-1);
   const plane = useMemo(() => new THREE.Plane(), []);
@@ -59,7 +62,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const { scene: bust } = useGLTF("/assets/models/marble_bust_01.glb", false);
   const center = useMemo(() => new THREE.Vector3(...(anchors?.core?.position ?? [0, 0, 0])), [anchors]);
   const radius = anchors?.core?.radius ?? 1.6;
-  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, bust }), [shape, count, anchors, activeProject, bust]);
+  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, activeRole, bust }), [shape, count, anchors, activeProject, activeRole, bust]);
   const latestTarget = useRef(target);
   latestTarget.current = target;
 
@@ -92,17 +95,19 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     uPositions: { value: null as THREE.Texture | null },
     uTarget: { value: null as THREE.Texture | null },
     uActiveGroup: { value: 0 },
-    uPointSize: { value: 2.8 },
+    uPointSize: { value: 1.15 },
+    uTime: { value: 0 },
   }), []);
   const cpuUniforms = useMemo(() => ({
     uActiveGroup: { value: 0 },
-    uPointSize: { value: 1.85 },
+    uPointSize: { value: 1.15 },
+    uTime: { value: 0 },
   }), []);
   uniforms.uTarget.value = target;
   uniforms.uActiveGroup.value = activeRole;
-  uniforms.uPointSize.value = resolvedQuality === "lite" ? 2.2 : 2.8;
+  uniforms.uPointSize.value = resolvedQuality === "lite" ? 0.95 : 1.15;
   cpuUniforms.uActiveGroup.value = activeRole;
-  cpuUniforms.uPointSize.value = resolvedQuality === "lite" ? 1.65 : 1.85;
+  cpuUniforms.uPointSize.value = resolvedQuality === "lite" ? 0.95 : 1.15;
 
   useEffect(() => {
     if (backend === "cpu") return;
@@ -139,12 +144,29 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
 
   useFrame((state, delta) => {
     const motionReduced = reducedMotion ?? storeReducedMotion;
-    const anchorName = shape === "project-glyph" ? "glyph" : shape;
-    const shapeAnchor = anchors?.[anchorName]
-      ? new THREE.Vector3(...anchors[anchorName].position)
-      : shape === "beacon" ? new THREE.Vector3(0, 0, 0) : center;
-    if (shape === "core") shapeAnchor.add(coreOffset);
-    const shapeRadius = anchors?.[anchorName]?.radius ?? (shape === "bust" ? 1.35 : shape === "beacon" ? 0.16 : radius);
+    uniforms.uTime.value = state.clock.elapsedTime;
+    cpuUniforms.uTime.value = state.clock.elapsedTime;
+    let shapeAnchor: THREE.Vector3;
+    let shapeRadius: number;
+    if (shape === "project-glyph") {
+      shapeAnchor = getProjectGlyphAnchor(activeProject);
+      shapeRadius = 0.95;
+    } else if (shape === "helix") {
+      shapeAnchor = getHelixAnchor(activeRole);
+      shapeRadius = 0.95;
+    } else if (shape === "core") {
+      shapeAnchor = center.clone().add(coreOffset);
+      shapeRadius = anchors?.core?.radius ?? 1.6;
+    } else if (shape === "bust") {
+      shapeAnchor = anchors?.bust ? new THREE.Vector3(...anchors.bust.position) : center;
+      shapeRadius = anchors?.bust?.radius ?? 1.35;
+    } else if (shape === "beacon") {
+      shapeAnchor = anchors?.beacon ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(0, 0, 0);
+      shapeRadius = anchors?.beacon?.radius ?? 0.16;
+    } else {
+      shapeAnchor = center;
+      shapeRadius = radius;
+    }
     signal.focus[0] = shapeAnchor.x;
     signal.focus[1] = shapeAnchor.y;
     signal.focus[2] = shapeAnchor.z;
@@ -153,13 +175,30 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     raycaster.setFromCamera(pointer, camera);
     plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), shapeAnchor);
     const hasCursor = !motionReduced && raycaster.ray.intersectPlane(plane, cursor) !== null;
+
+    if (delta > 0 && hasCursor) {
+      cursorVelocity.subVectors(cursor, previousCursor.current).divideScalar(delta);
+      cursorVelocity.clampLength(0, 15);
+    } else {
+      cursorVelocity.set(0, 0, 0);
+    }
+    previousCursor.current.copy(cursor);
+
     const pointerDistance = pointer.distanceTo(previousPointer.current);
     const pointerSpeed = delta > 0 ? pointerDistance / delta : 0;
-    if (pointerDistance > 0.001) lastPointerMotion.current = state.clock.elapsedTime;
+    if (pointerDistance > 0.001) {
+      lastPointerMotion.current = state.clock.elapsedTime;
+      cursorWake.current = Math.min(1.0, cursorWake.current + Math.min(0.65, pointerSpeed * 0.35));
+    }
     previousPointer.current.copy(pointer);
+
+    // Smooth lingering wake decay over ~1.6 seconds
+    const wakeDecayRate = motionReduced ? 8.0 : 1.35;
+    cursorWake.current = Math.max(0, THREE.MathUtils.damp(cursorWake.current, 0, wakeDecayRate, delta));
+
     const cursorAge = state.clock.elapsedTime - lastPointerMotion.current;
-    const cursorPulse = cursorAge >= 0 && cursorAge < 0.35 ? 0.65 * (1 - cursorAge / 0.35) : 0;
-    const cursorStrength = motionReduced ? 0 : Math.min(1, Math.max(pointerSpeed * 0.45, cursorPulse));
+    const cursorPulse = cursorAge >= 0 && cursorAge < 0.6 ? Math.pow(1 - cursorAge / 0.6, 1.4) : 0;
+    const cursorStrength = motionReduced ? 0 : Math.min(1, Math.max(pointerSpeed * 0.55, cursorPulse * 0.75));
 
     if (backend === "gpu") {
       const sim = simulation.current;
@@ -183,6 +222,8 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
         computeUniforms.uCursor.value.copy(cursor);
         computeUniforms.uCursorActive.value = hasCursor ? 1 : 0;
         computeUniforms.uCursorStrength.value = cursorStrength;
+        computeUniforms.uCursorWake.value = cursorWake.current;
+        computeUniforms.uCursorVelocity.value.copy(cursorVelocity);
         sim.compute.compute();
         uniforms.uPositions.value = sim.compute.getCurrentRenderTarget(sim.positionVariable).texture;
         uniforms.uTarget.value = target;
@@ -238,12 +279,15 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
           if (hasCursor) {
             const dx = x - cursor.x, dy = y - cursor.y, dz = z - cursor.z;
             const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            const reach = Math.max(0.7, shapeRadius * 0.62);
-            const influence = THREE.MathUtils.clamp(1 - distance / reach, 0, 1);
-            const impulse = cursorStrength * influence * Math.min(1, delta * 18) / Math.max(0.5, distance);
-            cpuCursorOffsets[p] += dx * impulse;
-            cpuCursorOffsets[p + 1] += dy * impulse;
-            cpuCursorOffsets[p + 2] += dz * impulse;
+            const reach = 2.4;
+            if (distance < reach && distance > 0.001) {
+              const normDist = distance / reach;
+              const falloff = (1 - normDist) * (1 - normDist);
+              const impulse = (cursorStrength * 0.45 + cursorWake.current * 0.28) * falloff * Math.min(1, delta * 18) / Math.max(0.4, distance);
+              cpuCursorOffsets[p] += dx * impulse + cursorVelocity.x * falloff * 0.06;
+              cpuCursorOffsets[p + 1] += dy * impulse + cursorVelocity.y * falloff * 0.06;
+              cpuCursorOffsets[p + 2] += dz * impulse + cursorVelocity.z * falloff * 0.06;
+            }
           }
           x += cpuCursorOffsets[p];
           y += cpuCursorOffsets[p + 1];
@@ -253,6 +297,11 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
             x += pulse * (x - shapeAnchor.x);
             y += pulse * (y - shapeAnchor.y);
             z += pulse * (z - shapeAnchor.z);
+          } else {
+            const breath = Math.sin(time * 0.85 + seed * 1.5) * 0.03;
+            x += (x - shapeAnchor.x) * breath;
+            y += (y - shapeAnchor.y) * breath;
+            z += (z - shapeAnchor.z) * breath;
           }
         }
         positions[p] = x;
@@ -280,9 +329,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     }
 
     const candidates: [AnchorId, THREE.Vector3, string][] = [
-      ["hero.core", center, "boot"],
+      ["hero.core", center.clone().add(coreOffset), "boot"],
       ["about.object", shape === "bust" ? shapeAnchor : new THREE.Vector3(...(anchors?.bust?.position ?? center.toArray())), "about"],
-      ["projects.active", shape === "project-glyph" ? shapeAnchor : new THREE.Vector3(...(anchors?.glyph?.position ?? center.toArray())), "projects"],
+      ["projects.active", shape === "project-glyph" ? shapeAnchor : getProjectGlyphAnchor(activeProject), "projects"],
       ["contact.beacon", shape === "beacon" ? shapeAnchor : new THREE.Vector3(...(anchors?.beacon?.position ?? [0, 0, 0])), "contact"],
     ];
     const projected = new THREE.Vector3();

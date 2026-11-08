@@ -3,7 +3,8 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import { anchors, type AnchorId } from "../../state/anchors";
 import { useOmni } from "../../state/store";
-import { beacon, projectNodes } from "../layout";
+import { beacon } from "../layout";
+import { getProjectGlyphAnchor, CORE_SHAPE_OFFSET } from "../particles/targets";
 
 const ids: AnchorId[] = ["hero.core", "about.object", "about.city", "projects.active", "contact.beacon"];
 const visibleSections: Record<AnchorId, string> = {
@@ -17,7 +18,7 @@ const visibleSections: Record<AnchorId, string> = {
 export default function AnchorWriters() {
   const { camera, size } = useThree();
   const points = useMemo(() => ({
-    "hero.core": new THREE.Vector3(0, 0, 0),
+    "hero.core": new THREE.Vector3(...CORE_SHAPE_OFFSET),
     "about.object": new THREE.Vector3(0, 1.1, 0),
     "about.city": new THREE.Vector3(0, -4.72, 0),
     "projects.active": new THREE.Vector3(),
@@ -26,7 +27,7 @@ export default function AnchorWriters() {
   const projected = useMemo(() => new THREE.Vector3(), []);
   useFrame(() => {
     const state = useOmni.getState();
-    points["projects.active"].fromArray(projectNodes[Math.max(0, Math.min(state.activeProject, projectNodes.length - 1))].position);
+    points["projects.active"].copy(getProjectGlyphAnchor(state.activeProject));
     for (const id of ids) {
       const anchor = anchors[id];
       projected.copy(points[id]).project(camera);
