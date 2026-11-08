@@ -1,26 +1,32 @@
-# round3 blender-sanctum — stills stage (NO export yet)
-Status: sanctum built in live Blender via scripts; Cycles stills rendered. Waiting for orchestrator go before bake/export.
+# Round 3 report: blender-sanctum ("Ember & Ash")
 
-## Scripts (blender/scripts/, re-runnable headless with -b -P)
-sanctum_lib.py, sanctum_01_shell.py, _02_props.py, _03_materials.py, _04_light_world.py, _05_cameras.py, build_sanctum.py (runs 1-5, saves blender/sanctum.blend, gitignored), sanctum_06_render_stills.py (-- spot...; env SAMPLES/RES_PCT/OUT).
-Contract names present: CAM_<spot> x17 (boot_wide, boot_under_oculus, about_niche, exp_role_0..3, proj_gallery, proj_0..7, contact_sky), TARGET_<spot>, ANCHOR_core/bust/helix/glyph/beacon.
-Layout (Blender Z-up): rotunda r9 h12 (oculus r2.2 offset y=-1.5 so the 7deg-tilted sun lands on the plinth), E niche+pedestal (bust), W corridor with 4 portal frames, N gallery with 8 monolith slabs, S gateway to open-roof court (night sky dome).
+Branch `r3/blender-sanctum`, rebased on main. Assets only: nothing modelled, no shaders written. The scene is the old layout turned into a ruined gothic hall.
 
-## Stills (1600x900, 128 spl, denoise): .orchestrator/reference/r3-blender-{boot_wide,boot_under_oculus,about_niche,exp_role_0,proj_gallery,contact_sky}.png
+## What changed
+New `blender/scripts/sanctum_09_ruins.py`, run last by `build_sanctum.py`. It imports and places the CC0 GLBs from `public/assets/ruins`:
+- `ruins-arch-gothic` replaces the 4 brutalist portal frames (one per role) and adds arches at the corridor mouth, hall mouth, between the slab pairs, the niche mouth, the court passage, and a far arch framing the court sky.
+- `ruins-wall-hole` stands either side of the court entrance.
+- `ruins-column-round` (two full, two short) stand in the rotunda.
+- `ruins-bricks` rubble heaps sit at the arch feet.
+- `stone_fire_pit` sits on the central plinth (centre 0,0, base z 0.42 Blender / y 0.42 glTF, scale 1.7, about 2.5 m wide).
+- `altar-stone` and `candle-multiple` sit in the About niche, with 6 candle sets on the altar and bust pedestal and 6 around the plinth steps.
+- `fire-basket` ×12 line the corridor and hall.
+- `ruins-floor-squares` (46 tiles, 18-20% randomly left out) paves the rotunda and runs as a strip down the corridor, hall and court.
 
-## Morph feedback applied
-1 textures: box projection, tile 0.6-0.7 m (was 2.5-3 m), diffuse contrast flattened toward grey, cooler tint; 2 plinth: polished dark concrete + coat (not marble); 3 bust: BUST_key warm spot + BUST_rim cool spot; real marble_bust_01.glb imported as preview (not exported); 4 haze: a true World volume made Cycles attenuate the sun to zero (infinite path), so it is a bounded VOL_air box (0.004) + denser VOL_haze in the rotunda; shaft now reads. VOL_*, SKY_dome, SUNBLOCK_court, BUST_* are preview-only, excluded from export.
+Stone pieces use the existing Poly Haven wall and floor materials. Layout, `sanctum.spots.json` and the node names are unchanged. The oculus, the slabs and the PROP_ rubble are kept.
 
-## Reused vs built
-Reused: blender/textures (Poly Haven CC0), repo marble_bust_01.glb, smoke_bake_export.py pipeline, Cycles/AgX, Blender's Voronoi for stars.
-Poly Haven props (enabled via scene.blendermcp_use_polyhaven=True): boulder_01 x4 (corridor rubble), bronze_whale_statue (gallery end), sources in blender/props (gitignored), step sanctum_07. Logged in CREDITS.md. Also reused: marble_bust_01.glb as preview bust.
-Built from scratch: architecture shell (as instructed), lights, cameras.
+## Lighting (baked)
+The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold stone: hearth 300 W + 120 W, 12 basket lights at 70 W, 12 candle lights at 8-14 W. The `FIRE_*` lights are not exported, so the runtime still adds the live flicker. Flames themselves are not modelled. Runtime should place the flame and ember source at glTF (0, ~1.0, 0).
 
-## Known issues / next
-Corridor + gallery lit by area lights in the ceiling slits (fake sky fill); both read flat-ish at the far end. Wall tile pattern is visible on the court walls. Floor reflection is Cycles-only; runtime uses the reflector. Bake step (UV unwrap, combine into sanctum_architecture, export) not started.
+## Budget
+`sanctum.glb` 2.33 MB (limit 4), `sanctum-lite.glb` 0.84 MB (limit 1). Bake: 256 samples, arch atlas 4096, floor atlas 4096.
 
-## EXPORT (after go) — public/assets/models/
-sanctum.glb 1,218,832 B (3 JPEG atlases: arch 4096² 984 KB, floor 2048² 128 KB, pedestal 512² 15 KB) | sanctum-lite.glb 302,616 B (1k/1k/256 same maps downscaled, same node names) | sanctum.spots.json 2.8 KB. Total high 1.22 MB (<= 4 MB).
-Nodes: sanctum_architecture (19.7k verts, boulders decimated 66k->2.5k tris each, props + slabs + frames + plinth + court roof joined), floor, bust_pedestal, oculus_shaft (empty at (0,12,1.5) glTF, radius 2.2) with child shaft_axis (unit direction of the sun, glTF (0,-0.993,-0.122)).
-Bake: Cycles COMBINED 256 spl, margin 8 (extend), AgX + exposure baked in, VOL_*/haze not baked. Materials: baseColor = emissive = baked map, roughness 1, extras {toneMapped:false}: runtime should render them unlit with material.toneMapped = false (colour is already tonemapped), swap `floor` for the reflector. Draco level 7 (Draco decode verified via gltf-transform inspect).
-Spots: 17 cameras (glTF Y-up, TARGET_ empties as targets, vertical fov deg) + 5 anchors. Re-run: build_sanctum.py then sanctum_08_bake_export.py (~25 min bake on this Mac). Final tweak round (contact_sky roof, softer moon, slab material) is in the export; stills for those two cameras re-rendered after export.
+## Evidence
+`.orchestrator/reference/r3-ruins-ch0.png` to `ch4.png`, 1440x900, captured through REA `capture_browser_scenario` (headless Chrome, `?skipgate=1&chapter=N`, reduced_motion no-preference, never the gate). I served this worktree on `http://localhost:5197` because 5173 serves the main checkout and would show the old GLB. Interceptor is not installed on this machine, so I did not use it. 390px captures were not taken.
+
+## Known issues / for the next pass
+1. The corridor floor still reads near-white ("snow") in ch2 after one rebake with a darker floor tint (0.28). Either the bake is blowing out under the slit and basket lights, or runtime floor handling adds brightness. Next step: lower slit-light energy or compare the baked `floor.jpg` with the runtime view.
+2. The Kenney kit GLBs (`altar-stone`, `candle-multiple`, `fire-basket`) reference `Textures/colormap.png`, which is not in the repo (they rendered magenta). They have plain stone, iron and wax materials instead. Dropping the real colormap in would restore the original colours.
+3. The ch3 camera is close to the slabs, so the arches barely show there. ch4 (contact) frames only the oculus and sky, with no arch in shot.
+4. Rotunda ch0 is dark by design. The hearth only shows in wider views (`boot_wide`).
+5. The `sanctum.blend` file is a build artifact and is not committed. Rebuild: `build_sanctum.py`, then `FLOOR_PX=4096 Blender -b blender/sanctum.blend -P blender/scripts/sanctum_08_bake_export.py`.
