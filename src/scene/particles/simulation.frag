@@ -3,6 +3,8 @@ uniform float uTime;
 uniform vec3 uCursor;
 uniform float uCursorActive;
 uniform float uCursorStrength;
+uniform float uCursorWake;
+uniform vec3 uCursorVelocity;
 uniform sampler2D uTarget;
 uniform sampler2D uFromTarget;
 uniform float uMorphProgress;
@@ -29,11 +31,24 @@ void main() {
   float breathing = sin(uTime * 0.85 + seed * 1.5) * 0.04 * (1.0 - uBeacon);
   position += normalize(toFocus + vec3(0.0001)) * breathing * uTurbulence;
 
+  // Cursor interaction: larger repulsion radius + lingering curl wake
   vec3 cursorDelta = position - uCursor;
   float cursorDistance = length(cursorDelta);
-  float repulsion = clamp(uCursorStrength, 0.0, 1.0) / max(0.08, cursorDistance * (cursorDistance + 1.0));
-  vec3 repel = normalize(cursorDelta + vec3(0.0001)) * repulsion * uCursorActive;
-  position += repel * min(1.0, uDelta * 12.0);
+  float cursorRadius = 2.4;
+  float normDist = clamp(cursorDistance / cursorRadius, 0.0, 1.0);
+  float repelFalloff = (1.0 - normDist) * (1.0 - normDist);
+
+  // Radial repulsion impulse
+  float repulsion = clamp(uCursorStrength, 0.0, 1.0) * repelFalloff * 0.75;
+  vec3 repelDir = normalize(cursorDelta + vec3(0.0001));
+  vec3 repel = repelDir * repulsion * uCursorActive;
+
+  // Lingering curl wake: tangential circulation along cursor velocity + turbulent eddies
+  vec3 wakeCirculation = cross(vec3(0.0, 1.0, 0.0), repelDir) * length(uCursorVelocity) * 0.25;
+  vec3 wakeCurl = pseudoCurl(position * 1.6 + cursorDelta * 0.8, uTime * 1.2, seed);
+  vec3 curlWake = (wakeCirculation + wakeCurl * 0.35) * uCursorWake * repelFalloff * uCursorActive;
+
+  position += (repel + curlWake) * uTurbulence;
   position += vec3(0.0, sin(uTime * 0.7) * 0.018 * uTurbulence, 0.0);
   gl_FragColor = vec4(position, target.a);
 }

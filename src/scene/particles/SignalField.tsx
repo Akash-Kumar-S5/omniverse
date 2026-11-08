@@ -46,6 +46,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const cpuFromPositions = useRef<Float32Array | null>(null);
   const cpuMorphProgress = useRef(1);
   const cursor = useMemo(() => new THREE.Vector3(), []);
+  const previousCursor = useRef(new THREE.Vector3());
+  const cursorVelocity = useMemo(() => new THREE.Vector3(), []);
+  const cursorWake = useRef(0);
   const previousPointer = useRef(new THREE.Vector2());
   const lastPointerMotion = useRef(-1);
   const plane = useMemo(() => new THREE.Plane(), []);
@@ -172,13 +175,30 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     raycaster.setFromCamera(pointer, camera);
     plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), shapeAnchor);
     const hasCursor = !motionReduced && raycaster.ray.intersectPlane(plane, cursor) !== null;
+
+    if (delta > 0 && hasCursor) {
+      cursorVelocity.subVectors(cursor, previousCursor.current).divideScalar(delta);
+      cursorVelocity.clampLength(0, 15);
+    } else {
+      cursorVelocity.set(0, 0, 0);
+    }
+    previousCursor.current.copy(cursor);
+
     const pointerDistance = pointer.distanceTo(previousPointer.current);
     const pointerSpeed = delta > 0 ? pointerDistance / delta : 0;
-    if (pointerDistance > 0.001) lastPointerMotion.current = state.clock.elapsedTime;
+    if (pointerDistance > 0.001) {
+      lastPointerMotion.current = state.clock.elapsedTime;
+      cursorWake.current = Math.min(1.0, cursorWake.current + Math.min(0.65, pointerSpeed * 0.35));
+    }
     previousPointer.current.copy(pointer);
+
+    // Smooth lingering wake decay over ~1.6 seconds
+    const wakeDecayRate = motionReduced ? 8.0 : 1.35;
+    cursorWake.current = Math.max(0, THREE.MathUtils.damp(cursorWake.current, 0, wakeDecayRate, delta));
+
     const cursorAge = state.clock.elapsedTime - lastPointerMotion.current;
-    const cursorPulse = cursorAge >= 0 && cursorAge < 0.35 ? 0.65 * (1 - cursorAge / 0.35) : 0;
-    const cursorStrength = motionReduced ? 0 : Math.min(1, Math.max(pointerSpeed * 0.45, cursorPulse));
+    const cursorPulse = cursorAge >= 0 && cursorAge < 0.6 ? Math.pow(1 - cursorAge / 0.6, 1.4) : 0;
+    const cursorStrength = motionReduced ? 0 : Math.min(1, Math.max(pointerSpeed * 0.55, cursorPulse * 0.75));
 
     if (backend === "gpu") {
       const sim = simulation.current;
@@ -202,6 +222,8 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
         computeUniforms.uCursor.value.copy(cursor);
         computeUniforms.uCursorActive.value = hasCursor ? 1 : 0;
         computeUniforms.uCursorStrength.value = cursorStrength;
+        computeUniforms.uCursorWake.value = cursorWake.current;
+        computeUniforms.uCursorVelocity.value.copy(cursorVelocity);
         sim.compute.compute();
         uniforms.uPositions.value = sim.compute.getCurrentRenderTarget(sim.positionVariable).texture;
         uniforms.uTarget.value = target;
@@ -257,12 +279,15 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
           if (hasCursor) {
             const dx = x - cursor.x, dy = y - cursor.y, dz = z - cursor.z;
             const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            const reach = Math.max(0.7, shapeRadius * 0.62);
-            const influence = THREE.MathUtils.clamp(1 - distance / reach, 0, 1);
-            const impulse = cursorStrength * influence * Math.min(1, delta * 18) / Math.max(0.5, distance);
-            cpuCursorOffsets[p] += dx * impulse;
-            cpuCursorOffsets[p + 1] += dy * impulse;
-            cpuCursorOffsets[p + 2] += dz * impulse;
+            const reach = 2.4;
+            if (distance < reach && distance > 0.001) {
+              const normDist = distance / reach;
+              const falloff = (1 - normDist) * (1 - normDist);
+              const impulse = (cursorStrength * 0.45 + cursorWake.current * 0.28) * falloff * Math.min(1, delta * 18) / Math.max(0.4, distance);
+              cpuCursorOffsets[p] += dx * impulse + cursorVelocity.x * falloff * 0.06;
+              cpuCursorOffsets[p + 1] += dy * impulse + cursorVelocity.y * falloff * 0.06;
+              cpuCursorOffsets[p + 2] += dz * impulse + cursorVelocity.z * falloff * 0.06;
+            }
           }
           x += cpuCursorOffsets[p];
           y += cpuCursorOffsets[p + 1];
