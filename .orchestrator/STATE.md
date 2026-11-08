@@ -212,3 +212,6 @@ Next: swarm fix merge -> agy-review + copilot-review re-score (Playwright headed
 ## 03:05 UTC (08:35 IST) interim orchestrator-b (copilot)
 MERGED r3/copilot-swarm 5f46eaf (swarm render fix) -> main 5c8fdcc, build+lint clean. Copilot budget rule (Morph): one bounded fix per turn, commit at once; exploratory/screenshot work to agy. Read copilot panes (herdr shows 'done' while working).
 Round 1: briefs/round1-score.md sent to agy-review (w2:pM) and copilot-review (w2:pQ) -> reports/score-agy-review.md, score-copilot-review.md. Next: write ROUND-1-PLAN.md (top 3), assign to agy-world (w2:pK) / copilot-swarm (bounded), review via ?skipgate&chapter=N, merge. copilot-swarm ~396 AIC: avoid further use unless essential.
+
+## 04:10 UTC (09:40 IST) ROUND 1 impl
+MERGED r3/agy-world (items 1-3: volumetric swarm, ch2 ribbon right, ch3 glyph beside slab, cursor wake) -> main, build+lint clean. Morph-style review of shots: big gain; remaining flaws: ch0 swarm clipped right edge, ch2 ribbon touches text, ch3 label hidden. agy-world on polish 1b (w2:pK). Then: copilot bounded ch1 callouts (optional), re-score round (agy-review + copilot-review), copilot-review score table still pending (check w2:pQ). Untracked duplicates parked in .orchestrator/tmp/premerge.
