@@ -76,3 +76,6 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 ### Sanctum props placed (Round 3, blender-sanctum)
 `knight`, `hearth-logs`, `fire-flame-3d`, `greatsword`, `shield-heater`, `helmet-greathelm`, `battleaxe`, `skull-bones`, `candles-altar`,
 `candelabra-tall`, `brazier-fire-basket` from `public/assets/props` (credits in the props picks report) are baked into `sanctum.glb`.
+
+### Round 5 blender-fire
+`castle_brick_broken_06`, `cobblestone_floor_13` (Poly Haven, CC0, 2k textures for the ch1 plinth and the floor), `wooden_candlestick` (Poly Haven, CC0, scan candles in the niche, on the altar and around the plinth), `stone_fire_pit.draco.glb` (Poly Haven scan, Draco-recompressed with `blender/scripts/compress_fire_pit.py`, 428 KB), `flame-spritesheet-6x1.png` (Kenney particle pack, CC0, flipbook on a drei Billboard in `src/scene/world/Fire.tsx`).

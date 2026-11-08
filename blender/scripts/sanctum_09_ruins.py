@@ -73,7 +73,7 @@ for o in [o for o in bpy.data.objects if o.name.startswith("portal")]:
 n = 0
 def R(fn, x, y, z, yaw=0.0, s=1.0, mat="wall", sink=0.0):
     global n; n += 1
-    m = {"wall": M_WALL, "iron": M_IRON, "wax": M_WAX}.get(mat)   # None keeps the glb own material (fire pit)
+    m = {"wall": M_WALL, "brick": bpy.data.materials.get("mat_brick"), "iron": M_IRON, "wax": M_WAX}.get(mat)   # None keeps the glb own material (fire pit)
     return place(fn, f"RUIN_{fn}_{n}", x, y, z, yaw, s, m, sink)
 
 # ---- 1. arches frame every chapter ----
@@ -100,18 +100,15 @@ for x, y, yaw, s in ((-13.3, 2.2, 20, 1.6), (-18.6, -2.3, 140, 1.5), (-23.5, 2.1
     R("ruins-bricks", x, y, 0, yaw, s)
 
 # ---- 4. the fire pit on the central plinth (plinth_top r=1.9, z=0.42) ----
-R("stone_fire_pit", 0, 0, 0.42, 0, 1.7, mat=None, sink=0.05)
 
 # ---- 5. altar in the about niche, candles on it and on the bust pedestal ----
-R("altar-stone", 9.1, 0, 0, 90, 1.5)
+R("altar-stone", 9.1, 0, 0, 90, 1.5, mat="brick")
 CANDLES = [(9.0, -0.35, 0.74), (9.2, 0.3, 0.74), (10.42, 0.45, 1.25), (10.42, -0.45, 1.25),
            (11.6, 0.5, 1.25), (11.6, -0.5, 1.25)]
 for i, (x, y, z) in enumerate(CANDLES):
-    R("candle-multiple", x, y, z, random.randint(0, 359), 1.0, mat="wax")
     firelight(f"FIRE_candle{i}", (x, y, z + 0.3), 14, (1.0, 0.62, 0.3), 0.05)
 for i, a in enumerate(range(20, 360, 70)):        # candles ring the plinth steps
     px, py = 2.35 * math.cos(math.radians(a)), 2.35 * math.sin(math.radians(a))
-    R("candle-multiple", px, py, 0.14, a * 3, 1.2, mat="wax")
     firelight(f"FIRE_pcandle{i}", (px, py, 0.5), 8, (1.0, 0.6, 0.28), 0.05)
 
 # ---- 6. fire baskets along the corridor and hall (practical warm lights) ----
@@ -141,17 +138,8 @@ for ix in range(-4, 5):
     for iy in range(-4, 5):
         x, y = ix * 2.0, iy * 2.0
         r = math.hypot(x, y)
-        if r < 2.9 or r > 7.2 or random.random() < 0.18: continue
+        if r < 2.9 or r > 6.5 or random.random() < 0.5: continue
         tile(x, y, random.choice((0, 90, 180, 270))); tiles += 1
-for x in range(-10, -34, -2):
-    if random.random() < 0.2: continue
-    tile(x, 0, random.choice((0, 90, 180, 270))); tiles += 1
-for y in range(10, 33, 2):
-    if random.random() < 0.2: continue
-    tile(0, y, random.choice((0, 90, 180, 270))); tiles += 1
-for y in range(-10, -22, -2):
-    if random.random() < 0.2: continue
-    tile(0, y, random.choice((0, 90, 180, 270))); tiles += 1
 print("tiles", tiles)
 
 # ---- 9. cold moonlight shaft kept; warm fire on top ----

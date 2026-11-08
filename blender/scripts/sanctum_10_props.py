@@ -25,7 +25,7 @@ _cache = {}
 def source(fn):
     if fn in _cache: return _cache[fn]
     before = set(bpy.data.objects)
-    bpy.ops.import_scene.gltf(filepath=os.path.join(PROPS, fn + ".glb"))
+    bpy.ops.import_scene.gltf(filepath=os.path.join(PROPS, fn + (".gltf" if fn.endswith("_1k") else ".glb")))
     new = [o for o in bpy.data.objects if o not in before]
     meshes = [o for o in new if o.type == "MESH"]
     bpy.context.view_layer.update()   # importer leaves matrix_world stale; without this the baked-in scale is wrong
@@ -47,6 +47,13 @@ def source(fn):
         bpy.ops.object.join()
         for c in list(meshes[0].users_collection): c.objects.unlink(meshes[0])
     t = meshes[0]
+    if len(t.data.polygons) > 2500:   # scanned props arrive dense: decimate the template once
+        sc.collection.objects.link(t)
+        for o in bpy.data.objects: o.select_set(False)
+        t.select_set(True); bpy.context.view_layer.objects.active = t
+        md = t.modifiers.new("dec", "DECIMATE"); md.ratio = 2500 / len(t.data.polygons)
+        bpy.ops.object.modifier_apply(modifier=md.name)
+        for c in list(t.users_collection): c.objects.unlink(t)
     for mat in t.data.materials:   # flat PBR props: no env map in the bake, so tame metals
         if mat and mat.use_nodes:
             for b in (n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"):
@@ -87,15 +94,17 @@ for o in [o for o in bpy.data.objects if o.type == "LIGHT" and (o.name.startswit
 
 # ---- ch0: the fire. Logs and flame sit in the pit (pit centre 0,0, floor of bowl ~z 0.5) ----
 P("hearth-logs", 0, 0, 0.55, 0.32, 0)
-P("fire-flame-3d", 0, 0, 0.7, 0.85, 0, mat=M_FLAME, tag="flame")
 # armoured knight on the plinth, facing the fire
 P("knight", -1.55, -0.85, 0.42, 1.75, face=(0, 0), tag="knight")
 firelight("FIRE_flame", (0, 0, 1.0), 250, (1.0, 0.5, 0.18), 0.3)
 
 # ---- ch1: skull and altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
 P("skull-bones", 10.7, -0.42, 1.25, 0.2, face=(5.4, 0), tag="skull")
-P("candles-altar", 10.6, 0.42, 1.25, 0.28, 40, mat=M_WAX, tag="candles")
-P("candles-altar", 11.45, -0.45, 1.25, 0.26, 200, mat=M_WAX, tag="candles")
+CS = "../../../blender/props/wooden_candlestick/wooden_candlestick_1k"   # Poly Haven CC0 scan
+for i, (x, y, z) in enumerate(((9.0, -0.35, 0.74), (9.2, 0.3, 0.74), (10.42, 0.45, 1.25), (10.42, -0.45, 1.25), (11.6, 0.5, 1.25), (11.6, -0.5, 1.25), (10.6, 0.42, 1.25))):
+    P(CS, x, y, z, 0.26, i * 53, tag="candlestick")
+for i, a in enumerate(range(20, 360, 70)):
+    P(CS, 2.35 * math.cos(math.radians(a)), 2.35 * math.sin(math.radians(a)), 0.14, 0.3, a * 3, tag="candlestick")
 for i, (x, y) in enumerate(((10.6, 0.42), (11.45, -0.45), (10.7, -0.42))):
     firelight(f"FIRE_niche{i}", (x, y, 1.65), 28, (1.0, 0.6, 0.28), 0.06)
 # a candelabra in the niche corner
@@ -113,7 +122,6 @@ for k, (x, (fn, h)) in enumerate(zip((-14, -19, -24, -29), JOB)):
 # ---- ch4: braziers + tall candelabra flank the court (camera at y=-14.6 looks up and away) ----
 for i, sx in enumerate((-2.3, 2.3)):
     P("brazier-fire-basket", sx, -16.0, 0, 0.55, 0, mat=M_IRON, tag="brazier")
-    P("fire-flame-3d", sx, -16.0, 0.5, 0.5, 0, mat=M_FLAME, tag="brazierflame")
     firelight(f"FIRE_court{i}", (sx, -16.0, 1.0), 110, (1.0, 0.5, 0.2), 0.2)
     P("candelabra-tall", sx * 1.6, -15.2, 0, 1.5, face=(0, -17.5), mat=M_IRON, tag="candelabra")
     firelight(f"FIRE_courtcand{i}", (sx * 1.6, -15.2, 1.6), 30, (1.0, 0.58, 0.25), 0.1)

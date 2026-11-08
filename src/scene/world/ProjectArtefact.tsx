@@ -106,14 +106,6 @@ export default function ProjectArtefact() {
           {/* Authentic CC0 Poly Haven standing picture frame */}
           <primitive object={frameScene} scale={[4.2, 4.2, 4.2]} position={[0, -0.15, 0]} />
 
-          {/* Soft warm firelight illuminating the easel frame */}
-          <pointLight
-            position={[0.8, 0.4, 0.7]}
-            intensity={2.2}
-            distance={4.5}
-            color="#d6782a"
-            decay={1.2}
-          />
         </group>
       </Float>
     </group>

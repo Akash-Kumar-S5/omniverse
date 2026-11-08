@@ -7,7 +7,10 @@ from sanctum_lib import *
 
 def _img(nt, fname, nc, loc):
     n = nt.nodes.new("ShaderNodeTexImage")
-    n.image = bpy.data.images.load(os.path.join(TEX, fname), check_existing=True)
+    p = os.path.join(TEX, fname)
+    if os.path.exists(p): n.image = bpy.data.images.load(p, check_existing=True)
+    else:  # no AO map shipped for this set (cobblestone_floor_13): flat white
+        n.image = bpy.data.images.get("white_ao") or bpy.data.images.new("white_ao", 4, 4); n.image.pixels = [1.0] * 64
     n.image.colorspace_settings.name = "Non-Color" if nc else "sRGB"
     n.projection = "BOX"; n.projection_blend = 0.25; n.location = loc
     return n
@@ -69,7 +72,8 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
 # tile sizes ~5x smaller than the first pass, diffuse contrast flattened (flat=0.6-0.75) so no rust-blotch read
 wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
 slab = pbr("mat_monolith", "concrete_wall_003", 1.1, tint=(0.30, 0.32, 0.37), rough_mul=0.8, flat=0.8, normal=0.4)  # larger tile + softer relief: no rocky/dirt read under the warm spots
-floor = pbr("mat_floor_wet", "concrete_floor_worn_001", 0.6, tint=(0.30, 0.26, 0.22), rough_mul=0.6, flat=0.6)
+floor = pbr("mat_floor_wet", "cobblestone_floor_13", 1.8, tint=(0.62, 0.55, 0.48), rough_mul=0.95, flat=0.25, normal=1.0)   # Poly Haven cobblestone_floor_13, box-projected + anti-tile blend
+brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.70, 0.64, 0.58), rough_mul=1.0, flat=0.2, normal=1.0)   # Poly Haven castle_brick_broken_06 for the ch1 plinth
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
@@ -86,7 +90,7 @@ for ob in bpy.data.objects:
     if n == "floor": assign(ob, floor)
     elif n.startswith("slab"): assign(ob, slab)
     elif n.startswith("plinth"): assign(ob, plinth)
-    elif n.startswith("bust_pedestal_cap"): assign(ob, marble)
+    elif n.startswith("bust_pedestal"): assign(ob, brick)
     elif n.startswith("BUST_"): pass  # keep the glb's own marble material
     else: assign(ob, wall)
 print("MATERIALS_OK")
