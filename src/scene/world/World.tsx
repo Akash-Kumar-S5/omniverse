@@ -83,6 +83,44 @@ function WorldLighting() {
   );
 }
 
+const CANDLE_POSITIONS: [number, number, number][] = [
+  [9.6, 1.0, -2.2],
+  [9.6, 1.0, 2.2],
+  [-9.5, 1.1, -2.6],
+  [-9.5, 1.1, 2.6],
+];
+
+function CandleLights() {
+  const quality = useOmni((s) => s.quality);
+  const refs = useRef<(THREE.PointLight | null)[]>([]);
+  const positions = quality === "lite" ? CANDLE_POSITIONS.slice(0, 2) : CANDLE_POSITIONS;
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    refs.current.forEach((light, i) => {
+      if (light) light.intensity = 1.2 + Math.sin(t * 9 + i * 2.1) * 0.15 + Math.sin(t * 23 + i) * 0.08;
+    });
+  });
+
+  return (
+    <group>
+      {positions.map((p, i) => (
+        <pointLight
+          key={i}
+          ref={(l) => {
+            refs.current[i] = l;
+          }}
+          position={p}
+          color="#ff9933"
+          intensity={1.2}
+          distance={8}
+          decay={2}
+        />
+      ))}
+    </group>
+  );
+}
+
 function PlinthFireAndMist() {
   const lightRef = useRef<THREE.PointLight>(null);
   const hearthLightRef = useRef<THREE.PointLight>(null);
@@ -186,6 +224,7 @@ export default function World() {
     <>
       <WorldLighting />
       <PlinthFireAndMist />
+      <CandleLights />
       {/* Fog precisely matching background (#060505) with seamless falloff */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 

@@ -4,41 +4,46 @@ import * as THREE from "three";
 import { useOmni } from "../../state/store";
 import { SANCTUM_FILES } from "../../state/signal";
 
-function MarbleBust() {
-  const { scene } = useGLTF("/assets/models/marble_bust_01.glb", false);
-  const bustClone = useMemo(() => {
+const STATUE_URL = "/assets/ruins/gothic_statue.glb";
+
+function GothicStatue() {
+  const { scene } = useGLTF(STATUE_URL, false);
+  const statue = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        if (mesh.material) {
-          const orig = mesh.material as THREE.MeshStandardMaterial;
-          // Carrara marble PBR material: keep textures and normal detail,
-          // ensure zero emissive and toneMapped=true so it shades cleanly
-          mesh.material = new THREE.MeshStandardMaterial({
-            map: orig.map,
-            normalMap: orig.normalMap,
-            roughnessMap: orig.roughnessMap,
-            roughness: 0.38,
-            metalness: 0.0,
-            toneMapped: true,
-            emissive: new THREE.Color("#000000"),
-            emissiveIntensity: 0,
-          });
-          mesh.castShadow = false;
-          mesh.receiveShadow = false;
-        }
+        const orig = mesh.material as THREE.MeshStandardMaterial;
+        // Weathered stone PBR: keep the scanned textures; the packed ARM map
+        // supplies AO (R) and roughness (G), so metalness stays at zero
+        mesh.material = new THREE.MeshStandardMaterial({
+          map: orig.map,
+          normalMap: orig.normalMap,
+          aoMap: orig.metalnessMap,
+          roughnessMap: orig.metalnessMap,
+          roughness: 1,
+          metalness: 0,
+          toneMapped: true,
+        });
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
       }
     });
-    return clone;
+    // Stand the statue on the pedestal: centre it on x/z and put its base at y=0
+    const box = new THREE.Box3().setFromObject(clone);
+    const centre = box.getCenter(new THREE.Vector3());
+    const holder = new THREE.Group();
+    clone.position.set(-centre.x, -box.min.y, -centre.z);
+    holder.add(clone);
+    return holder;
   }, [scene]);
 
   return (
     <primitive
-      object={bustClone}
+      object={statue}
       position={[11.0, 1.25, 0.0]}
-      scale={[1.65, 1.65, 1.65]}
-      rotation={[0, -Math.PI * 0.62, 0]}
+      scale={[0.9, 0.9, 0.9]}
+      rotation={[0, -Math.PI / 2, 0]}
     />
   );
 }
@@ -72,11 +77,11 @@ export default function Sanctum() {
   return (
     <group>
       <primitive object={scene} />
-      <MarbleBust />
+      <GothicStatue />
     </group>
   );
 }
 
 useGLTF.preload(SANCTUM_FILES.high, "/draco/");
 useGLTF.preload(SANCTUM_FILES.lite, "/draco/");
-useGLTF.preload("/assets/models/marble_bust_01.glb", false);
+useGLTF.preload(STATUE_URL, false);
