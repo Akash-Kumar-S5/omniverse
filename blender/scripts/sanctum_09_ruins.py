@@ -119,8 +119,8 @@ for i, (x, y) in enumerate(BASKETS):
     firelight(f"FIRE_basket{i}", (x, y, 1.5), 60, (1.0, 0.5, 0.2), 0.2)
 
 # ---- 7. THE fire: warm key over the pit on cold stone (runtime adds the flicker) ----
-firelight("FIRE_hearth", (0, 0, 1.35), 150, (1.0, 0.48, 0.18), 0.35)
-firelight("FIRE_hearth_low", (0, 0, 0.8), 50, (1.0, 0.42, 0.14), 0.3)
+firelight("FIRE_hearth", (0, 0, 2.2), 190, (1.0, 0.48, 0.18), 0.35)
+firelight("FIRE_hearth_low", (0, 0, 1.7), 60, (1.0, 0.42, 0.14), 0.3)
 
 # ---- 8. ruined paving: floor-squares in the rotunda + a runner down corridor, hall and court (join the floor mesh) ----
 import bmesh

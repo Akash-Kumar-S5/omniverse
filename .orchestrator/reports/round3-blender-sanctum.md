@@ -88,3 +88,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch1: stepped block table deleted, candle cluster stands on the floor.
 - ch3: the stray dot at ~(1025,768) is NOT in the baked mesh (no mesh or empty projects there; I raised the hall basket lights to 1.5 m anyway and the dot is unchanged), so it is a runtime element in src and needs the src lane.
 - sanctum.glb 2.76 MB, sanctum-lite.glb 0.82 MB. Dev server for evidence ran on port 5211 and was stopped.
+
+## Round 10 scenes (r10/blender-scenes)
+- ch0/ch4: pale kindling replaced by 3 dead_tree_trunk_02 scans (charred); the loose pebbles and the tan disc under the pit are gone; 9 dark scanned rocks half-sunk (0.13 m) form a continuous ring; relief moved to (1.75,-0.2) so it is fully in the ch4 frame. Hearth lights raised and weakened so logs are not overexposed; the linked metal map on scanned props is now unlinked (it mirrored the fire and bleached them).
+- ch2: shield albedo toned to mid-grey (sat .75 / value .5), wall spot cut to 260 W and moved to graze from the side, pedestal 1.75 m so its top shows at y~640, pedestal fill light; the small helmet under the body text removed.
+- ch1: both foreground candelabras removed.
+- sanctum.glb 2.54 MB, sanctum-lite.glb 0.81 MB. Evidence r10-scenes-ch0..4.png. Dev server (port 5211) stopped.
