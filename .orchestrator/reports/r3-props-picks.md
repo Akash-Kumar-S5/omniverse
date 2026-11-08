@@ -30,8 +30,8 @@
 | `public/assets/props/helmet-sallet.glb` | **Chapter 2 (Work)** | Alternate visor sallet helmet | [Quaternius Single Knight Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 51.1 KB |
 | `public/assets/props/sword-knight.glb` | **Chapter 2 (Work)** | Alternate one-handed arming sword | [Quaternius Single Knight Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 40.3 KB |
 | `public/assets/props/battleaxe.glb` | **Chapter 2 (Work)** | Alternate double-bitted battleaxe | [Quaternius Medieval Weapons Pack](https://quaternius.com) (via [showcase mirror](https://github.com/trebeljahr/quaternius-showcase)) | Quaternius | CC0 1.0 Universal | 99.2 KB |
-| `public/assets/props/statue-hooded-keeper.glb` | **Chapter 0 & 4 (Hearth Keeper)** | Generic hooded veiled woman seated/kneeling by the fire pit | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 422.0 KB |
-| `public/assets/props/statue-cloaked-knight.glb` | **Chapter 2 (Alcove) / Chapter 0 (Hero)** | Generic tall cloaked female knight statue with sword and cape | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 440.6 KB |
+| `public/assets/props/statue-hooded-keeper.glb` | **Chapter 0 & 4 (Hearth Keeper)** | Generic hooded veiled keeper in long grey robe, kneeling, hands folded, head bowed | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 420.5 KB |
+| `public/assets/props/statue-cloaked-knight.glb` | **Chapter 2 (Alcove) / Chapter 0 (Hero)** | Generic tall cloaked female swordswoman statue in worn bronze-toned armour with torn cape and single blade lowered | [KayKit Adventurers](https://kaylousberg.com) (via [KayKit-Game-Assets](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0)) | Kay Lousberg | CC0 1.0 Universal | 439.3 KB |
 
 ---
 
@@ -68,19 +68,19 @@
 
 ---
 
-## 3. Original Generic Figures Addendum (Direction 13:25)
+## 3. Original Generic Figures Addendum (Direction 13:25 & Specification 14:01)
 
-1. **Figure (a) — `statue-hooded-keeper.glb` (422.0 KB):**
-   - **Archetype:** Generic hooded veiled woman / mourning statue / quiet hall keeper.
-   - **Placement:** Seated / kneeling beside the fire pit in Chapter 0 (Hero) or Chapter 4 (Hearth).
-   - **Source:** Kay Lousberg (KayKit Adventurers), CC0 1.0 Universal public domain.
-   - **Features:** Self-contained GLB with embedded textures and armature containing `Sit_Floor_Pose`, `Sit_Floor_Idle`, and `Idle` animation clips for immediate static or idling placement.
+1. **Figure (a) — KEEPER: `statue-hooded-keeper.glb` (420.5 KB):**
+   - **Archetype & Spec:** Slight figure in a long grey hooded robe, kneeling at a hearth, hands folded, head bowed.
+   - **Placement:** Kneeling beside the central fire pit in Chapter 0 (Hero) or Chapter 4 (Hearth).
+   - **Source:** Kay Lousberg (KayKit Adventurers), CC0 1.0 Universal public domain (Mixamo-compatible humanoid rig).
+   - **Features:** Self-contained GLB with embedded long grey hooded robe texture, weapon attachments removed for tranquil folded prayer hands, and armature containing `Sit_Floor_Pose` (floor kneel pose with hands folded and head bowed), `Sit_Floor_Idle`, and `Idle`.
    - **Compliance:** Strictly original generic design. Zero references to FromSoftware characters (no eye-cutout mask, no gold embroidery, no named lore tags).
 
-2. **Figure (b) — `statue-cloaked-knight.glb` (440.6 KB):**
-   - **Archetype:** Generic tall cloaked female knight statue with cape and greatsword.
+2. **Figure (b) — SWORDSWOMAN: `statue-cloaked-knight.glb` (439.3 KB):**
+   - **Archetype & Spec:** Tall, cloaked, worn bronze-toned armour, long cape torn at hem, single blade lowered, standing statue/figure.
    - **Placement:** Ancient stone alcove in Chapter 2 (Colonnade), or alternate heroic figure in Chapter 0.
-   - **Source:** Kay Lousberg (KayKit Adventurers), CC0 1.0 Universal public domain.
-   - **Features:** Self-contained GLB with draped cape mesh, two-handed greatsword (`2H_Sword`), plate armor, and armature containing `2H_Melee_Idle` and `Idle` poses.
+   - **Source:** Kay Lousberg (KayKit Adventurers) & Quaternius, CC0 1.0 Universal public domain (Mixamo-compatible humanoid rig).
+   - **Features:** Self-contained GLB with embedded worn bronze-toned armor texture, draped torn cape mesh, offhand shields cleared, and single iron blade lowered (`1H_Sword` at side) in static standing statue stance (`2H_Melee_Idle` / `Idle`).
    - **Compliance:** Strictly original generic design. Zero references to FromSoftware characters (no winged helm with prosthetic arm, no scarlet hair / golden prosthetic, no named lore tags).
 
