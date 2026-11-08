@@ -5,7 +5,7 @@ import { useChapter } from "../../state/chapters";
 import { projects, profile } from "../../content";
 import "./callouts.css";
 
-/* Callouts say one true, specific thing each: the city, and the project in view. */
+/* Callouts: thin leader lines with contextual micro-labels outside 3D objects. */
 export default function CalloutLayer() {
   const entered = useOmni((s) => s.entered);
   // Each callout is mounted only while its chapter is the one on screen.
@@ -23,7 +23,6 @@ export default function CalloutLayer() {
 
   useEffect(() => {
     let rafId = 0;
-
 
     const updateItem = (
       anchor: Anchor,
@@ -79,11 +78,11 @@ export default function CalloutLayer() {
       const viewWidth = window.innerWidth;
 
       // City label is desktop only.
-      // Refs are null unless that chapter is mounted; updateItem ignores null refs.
       if (!isMobile) {
         updateItem(anchors["about.city"], dotCityRef.current, lineCityRef.current, labelCityRef.current, 75, 40, viewWidth, isMobile);
       }
-      updateItem(anchors["projects.active"], dotProjectRef.current, lineProjectRef.current, labelProjectRef.current, 75, -40, viewWidth, isMobile);
+      // Project callout: leader line places label outside the letterform glyph bounds
+      updateItem(anchors["projects.active"], dotProjectRef.current, lineProjectRef.current, labelProjectRef.current, 65, -55, viewWidth, isMobile);
 
       rafId = requestAnimationFrame(update);
     };
@@ -117,15 +116,10 @@ export default function CalloutLayer() {
             <span className="callout-chip-title">{profile.location.split(",")[0]}</span>
           </div>
         )}
-
         {active === "projects" && (
-          <div ref={labelProjectRef} className="callout-chip">
-            <span className="callout-chip-title">
-              {shownProject.title}
-            </span>
-            <span className="callout-chip-sub">
-              {shownProject.tags.slice(0, 2).join(", ")}
-            </span>
+          <div ref={labelProjectRef} className="callout-chip callout-chip-project">
+            <span className="callout-chip-title">{shownProject.title}</span>
+            <span className="callout-chip-sub">{shownProject.tags.slice(0, 2).join(", ")}</span>
           </div>
         )}
       </div>
