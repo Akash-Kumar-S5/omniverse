@@ -310,5 +310,35 @@ COMMITTED to main: b5f2249.
 | blender-sanctum | w2:pJ | paused until 15:10 IST Claude reset | import/light/bake CC0 ruins into sanctum.glb |
 | codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
 
+## Handback 12:10
+OPS HANDBACK (Morph): Claude quota is available again (5H window at 83%, Weekly at 50%).
+Main HEAD 7d706bb. Build & lint pass with 0 errors/warnings.
+
+### 1. Merged to Main During Interim Session
+- `r4/agy-assets` (d20834f): 5 dark-fantasy CC0 asset packs downloaded to `public/assets/ruins/` (Quaternius ruins, Kenney castle & graveyard kits, Poly Haven gothic_statue & stone_fire_pit) + CREDITS.md updated with full CC0 citations.
+- `r3/agy-world` (c4fcd2a): SignalField retuned to ember/ash palette with thermal upward drift and flicker, plinth fire, subtle floor mist, chapter 4 resting hearth.
+- `r3/copilot-review` (3d5c733): About focal object swapped to GothicStatue (`/assets/ruins/gothic_statue.glb`) with stone PBR toneMapped=true; added CandleLights in World.tsx with 4 flickering amber point lights in alcoves/corridors.
+- Ch3 Picture-Frame Swap (b5f2249): Morph review 12:05 addressed. Hand-built stone tablet and duplicate text removed; swapped for ready-made Poly Haven Standing Picture Frame (`standing_picture_frame_01.glb`, CC0 by James Ray Cock, 683 KB) displaying an abstract, desaturated project UI blueprint with strictly zero text. Evidence verified at `?skipgate&chapter=3` in `.orchestrator/reference/r3-ch3-frame-verified-1440.png`.
+
+### 2. Branches & Pending Merges
+- All worktrees are fully synchronized and merged to `main`. No pending merges.
+- Working trees clean on `agy-world`, `agy-assets`, `copilot-review`.
+
+### 3. Open Review Notes & In-Flight Work
+- `agy-review` (w2:pM): In flight running anti-slop, AA contrast, keyboard navigation, and console error audit across chapters 0..4 -> `.orchestrator/reports/r3-anti-slop-review.md`.
+- `blender-sanctum` (w2:pJ): Claude is back below 85% (83% 5H). Ready to resume Blender MCP / headless build: import the ready CC0 ruins models from `public/assets/ruins/`, light (warm firelight + cold moonlight), bake Cycles COMBINED, and export `sanctum.glb` (<=4 MB) and `sanctum-lite.glb`.
+- Codex: Still LOCKED until Mon 13:54 IST.
+- Copilot: ~185.6 AIC used on `copilot-review`.
+
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | idle | standby |
+| agy-review (acting as QA) | w2:pM | IN FLIGHT (audit chapters 0..4) | finish report -> reports/r3-anti-slop-review.md |
+| copilot-review | w2:pQ | idle (~185 AIC used) | standby for bounded tasks |
+| copilot-swarm | w2:pS | idle (~413 AIC used) | avoid |
+| blender-sanctum | w2:pJ | READY (Claude active) | import downloaded CC0 ruins, light, bake, export sanctum.glb |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+
+
 
 
