@@ -73,11 +73,11 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
 wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
 slab = pbr("mat_monolith", "concrete_wall_003", 1.1, tint=(0.30, 0.32, 0.37), rough_mul=0.8, flat=0.8, normal=0.4)  # larger tile + softer relief: no rocky/dirt read under the warm spots
 floor = pbr("mat_floor_wet", "cobblestone_floor_13", 1.8, tint=(0.62, 0.55, 0.48), rough_mul=0.95, flat=0.25, normal=1.0)   # Poly Haven cobblestone_floor_13, box-projected + anti-tile blend
-brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.70, 0.64, 0.58), rough_mul=1.0, flat=0.2, normal=1.0)   # Poly Haven castle_brick_broken_06 for the ch1 plinth
+brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.46, 0.45, 0.45), rough_mul=1.0, flat=0.2, normal=1.0)   # Poly Haven castle_brick_broken_06 for the ch1 plinth
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
-plinth = pbr("mat_plinth_polished", "cobblestone_floor_13", 0.9, tint=(0.16, 0.15, 0.145), rough_mul=1.0, flat=0.3, normal=1.0)   # weathered dark stone (was a pale pink polished coat)
+plinth = pbr("mat_plinth_polished", "cobblestone_floor_13", 0.9, tint=(0.05, 0.047, 0.045), rough_mul=1.0, flat=0.3, normal=1.0)   # weathered dark stone (was a pale pink polished coat)
 
 def assign(ob, mat):
     ob.data.materials.clear(); ob.data.materials.append(mat)
