@@ -5,7 +5,9 @@ import { useOmni } from "../../state/store";
 export default function LoadProgress() {
   const { progress, active } = useProgress();
   useEffect(() => {
-    useOmni.getState().setLoadProgress(active ? progress : 100);
+    queueMicrotask(() => {
+      useOmni.getState().setLoadProgress(active ? progress : 100);
+    });
   }, [active, progress]);
   return null;
 }

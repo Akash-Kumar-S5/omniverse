@@ -94,6 +94,22 @@
   transition: color var(--transition-fast);
 }
 
+.hud-settings-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: var(--radius-sm);
+  opacity: 0.65;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.hud-settings-icon-btn:hover,
+.hud-settings-icon-btn[aria-expanded="true"] {
+  opacity: 1;
+  color: var(--fg);
+}
+
 .hud-settings-toggle:hover,
 .hud-settings-toggle[aria-expanded="true"] {
   color: var(--fg);

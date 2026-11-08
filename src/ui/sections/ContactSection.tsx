@@ -26,7 +26,6 @@ export default function ContactSection() {
 
   return (
     <div className="chapter-view chapter-contact" aria-label="Contact">
-      <span className="contact-hearth-badge">A resting fire at the journey’s end</span>
       <SplitHeading text={copy.contact.title} as="h2" className="contact-title" />
 
       <p className="contact-desc">{copy.contact.pitch}</p>

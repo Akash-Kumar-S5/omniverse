@@ -12,10 +12,15 @@ export default function Sections() {
   const { active, phase } = useChapter();
   const reducedMotion = useOmni((s) => s.reducedMotion);
 
+  const isBrightScene = active === "experience" || active === "projects";
+
   return (
     <>
-      {/* Background scrim to ensure high contrast against the 3D scene */}
-      <div className="sections-scrim-left" aria-hidden="true" />
+      {/* Background 0->60% black scrim only where the 3D scene is bright (ch2, ch3). No glass. */}
+      <div
+        className={`sections-scrim-left ${isBrightScene ? "scrim-active" : ""}`}
+        aria-hidden="true"
+      />
 
       {/* Empty spacer sections that establish scroll length for useScrollSync */}
       <Spacers />

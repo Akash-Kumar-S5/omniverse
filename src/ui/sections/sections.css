@@ -2,16 +2,22 @@
    secondary blocks indented to column 3 so each section has one strong line and one step.
    The scene keeps the right half of the frame. */
 
-/* Left scrim keeps body text above AA contrast against the 3D scene. */
+/* Left-side 0→60% black gradient behind the text column only where the 3D is bright (ch2, ch3). No glass. */
 .sections-scrim-left {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: min(760px, 56vw);
-  background: linear-gradient(90deg, rgba(8, 7, 6, 0.86) 0%, rgba(8, 7, 6, 0.72) 58%, rgba(8, 7, 6, 0) 100%);
+  width: min(720px, 52vw);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
   z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sections-scrim-left.scrim-active {
+  opacity: 1;
 }
 
 @media (max-width: 767px) {
@@ -20,7 +26,7 @@
     top: auto;
     bottom: 0;
     height: 78vh;
-    background: linear-gradient(180deg, rgba(8, 7, 6, 0) 0%, rgba(8, 7, 6, 0.82) 22%, rgba(8, 7, 6, 0.94) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.60) 30%, rgba(0, 0, 0, 0.85) 100%);
   }
 }
 
@@ -327,16 +333,6 @@
 
 /* ---------- 5. Contact ---------- */
 .chapter-contact { row-gap: var(--space-6); align-content: start; padding-top: clamp(8px, 4vh, 40px); }
-
-.contact-hearth-badge {
-  grid-column: 1 / span 6;
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  opacity: 0.85;
-}
 
 .contact-title {
   grid-column: 1 / span 8;
