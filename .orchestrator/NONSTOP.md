@@ -58,3 +58,8 @@ list applies; perf must not regress below DONE §3 (a rejected upgrade is better
 - Orchestrator: on each reports/critic-cycle-N.md, dispatch the top fixes in parallel to idle lanes (check usage first),
   merge when evidence passes, then prompt critic for cycle N+1 (after `/clear` in its pane). Repeat without waiting for Akash.
 - Stop only on critic verdict SHIP (overall >= 8.5, no chapter < 8). Keep the critic independent: never show it builders' reports.
+
+## Stage 2: the final judge (Akash 01:00 IST 09-Nov)
+When the critic says SHIP, start briefs/final-judge.md: a NEW judge agent, fresh each cycle. Loop fixes, merges and
+judge cycles until the judge gives >= 9 overall (no chapter < 8.5). Lanes may fetch from the internet anything
+they need, within the asset rules. Don't wait for Akash.
