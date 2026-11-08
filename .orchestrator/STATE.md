@@ -236,3 +236,7 @@ Next 3 steps: (1) collect both rescore reports, send Morph the table (he asked f
 
 ## 10:20 IST Claude orchestrator restarted fresh (Sonnet)
 Read all briefs. copilot-review rescore (dc11a32) has PERF ONLY (111-121 fps, up from 72-76; ch3 auto-picks Medium): it could not see images, so its round-1 visual scores (6.7) are also unverified. agy-review (w2:pM) re-score in flight; agy-world (w2:pK) on ROUND-2-PLAN items 1-2. Next: collect agy rescore, I score the shots myself (copilot-review shots r1-rescore-copilot-review-ch*.png), merge agy-world, send Morph table.
+
+## 10:35 IST Round-1 re-score table (Morph's eye is final)
+agy-review (generous, avg 9.01): 9.05/8.87/8.92/8.98/9.23. copilot-review: could not see images, perf only (111-121 fps, was 72-76).
+Morph (Sonnet) from shots: ch3 ~7.5 (glyph 'S' reads as '8', slabs murky, body text oddly indented); ch4 ~7.5 (halo ring still touches paragraph 'tooling.'). Overall ~7.7 < 8.5, so ROUND-2-PLAN stays in force (agy-world on items 1-2). agy scores are inflated: do not stop on them.
