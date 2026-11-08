@@ -1,3 +1,10 @@
 {
-  "enabledMcpjsonServers": ["playwright", "chrome-devtools", "context7"]
+  "enabledMcpjsonServers": [
+    "playwright",
+    "chrome-devtools",
+    "context7"
+  ],
+  "enabledPlugins": {
+    "ponytail@ponytail": true
+  }
 }

@@ -221,3 +221,47 @@ Scores round 1: agy avg 8.36, copilot avg 6.7 (ch3 5.5 weakest: no subject, blur
 
 ## 04:40 UTC (10:10 IST) round 1 polish merged -> main 8180254
 agy-world 1b + ch3 letterform glyph merged (build+lint clean). Morph approved ch0. Scores BEFORE upgrades: agy-review avg 8.36 (ch 8.5/8.5/8.2/7.8/8.8); copilot-review (strict) 6.5/7.5/7/5.5/7 avg 6.7 (reports/score-copilot-review.md in its worktree, commit 305be3a; top asks: hero object per chapter, legibility, continuous scroll camera, pointer interaction). Re-score dispatched (briefs/round1-rescore.md) to agy-review + copilot-review -> reports/rescore-*.md. Then send Morph the table. Claude limit resets ~10:10 IST: on OPS HANDBACK update STATE and reply HANDBACK-READY.
+
+## HANDBACK from orchestrator-b (10:1x IST)
+Main 8180254+: round-1 impl MERGED (volumetric swarm ch0 [Morph approved], ch2 ribbon right, ch3 letterform glyph + external callout chip, cursor wake, 1b polish). Build+lint clean. .claude/settings.json adds ponytail@ponytail plugin (project scope).
+| Agent | Pane | State |
+| agy-world | w2:pK | idle after commit ff7c90b (merged); branch r3/agy-world |
+| agy-review | w2:pM | IN FLIGHT: round-1 re-score (briefs/round1-rescore.md) -> reports/rescore-agy-review.md (shots r1-rescore-agy-*.png in reference/ untracked) |
+| copilot-review | w2:pQ | IN FLIGHT: re-score -> rescore-copilot-review.md in ITS worktree (.worktrees/copilot-review), commit there then merge |
+| copilot-swarm | w2:pS | idle, ~396 AIC: avoid |
+| codex-world | w2:pE | OUT OF QUOTA until Mon 13:54 / Dec 7 |
+Scores before upgrades: agy-review avg 8.36 (8.5/8.5/8.2/7.8/8.8); copilot-review strict avg 6.7 (6.5/7.5/7/5.5/7; asks: hero object per chapter, text-over-scene legibility, continuous scroll camera, signature pointer interaction).
+Round-2 (not started): pending re-score tables. Copilot rule: one bounded fix/turn; exploratory/screenshot work to agy.
+Next 3 steps: (1) collect both rescore reports, send Morph the table (he asked for it); (2) write ROUND-2-PLAN.md from the gaps (ch3 subject/legibility, scroll-continuous camera, ch1 bust callouts) and assign agy-world; (3) re-benchmark; stop rule in NONSTOP.md; FINAL.md at the end. Untracked dup files parked in .orchestrator/tmp/premerge*.
+
+## 10:20 IST Claude orchestrator restarted fresh (Sonnet)
+Read all briefs. copilot-review rescore (dc11a32) has PERF ONLY (111-121 fps, up from 72-76; ch3 auto-picks Medium): it could not see images, so its round-1 visual scores (6.7) are also unverified. agy-review (w2:pM) re-score in flight; agy-world (w2:pK) on ROUND-2-PLAN items 1-2. Next: collect agy rescore, I score the shots myself (copilot-review shots r1-rescore-copilot-review-ch*.png), merge agy-world, send Morph table.
+
+## 10:35 IST Round-1 re-score table (Morph's eye is final)
+agy-review (generous, avg 9.01): 9.05/8.87/8.92/8.98/9.23. copilot-review: could not see images, perf only (111-121 fps, was 72-76).
+Morph (Sonnet) from shots: ch3 ~7.5 (glyph 'S' reads as '8', slabs murky, body text oddly indented); ch4 ~7.5 (halo ring still touches paragraph 'tooling.'). Overall ~7.7 < 8.5, so ROUND-2-PLAN stays in force (agy-world on items 1-2). agy scores are inflated: do not stop on them.
+
+## 10:40 IST ROUND 3 "Ember & Ash" queued (Akash via Morph; ROUND-3-DARK-FANTASY.md incl. OVERRIDE: assets only, no new modelling/shaders)
+Lanes in briefs/round3-dark-fantasy-lanes.md. Starts when agy-world's round-2 items merge (not thrown away). NOTE: blender-sanctum status line shows Claude 5H 100% (reset ~15:10 IST): the claude lane may be capped; if so use agy for asset search or wait. Orchestrator may need OPS failover too.
+Round 2 still in flight: agy-world (w2:pK) editing targets.ts for hero objects.
+
+## 10:45 IST CREDIT CHECK
+- Claude: 5H 100% (resets 15:10 IST), WK 64%. blender-sanctum (claude, Blender MCP) STALLED until then; this orchestrator may cap too. Codex LOCKED to Mon 13:54. Copilot: copilot-swarm 413 AIC (avoid), copilot-review 110 AIC (bounded only, cannot view images). agy flash: OK. agy Opus 4.6 own quota should be back after ~01:40 IST (untested).
+- Passed: round-3 asset sourcing -> agy-review pane w2:pM (flash) in worktree .worktrees/agy-assets (r4/agy-assets), brief briefs/round3-agy-assets.md; step 1 = candidate report only. blender-sanctum resumes Blender-MCP lighting/bake after 15:10 IST.
+- agy-world (w2:pK) still on round-2 hero objects. Reviews of round 3 go to copilot-review for perf/console/a11y; I score visuals.
+
+## HANDOVER (OPS FAILOVER, Claude 5H at 89%, resets 15:10 IST; written ~11:00 IST 2026-11-08)
+Main HEAD ac69cb6 (+ this commit). Build/lint last clean at 8180254; nothing merged since except docs/briefs.
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | WORKING round-2 items 1-2 (hero object per chapter, text legibility) in .worktrees/agy-world (branch r3/agy-world); uncommitted edits in ParticleSim.ts, SignalField.tsx, targets.ts, World.tsx, index.ts; sitting at an "accept this change? 1=Yes 2=No" dialog (read pane; option 1 = accept edit) | when it commits: check diff stays in its files, build+lint, shots ?skipgate&chapter=0..4 at 1440+390, merge --no-ff w/ Co-Authored-By |
+| agy-review (acting as asset sourcer) | w2:pM | idle after step 1: report committed 2d4a63f on r4/agy-assets (.worktrees/agy-assets): .orchestrator/reports/r3-asset-candidates.md | read the candidates, pick, then send step 2 of briefs/round3-agy-assets.md |
+| copilot-review | w2:pQ | idle; ~110 AIC; CANNOT view images (perf/console/a11y only); rescore perf 111-121 fps in dc11a32 | bounded checks only |
+| copilot-swarm | w2:pS | idle, ~413 AIC: avoid | none |
+| blender-sanctum | w2:pJ | idle, Claude capped | after 15:10 IST: Blender MCP lighting/bake of the picked assets |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+| w1:p1 | | Morph's own pane, never touch | |
+Round 1 re-score: agy-review avg 9.01 (inflated); Morph-eye ~7.7 (ch3 ~7.5 glyph reads as '8', slabs murky, body text indented; ch4 ~7.5 halo ring touches paragraph). Table already shown to Morph. Round 2 (ROUND-2-PLAN.md) in force: hero object/legibility (agy-world), then continuous camera + interaction (copilot, one bounded turn, only if credits).
+Round 3 "Ember & Ash" (Akash-approved, ROUND-3-DARK-FANTASY.md; OVERRIDE: assets only, no new modelling/shaders; no FromSoftware anything; no "bonfire"): lanes in briefs/round3-dark-fantasy-lanes.md. Starts after round-2 merges.
+Next 3 steps: (1) land agy-world round 2 (answer its dialog, review shots, merge); (2) read r3-asset-candidates.md, pick, send agy step 2 (download/place/headless export, CREDITS.md); then agy-world retunes SignalField to embers + drei Sparkles/Clouds + flicker pointLight; (3) after 15:10 reset blender-sanctum lights/bakes, re-score (I score visuals; reviewers perf/console), stop rules in NONSTOP.md, FINAL.md.
+Gotchas: agy dialogs "Allow creation of this file?" -> send only "1"; herdr shows agy/copilot 'done' while working: read panes; Esc on Claude settings dialogs; no push/deploy/rm -rf.
