@@ -44,3 +44,17 @@
 (`ruins-arch-gothic`, `ruins-wall-hole`, `ruins-floor-squares`, `ruins-column-round[-short]`, `ruins-bricks`, `altar-stone`, `fire-basket`,
 `candle-multiple`, `stone_fire_pit`) imported, placed, scaled and lit only, textured with the existing Poly Haven stone textures above.
 The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo, so those props get plain iron/wax materials in the bake.
+## Chapter 3 Project Artefact Masterwork Paintings (CC0 Open Access)
+
+| Project | Painting Title | Artist / Date | Source | Licence | File |
+|---|---|---|---|---|---|
+| SalarySync | *Arches in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437472)](https://www.metmuseum.org/art/collection/search/437472) | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg` |
+| Rentify | *A Colonnade in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437475)](https://www.metmuseum.org/art/collection/search/437475) | CC0 1.0 Universal | `public/assets/paintings/painting_1.jpg` |
+| Website Performance Monitor | *Aqueduct in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437471)](https://www.metmuseum.org/art/collection/search/437471) | CC0 1.0 Universal | `public/assets/paintings/painting_2.jpg` |
+| Innovation Sprint 2025 | *Gothic Windows in the Ruins of the Monastery at Oybin* | Carl Gustav Carus (German, 1789–1869), ca. 1828 | [The Metropolitan Museum of Art (Object 439122)](https://www.metmuseum.org/art/collection/search/439122) | CC0 1.0 Universal | `public/assets/paintings/painting_3.jpg` |
+| MediHub | *The Parthenon* | Frederic Edwin Church (American, 1826–1900), 1871 | [The Metropolitan Museum of Art (Object 10482)](https://www.metmuseum.org/art/collection/search/10482) | CC0 1.0 Universal | `public/assets/paintings/painting_4.jpg` |
+| Finaca | *The Old Castle* | Emanuel Murant (Dutch, 1622–ca. 1700), 17th c. | [The Metropolitan Museum of Art (Object 437171)](https://www.metmuseum.org/art/collection/search/437171) | CC0 1.0 Universal | `public/assets/paintings/painting_5.jpg` |
+| Fuel Dispenser RFID App | *Evening: Landscape with an Aqueduct* | Théodore Géricault (French, 1791–1824), 1818 | [The Metropolitan Museum of Art (Object 436455)](https://www.metmuseum.org/art/collection/search/436455) | CC0 1.0 Universal | `public/assets/paintings/painting_6.jpg` |
+| GenAI Experiments | *Copenhagen Harbor by Moonlight* | Johan Christian Dahl (Norwegian, 1788–1857), 1846 | [The Metropolitan Museum of Art (Object 439343)](https://www.metmuseum.org/art/collection/search/439343) | CC0 1.0 Universal | `public/assets/paintings/painting_7.jpg` |
+
+

@@ -15,11 +15,8 @@
 - Bound `CameraRig.tsx` to `sanctum.spots.json` with instant initial alignment and tuned `maath.easing.damp3` (0.45s) for smooth chapter transitions.
 - All 5 chapters tested and confirmed visibly distinct with `?skipgate&chapter=0..4`.
 
-## Screenshot Evidence (1440x900)
-- Verified chapter captures saved in `.orchestrator/reference/`:
-  - `r3-agyworld-ch0.png` / `r3-agyworld-boot.png`: 1080 KB (subtle additive sunbeam, right-half swarm, zero text overlap).
-  - `r3-agyworld-ch1.png` / `r3-agyworld-about.png`: 1546 KB (`about_niche` framed on pedestal with marble bust particle swarm).
-  - `r3-agyworld-ch2.png` / `r3-agyworld-experience.png`: 1356 KB (corridor perspective through concrete portal arches with boulders).
-  - `r3-agyworld-ch3.png` / `r3-agyworld-projects.png`: 1578 KB (north gallery monolith slabs).
-  - `r3-agyworld-ch4.png` / `r3-agyworld-contact.png`: 1337 KB (contact sky oculus looking up at starfield dome).
-  - `r3-agyworld-floor.png`, `r3-agyworld-beam.png`, `r3-agyworld-perf.png`: Proof files.
+## Morph Review Fixes (Branch `r3/agy-world-frame` from `main`):
+1. Replaced canvas-drawn fake UI with authentic, desaturated CC0 masterwork paintings from The Met Open Access (Hubert Robert *Arches in Ruins* and 7 others), with full attributions in `CREDITS.md`.
+2. Scaled and repositioned the Poly Haven standing picture frame (`scale: 4.2`, `x: -1.35`, `y: 1.78`), pulling it completely into the 1440x900 viewport with all 4 borders and stand clear of edges.
+3. Elevated the celestial ember glyph anchor (`y: 3.35`, `x: -2.05`), ensuring zero collision and a distinct clearance gap above-left of the frame; verified via `.orchestrator/reference/r3-ch3-frame-v2-1440.png` and `r3-ch3-frame-v2-390.png`.
+
