@@ -1,0 +1,7 @@
+# Round 3 "Ember & Ash": lanes (read ROUND-3-DARK-FANTASY.md first; OVERRIDE = assets only, no new modelling/shaders)
+Start only after round-2 items (agy-world: hero object + legibility) are merged to main. Each agent works in its own worktree off main.
+1. blender-sanctum (claude+Blender MCP, w2:pJ): FIRST find ready CC0/CC-BY ruin/cathedral/dungeon models (Sketchfab CC0/CC-BY, Quaternius, Kenney, Poly Haven, Smithsonian) via search_assets/import_asset. Import, place, scale, light (warm fire + cold moon), bake, export (<=4 MB, lite <=1 MB). No hand modelling. Missing asset = leave out. Append every asset + licence + author to CREDITS.md. Keep CAM_*/ANCHOR_* empties and sanctum.spots.json contract.
+2. agy-world (w2:pK): retune SignalField params only (warm ember colour ramp orange->grey ash, rising drift, flicker, cursor stirs); add drei <Sparkles> embers, <Clouds> floor mist, flickering pointLight at the plinth fire; contact section = fire beside "Say hello." No new shader code.
+3. copilot (bounded, one task): candle practical lights (pointLights only) in alcoves + mist tuning, after 1 lands.
+4. Reviews: agy-review and copilot-review re-score; I score from screenshots myself (copilot cannot view images: give it perf/console/a11y checks only).
+Forbidden: anything from or imitating FromSoftware games; names like "bonfire". Evidence = ?skipgate&chapter=0..4 shots at 1440x900 and 390x844.
