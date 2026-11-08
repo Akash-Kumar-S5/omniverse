@@ -21,6 +21,7 @@ export default function ProjectArtefact() {
   const groupRef = useRef<THREE.Group>(null);
   const currentPos = useRef(new THREE.Vector3());
   const targetPos = useRef(new THREE.Vector3());
+  const lanternDirection = useRef(new THREE.Vector3());
 
   // Load the ready-made Poly Haven Standing Picture Frame (CC0)
   const { scene } = useGLTF(FRAME_MODEL_URL, false);
@@ -47,7 +48,7 @@ export default function ProjectArtefact() {
     });
     const box = new THREE.Box3().setFromObject(c);
     const size = box.getSize(new THREE.Vector3());
-    const k = 0.6 / size.y;
+    const k = 0.36 / size.y;
     const ctr = box.getCenter(new THREE.Vector3());
     const holder = new THREE.Group();
     c.position.set(-ctr.x, -ctr.y, -ctr.z);
@@ -57,6 +58,7 @@ export default function ProjectArtefact() {
   }, [lantern]);
   const lightRef = useRef<THREE.PointLight>(null);
   const turnRef = useRef<THREE.Group>(null);
+  const lanternRef = useRef<THREE.Group>(null);
 
   // Build the frame model with custom artwork material and hide occluding glass
   const frameScene = useMemo(() => {
@@ -122,9 +124,15 @@ export default function ProjectArtefact() {
       const cam = state.camera.position;
       turnRef.current.rotation.y = Math.atan2(cam.x - currentPos.current.x, cam.z - currentPos.current.z) - Math.PI / 2;
     }
+    if (lanternRef.current) {
+      const direction = lanternDirection.current.copy(state.camera.position).sub(currentPos.current);
+      direction.y = 0;
+      direction.normalize().multiplyScalar(0.7);
+      lanternRef.current.position.set(0.4 + direction.x, 1.17, direction.z);
+    }
     if (lightRef.current) {
       const tt = performance.now() / 1000;
-      lightRef.current.intensity = 9 * (1 + 0.12 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      lightRef.current.intensity = 6 * (1 + 0.12 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -141,8 +149,10 @@ export default function ProjectArtefact() {
 
         </group>
       </Float>
-      <primitive object={lanternObj} position={[0.4, 1.42, 0]} />
-      <pointLight ref={lightRef} color="#ffb066" intensity={6.8} distance={7} decay={2} position={[0.3, 1.25, 1.0]} />
+      <group ref={lanternRef} position={[0.4, 1.17, 0]}>
+        <primitive object={lanternObj} />
+        <pointLight ref={lightRef} color="#ffb066" intensity={6} distance={3} decay={2} />
+      </group>
     </group>
   );
 }

@@ -25,7 +25,7 @@ export default function SplitHeading({
     gsap.registerPlugin(SplitText);
     const split = new SplitText(textRef.current, { type: "chars,words" });
 
-    gsap.from(split.chars, {
+    const tween = gsap.from(split.chars, {
       opacity: 0,
       y: 20,
       rotateX: -25,
@@ -35,8 +35,14 @@ export default function SplitHeading({
       ease: "power3.out",
       clearProps: "opacity,transform",
     });
+    const settle = window.setTimeout(
+      () => tween.progress(1),
+      (delay + 0.55 + Math.max(0, split.chars.length - 1) * 0.02) * 1000 + 200,
+    );
 
     return () => {
+      window.clearTimeout(settle);
+      tween.kill();
       split.revert();
     };
   }, [text, reducedMotion, delay]);
