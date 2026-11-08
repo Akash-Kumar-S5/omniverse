@@ -38,3 +38,9 @@
 | Stone Fire Pit | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | `stone_fire_pit.glb` (central hearth for ch0 / ch4) |
 | Standing Picture Frame 01 | James Ray Cock / Poly Haven | https://polyhaven.com/a/standing_picture_frame_01 | CC0 1.0 Universal | `standing_picture_frame_01.glb` (chapter 3 project screenshot easel/frame) |
 
+
+### Sanctum bake (Round 3, blender-sanctum)
+`public/assets/models/sanctum.glb` / `sanctum-lite.glb` are baked from `blender/scripts/sanctum_09_ruins.py`: the CC0 pieces above
+(`ruins-arch-gothic`, `ruins-wall-hole`, `ruins-floor-squares`, `ruins-column-round[-short]`, `ruins-bricks`, `altar-stone`, `fire-basket`,
+`candle-multiple`, `stone_fire_pit`) imported, placed, scaled and lit only, textured with the existing Poly Haven stone textures above.
+The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo, so those props get plain iron/wax materials in the bake.

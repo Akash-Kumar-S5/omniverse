@@ -44,7 +44,10 @@ for o in list(D.objects):
 
 # ---------- 2. group + join ----------
 shell = D.objects["sanctum_shell"]; floor = D.objects["floor"]
-arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_"))]
+ftiles = [o for o in D.objects if o.type == "MESH" and o.name.startswith("FLOORT_")]
+if ftiles:  # ruined paving joins the floor mesh (one floor atlas)
+    sel(floor, *ftiles); bpy.ops.object.join(); floor = bpy.context.view_layer.objects.active; floor.name = "floor"
+arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_", "RUIN_"))]
 ped_parts = [D.objects["bust_pedestal"], D.objects["bust_pedestal_cap"]]
 def join(parts, name):
     sel(*parts); bpy.ops.object.join(); ob = bpy.context.view_layer.objects.active; ob.name = name; ob.data.name = name; return ob
