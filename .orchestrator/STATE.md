@@ -381,3 +381,4 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - Open: ch2 glitter column right edge; dist 33 MB prune; mobile 390 unchecked.
 - Critic cleared, cycle 2 prompted at 20:36.
 - 15:08 UTC: dispatched r6/agy-world (swarms off, ch3 callout, ch4 eyebrow, embers) and r6/blender-scenes (ch0 plinth, ch3 painting hero, ch2 light, ch1 boxes). Critic c2 = 4.5 ITERATE.
+- 21:54 merged r6/blender-scenes (c8e1a31); waiting r6/agy-world

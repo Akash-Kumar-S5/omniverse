@@ -15,7 +15,7 @@ export const CHAPTER_SHAPE: Record<SectionId, ShapeId> = {
   about: "none",
   experience: "none",
   projects: "none",
-  contact: "beacon",
+  contact: "none",
 };
 
 /**
