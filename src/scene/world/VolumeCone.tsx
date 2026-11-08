@@ -118,6 +118,7 @@ export default function VolumeCone() {
 
       {/* Floating dust motes within the sunbeam */}
       <Sparkles
+        key={quality}
         position={[0, 4.4, 0]}
         count={quality === "high" ? 50 : 28}
         scale={[3.2, 7.8, 3.2]}
