@@ -84,8 +84,9 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  const h = quality === "lite" ? 0.64 : 0.74;
-  const w = h * 0.92;
+  // Scale flame billboards ~2x (1.48m tall, core #ffd29a) so the fire reads as the brightest point
+  const h = quality === "lite" ? 1.25 : 1.48;
+  const w = h * 0.88;
 
   // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
   return (
@@ -106,7 +107,7 @@ function FireLight() {
     if (!l) return;
     const t = state.clock.elapsedTime;
     const flicker = 0.55 * Math.sin(t * 9.1) + 0.3 * Math.sin(t * 17.3 + 1.7) + 0.15 * Math.sin(t * 31.9 + 0.4);
-    l.intensity = 7.5 * (1 + 0.15 * flicker);
+    l.intensity = 8.5 * (1 + 0.15 * flicker);
   });
 
   return (

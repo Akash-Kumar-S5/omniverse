@@ -37,16 +37,41 @@ function SparksAndMist() {
 
   return (
     <group>
-      {/* Small warm orange embers scoped strictly to 1m cylinder above the plinth hearth */}
+      {/* Varied natural embers (1-4px), warm colors and layered brightness above the plinth hearth */}
+      {/* 1. Fine glowing spark motes: 1-1.4px, luminous amber-gold, fast rise */}
       <Sparkles
-        count={quality === "lite" ? 25 : 50}
-        scale={[0.9, 2.4, 0.9]}
-        position={[0, 1.2, 0]}
-        color="#ff6e1a"
-        speed={0.65}
-        size={quality === "lite" ? 1.3 : 1.7}
-        noise={[0.25, 0.8, 0.25]}
-        opacity={0.82}
+        count={quality === "lite" ? 16 : 32}
+        scale={[0.85, 2.6, 0.85]}
+        position={[0, 1.3, 0]}
+        color="#ffe08a"
+        speed={0.80}
+        size={quality === "lite" ? 1.0 : 1.4}
+        noise={[0.2, 0.8, 0.2]}
+        opacity={0.92}
+      />
+
+      {/* 2. Mid-sized ember sparks: 2-2.5px, vibrant warm orange, steady drift */}
+      <Sparkles
+        count={quality === "lite" ? 12 : 24}
+        scale={[0.9, 2.2, 0.9]}
+        position={[0, 1.25, 0]}
+        color="#ff761a"
+        speed={0.55}
+        size={quality === "lite" ? 2.0 : 2.5}
+        noise={[0.25, 0.7, 0.25]}
+        opacity={0.78}
+      />
+
+      {/* 3. Larger cooling ember flakes: 3.2-3.8px, deep ember crimson-orange, slow rise */}
+      <Sparkles
+        count={quality === "lite" ? 6 : 12}
+        scale={[0.95, 1.8, 0.95]}
+        position={[0, 1.15, 0]}
+        color="#d6440c"
+        speed={0.35}
+        size={quality === "lite" ? 3.0 : 3.8}
+        noise={[0.3, 0.6, 0.3]}
+        opacity={0.60}
       />
 
       {/* Low subtle floor mist across the cold stone ruins */}

@@ -192,14 +192,14 @@ export default function CameraRig() {
         pos.set(...sky.position);
         look.set(...sky.target);
         if (!isPortrait) {
-          // ch4: elevated angle across coals toward dark wall; fire lower-right; email over black
-          pos.set(-1.85, 1.55, 2.5);
-          look.set(-0.65, 0.95, -0.3);
-          targetFov = 46;
+          // ch4: pulled back ~1.5x and lowered; pit <=25% of frame in lower-right; email over black
+          pos.set(-2.75, 1.15, 3.75);
+          look.set(-1.1, 0.85, 0.0);
+          targetFov = 44;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 30% below the CTA row
-          pos.set(-1.3, 1.75, 3.2);
-          look.set(-0.15, 2.05, 0.0);
+          pos.set(-1.8, 1.85, 4.2);
+          look.set(-0.3, 2.25, 0.0);
           targetFov = 54;
         }
         break;
