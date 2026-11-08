@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
 import { experiences, projects } from "../../content";
 import type { ShapeId, SanctumSpots } from "../../state/signal";
-import { beacon } from "../layout";
 
 export interface TargetOptions {
   shape: ShapeId;
@@ -221,13 +220,22 @@ export function createTargetTexture(options: TargetOptions) {
   } else if (shape === "project-glyph") {
     shapeAnchor = getProjectGlyphAnchor(activeProject);
     radius = 0.55;
+  } else if (shape === "beacon") {
+    shapeAnchor = anchorPosition(anchors, "beacon", new THREE.Vector3());
+    radius = anchors?.beacon?.radius ?? 1.6;
   } else {
-    shapeAnchor = anchorPosition(anchors, shape, new THREE.Vector3());
-    radius = anchors?.[shape]?.radius ?? 1.6;
+    shapeAnchor = new THREE.Vector3();
+    radius = 0;
   }
 
   let points: { position: THREE.Vector3; group: number }[] | null = null;
 
+  if (shape === "none") {
+    points = Array.from({ length: count }, () => ({
+      position: new THREE.Vector3(0, -9999, 0),
+      group: 0,
+    }));
+  }
   if (shape === "bust" && bust) points = sampleBust(count, bust, shapeAnchor, radius, random);
   if (shape === "helix") {
     // Elegant 3D corkscrew timeline ribbon placed in the right half of the corridor
@@ -253,14 +261,16 @@ export function createTargetTexture(options: TargetOptions) {
     points = sampleTextGlyph(letter, count, shapeAnchor, radius, random, activeProject);
   }
   if (shape === "beacon") {
-    const point = anchors?.beacon?.position ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(...beacon);
-    // Shift slightly to screen right (+X) so the halo ring frames in the open sky and clears the paragraph text on the left
-    point.x += 0.95;
+    // Warm sparks rising directly above the resting fire pit on the plinth, clear of body text
+    const fireBase = new THREE.Vector3(0, 0.62, 0);
     points = Array.from({ length: count }, () => {
       const angle = random() * Math.PI * 2;
-      const major = radius * 2.2;
-      const tube = (random() - 0.5) * radius * 0.22;
-      return { position: point.clone().add(new THREE.Vector3(Math.cos(angle) * (major + tube), Math.sin(angle) * (major + tube), (random() - 0.5) * radius * 0.09)), group: 0 };
+      const r = Math.sqrt(random()) * 0.45;
+      const h = random() * 1.8;
+      return {
+        position: fireBase.clone().add(new THREE.Vector3(Math.cos(angle) * r, h, Math.sin(angle) * r)),
+        group: random() < 0.08 ? 9 : 0,
+      };
     });
   }
   if (!points) {

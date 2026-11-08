@@ -7,13 +7,14 @@ export type ShapeId =
   | "bust"            // about: marble_bust_01.glb sampled as points, in the side niche
   | "helix"           // experience: helix/timeline ribbon with 4 clusters (one per role)
   | "project-glyph"   // projects: glyph for store.activeProject (0..7)
-  | "beacon";         // contact: collapse to a single pulsing point under open sky
+  | "beacon"          // contact: collapse to a single pulsing point under open sky
+  | "none";           // no particle swarm
 
 export const CHAPTER_SHAPE: Record<SectionId, ShapeId> = {
   boot: "core",
-  about: "bust",
-  experience: "helix",
-  projects: "project-glyph",
+  about: "none",
+  experience: "none",
+  projects: "none",
   contact: "beacon",
 };
 
