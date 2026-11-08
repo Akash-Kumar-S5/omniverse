@@ -10,7 +10,7 @@ REPO = os.environ.get("SANCTUM_REPO") or "/Users/akashkumars/Documents/Personal/
 OUT = os.path.join(REPO, "public", "assets", "models"); BAKE = os.path.join(REPO, "blender", "bake")
 os.makedirs(OUT, exist_ok=True); os.makedirs(BAKE, exist_ok=True)
 SAMPLES = int(os.environ.get("BAKE_SAMPLES", 256)); ARCH_PX = int(os.environ.get("ARCH_PX", 4096))
-FLOOR_PX = int(os.environ.get("FLOOR_PX", 2048)); LITE_PX = int(os.environ.get("LITE_PX", 1024)); Q = int(os.environ.get("JPEG_Q", 82))
+FLOOR_PX = int(os.environ.get("FLOOR_PX", 4096)); LITE_PX = int(os.environ.get("LITE_PX", 1024)); Q = int(os.environ.get("JPEG_Q", 82))
 sc = bpy.context.scene; D = bpy.data
 T0 = time.time()
 def log(*a): print(f"[{time.time()-T0:6.0f}s]", *a, flush=True)
@@ -47,8 +47,13 @@ shell = D.objects["sanctum_shell"]; floor = D.objects["floor"]
 ftiles = [o for o in D.objects if o.type == "MESH" and o.name.startswith("FLOORT_")]
 if ftiles:  # ruined paving joins the floor mesh (one floor atlas)
     sel(floor, *ftiles); bpy.ops.object.join(); floor = bpy.context.view_layer.objects.active; floor.name = "floor"
-arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_", "RUIN_"))]
-ped_parts = [D.objects["bust_pedestal"], D.objects["bust_pedestal_cap"]]
+def _c(o):
+    pts = [o.matrix_world @ mathutils.Vector(c) for c in o.bound_box]
+    return sum(p.x for p in pts) / 8, sum(p.y for p in pts) / 8
+# the about niche (arch, altar, candles) bakes with the pedestal into its own, denser atlas
+niche = [o for o in D.objects if o.type == "MESH" and o.name.startswith("RUIN_") and _c(o)[0] > 7.8 and abs(_c(o)[1]) < 3.0]
+arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_", "RUIN_")) and o not in niche]
+ped_parts = [D.objects["bust_pedestal"], D.objects["bust_pedestal_cap"]] + niche
 def join(parts, name):
     sel(*parts); bpy.ops.object.join(); ob = bpy.context.view_layer.objects.active; ob.name = name; ob.data.name = name; return ob
 arch = join(arch_parts, "sanctum_architecture"); ped = join(ped_parts, "bust_pedestal")
@@ -83,7 +88,7 @@ def bake(ob, name, px):
     log("baked", name, px)
     for m in mats: m.node_tree.nodes.remove(m.node_tree.nodes["BAKE_TARGET"])
     return img
-imgs = {"arch": bake(arch, "arch", ARCH_PX), "floor": bake(floor, "floor", FLOOR_PX), "ped": bake(ped, "ped", 512)}
+imgs = {"arch": bake(arch, "arch", ARCH_PX), "floor": bake(floor, "floor", FLOOR_PX), "ped": bake(ped, "ped", 2048)}
 
 # ---------- 5. save JPEGs through the scene colour management (AgX baked in), plus 1k lite copies ----------
 scene_fmt = sc.render.image_settings
@@ -92,7 +97,7 @@ def save(img, fn):
     p = os.path.join(BAKE, fn); img.save_render(p, scene=sc); return p
 hi = {k: save(v, f"{k}.jpg") for k, v in imgs.items()}
 lite = {}
-for k, px in (("arch", LITE_PX), ("floor", LITE_PX // 2 if False else LITE_PX), ("ped", 256)):
+for k, px in (("arch", LITE_PX), ("floor", LITE_PX // 2 if False else LITE_PX), ("ped", 512)):
     im = D.images.load(hi[k]); im.colorspace_settings.name = "sRGB"; im.scale(px, px)
     p = os.path.join(BAKE, f"{k}_lite.jpg"); im.filepath_raw = p; im.file_format = "JPEG"
     sc.render.image_settings.quality = Q; im.save(); lite[k] = p

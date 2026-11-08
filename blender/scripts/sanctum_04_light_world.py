@@ -133,7 +133,7 @@ for i in range(8):
 # ---- sky fill leaking through the ceiling slits (corridor + gallery): soft cool area lights sitting in each slit ----
 def slit_light(name, loc, size):
     d = bpy.data.lights.new(name, "AREA"); d.shape = "RECTANGLE"; d.size, d.size_y = size
-    d.energy = 280; d.color = (0.62, 0.74, 1.0); d.spread = math.radians(130)
+    d.energy = 70; d.color = (0.62, 0.74, 1.0); d.spread = math.radians(130)
     o = bpy.data.objects.new(name, d); sc.collection.objects.link(o); o.location = loc  # area lights point down (-Z) by default
 for i, x in enumerate((-16.5, -21.5, -26.5, -31.5)): slit_light(f"SLIT_corr{i}", (x, 0, 7.4), (0.6, 4.8))
 for i, y in enumerate((14, 19, 24, 29)): slit_light(f"SLIT_hall{i}", (0, y, 9.4), (7.6, 0.6))

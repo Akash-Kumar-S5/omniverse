@@ -69,7 +69,7 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
 # tile sizes ~5x smaller than the first pass, diffuse contrast flattened (flat=0.6-0.75) so no rust-blotch read
 wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
 slab = pbr("mat_monolith", "concrete_wall_003", 1.1, tint=(0.30, 0.32, 0.37), rough_mul=0.8, flat=0.8, normal=0.4)  # larger tile + softer relief: no rocky/dirt read under the warm spots
-floor = pbr("mat_floor_wet", "concrete_floor_worn_001", 0.6, tint=(0.28, 0.29, 0.33), rough_mul=0.55, flat=0.6)
+floor = pbr("mat_floor_wet", "concrete_floor_worn_001", 0.6, tint=(0.30, 0.26, 0.22), rough_mul=0.6, flat=0.6)
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
