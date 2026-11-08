@@ -1,0 +1,5 @@
+# agy-assets (stand-in for blender-sanctum while Claude is capped until ~15:10 IST)
+Worktree: .worktrees/agy-assets (branch r4/agy-assets). Read .orchestrator/ROUND-3-DARK-FANTASY.md (OVERRIDE: assets only, no modelling).
+Step 1 (report only, no downloads yet): find 4-6 READY-MADE CC0/CC-BY gothic ruin / cathedral / dungeon models or kits that load in three.js as GLB, <=4 MB each after decimation. Sources reachable without login: Poly Haven API (api.polyhaven.com, CC0), Quaternius, Kenney (CC0 packs), Smithsonian 3D (CC0). Write candidates (name, URL, licence, author, size, why) to .orchestrator/reports/r3-asset-candidates.md and commit. STOP; the orchestrator picks.
+Step 2 (after pick): download into public/assets/ruins/, place/scale/light via the headless scripts in blender/scripts/ (no live Blender MCP, no hand modelling), export sanctum.glb (<=4 MB) + lite (<=1 MB), keep CAM_*/ANCHOR_* empties and sanctum.spots.json, append every asset with licence/author to CREDITS.md. Only commands inside the worktree; keep outputs in-repo. No git push.
+Nothing from or imitating FromSoftware games.
