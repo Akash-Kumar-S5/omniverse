@@ -240,3 +240,7 @@ Read all briefs. copilot-review rescore (dc11a32) has PERF ONLY (111-121 fps, up
 ## 10:35 IST Round-1 re-score table (Morph's eye is final)
 agy-review (generous, avg 9.01): 9.05/8.87/8.92/8.98/9.23. copilot-review: could not see images, perf only (111-121 fps, was 72-76).
 Morph (Sonnet) from shots: ch3 ~7.5 (glyph 'S' reads as '8', slabs murky, body text oddly indented); ch4 ~7.5 (halo ring still touches paragraph 'tooling.'). Overall ~7.7 < 8.5, so ROUND-2-PLAN stays in force (agy-world on items 1-2). agy scores are inflated: do not stop on them.
+
+## 10:40 IST ROUND 3 "Ember & Ash" queued (Akash via Morph; ROUND-3-DARK-FANTASY.md incl. OVERRIDE: assets only, no new modelling/shaders)
+Lanes in briefs/round3-dark-fantasy-lanes.md. Starts when agy-world's round-2 items merge (not thrown away). NOTE: blender-sanctum status line shows Claude 5H 100% (reset ~15:10 IST): the claude lane may be capped; if so use agy for asset search or wait. Orchestrator may need OPS failover too.
+Round 2 still in flight: agy-world (w2:pK) editing targets.ts for hero objects.
