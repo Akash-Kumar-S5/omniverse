@@ -68,6 +68,7 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 | Modular Medieval Buildings (`Banner.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/banner.glb` (Ch2 corridor pillar banner) |
 | Particle Pack (Flame & Fire Sprites) | Kenney | https://kenney.nl/assets/particle-pack | CC0 1.0 Universal | `public/assets/props/textures/flame-spritesheet-6x1.png`, `flame_0*.png`, `fire_0*.png` (Ch0 & Ch4 animated flame flipbook) |
 | Graveyard Kit (`fire-basket.glb`, `candle-multiple.glb`) | Kenney | https://kenney.nl/assets/graveyard-kit | CC0 1.0 Universal | `public/assets/props/brazier-fire-basket.glb`, `candles-altar.glb` (Ch0/Ch4 brazier and Ch1 altar candles) |
+| Adventurers Character Pack (`Rogue_Hooded.glb`, `Knight.glb`) | Kay Lousberg (KayKit) | https://kaylousberg.com | CC0 1.0 Universal | `public/assets/props/statue-hooded-keeper.glb`, `public/assets/props/statue-cloaked-knight.glb` (Ch0/Ch4 kneeling keeper in long grey hooded robe with folded hands & Ch2 cloaked swordswoman statue in worn bronze-toned armour with torn cape and single blade lowered) |
 
 
 
