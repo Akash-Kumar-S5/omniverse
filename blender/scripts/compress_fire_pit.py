@@ -9,7 +9,11 @@ bpy.ops.import_scene.gltf(filepath=src)
 for im in bpy.data.images:
     print("IMG", im.name, tuple(im.size), im.packed_file is not None)
     im.scale(1000, 1000)   # forces a re-encode at export quality
-    im.scale(1000, 1000)   # forces a re-encode at export quality
+    if im.name.endswith("_diff"):   # r7: the runtime fire light blows the scan albedo out to cream; pull the albedo down so the ring rocks read as the dark scan stone
+        import numpy as np
+        px = np.empty(len(im.pixels), dtype=np.float32); im.pixels.foreach_get(px)
+        px = px.reshape(-1, 4); px[:, :3] *= 0.5
+        im.pixels.foreach_set(px.ravel()); im.update()
 bpy.ops.export_scene.gltf(filepath=dst, export_format="GLB", export_draco_mesh_compression_enable=True,
     export_draco_mesh_compression_level=7, export_draco_position_quantization=14, export_image_format="JPEG", export_jpeg_quality=80)
 print("PIT_OK", os.path.getsize(dst))
