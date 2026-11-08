@@ -119,7 +119,7 @@ export default function World() {
       {/* Lit readable hero artefact per project beside the active slab */}
       <ProjectArtefact />
 
-      {/* Volumetric moonbeam descending through the ceiling oculus onto the fire */}
+      {/* Soft oculus light and floating motes */}
       <VolumeCone />
     </>
   );
