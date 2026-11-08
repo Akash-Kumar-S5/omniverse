@@ -342,3 +342,15 @@ Main HEAD 7d706bb. Build & lint pass with 0 errors/warnings.
 
 
 
+
+## 12:55 IST — ORCHESTRATOR (Claude Sonnet 5.5, w2:p1) back in charge
+MERGED to main: r3/blender-sanctum ruins bake (1500c87; sanctum.glb 2.3 MB, lite 0.84 MB) + r3/agy-world-frame ch3 paintings (7eb4818). Build+lint clean. dist 28 MB (raw ruins kit GLBs in public/ ship unused; prune before FINAL, initial payload to be measured).
+Morph review 12:50 queued: (1) ch4 fire pit + Sparkles + flicker light, (2) ch0 fire pit visible, -> agy-world; (3) ch1 pillar/plinth detail, plus ch2 floor blown white -> blender-sanctum; re-score -> agy-review (now), copilot-review (after fixes, bounded).
+| Agent | Pane | Task |
+|---|---|---|
+| agy-world | w2:pK | ch4/ch0 fire pit |
+| blender-sanctum | w2:pJ | ch2 floor, then ch1 pillar/plinth |
+| agy-review | w2:pM | r3 re-score of main 7eb4818 |
+| copilot-review | w2:pQ | idle, ~185 AIC; perf check after fixes |
+| codex-world | w2:pE | LOCKED to Mon 13:54 |
+Score table: pending.
