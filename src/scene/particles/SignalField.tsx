@@ -6,7 +6,7 @@ import { CHAPTER_SHAPE, signal, type ShapeId, type SignalFieldProps } from "../.
 import { useOmni } from "../../state/store";
 import { anchors as screenAnchors, type AnchorId } from "../../state/anchors";
 import { createParticleSimulation, hasFloatRenderTargetSupport, type ParticleSimulation } from "./ParticleSim";
-import { CORE_SHAPE_OFFSET, createTargetTexture } from "./targets";
+import { CORE_SHAPE_OFFSET, createTargetTexture, getProjectGlyphAnchor, getHelixAnchor } from "./targets";
 import vertexShader from "./particles.vert?raw";
 import fragmentShader from "./particles.frag?raw";
 import cpuVertexShader from "./cpu.vert?raw";
@@ -59,7 +59,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const { scene: bust } = useGLTF("/assets/models/marble_bust_01.glb", false);
   const center = useMemo(() => new THREE.Vector3(...(anchors?.core?.position ?? [0, 0, 0])), [anchors]);
   const radius = anchors?.core?.radius ?? 1.6;
-  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, bust }), [shape, count, anchors, activeProject, bust]);
+  const target = useMemo(() => createTargetTexture({ shape, count, anchors, activeProject, activeRole, bust }), [shape, count, anchors, activeProject, activeRole, bust]);
   const latestTarget = useRef(target);
   latestTarget.current = target;
 
@@ -143,12 +143,27 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     const motionReduced = reducedMotion ?? storeReducedMotion;
     uniforms.uTime.value = state.clock.elapsedTime;
     cpuUniforms.uTime.value = state.clock.elapsedTime;
-    const anchorName = shape === "project-glyph" ? "glyph" : shape;
-    const shapeAnchor = anchors?.[anchorName]
-      ? new THREE.Vector3(...anchors[anchorName].position)
-      : shape === "beacon" ? new THREE.Vector3(0, 0, 0) : center;
-    if (shape === "core") shapeAnchor.add(coreOffset);
-    const shapeRadius = anchors?.[anchorName]?.radius ?? (shape === "bust" ? 1.35 : shape === "beacon" ? 0.16 : radius);
+    let shapeAnchor: THREE.Vector3;
+    let shapeRadius: number;
+    if (shape === "project-glyph") {
+      shapeAnchor = getProjectGlyphAnchor(activeProject);
+      shapeRadius = 0.95;
+    } else if (shape === "helix") {
+      shapeAnchor = getHelixAnchor(activeRole);
+      shapeRadius = 0.95;
+    } else if (shape === "core") {
+      shapeAnchor = center.clone().add(coreOffset);
+      shapeRadius = anchors?.core?.radius ?? 1.6;
+    } else if (shape === "bust") {
+      shapeAnchor = anchors?.bust ? new THREE.Vector3(...anchors.bust.position) : center;
+      shapeRadius = anchors?.bust?.radius ?? 1.35;
+    } else if (shape === "beacon") {
+      shapeAnchor = anchors?.beacon ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(0, 0, 0);
+      shapeRadius = anchors?.beacon?.radius ?? 0.16;
+    } else {
+      shapeAnchor = center;
+      shapeRadius = radius;
+    }
     signal.focus[0] = shapeAnchor.x;
     signal.focus[1] = shapeAnchor.y;
     signal.focus[2] = shapeAnchor.z;
@@ -289,9 +304,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     }
 
     const candidates: [AnchorId, THREE.Vector3, string][] = [
-      ["hero.core", center, "boot"],
+      ["hero.core", center.clone().add(coreOffset), "boot"],
       ["about.object", shape === "bust" ? shapeAnchor : new THREE.Vector3(...(anchors?.bust?.position ?? center.toArray())), "about"],
-      ["projects.active", shape === "project-glyph" ? shapeAnchor : new THREE.Vector3(...(anchors?.glyph?.position ?? center.toArray())), "projects"],
+      ["projects.active", shape === "project-glyph" ? shapeAnchor : getProjectGlyphAnchor(activeProject), "projects"],
       ["contact.beacon", shape === "beacon" ? shapeAnchor : new THREE.Vector3(...(anchors?.beacon?.position ?? [0, 0, 0])), "contact"],
     ];
     const projected = new THREE.Vector3();
