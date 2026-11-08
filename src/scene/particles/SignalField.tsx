@@ -6,7 +6,7 @@ import { CHAPTER_SHAPE, signal, type ShapeId, type SignalFieldProps } from "../.
 import { useOmni } from "../../state/store";
 import { anchors as screenAnchors, type AnchorId } from "../../state/anchors";
 import { createParticleSimulation, hasFloatRenderTargetSupport, type ParticleSimulation } from "./ParticleSim";
-import { createTargetTexture } from "./targets";
+import { CORE_SHAPE_OFFSET, createTargetTexture } from "./targets";
 import vertexShader from "./particles.vert?raw";
 import fragmentShader from "./particles.frag?raw";
 import cpuVertexShader from "./cpu.vert?raw";
@@ -15,6 +15,7 @@ import cpuFragmentShader from "./cpu.frag?raw";
 const GPU_SIM_SIZE = { high: 256, medium: 160, lite: 96 } as const;
 const CPU_SIM_SIZE = 192;
 const TAU = Math.PI * 2;
+const coreOffset = new THREE.Vector3(...CORE_SHAPE_OFFSET);
 
 type Backend = "gpu" | "cpu";
 
@@ -50,7 +51,9 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
   const plane = useMemo(() => new THREE.Plane(), []);
   const previousDebugFrame = useRef(0);
   const debugSamples = useRef<number[]>([]);
-  const simSize = backend === "cpu" ? CPU_SIM_SIZE : GPU_SIM_SIZE[resolvedQuality];
+  // Particle count is latched at mount: rebuilding the sim when PerformanceMonitor upgrades quality leaves the swarm invisible.
+  const [mountQuality] = useState(resolvedQuality);
+  const simSize = backend === "cpu" ? CPU_SIM_SIZE : GPU_SIM_SIZE[mountQuality];
   const count = simSize * simSize;
   const cpuCursorOffsets = useMemo(() => new Float32Array(count * 3), [count]);
   const { scene: bust } = useGLTF("/assets/models/marble_bust_01.glb", false);
@@ -72,6 +75,8 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
         }
       }
       result.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+      // Positions come from the sim texture; this placeholder sizes the draw call.
+      result.setAttribute("position", new THREE.BufferAttribute(new Float32Array(count * 3), 3));
     } else {
       const positions = new Float32Array(count * 3);
       const groups = new Float32Array(count);
@@ -82,17 +87,22 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     return result;
   }, [backend, count, simSize]);
 
+  // Uniform objects must stay referentially stable: three caches them per program, so replacing them leaves stale textures bound.
   const uniforms = useMemo(() => ({
     uPositions: { value: null as THREE.Texture | null },
-    uTarget: { value: target as THREE.Texture },
-    uActiveGroup: { value: activeRole },
-    uPointSize: { value: resolvedQuality === "lite" ? 2.2 : 2.8 },
-  }), [resolvedQuality, target, activeRole]);
-
+    uTarget: { value: null as THREE.Texture | null },
+    uActiveGroup: { value: 0 },
+    uPointSize: { value: 2.8 },
+  }), []);
   const cpuUniforms = useMemo(() => ({
-    uActiveGroup: { value: activeRole },
-    uPointSize: { value: resolvedQuality === "lite" ? 1.65 : 1.85 },
-  }), [resolvedQuality, activeRole]);
+    uActiveGroup: { value: 0 },
+    uPointSize: { value: 1.85 },
+  }), []);
+  uniforms.uTarget.value = target;
+  uniforms.uActiveGroup.value = activeRole;
+  uniforms.uPointSize.value = resolvedQuality === "lite" ? 2.2 : 2.8;
+  cpuUniforms.uActiveGroup.value = activeRole;
+  cpuUniforms.uPointSize.value = resolvedQuality === "lite" ? 1.65 : 1.85;
 
   useEffect(() => {
     if (backend === "cpu") return;
@@ -133,7 +143,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     const shapeAnchor = anchors?.[anchorName]
       ? new THREE.Vector3(...anchors[anchorName].position)
       : shape === "beacon" ? new THREE.Vector3(0, 0, 0) : center;
-    if (shape === "core") shapeAnchor.x += 5.5;
+    if (shape === "core") shapeAnchor.add(coreOffset);
     const shapeRadius = anchors?.[anchorName]?.radius ?? (shape === "bust" ? 1.35 : shape === "beacon" ? 0.16 : radius);
     signal.focus[0] = shapeAnchor.x;
     signal.focus[1] = shapeAnchor.y;
@@ -289,7 +299,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
       <shaderMaterial vertexShader={cpuVertexShader} fragmentShader={cpuFragmentShader} uniforms={cpuUniforms} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
     </points>
   ) : gpuReady ? (
-    <points geometry={geometry} frustumCulled={false}>
+    <points key={`gpu-${count}`} geometry={geometry} frustumCulled={false}>
       <shaderMaterial vertexShader={vertexShader} fragmentShader={fragmentShader} uniforms={uniforms} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
     </points>
   ) : null;

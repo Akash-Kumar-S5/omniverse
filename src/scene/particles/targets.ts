@@ -12,6 +12,9 @@ export interface TargetOptions {
   bust?: THREE.Object3D;
 }
 
+/** Offset from the core anchor that keeps the hero swarm on the right of the boot camera path. */
+export const CORE_SHAPE_OFFSET: [number, number, number] = [1.1, 3, 0.9];
+
 const seeded = (seed: number) => () => {
   seed |= 0;
   seed = (seed + 0x6d2b79f5) | 0;
@@ -64,7 +67,7 @@ export function createTargetTexture(options: TargetOptions) {
   const random = seeded((activeProject + 1) * 997 + shape.length * 131);
   const core = anchorPosition(anchors, "core", new THREE.Vector3());
   const shapeAnchor = shape === "core"
-    ? core.add(new THREE.Vector3(5.5, 0, 0))
+    ? core.add(new THREE.Vector3(...CORE_SHAPE_OFFSET))
     : anchorPosition(anchors, shape === "project-glyph" ? "glyph" : shape, new THREE.Vector3());
   const radius = anchors?.[shape === "project-glyph" ? "glyph" : shape]?.radius ?? (shape === "bust" ? 1.35 : 1.6);
   let points: { position: THREE.Vector3; group: number }[] | null = null;
