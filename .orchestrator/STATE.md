@@ -208,3 +208,7 @@ MERGED: copilot-review (audit+recheck), codex-world swarm shapes (9f18daa), agy-
 OPEN BUG (blocks DONE 3D): swarm does not render on main (agy-review: GL_INVALID_OPERATION glDrawArrays 'Vertex buffer is not big enough'). Owner: copilot-swarm (w2:pS, r3/copilot-swarm, copilot sonnet-5.5, ~100 AIC used so far: watch copilot credits). Uncommitted diff in SignalField.tsx/targets.ts/VolumeCone.tsx.
 agy-review baseline (commit 9f18daa, before swarm fix and agy-world 9be7400): per chapter overall 0:7.3 1:7.3 2:7.8 3:7.8 4:8.0; 3D craft 5-6, art direction 8-9, type 8-9, perf 9. Verdict 'not yet competitive' (swarm missing).
 Next: swarm fix merge -> agy-review + copilot-review re-score (Playwright headed) -> score table to Morph -> improvement loop round 1. agy-world idle (next: motion polish per round plan).
+
+## 03:05 UTC (08:35 IST) interim orchestrator-b (copilot)
+MERGED r3/copilot-swarm 5f46eaf (swarm render fix) -> main 5c8fdcc, build+lint clean. Copilot budget rule (Morph): one bounded fix per turn, commit at once; exploratory/screenshot work to agy. Read copilot panes (herdr shows 'done' while working).
+Round 1: briefs/round1-score.md sent to agy-review (w2:pM) and copilot-review (w2:pQ) -> reports/score-agy-review.md, score-copilot-review.md. Next: write ROUND-1-PLAN.md (top 3), assign to agy-world (w2:pK) / copilot-swarm (bounded), review via ?skipgate&chapter=N, merge. copilot-swarm ~396 AIC: avoid further use unless essential.
