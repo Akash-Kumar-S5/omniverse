@@ -120,8 +120,9 @@
 .chapter-hero { align-content: end; row-gap: var(--space-8); }
 
 .hero-title {
-  grid-column: 1 / span 10;
-  font-size: min(var(--step-hero), 9.6vw);
+  grid-column: 1 / span 7;
+  max-width: 580px;
+  font-size: clamp(3.2rem, 7.2vw, 5.4rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
   font-weight: 300;
@@ -327,8 +328,18 @@
 /* ---------- 5. Contact ---------- */
 .chapter-contact { row-gap: var(--space-6); align-content: start; padding-top: clamp(8px, 4vh, 40px); }
 
+.contact-hearth-badge {
+  grid-column: 1 / span 6;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
 .contact-title {
-  grid-column: 1 / span 9;
+  grid-column: 1 / span 8;
   font-size: clamp(3rem, 8.4vw, 8.4rem);
   line-height: 0.96;
   letter-spacing: -0.02em;
@@ -337,13 +348,14 @@
 }
 
 .contact-desc {
-  grid-column: 3 / span 4;
-  max-width: var(--measure);
+  grid-column: 1 / span 5;
+  max-width: 44ch;
   color: var(--fg);
+  text-shadow: 0 2px 14px rgba(6, 5, 5, 0.95);
 }
 
 .contact-email {
-  grid-column: 3 / span 9;
+  grid-column: 1 / span 8;
   justify-self: start;
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 2.5vw, 2.4rem);
@@ -353,11 +365,12 @@
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
   overflow-wrap: anywhere;
+  text-shadow: 0 2px 14px rgba(6, 5, 5, 0.95);
 }
 .contact-email:hover { color: var(--fg-bright); }
 
 .contact-links-row {
-  grid-column: 3 / span 8;
+  grid-column: 1 / span 8;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-8);
@@ -368,11 +381,19 @@
   .chapter-view { align-content: end; row-gap: var(--space-4); padding-bottom: var(--space-2); }
   .chapter-view > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
 
-  .hero-title { font-size: clamp(3.4rem, 17vw, 5.4rem); }
+  .hero-title { font-size: clamp(2.4rem, 11vw, 3.8rem); line-height: 1.0; }
   .hero-pitch { font-size: var(--step-0); max-width: none; }
 
   .about-title, .exp-title { font-size: clamp(2.2rem, 9.4vw, 3rem); }
   .about-facts > div { grid-template-columns: 6.5rem 1fr; }
+
+  .role-card-active {
+    background: rgba(6, 5, 5, 0.72);
+    backdrop-filter: blur(8px);
+    padding: var(--space-4);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 
   .exp-tabs {
     flex-direction: row;

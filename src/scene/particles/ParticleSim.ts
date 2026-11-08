@@ -117,8 +117,8 @@ export function createParticleSimulation(
   positionVariable.material.uniforms.uCursorWake = { value: 0 };
   positionVariable.material.uniforms.uCursorVelocity = { value: new THREE.Vector3() };
   positionVariable.material.uniforms.uTarget = { value: target };
-  positionVariable.material.uniforms.uFromTarget = { value: target };
-  positionVariable.material.uniforms.uMorphProgress = { value: 1 };
+  positionVariable.material.uniforms.uFromTarget = { value: initial };
+  positionVariable.material.uniforms.uMorphProgress = { value: 0 };
   positionVariable.material.uniforms.uTurbulence = { value: 1 };
   positionVariable.material.uniforms.uBeacon = { value: 0 };
   positionVariable.material.uniforms.uFocus = { value: center.clone() };

@@ -265,3 +265,43 @@ Round 1 re-score: agy-review avg 9.01 (inflated); Morph-eye ~7.7 (ch3 ~7.5 glyph
 Round 3 "Ember & Ash" (Akash-approved, ROUND-3-DARK-FANTASY.md; OVERRIDE: assets only, no new modelling/shaders; no FromSoftware anything; no "bonfire"): lanes in briefs/round3-dark-fantasy-lanes.md. Starts after round-2 merges.
 Next 3 steps: (1) land agy-world round 2 (answer its dialog, review shots, merge); (2) read r3-asset-candidates.md, pick, send agy step 2 (download/place/headless export, CREDITS.md); then agy-world retunes SignalField to embers + drei Sparkles/Clouds + flicker pointLight; (3) after 15:10 reset blender-sanctum lights/bakes, re-score (I score visuals; reviewers perf/console), stop rules in NONSTOP.md, FINAL.md.
 Gotchas: agy dialogs "Allow creation of this file?" -> send only "1"; herdr shows agy/copilot 'done' while working: read panes; Esc on Claude settings dialogs; no push/deploy/rm -rf.
+
+## 11:10 IST copilot-review (w2:pQ) assigned: vet asset candidates -> reports/r3-asset-picks.md (bounded, one turn). Akash asked to use copilot too; keep one bounded task per turn (~110 AIC used).
+
+## 11:14 IST — INTERIM ORCHESTRATOR (agy Opus 4.6 Thinking, pane w2:pV)
+MERGED r3/agy-world round-2 (6e37b83) → main f846017, build+lint clean.
+Changes: ProjectArtefact.tsx (hero artefact per project in ch3), astrolabe swarm shape on ch0 (ParticleSim/SignalField/targets), text-over-scene legibility (sections.css for ch2/ch4). Evidence shots r2-ch{0,2,3,4}-{1440,390}.png committed.
+Round 2 items 1-2 DONE. Round 3 "Ember & Ash" can now start.
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | idle after round-2 merge | retune SignalField to embers (warm colour ramp, rising drift, flicker, cursor stirs) + drei Sparkles/Clouds/flicker pointLight per ROUND-3-DARK-FANTASY.md lane 2 |
+| agy-assets (agy-review pane) | w2:pM | WORKING step 2: downloading CC0 assets; 7 Kenney GLBs done (164 KB), converting Quaternius OBJ→GLB via obj2gltf, Poly Haven pending | commit when all downloaded; then blender-sanctum imports/lights/bakes after 15:10 |
+| copilot-review | w2:pQ | idle; ~110 AIC | bounded perf/console/a11y check on main after ember retune |
+| copilot-swarm | w2:pS | idle, ~413 AIC: avoid | none |
+| blender-sanctum | w2:pJ | idle, Claude capped until 15:10 IST | import downloaded ruins assets, light (warm fire + cold moon), bake, export sanctum.glb ≤4 MB |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+Asset picks (5 of 6 candidates): Quaternius Ultimate Modular Ruins, Kenney Castle Kit, Kenney Graveyard Kit, Poly Haven gothic_statue, Poly Haven stone_fire_pit. Skipped: Kenney Modular Dungeon (overlaps).
+Next 3 steps: (1) send agy-world round-3 ember retune brief (lane 2); (2) monitor agy-assets downloads to completion, commit, merge to main; (3) after 15:10 IST Claude reset → blender-sanctum imports assets + lights/bakes → export sanctum.glb. Then re-score (I score visuals from ?skipgate&chapter=N shots; copilot-review perf/console).
+
+## 11:20 IST Akash: "why check licence, if the asset looks good use it". Pick assets by look/fit/size only; no licence gating. Still record source+author in CREDITS.md (attribution only, no blocking). FromSoftware ban stands.
+
+## 11:50 IST — INTERIM ORCHESTRATOR (Gemini 3.8 Flash, pane w2:pW)
+MERGED to main (HEAD c4fcd2a):
+1. r4/agy-assets (49e522a) -> d20834f: 5 CC0 asset packs downloaded to public/assets/ruins/ (Quaternius ruins, Kenney castle & graveyard kits, Poly Haven gothic_statue & stone_fire_pit) + CREDITS.md updated. Strict CC0/CC-BY policy maintained.
+2. r3/agy-world (86f4ce1) -> c4fcd2a: SignalField retuned to ember/ash palette with upward thermal drift, floor mist, flickering plinth fire, chapter 4 resting hearth, and replaced ch3 sci-fi HUD with carved basalt stone tablet plate in muted stone/ember tones.
+Verification: build + lint clean; visual evidence verified in .orchestrator/reference/r3-ember-ch0..4-1440.png across chapters 0-4.
+
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | idle after round-3 ember retune merge | standby / fine-tuning |
+| agy-assets (agy-review pane) | w2:pM | idle after asset download merge | standby for review/QA |
+| copilot-review | w2:pQ | idle; ~110 AIC | bounded perf/console/a11y audit on main if needed |
+| copilot-swarm | w2:pS | idle, ~413 AIC: avoid | none |
+| blender-sanctum | w2:pJ | idle, Claude capped until 15:10 IST | import downloaded CC0 ruins assets into sanctum, set lighting (firelight/moonlight), bake, export sanctum.glb <=4 MB |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+
+Next 3 steps:
+(1) Run bounded perf/console/a11y audit on main;
+(2) Prepare/review Blender import scripts for CC0 assets in public/assets/ruins/;
+(3) At 15:10 IST Claude reset -> hand back or launch blender-sanctum to assemble/bake/export sanctum.glb.
+
