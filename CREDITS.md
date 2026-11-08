@@ -36,4 +36,5 @@
 | Graveyard Kit | Kenney | https://kenney.nl/assets/graveyard-kit | CC0 1.0 Universal | `fire-basket.glb`, `candle-multiple.glb`, `altar-stone.glb` (ritual sanctuary props) |
 | Gothic Statue | Rico Cilliers / Poly Haven | https://polyhaven.com/a/gothic_statue | CC0 1.0 Universal | `gothic_statue.glb` (chapter 1 About niche statue) |
 | Stone Fire Pit | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | `stone_fire_pit.glb` (central hearth for ch0 / ch4) |
+| Standing Picture Frame 01 | James Ray Cock / Poly Haven | https://polyhaven.com/a/standing_picture_frame_01 | CC0 1.0 Universal | `standing_picture_frame_01.glb` (chapter 3 project screenshot easel/frame) |
 
