@@ -123,3 +123,31 @@ All images verified and saved under `.orchestrator/reference/`:
 - `npm run build && npm run lint`: PASSED cleanly with 0 TypeScript and 0 ESLint errors.
 - WebGL console errors: 0 errors.
 - Frame rate: 60 fps stable on high and lite profiles.
+
+---
+
+## 6. Polish Round 1b
+
+- **Commit**: `9924cdc`
+- **Improvements**:
+  1. **(a) Ch0 Swarm Viewport Margin**: Re-scaled the radial volume ($r \propto 0.22 + 0.92 r^{1.6}$) and centered the anchor at `[1.55, 2.8, 0.95]` with `look.x -= 1.45`. The entire cloud is now 100% visible inside the 1440x900 viewport with clean right-edge margin and remains strictly right of 60% width (>58% rule).
+  2. **(b) Ch2 Helix Ribbon Text Clearance**: Shifted helix anchor further right across the corridor to $z = -1.85$ (camera looks along $-X$, so $-Z$ is screen right) with ribbon radius tightened to $0.52\times$. Constrained `.role-card-active` max-width to `min(var(--measure), 42ch)`. A generous $\sim 80\text{px}$ dark gap completely separates the role card text ('with', 'feature', 'team') from the ribbon.
+  3. **(c) Ch3 Canvas Letterform Glyph Sampling & External Callout**:
+     - Converted project glyph from a solid rectangular slab into the project's initial letterform (e.g. 'S' for SalarySync, 'R' for Rentify, 'I' for Innovation Sprint 2025).
+     - Rendered letterform onto a 256x256 offscreen HTML5 canvas using serif/display typography (`Playfair Display`, `Cinzel`, `Georgia`).
+     - Outline stroked (`lineWidth: 14`, full opacity) and interior filled (`rgba(255, 255, 255, 0.22)`) with cumulative weighted sampling and sub-pixel edge jitter to achieve soft interior density with distinct luminous edge falloff.
+     - Billboarded letterform along camera view basis vectors (`right`, `up`, `normal`) for both even and odd gallery cameras so glyph remains upright and directly faces the camera.
+     - Tagged ~3.5% of points as luminous agent beacons (`group = 9`).
+     - Morphs dynamically across project changes via GPU simulation target texture updates.
+     - Added external callout chip (`.callout-chip-project`) positioned outside glyph bounds with an angled leader line pointing cleanly to the letterform, styled with a frosted dark pill backdrop (`rgba(10, 9, 8, 0.85)` + `backdrop-filter: blur(8px)`) for 100% contrast against the gallery slabs.
+
+### Round 1b Reference Images
+| Artifact | Resolution | Verification Notes |
+|---|---|---|
+| `r1b-ch0-1440.png` | 1440x900 | Whole cloud visible with zero right-edge clipping; strictly right of 60% width |
+| `r1b-ch2-1440.png` | 1440x900 | Helix ribbon pushed right into archway; clean $\sim 80\text{px}$ gap to role card text |
+| `r1b-ch3-1440.png` | 1440x900 | Ch3 Project 0 (SalarySync): sampled 'S' letterform glyph with external callout chip & leader line |
+| `r1b-ch3-proj1-1440.png` | 1440x900 | Ch3 Project 1 (Rentify): morphed 'R' letterform glyph with external callout chip & leader line |
+| `r1b-ch3-proj2-1440.png` | 1440x900 | Ch3 Project 2 (Website Performance Monitor): morphed 'W' letterform glyph with external callout |
+| `r1b-ch3-proj3-1440.png` | 1440x900 | Ch3 Project 3 (Innovation Sprint 2025): morphed 'I' letterform glyph with external callout chip |
+

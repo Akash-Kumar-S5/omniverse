@@ -2,18 +2,24 @@ import { useEffect, useRef } from "react";
 import { anchors, type Anchor } from "../../state/anchors";
 import { useOmni } from "../../state/store";
 import { useChapter } from "../../state/chapters";
-import { profile } from "../../content";
+import { projects, profile } from "../../content";
 import "./callouts.css";
 
-/* Callouts say one true, specific thing: the city callout in About. */
+/* Callouts: thin leader lines with contextual micro-labels outside 3D objects. */
 export default function CalloutLayer() {
   const entered = useOmni((s) => s.entered);
   // Each callout is mounted only while its chapter is the one on screen.
   const { active } = useChapter();
+  const activeProject = useOmni((s) => s.activeProject);
+  const shownProject = projects[activeProject] || projects[0];
 
   const dotCityRef = useRef<SVGCircleElement>(null);
   const lineCityRef = useRef<SVGPathElement>(null);
   const labelCityRef = useRef<HTMLDivElement>(null);
+
+  const dotProjectRef = useRef<SVGCircleElement>(null);
+  const lineProjectRef = useRef<SVGPathElement>(null);
+  const labelProjectRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let rafId = 0;
@@ -72,10 +78,11 @@ export default function CalloutLayer() {
       const viewWidth = window.innerWidth;
 
       // City label is desktop only.
-      // Refs are null unless that chapter is mounted; updateItem ignores null refs.
       if (!isMobile) {
         updateItem(anchors["about.city"], dotCityRef.current, lineCityRef.current, labelCityRef.current, 75, 40, viewWidth, isMobile);
       }
+      // Project callout: leader line places label outside the letterform glyph bounds
+      updateItem(anchors["projects.active"], dotProjectRef.current, lineProjectRef.current, labelProjectRef.current, 65, -55, viewWidth, isMobile);
 
       rafId = requestAnimationFrame(update);
     };
@@ -95,12 +102,24 @@ export default function CalloutLayer() {
             <path ref={lineCityRef} className="callout-leader-line" />
           </>
         )}
+        {active === "projects" && (
+          <>
+            <circle ref={dotProjectRef} r="2.5" className="callout-anchor-dot" />
+            <path ref={lineProjectRef} className="callout-leader-line" />
+          </>
+        )}
       </svg>
 
       <div className="callout-labels-root" aria-hidden="true">
         {active === "about" && (
           <div ref={labelCityRef} className="callout-chip">
             <span className="callout-chip-title">{profile.location.split(",")[0]}</span>
+          </div>
+        )}
+        {active === "projects" && (
+          <div ref={labelProjectRef} className="callout-chip callout-chip-project">
+            <span className="callout-chip-title">{shownProject.title}</span>
+            <span className="callout-chip-sub">{shownProject.tags.slice(0, 2).join(", ")}</span>
           </div>
         )}
       </div>
