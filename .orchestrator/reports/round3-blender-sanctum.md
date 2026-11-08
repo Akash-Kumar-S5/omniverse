@@ -74,3 +74,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch1: wooden candelabra front-left of the statue plus one point light (#ffb070) exported inside sanctum.glb (KHR light, RAW candela) because the statue is a runtime model; niche-mouth arch pier (the black box) removed.
 - ch2: shield is role 0, 2.5 m ahead of the camera and hard right (screen x > 1000 px), metallic 0.8 / roughness 0.45; wall sconce on the right arch (90 W); moon spots (source of the white patches at the right edge) removed.
 - Exports: sanctum.glb 3.07 MB, sanctum-lite.glb 0.77 MB. Evidence: .orchestrator/reference/r7-scenes-ch0..4.png. Limits: the pit scan's own bowl top still glows peach under the fire light (runtime, in Fire.tsx); the shield albedo reads tan leather with a dark metal boss.
+
+## Round 8 scenes (r8/blender-scenes)
+- ch2: kite_shield scan (Poly Haven) on a 1.5 m brick pillar at screen x 1050-1170, y 440-700; torch sconce behind it; the stepped arch pier at x=-14 (the floating slab beams) removed; cuirass moved to the far end of the corridor, other stands hug the right wall.
+- ch0/ch4: hearth-logs replaced by 4 crossed dry_branches_medium_01 scans (charred in the albedo); hearth stone shrunk to r 0.62 so no plinth rim shows; pit albedo ground disc darkened; relief turned the other way (-26 deg).
+- ch1: wall tint 0.2/0.21/0.24 (near black); candelabra replaced by the candles-brass scan on a low stone; the RT light moved to the candles.
+- sanctum.glb 3.06 MB, sanctum-lite.glb < 1 MB. Evidence r8-scenes-ch0..4.png.
+- The ring boulders are the pit scan itself (its own Poly Haven rock texture); no extra rock asset was added.

@@ -70,7 +70,7 @@ def pbr(name, prefix, tile_m, tint=(1, 1, 1), rough_mul=1.0, ao_mix=0.8, metalli
     return mat
 
 # tile sizes ~5x smaller than the first pass, diffuse contrast flattened (flat=0.6-0.75) so no rust-blotch read
-wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.52, 0.55, 0.62), flat=0.7)
+wall = pbr("mat_concrete_wall", "concrete_wall_003", 0.7, tint=(0.2, 0.21, 0.24), flat=0.7)   # r8: near-black room walls
 slab = pbr("mat_monolith", "concrete_wall_003", 1.1, tint=(0.30, 0.32, 0.37), rough_mul=0.8, flat=0.8, normal=0.4)  # larger tile + softer relief: no rocky/dirt read under the warm spots
 floor = pbr("mat_floor_wet", "cobblestone_floor_13", 1.1, tint=(0.34, 0.31, 0.28), rough_mul=0.95, flat=0.25, normal=1.0)   # Poly Haven cobblestone_floor_13, box-projected + anti-tile blend
 brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.46, 0.45, 0.45), rough_mul=1.0, flat=0.2, normal=1.0)   # Poly Haven castle_brick_broken_06 for the ch1 plinth

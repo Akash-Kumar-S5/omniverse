@@ -121,3 +121,12 @@ No new third-party assets; reused CC0 files in new places.
 | Wall torch (`public/assets/props/torch-wall.glb`) | see Props section | CC0 | Ch2 right-arch wall sconce |
 | Candelabra (`candelabra-tall.glb`) | see Props section | CC0 | Ch1 warm practical front-left of the statue |
 | Stone fire pit scan (`stone_fire_pit.draco.glb`) | Poly Haven | CC0 | Albedo darkened 50% so the ring rocks read as the dark scan stone under the fire light |
+
+## Round 8 scenes (blender-scenes)
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
+| Kite Shield (scan, 1k, `blender/props/kite_shield/`) | Poly Haven | https://polyhaven.com/a/kite_shield | CC0 1.0 Universal | Ch2 role 0: the scanned metal shield on a pedestal, baked into `sanctum.glb` |
+| Dry Branches Medium 01 (scan, 1k, `blender/props/dry_branches_medium_01/`) | Poly Haven | https://polyhaven.com/a/dry_branches_medium_01 | CC0 1.0 Universal | Ch0/ch4: charred kindling in the fire pit, replaces the faceted hearth logs |
+| Brass Candleholders (`public/assets/scans/candles-brass.glb`) | Tina / Poly Haven | https://polyhaven.com/a/brass_candleholders | CC0 1.0 Universal | Ch1: scanned candle cluster front-left of the statue, replaces the chunky candelabra |
+| Stone fire pit scan, albedo darkened | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | Pit stones read as dark scan stone |
