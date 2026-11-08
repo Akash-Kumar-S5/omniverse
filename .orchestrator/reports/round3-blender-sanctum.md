@@ -30,3 +30,16 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 3. The ch3 camera is close to the slabs, so the arches barely show there. ch4 (contact) frames only the oculus and sky, with no arch in shot.
 4. Rotunda ch0 is dark by design. The hearth only shows in wider views (`boot_wide`).
 5. The `sanctum.blend` file is a build artifact and is not committed. Rebuild: `build_sanctum.py`, then `FLOOR_PX=4096 Blender -b blender/sanctum.blend -P blender/scripts/sanctum_08_bake_export.py`.
+
+## Props pass (direction 13:05)
+`blender/scripts/sanctum_10_props.py` (after step 9). Lit by fire + moon only: the warm ceiling spots and the bust key spot are removed; fire lights sit at the pit, niche candles, corridor stands and court braziers; moonlight shaft and cool slit lights stay.
+- ch0: knight beside the pit on the plinth (facing the fire), hearth logs + flame mesh in the pit.
+- ch1: skull, two altar-candle clusters and a tall candelabra at the niche pedestal.
+- ch2: greatsword, shield, greathelm, battleaxe, one per role, each on a stone stand right of its arch.
+- ch4: two braziers (flame mesh) and tall candelabra flanking the court.
+- Exports: sanctum.glb 2.91 MB, sanctum-lite.glb 0.99 MB. Evidence: `.orchestrator/reference/r3-props-ch0..4.png` (served from this worktree on :5197).
+- Not placed: the hooded woman and the cloaked female knight statue (not in public/assets/props yet).
+- Flame meshes and logs are baked static; the runtime flame/flicker still needs to be wired by agy-world.
+- ch0 and ch4 cameras look up at the oculus/sky, so the knight, logs and braziers are out of frame there; the knight reads in the `boot_wide` still, not in the runtime ch0 shot. Camera framing is outside this lane.
+- The knight is a T-pose figure (the pack has no pose), so it reads stiff.
+- Candle wax is too bright (emission 2.5): worth halving next pass.

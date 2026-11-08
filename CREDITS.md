@@ -71,3 +71,7 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 
 
 
+
+### Sanctum props placed (Round 3, blender-sanctum)
+`knight`, `hearth-logs`, `fire-flame-3d`, `greatsword`, `shield-heater`, `helmet-greathelm`, `battleaxe`, `skull-bones`, `candles-altar`,
+`candelabra-tall`, `brazier-fire-basket` from `public/assets/props` (credits in the props picks report) are baked into `sanctum.glb`.
