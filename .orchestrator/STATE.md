@@ -267,3 +267,20 @@ Next 3 steps: (1) land agy-world round 2 (answer its dialog, review shots, merge
 Gotchas: agy dialogs "Allow creation of this file?" -> send only "1"; herdr shows agy/copilot 'done' while working: read panes; Esc on Claude settings dialogs; no push/deploy/rm -rf.
 
 ## 11:10 IST copilot-review (w2:pQ) assigned: vet asset candidates -> reports/r3-asset-picks.md (bounded, one turn). Akash asked to use copilot too; keep one bounded task per turn (~110 AIC used).
+
+## 11:14 IST — INTERIM ORCHESTRATOR (agy Opus 4.6 Thinking, pane w2:pV)
+MERGED r3/agy-world round-2 (6e37b83) → main f846017, build+lint clean.
+Changes: ProjectArtefact.tsx (hero artefact per project in ch3), astrolabe swarm shape on ch0 (ParticleSim/SignalField/targets), text-over-scene legibility (sections.css for ch2/ch4). Evidence shots r2-ch{0,2,3,4}-{1440,390}.png committed.
+Round 2 items 1-2 DONE. Round 3 "Ember & Ash" can now start.
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | idle after round-2 merge | retune SignalField to embers (warm colour ramp, rising drift, flicker, cursor stirs) + drei Sparkles/Clouds/flicker pointLight per ROUND-3-DARK-FANTASY.md lane 2 |
+| agy-assets (agy-review pane) | w2:pM | WORKING step 2: downloading CC0 assets; 7 Kenney GLBs done (164 KB), converting Quaternius OBJ→GLB via obj2gltf, Poly Haven pending | commit when all downloaded; then blender-sanctum imports/lights/bakes after 15:10 |
+| copilot-review | w2:pQ | idle; ~110 AIC | bounded perf/console/a11y check on main after ember retune |
+| copilot-swarm | w2:pS | idle, ~413 AIC: avoid | none |
+| blender-sanctum | w2:pJ | idle, Claude capped until 15:10 IST | import downloaded ruins assets, light (warm fire + cold moon), bake, export sanctum.glb ≤4 MB |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+Asset picks (5 of 6 candidates): Quaternius Ultimate Modular Ruins, Kenney Castle Kit, Kenney Graveyard Kit, Poly Haven gothic_statue, Poly Haven stone_fire_pit. Skipped: Kenney Modular Dungeon (overlaps).
+Next 3 steps: (1) send agy-world round-3 ember retune brief (lane 2); (2) monitor agy-assets downloads to completion, commit, merge to main; (3) after 15:10 IST Claude reset → blender-sanctum imports assets + lights/bakes → export sanctum.glb. Then re-score (I score visuals from ?skipgate&chapter=N shots; copilot-review perf/console).
+
+## 11:20 IST Akash: "why check licence, if the asset looks good use it". Pick assets by look/fit/size only; no licence gating. Still record source+author in CREDITS.md (attribution only, no blocking). FromSoftware ban stands.
