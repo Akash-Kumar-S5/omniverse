@@ -77,9 +77,7 @@ brick = pbr("mat_brick", "castle_brick_broken_06", 1.6, tint=(0.70, 0.64, 0.58),
 # pedestal cap: ONE marble slab, so the 2k texture spans the whole 1.2 m top (tile 3 m) with no repeat, polished
 marble = pbr("mat_marble", "marble_01", 3.0, tint=(0.80, 0.84, 0.95), rough_mul=0.25, flat=0.2)
 # plinth: smooth polished dark concrete (not marble, which read as tiled wood under the warm key)
-plinth = pbr("mat_plinth_polished", "concrete_floor_worn_001", 0.8, tint=(0.75, 0.77, 0.82), rough_mul=0.18, flat=0.85)
-_b = next(n for n in plinth.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-_b.inputs["Coat Weight"].default_value = 0.4; _b.inputs["Coat Roughness"].default_value = 0.05
+plinth = pbr("mat_plinth_polished", "cobblestone_floor_13", 0.9, tint=(0.16, 0.15, 0.145), rough_mul=1.0, flat=0.3, normal=1.0)   # weathered dark stone (was a pale pink polished coat)
 
 def assign(ob, mat):
     ob.data.materials.clear(); ob.data.materials.append(mat)

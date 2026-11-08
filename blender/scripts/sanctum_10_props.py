@@ -21,6 +21,7 @@ def emissive(name, col, strength):
     return m
 M_FLAME = emissive("mat_flame", (1.0, 0.45, 0.12), 6.0)
 
+DEC = {"../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 5000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
 _cache = {}
 def source(fn):
     if fn in _cache: return _cache[fn]
@@ -47,11 +48,12 @@ def source(fn):
         bpy.ops.object.join()
         for c in list(meshes[0].users_collection): c.objects.unlink(meshes[0])
     t = meshes[0]
-    if len(t.data.polygons) > 2500:   # scanned props arrive dense: decimate the template once
+    if len(t.data.polygons) > DEC.get(fn, 2500):   # scanned props arrive dense: decimate the template once
         sc.collection.objects.link(t)
+        if t.data.shape_keys: t.shape_key_clear()   # scans can carry shape keys, which block the modifier
         for o in bpy.data.objects: o.select_set(False)
         t.select_set(True); bpy.context.view_layer.objects.active = t
-        md = t.modifiers.new("dec", "DECIMATE"); md.ratio = 2500 / len(t.data.polygons)
+        md = t.modifiers.new("dec", "DECIMATE"); md.ratio = DEC.get(fn, 2500) / len(t.data.polygons)
         bpy.ops.object.modifier_apply(modifier=md.name)
         for c in list(t.users_collection): c.objects.unlink(t)
     for mat in t.data.materials:   # flat PBR props: no env map in the bake, so tame metals
@@ -94,12 +96,12 @@ for o in [o for o in bpy.data.objects if o.type == "LIGHT" and (o.name.startswit
 
 # ---- ch0: the fire. Logs and flame sit in the pit (pit centre 0,0, floor of bowl ~z 0.5) ----
 P("hearth-logs", 0, 0, 0.55, 0.32, 0)
-# armoured knight on the plinth, facing the fire
-P("knight", -1.55, -0.85, 0.42, 1.75, face=(0, 0), tag="knight")
+# hooded mourner (photoreal scan) kneeling beside the fire, lit warm from below
+P("../scans/statue-hooded-mourner", 1.35, -0.55, 0.42, 1.15, face=(0, 0), tag="scan_mourner")
 firelight("FIRE_flame", (0, 0, 1.0), 250, (1.0, 0.5, 0.18), 0.3)
+firelight("FIRE_mourner_low", (0.75, -0.3, 0.5), 90, (1.0, 0.45, 0.15), 0.15)
 
-# ---- ch1: skull and altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
-P("skull-bones", 10.7, -0.42, 1.25, 0.2, face=(5.4, 0), tag="skull")
+# ---- ch1: altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
 CS = "../../../blender/props/wooden_candlestick/wooden_candlestick_1k"   # Poly Haven CC0 scan
 for i, (x, y, z) in enumerate(((9.0, -0.35, 0.74), (9.2, 0.3, 0.74), (10.42, 0.45, 1.25), (10.42, -0.45, 1.25), (11.6, 0.5, 1.25), (11.6, -0.5, 1.25), (10.6, 0.42, 1.25))):
     P(CS, x, y, z, 0.26, i * 53, tag="candlestick")
@@ -112,12 +114,16 @@ P("candelabra-tall", 9.0, 1.3, 0, 1.4, face=(5.4, 0), mat=M_IRON, tag="candelabr
 firelight("FIRE_niche_cand", (9.0, 1.3, 1.5), 45, (1.0, 0.58, 0.25), 0.1)
 
 # ---- ch2: one job prop per role, on a stone stand to the right of each arch (camera at x+4.2 looks -X; +Y is screen right) ----
-JOB = (("greatsword", 1.7), ("shield-heater", 1.1), ("helmet-greathelm", 0.62), ("battleaxe", 1.55))
-for k, (x, (fn, h)) in enumerate(zip((-14, -19, -24, -29), JOB)):
+JOB = (("../scans/sword-arming-scan", 0.33, 90), ("../scans/shield-round-scan", 0.8, None), ("../scans/helmet-sallet-scan", 0.45, None), ("../scans/armour-cuirass-scan", 0.6, None))
+for k, (x, (fn, h, yaw)) in enumerate(zip((-14, -19, -24, -29), JOB)):
     sx, sy = x + 1.9, 1.15
-    P("../ruins/altar-stone", sx, sy, 0, 0.55, 90, mat=M_WALL, tag="stand")
-    P(fn, sx, sy, 0.55, h, face=(x + 4.2, 0), mat=None, tag=f"job{k}")
-    firelight(f"FIRE_job{k}", (sx + 0.9, sy - 0.2, 1.9), 40, (1.0, 0.55, 0.22), 0.1)
+    P("../ruins/altar-stone", sx, sy, 0, 0.7, 90, mat=bpy.data.materials.get("mat_brick") or M_WALL, tag="stand")
+    if yaw is None: P(fn, sx, sy, 0.7, h, face=(x + 4.2, 0), tag=f"scan_job{k}")
+    else: P(fn, sx, sy, 0.7, h, yaw=yaw, tag=f"scan_job{k}")
+    firelight(f"FIRE_job{k}", (sx + 0.7, sy - 0.5, 1.5), 30, (1.0, 0.55, 0.22), 0.1)            # warm accent
+    sp = bpy.data.lights.new(f"MOON_job{k}", "SPOT"); sp.energy = 900; sp.color = (0.62, 0.74, 1.0)  # moon accent from the slit above
+    sp.spot_size = math.radians(24); sp.spot_blend = 0.7; sp.shadow_soft_size = 0.3
+    so = bpy.data.objects.new(f"MOON_job{k}", sp); sc.collection.objects.link(so); so.location = (sx - 0.4, sy - 0.6, 6.5); look_at(so, (sx, sy, 1.0))
 
 # ---- ch4: braziers + tall candelabra flank the court (camera at y=-14.6 looks up and away) ----
 for i, sx in enumerate((-2.3, 2.3)):
