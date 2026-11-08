@@ -69,7 +69,7 @@ export default function Sanctum() {
             map: baked,
             emissiveMap: isProps ? baked : null,
             emissive: isProps ? new THREE.Color(1, 1, 1) : new THREE.Color(0, 0, 0),
-            emissiveIntensity: isProps ? 0.85 : 0,
+            emissiveIntensity: isProps ? 0.62 : 0,
             roughness: 0.88,
             metalness: 0.04,
             toneMapped: true,

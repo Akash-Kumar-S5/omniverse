@@ -22,6 +22,8 @@ def emissive(name, col, strength):
 M_FLAME = emissive("mat_flame", (1.0, 0.45, 0.12), 6.0)
 
 DEC = {"../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 5000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
+# r6: (saturation, value) pulled down on the albedo so scans read as aged metal under warm light, not flat orange
+TUNE = {"../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
 _cache = {}
 def source(fn):
     if fn in _cache: return _cache[fn]
@@ -61,6 +63,17 @@ def source(fn):
             for b in (n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"):
                 b.inputs["Metallic"].default_value = min(b.inputs["Metallic"].default_value, 0.25)
                 b.inputs["Roughness"].default_value = max(b.inputs["Roughness"].default_value, 0.55)
+    if fn in TUNE:
+        for mat in t.data.materials:
+            if not (mat and mat.use_nodes): continue
+            nt = mat.node_tree
+            for b in (n for n in nt.nodes if n.type == "BSDF_PRINCIPLED"):
+                lk = b.inputs["Base Color"].links
+                if not lk: continue
+                src = lk[0].from_socket
+                hs = nt.nodes.new("ShaderNodeHueSaturation")
+                hs.inputs["Saturation"].default_value, hs.inputs["Value"].default_value = TUNE[fn]
+                nt.links.new(src, hs.inputs["Color"]); nt.links.new(hs.outputs["Color"], b.inputs["Base Color"])
     _cache[fn] = t
     return t
 
@@ -110,7 +123,7 @@ firelight("FIRE_mourner_low", (0.6, -0.45, 0.55), 160, (1.0, 0.45, 0.15), 0.15)
 
 # ---- ch1: altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
 CS = "../../../blender/props/wooden_candlestick/wooden_candlestick_1k"   # Poly Haven CC0 scan
-for i, (x, y, z) in enumerate(((9.0, -0.35, 0.74), (9.2, 0.3, 0.74), (10.42, 0.45, 1.25), (10.42, -0.45, 1.25), (11.6, 0.5, 1.25), (11.6, -0.5, 1.25), (10.6, 0.42, 1.25))):
+for i, (x, y, z) in enumerate(((10.42, 0.45, 1.25), (10.42, -0.45, 1.25), (11.6, 0.5, 1.25), (11.6, -0.5, 1.25), (10.6, 0.42, 1.25))):
     P(CS, x, y, z, 0.26, i * 53, tag="candlestick")
 for i, a in enumerate(range(20, 360, 70)):
     P(CS, 2.35 * math.cos(math.radians(a)), 2.35 * math.sin(math.radians(a)), 0.14, 0.3, a * 3, tag="candlestick")
@@ -127,7 +140,7 @@ for k, (x, (fn, h, rot)) in enumerate(zip((-14, -19, -24, -29), JOB)):
     sx, sy = x + 2.7, 0.95          # 1.5 m from the camera path, right of centre
     P("../ruins/altar-stone", sx, sy, 0, 0.75, 90, mat=bpy.data.materials.get("mat_brick") or M_WALL, tag="stand")
     P(fn, sx, sy, 0.75, h, face=(x + 4.2, 0), rot=rot, tag=f"scan_job{k}")
-    firelight(f"FIRE_job{k}", (sx + 0.9, sy - 0.1, 1.6), 140, (1.0, 0.55, 0.22), 0.1)           # warm accent: a wall torch's worth of glow
+    firelight(f"FIRE_job{k}", (sx + 0.9, sy - 0.1, 1.6), 95, (1.0, 0.55, 0.22), 0.1)           # warm accent: a wall torch's worth of glow
     sp = bpy.data.lights.new(f"MOON_job{k}", "SPOT"); sp.energy = 2500; sp.color = (0.62, 0.74, 1.0)  # moon accent from the slit above
     sp.spot_size = math.radians(30); sp.spot_blend = 0.7; sp.shadow_soft_size = 0.3
     so = bpy.data.objects.new(f"MOON_job{k}", sp); sc.collection.objects.link(so); so.location = (sx - 0.4, sy - 0.6, 6.5); look_at(so, (sx, sy, 1.2))

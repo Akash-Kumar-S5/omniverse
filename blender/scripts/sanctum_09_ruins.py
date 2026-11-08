@@ -102,8 +102,8 @@ for x, y, yaw, s in ((-13.3, 2.2, 20, 1.6), (-18.6, -2.3, 140, 1.5), (-23.5, 2.1
 # ---- 4. the fire pit on the central plinth (plinth_top r=1.9, z=0.42) ----
 
 # ---- 5. altar in the about niche, candles on it and on the bust pedestal ----
-R("altar-stone", 9.1, 0, 0, 90, 1.5, mat="brick")
-CANDLES = [(9.0, -0.35, 0.74), (9.2, 0.3, 0.74), (10.42, 0.45, 1.25), (10.42, -0.45, 1.25),
+# r6: the untextured box altar in the about niche is gone (candles stand on the textured pedestal)
+CANDLES = [(10.42, 0.45, 1.25), (10.42, -0.45, 1.25),
            (11.6, 0.5, 1.25), (11.6, -0.5, 1.25)]
 for i, (x, y, z) in enumerate(CANDLES):
     firelight(f"FIRE_candle{i}", (x, y, z + 0.3), 14, (1.0, 0.62, 0.3), 0.05)
@@ -138,7 +138,7 @@ for ix in range(-4, 5):
     for iy in range(-4, 5):
         x, y = ix * 2.0, iy * 2.0
         r = math.hypot(x, y)
-        if r < 2.9 or r > 6.5 or random.random() < 0.5: continue
+        if r > 6.5 or (r >= 2.9 and random.random() < 0.5): continue   # r6: solid flagstones round the hearth, ruined further out
         tile(x, y, random.choice((0, 90, 180, 270))); tiles += 1
 print("tiles", tiles)
 

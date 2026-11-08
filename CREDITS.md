@@ -98,3 +98,14 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 
 ### Round 5 blender-scans
 Photoreal scans from `public/assets/scans` (see the agy-scans credits) are baked into `sanctum.glb`: hooded mourner by the fire, helmet, cuirass, sword and shield on the ch2 stands. The earlier figure and weapon props are removed from the scene.
+
+## Round 6 scenes (blender-scenes)
+
+No new third-party assets. Reuse of already credited CC0 files in new places:
+
+| Asset | Source | Licence | New use |
+|---|---|---|---|
+| Lantern Chandelier 01 (`public/assets/scans/lantern-chandelier.glb`) | Kirill Sannikov / Poly Haven | CC0 1.0 Universal | Ch3 Projects: the warm practical that lights the framed painting |
+| cobblestone_floor_13, castle_brick_broken_06 | Poly Haven | CC0 | Ch0/Ch4 hearth stone and flagstone surround; ch1 pedestal (greyer tint) |
+| Floor Squares (Quaternius Ultimate Modular Ruins) | Quaternius | CC0 | Flagstones now run up to the hearth stone |
+| Shield / helmet / cuirass / arming sword scans | see Scans section | CC0 | Ch2: albedo desaturated and darkened in Blender so they read as aged metal |

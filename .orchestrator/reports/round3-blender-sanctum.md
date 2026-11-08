@@ -61,3 +61,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - The "thin sliver" is the real shape of the asset: `statue-hooded-mourner.glb` is a flat bas-relief slab (front, side and top views checked in Blender: 0.27 : 1 : 0.13 w:h:d, flat back). A kneeling figure cannot come out of it without modelling, so it now stands as a carved stele 1.55 m tall, 1.5 m from the fire on the lit side, front turned to camera-left, with a low warm light under it. It reads as a whole figure in ch0 and ch4.
 - ch2: the four scans (sword upright 1.3 m, round shield 0.95 m, sallet 0.55 m, cuirass 0.8 m) now stand on 0.75 m brick plinths 1.5 m ahead of each camera, right of centre, each with a 140 W warm accent and a 2500 W cool moon spot. `Sanctum.tsx` shows the baked `sanctum_props` mesh with emissive = its baked map (0.85), so the props stay lit in the dark corridor while the architecture still falls to black.
 - ch4 camera moved back and left (-1.2, 1.35, 3.6) -> (-0.5, 0.95, -0.2) so the pit and the full stele sit centre-right beside the copy. Exports: sanctum.glb 3.80 MB, sanctum-lite.glb 0.97 MB (shrink_lite.py with LITE_PROPS=384). Evidence r5-scans2-ch0/2/4.png.
+
+## Round 6 scenes (r6/blender-scenes)
+- ch0/ch4: plinth step disc removed, hearth stone shrunk (r 1.08 to 0.98) and darkened; solid flagstones (floor-squares, cobblestone_floor_13 atlas) run up to it.
+- ch3: painting is the hero, 6x scale, squared to the camera each frame, right-centre; lit by one flickering warm point light with the lantern chandelier scan hung above it.
+- ch2: scan albedos desaturated and darkened in Blender (shield 0.22 sat / 0.5 value), job warm accents 95 W, props emissive 0.62; shield reads as aged metal, not flat orange.
+- ch1: Kenney box altar deleted, brick pedestal tinted to grey stone; two altar candlesticks removed.
+- Exports: sanctum.glb 3.87 MB, sanctum-lite.glb 0.997 MB (shrink_lite.py, LITE_PROPS=256). Evidence: .orchestrator/reference/r6-scenes-ch0..4.png.
