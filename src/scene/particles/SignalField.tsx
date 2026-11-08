@@ -120,7 +120,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     }
     simulation.current = next;
     activeGpuTarget.current = initialTarget;
-    morphProgress.current = 1;
+    morphProgress.current = useOmni.getState().reducedMotion ? 1 : 0.05;
     setGpuReady(true);
     return () => {
       next.dispose();
@@ -156,12 +156,13 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
       shapeRadius = 0.95;
     } else if (shape === "core") {
       shapeAnchor = center.clone().add(coreOffset);
-      shapeRadius = anchors?.core?.radius ?? 1.6;
+      shapeRadius = 0.88;
     } else if (shape === "bust") {
       shapeAnchor = anchors?.bust ? new THREE.Vector3(...anchors.bust.position) : center;
       shapeRadius = anchors?.bust?.radius ?? 1.35;
     } else if (shape === "beacon") {
       shapeAnchor = anchors?.beacon ? new THREE.Vector3(...anchors.beacon.position) : new THREE.Vector3(0, 0, 0);
+      shapeAnchor.x += 0.95;
       shapeRadius = anchors?.beacon?.radius ?? 0.16;
     } else {
       shapeAnchor = center;

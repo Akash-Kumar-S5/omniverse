@@ -4,6 +4,7 @@ import { chapterLook } from "./chapterLook";
 import Sanctum from "./Sanctum";
 import VolumeCone from "./VolumeCone";
 import Floor from "./Floor";
+import ProjectArtefact from "./ProjectArtefact";
 
 function WorldLighting() {
   const quality = useOmni((s) => s.quality);
@@ -94,6 +95,9 @@ export default function World() {
 
       {/* Seamless ground plane matching background to eliminate any hard horizon */}
       <Floor />
+
+      {/* Lit readable hero artefact per project beside the active brutalist slab */}
+      <ProjectArtefact />
 
       {/* Volumetric sunbeam descending through the ceiling oculus onto the core */}
       <VolumeCone />
