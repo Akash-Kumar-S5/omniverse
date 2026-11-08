@@ -14,7 +14,7 @@ export interface TargetOptions {
 }
 
 /** Offset from the core anchor that keeps the hero swarm on the right of the boot camera path. */
-export const CORE_SHAPE_OFFSET: [number, number, number] = [2.0, 2.8, 1.2];
+export const CORE_SHAPE_OFFSET: [number, number, number] = [1.55, 2.8, 0.95];
 
 /** Compute anchor beside the active project's slab in the gallery (Chapter 3). */
 export function getProjectGlyphAnchor(activeProject: number): THREE.Vector3 {
@@ -35,7 +35,7 @@ export function getHelixAnchor(activeRole?: number): THREE.Vector3 {
   const role = Math.max(0, Math.min(3, activeRole ?? 0));
   // Follow active role portal forward: role 0 -> x = -14.2, role 1 -> -19.2, etc.
   // Camera looks down -X, so negative Z shifts to screen right (x > 0) away from role card.
-  return new THREE.Vector3(-14.2 - role * 5.0, 2.05, -1.25);
+  return new THREE.Vector3(-14.2 - role * 5.0, 2.05, -1.85);
 }
 
 const seeded = (seed: number) => () => {
@@ -118,10 +118,10 @@ export function createTargetTexture(options: TargetOptions) {
     points = Array.from({ length: count }, () => {
       const group = Math.min(experiences.length - 1, Math.floor(random() * experiences.length));
       const t = (random() * 2 - 1) * Math.PI * 1.4;
-      const ribbonRadius = radius * 0.58;
+      const ribbonRadius = radius * 0.52;
       const hx = Math.sin(t * 1.2) * ribbonRadius * 0.65 + (random() - 0.5) * 0.2;
       const hy = t * 0.28 + (group - 1.5) * 0.16 + (random() - 0.5) * 0.15;
-      const hz = Math.cos(t * 1.2) * ribbonRadius * 0.75 + (random() - 0.5) * 0.2;
+      const hz = Math.cos(t * 1.2) * ribbonRadius * 0.7 + (random() - 0.5) * 0.15;
       const isAgent = random() < 0.04 ? 9 : group;
       return {
         position: new THREE.Vector3(shapeAnchor.x + hx, shapeAnchor.y + hy, shapeAnchor.z + hz),
@@ -191,7 +191,7 @@ export function createTargetTexture(options: TargetOptions) {
       const sinPhi = Math.sin(phi);
       // Volumetric radial distribution: dense luminous core with soft outer filaments
       const rDist = Math.pow(random(), 1.6);
-      const r = radius * (0.25 + rDist * 1.15);
+      const r = radius * (0.22 + rDist * 0.92);
       // Gentle fractal turbulence displacement to avoid geometric banding
       const nx = Math.sin(theta * 3.0 + rDist * 4.0) * radius * 0.08;
       const ny = Math.cos(phi * 3.0 + rDist * 4.0) * radius * 0.08;

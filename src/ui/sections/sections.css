@@ -223,7 +223,7 @@
   grid-column: 5 / span 4;
   grid-row: 2;
   align-self: start;
-  max-width: var(--measure);
+  max-width: min(var(--measure), 42ch);
   padding-top: var(--space-3);
   border-top: 1px solid var(--line);
 }
