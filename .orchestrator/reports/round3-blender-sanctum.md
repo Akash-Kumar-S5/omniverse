@@ -81,3 +81,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch1: wall tint 0.2/0.21/0.24 (near black); candelabra replaced by the candles-brass scan on a low stone; the RT light moved to the candles.
 - sanctum.glb 3.06 MB, sanctum-lite.glb < 1 MB. Evidence r8-scenes-ch0..4.png.
 - The ring boulders are the pit scan itself (its own Poly Haven rock texture); no extra rock asset was added.
+
+## Round 9 scenes (r9/blender-scenes)
+- ch0/ch4: plinth puck deleted; a squashed Poly Haven boulder scan (1.55 x 0.36 m, albedo darkened) is the pit base, so no peach band. Relief turned 28 deg toward the fire and its albedo pulled down.
+- ch2: kite shield 1.3 m on a 1.5 m pillar, 2.7 m from the camera at screen x 1050-1280; a 700 W warm spot from the right wall is aimed at its face; torch prop kept.
+- ch1: stepped block table deleted, candle cluster stands on the floor.
+- ch3: the stray dot at ~(1025,768) is NOT in the baked mesh (no mesh or empty projects there; I raised the hall basket lights to 1.5 m anyway and the dot is unchanged), so it is a runtime element in src and needs the src lane.
+- sanctum.glb 2.76 MB, sanctum-lite.glb 0.82 MB. Dev server for evidence ran on port 5211 and was stopped.
