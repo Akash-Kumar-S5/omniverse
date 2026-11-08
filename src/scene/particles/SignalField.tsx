@@ -144,8 +144,12 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
 
   useFrame((state, delta) => {
     const motionReduced = reducedMotion ?? storeReducedMotion;
-    uniforms.uTime.value = state.clock.elapsedTime;
-    cpuUniforms.uTime.value = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime;
+    const flicker = motionReduced ? 1.0 : (1.0 + Math.sin(t * 11.5) * 0.12 + Math.sin(t * 26.3) * 0.08);
+    uniforms.uTime.value = t;
+    uniforms.uPointSize.value = 1.15 * flicker;
+    cpuUniforms.uTime.value = t;
+    cpuUniforms.uPointSize.value = 1.15 * flicker;
     let shapeAnchor: THREE.Vector3;
     let shapeRadius: number;
     if (shape === "project-glyph") {
@@ -301,7 +305,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
           } else {
             const breath = Math.sin(time * 0.85 + seed * 1.5) * 0.03;
             x += (x - shapeAnchor.x) * breath;
-            y += (y - shapeAnchor.y) * breath;
+            y += (y - shapeAnchor.y) * breath + 0.022 + Math.sin(time * 1.5 + seed * 6.28) * 0.008;
             z += (z - shapeAnchor.z) * breath;
           }
         }
