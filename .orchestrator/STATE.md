@@ -244,3 +244,8 @@ Morph (Sonnet) from shots: ch3 ~7.5 (glyph 'S' reads as '8', slabs murky, body t
 ## 10:40 IST ROUND 3 "Ember & Ash" queued (Akash via Morph; ROUND-3-DARK-FANTASY.md incl. OVERRIDE: assets only, no new modelling/shaders)
 Lanes in briefs/round3-dark-fantasy-lanes.md. Starts when agy-world's round-2 items merge (not thrown away). NOTE: blender-sanctum status line shows Claude 5H 100% (reset ~15:10 IST): the claude lane may be capped; if so use agy for asset search or wait. Orchestrator may need OPS failover too.
 Round 2 still in flight: agy-world (w2:pK) editing targets.ts for hero objects.
+
+## 10:45 IST CREDIT CHECK
+- Claude: 5H 100% (resets 15:10 IST), WK 64%. blender-sanctum (claude, Blender MCP) STALLED until then; this orchestrator may cap too. Codex LOCKED to Mon 13:54. Copilot: copilot-swarm 413 AIC (avoid), copilot-review 110 AIC (bounded only, cannot view images). agy flash: OK. agy Opus 4.6 own quota should be back after ~01:40 IST (untested).
+- Passed: round-3 asset sourcing -> agy-review pane w2:pM (flash) in worktree .worktrees/agy-assets (r4/agy-assets), brief briefs/round3-agy-assets.md; step 1 = candidate report only. blender-sanctum resumes Blender-MCP lighting/bake after 15:10 IST.
+- agy-world (w2:pK) still on round-2 hero objects. Reviews of round 3 go to copilot-review for perf/console/a11y; I score visuals.
