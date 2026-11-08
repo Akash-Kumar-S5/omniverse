@@ -218,3 +218,6 @@ MERGED r3/agy-world (items 1-3: volumetric swarm, ch2 ribbon right, ch3 glyph be
 
 ## 04:45 UTC (10:15 IST) Claude orchestrator resumed (HANDBACK from interim)
 Scores round 1: agy avg 8.36, copilot avg 6.7 (ch3 5.5 weakest: no subject, blurred slabs). ROUND-2-PLAN.md written (hero object per chapter, text legibility, continuous camera + interaction). agy-world (w2:pK) polishing 1b then round 2 items 1-2. copilot-review (w2:pQ) idle. copilot-swarm (w2:pS) idle, ~400 AIC used: avoid. Morph to receive the combined score table in this reply.
+
+## 04:40 UTC (10:10 IST) round 1 polish merged -> main 8180254
+agy-world 1b + ch3 letterform glyph merged (build+lint clean). Morph approved ch0. Scores BEFORE upgrades: agy-review avg 8.36 (ch 8.5/8.5/8.2/7.8/8.8); copilot-review (strict) 6.5/7.5/7/5.5/7 avg 6.7 (reports/score-copilot-review.md in its worktree, commit 305be3a; top asks: hero object per chapter, legibility, continuous scroll camera, pointer interaction). Re-score dispatched (briefs/round1-rescore.md) to agy-review + copilot-review -> reports/rescore-*.md. Then send Morph the table. Claude limit resets ~10:10 IST: on OPS HANDBACK update STATE and reply HANDBACK-READY.

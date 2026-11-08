@@ -1,0 +1,3 @@
+# Round 1 RE-SCORE (after upgrades)
+Main now has: volumetric swarm (ch0), ch2 ribbon right, ch3 letterform glyph + external callout chip, cursor wake. Build `npm run build` and `npx vite preview --port 4210` (or reuse), shoot ?skipgate&chapter=0..4 at 1440x900 (and ch0,ch3 at 390x844), save as r1-rescore-<you>-ch*.png.
+Score every chapter 1-10 on: 3D craft, art direction, motion, typography, originality, performance; overall per chapter; table first. Be strict, compare to aengel.io refs and benchmark-refs.md; note remaining flaws (top 3 each chapter). Write .orchestrator/reports/rescore-<you>.md. Don't edit source. Reply in 3 lines.
