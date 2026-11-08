@@ -10,7 +10,7 @@ REPO = os.environ.get("SANCTUM_REPO") or "/Users/akashkumars/Documents/Personal/
 OUT = os.path.join(REPO, "public", "assets", "models"); BAKE = os.path.join(REPO, "blender", "bake")
 os.makedirs(OUT, exist_ok=True); os.makedirs(BAKE, exist_ok=True)
 SAMPLES = int(os.environ.get("BAKE_SAMPLES", 256)); ARCH_PX = int(os.environ.get("ARCH_PX", 4096))
-FLOOR_PX = int(os.environ.get("FLOOR_PX", 4096)); LITE_PX = int(os.environ.get("LITE_PX", 1024)); Q = int(os.environ.get("JPEG_Q", 82))
+PROPS_PX = int(os.environ.get("PROPS_PX", 2048)); FLOOR_PX = int(os.environ.get("FLOOR_PX", 4096)); LITE_PX = int(os.environ.get("LITE_PX", 1024)); Q = int(os.environ.get("JPEG_Q", 82))
 sc = bpy.context.scene; D = bpy.data
 T0 = time.time()
 def log(*a): print(f"[{time.time()-T0:6.0f}s]", *a, flush=True)
@@ -52,11 +52,12 @@ def _c(o):
     return sum(p.x for p in pts) / 8, sum(p.y for p in pts) / 8
 # the about niche (arch, altar, candles) bakes with the pedestal into its own, denser atlas
 niche = [o for o in D.objects if o.type == "MESH" and o.name.startswith("RUIN_") and _c(o)[0] > 7.8 and abs(_c(o)[1]) < 3.0]
-arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_", "RUIN_")) and o not in niche]
+scan_parts = [o for o in D.objects if o.type == "MESH" and o.name.startswith("RUIN_prop_scan") and o not in niche]   # photoreal scans get their own atlas (keeps the scan detail)
+arch_parts = [shell] + [o for o in D.objects if o.type == "MESH" and o.name.startswith(("portal", "slab", "plinth", "PROP_", "RUIN_")) and o not in niche and o not in scan_parts]
 ped_parts = [D.objects["bust_pedestal"], D.objects["bust_pedestal_cap"]] + niche
 def join(parts, name):
     sel(*parts); bpy.ops.object.join(); ob = bpy.context.view_layer.objects.active; ob.name = name; ob.data.name = name; return ob
-arch = join(arch_parts, "sanctum_architecture"); ped = join(ped_parts, "bust_pedestal")
+arch = join(arch_parts, "sanctum_architecture"); ped = join(ped_parts, "bust_pedestal"); props = join(scan_parts, "sanctum_props")
 log("arch faces", len(arch.data.polygons), "floor", len(floor.data.polygons), "ped", len(ped.data.polygons))
 for ob in (arch, ped, floor): ob.data.polygons.foreach_set("use_smooth", [False] * len(ob.data.polygons)) if False else None
 
@@ -72,7 +73,7 @@ def atlas_uv(ob):
     bpy.ops.uv.average_islands_scale()
     bpy.ops.uv.pack_islands(margin=0.003)
     bpy.ops.object.mode_set(mode="OBJECT")
-for ob in (arch, ped, floor): atlas_uv(ob)
+for ob in (arch, ped, floor, props): atlas_uv(ob)
 log("uv done")
 
 # ---------- 4. bake COMBINED ----------
@@ -88,7 +89,7 @@ def bake(ob, name, px):
     log("baked", name, px)
     for m in mats: m.node_tree.nodes.remove(m.node_tree.nodes["BAKE_TARGET"])
     return img
-imgs = {"arch": bake(arch, "arch", ARCH_PX), "floor": bake(floor, "floor", FLOOR_PX), "ped": bake(ped, "ped", 2048)}
+imgs = {"arch": bake(arch, "arch", ARCH_PX), "floor": bake(floor, "floor", FLOOR_PX), "ped": bake(ped, "ped", 2048), "props": bake(props, "props", PROPS_PX)}
 
 # ---------- 5. save JPEGs through the scene colour management (AgX baked in), plus 1k lite copies ----------
 scene_fmt = sc.render.image_settings
@@ -97,7 +98,7 @@ def save(img, fn):
     p = os.path.join(BAKE, fn); img.save_render(p, scene=sc); return p
 hi = {k: save(v, f"{k}.jpg") for k, v in imgs.items()}
 lite = {}
-for k, px in (("arch", LITE_PX), ("floor", LITE_PX // 2 if False else LITE_PX), ("ped", 512)):
+for k, px in (("arch", LITE_PX), ("floor", LITE_PX // 2 if False else LITE_PX), ("ped", 512), ("props", 1024)):
     im = D.images.load(hi[k]); im.colorspace_settings.name = "sRGB"; im.scale(px, px)
     p = os.path.join(BAKE, f"{k}_lite.jpg"); im.filepath_raw = p; im.file_format = "JPEG"
     sc.render.image_settings.quality = Q; im.save(); lite[k] = p
@@ -115,7 +116,7 @@ def baked_mat(name, path):
     return m, t
 def assign(variant):
     paths = hi if variant == "high" else lite
-    for ob, key in ((arch, "arch"), (floor, "floor"), (ped, "ped")):
+    for ob, key in ((arch, "arch"), (floor, "floor"), (ped, "ped"), (props, "props")):
         m, t = baked_mat(f"{ob.name}_baked_{variant}", paths[key])
         ob.data.materials.clear(); ob.data.materials.append(m)
         for lay in list(ob.data.uv_layers):
@@ -135,7 +136,7 @@ bpy.context.view_layer.update()
 # ---------- 8. export ----------
 def export(variant, fn):
     assign(variant); bpy.context.view_layer.update()
-    sel(arch, floor, ped, osh, ax)
+    sel(arch, floor, ped, props, osh, ax)
     bpy.ops.export_scene.gltf(
         filepath=os.path.join(OUT, fn), export_format="GLB", use_selection=True, export_apply=True,
         export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7,

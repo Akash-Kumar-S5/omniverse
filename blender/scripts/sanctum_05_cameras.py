@@ -11,7 +11,7 @@ SPOTS = {
     "boot_wide":         ((-4.4, -6.2, 1.7), (0.0, 0.0, 1.3), 58),
     "boot_under_oculus": ((0.3, -4.4, 1.45), (-0.2, 0.0, 1.05), 50),
     "about_niche":       ((5.4, 0.0, 1.7), (11.0, 0.0, 1.55), 40),
-    "contact_sky":       ((0.0, -12.6, 1.6), (0.0, -16.2, 1.25), 55),
+    "contact_sky":       ((-2.2, -2.6, 1.35), (-0.9, 0.0, 0.95), 50),   # the plinth fire, centre-right, beside the left-hand copy
     "proj_gallery":      ((0.0, 10.5, 2.0), (0.0, 26.0, 2.8), 52),
 }
 for k, x in enumerate((-14, -19, -24, -29)):

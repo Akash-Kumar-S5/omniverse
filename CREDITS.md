@@ -95,3 +95,6 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 
 ### Round 5 blender-fire
 `castle_brick_broken_06`, `cobblestone_floor_13` (Poly Haven, CC0, 2k textures for the ch1 plinth and the floor), `wooden_candlestick` (Poly Haven, CC0, scan candles in the niche, on the altar and around the plinth), `stone_fire_pit.draco.glb` (Poly Haven scan, Draco-recompressed with `blender/scripts/compress_fire_pit.py`, 428 KB), `flame-spritesheet-6x1.png` (Kenney particle pack, CC0, flipbook on a drei Billboard in `src/scene/world/Fire.tsx`).
+
+### Round 5 blender-scans
+Photoreal scans from `public/assets/scans` (see the agy-scans credits) are baked into `sanctum.glb`: hooded mourner by the fire, helmet, cuirass, sword and shield on the ch2 stands. The earlier figure and weapon props are removed from the scene.

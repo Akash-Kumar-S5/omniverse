@@ -17,12 +17,8 @@ const PIT_SCALE = 1.7;
 const PLINTH_TOP = 0.42;
 const FRAMES = 6;
 
-/** Plinth fire sits at the origin; the contact chapter's fire is the pair of court braziers. */
+/** The one fire sits on the plinth at the origin; the contact chapter now looks at it from the side. */
 const PLINTH_FLAME: [number, number, number] = [0, 0.62, 0];
-const COURT_FLAMES: [number, number, number][] = [
-  [-2.3, 0.5, 16.0],
-  [2.3, 0.5, 16.0],
-];
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -74,11 +70,9 @@ function Flame({ position, size = 1.1, phase = 0 }: { position: [number, number,
   );
 }
 
-/** The one warm light. Follows the active fire: plinth by default, court braziers for the contact chapter. */
+/** The one warm light, on the plinth fire. */
 function FireLight() {
   const ref = useRef<THREE.PointLight>(null);
-  const section = useOmni((s) => s.section);
-  const contact = section === "contact";
 
   useFrame((state) => {
     const l = ref.current;
@@ -95,21 +89,18 @@ function FireLight() {
       intensity={7}
       distance={10}
       decay={2}
-      position={contact ? [0, 1.0, 16.0] : [0, 1.1, 0]}
+      position={[0, 1.1, 0]}
     />
   );
 }
 
 export default function Fire() {
-  const section = useOmni((s) => s.section);
   const quality = useOmni((s) => s.quality);
-  const contact = section === "contact";
   return (
     <group>
       <FirePit />
       <FireLight />
       <Flame position={PLINTH_FLAME} size={quality === "lite" ? 1.0 : 1.2} />
-      {contact && COURT_FLAMES.map((p, i) => <Flame key={i} position={p} size={0.8} phase={i * 0.37} />)}
     </group>
   );
 }

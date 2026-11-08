@@ -33,7 +33,6 @@ function WorldLighting() {
 }
 
 function SparksAndMist() {
-  const section = useOmni((s) => s.section);
   const quality = useOmni((s) => s.quality);
 
   return (
@@ -49,20 +48,6 @@ function SparksAndMist() {
         noise={[0.4, 1.2, 0.4]}
         opacity={0.8}
       />
-
-      {/* Court braziers: sparks for the resting fire */}
-      {section === "contact" && (
-        <Sparkles
-          count={quality === "lite" ? 20 : 44}
-          scale={[5.0, 3.5, 1.6]}
-          position={[0, 1.8, 16.0]}
-          color="#ff6010"
-          speed={0.6}
-          size={2.0}
-          noise={[0.3, 0.8, 0.3]}
-          opacity={0.75}
-        />
-      )}
 
       {/* Low subtle floor mist across the cold stone ruins */}
       <Clouds material={THREE.MeshBasicMaterial} limit={40}>
