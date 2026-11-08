@@ -20,9 +20,15 @@ void main() {
   position += beaconDirection * sin(uTime * 2.2) * 0.035 * uBeacon * uTurbulence;
   float transitionNoise = sin(3.14159265 * progress);
   vec3 flow = flowField(position * 0.8, uTime * 0.2 + seed * 6.2831853);
-  vec3 organic = pseudoCurl(position, uTime, seed);
+  vec3 organic = pseudoCurl(position * 0.75, uTime * 0.35, seed);
   position += flow * (0.012 + seed * 0.008) * uTurbulence;
-  position += organic * (0.018 * uTurbulence + transitionNoise * 0.14);
+  position += organic * (0.024 * uTurbulence + transitionNoise * 0.14);
+
+  // Slow organic breathing: gentle radial pulse of the living swarm
+  vec3 toFocus = position - uFocus;
+  float breathing = sin(uTime * 0.85 + seed * 1.5) * 0.04 * (1.0 - uBeacon);
+  position += normalize(toFocus + vec3(0.0001)) * breathing * uTurbulence;
+
   vec3 cursorDelta = position - uCursor;
   float cursorDistance = length(cursorDelta);
   float repulsion = clamp(uCursorStrength, 0.0, 1.0) / max(0.08, cursorDistance * (cursorDistance + 1.0));

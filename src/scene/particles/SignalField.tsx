@@ -92,17 +92,19 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
     uPositions: { value: null as THREE.Texture | null },
     uTarget: { value: null as THREE.Texture | null },
     uActiveGroup: { value: 0 },
-    uPointSize: { value: 2.8 },
+    uPointSize: { value: 1.15 },
+    uTime: { value: 0 },
   }), []);
   const cpuUniforms = useMemo(() => ({
     uActiveGroup: { value: 0 },
-    uPointSize: { value: 1.85 },
+    uPointSize: { value: 1.15 },
+    uTime: { value: 0 },
   }), []);
   uniforms.uTarget.value = target;
   uniforms.uActiveGroup.value = activeRole;
-  uniforms.uPointSize.value = resolvedQuality === "lite" ? 2.2 : 2.8;
+  uniforms.uPointSize.value = resolvedQuality === "lite" ? 0.95 : 1.15;
   cpuUniforms.uActiveGroup.value = activeRole;
-  cpuUniforms.uPointSize.value = resolvedQuality === "lite" ? 1.65 : 1.85;
+  cpuUniforms.uPointSize.value = resolvedQuality === "lite" ? 0.95 : 1.15;
 
   useEffect(() => {
     if (backend === "cpu") return;
@@ -139,6 +141,8 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
 
   useFrame((state, delta) => {
     const motionReduced = reducedMotion ?? storeReducedMotion;
+    uniforms.uTime.value = state.clock.elapsedTime;
+    cpuUniforms.uTime.value = state.clock.elapsedTime;
     const anchorName = shape === "project-glyph" ? "glyph" : shape;
     const shapeAnchor = anchors?.[anchorName]
       ? new THREE.Vector3(...anchors[anchorName].position)
@@ -253,6 +257,11 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
             x += pulse * (x - shapeAnchor.x);
             y += pulse * (y - shapeAnchor.y);
             z += pulse * (z - shapeAnchor.z);
+          } else {
+            const breath = Math.sin(time * 0.85 + seed * 1.5) * 0.03;
+            x += (x - shapeAnchor.x) * breath;
+            y += (y - shapeAnchor.y) * breath;
+            z += (z - shapeAnchor.z) * breath;
           }
         }
         positions[p] = x;

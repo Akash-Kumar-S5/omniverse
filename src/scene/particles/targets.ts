@@ -13,7 +13,7 @@ export interface TargetOptions {
 }
 
 /** Offset from the core anchor that keeps the hero swarm on the right of the boot camera path. */
-export const CORE_SHAPE_OFFSET: [number, number, number] = [1.1, 3, 0.9];
+export const CORE_SHAPE_OFFSET: [number, number, number] = [2.0, 2.8, 1.2];
 
 const seeded = (seed: number) => () => {
   seed |= 0;
@@ -118,11 +118,28 @@ export function createTargetTexture(options: TargetOptions) {
   }
   if (!points) {
     points = Array.from({ length: count }, () => {
-      const y = random() * 2 - 1;
-      const angle = random() * Math.PI * 2;
-      const ring = Math.sqrt(1 - y * y);
-      const r = radius * (0.28 + Math.cbrt(random()) * 0.82);
-      return { position: shapeAnchor.clone().add(new THREE.Vector3(Math.cos(angle) * ring * r * 1.18, y * r * 0.78, Math.sin(angle) * ring * r)), group: 0 };
+      // Uniform spherical direction
+      const u = random() * 2 - 1;
+      const theta = random() * Math.PI * 2;
+      const phi = Math.acos(u);
+      const sinPhi = Math.sin(phi);
+      // Volumetric radial distribution: dense luminous core with soft outer filaments
+      const rDist = Math.pow(random(), 1.6);
+      const r = radius * (0.25 + rDist * 1.15);
+      // Gentle fractal turbulence displacement to avoid geometric banding
+      const nx = Math.sin(theta * 3.0 + rDist * 4.0) * radius * 0.08;
+      const ny = Math.cos(phi * 3.0 + rDist * 4.0) * radius * 0.08;
+      const nz = Math.sin((theta + phi) * 2.0) * radius * 0.08;
+      const pos = shapeAnchor.clone().add(
+        new THREE.Vector3(
+          r * sinPhi * Math.cos(theta) + nx,
+          r * Math.cos(phi) + ny,
+          r * sinPhi * Math.sin(theta) + nz,
+        ),
+      );
+      // Mark ~3.5% as luminous agent particles (group = 9)
+      const isAgent = random() < 0.035 ? 9 : 0;
+      return { position: pos, group: isAgent };
     });
   }
 

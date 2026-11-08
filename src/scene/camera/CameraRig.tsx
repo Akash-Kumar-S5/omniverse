@@ -142,10 +142,10 @@ export default function CameraRig() {
           wide.target[1] + (oculus.target[1] - wide.target[1]) * t,
           wide.target[2] + (oculus.target[2] - wide.target[2]) * t,
         );
-        // Morph composition rule: keep swarm footprint to the RIGHT of ~55% width
+        // Morph composition rule: keep swarm footprint to the RIGHT of ~58% width
         if (!isPortrait) {
-          look.x -= 1.6;
-          look.y -= 0.3;
+          look.x -= 1.8;
+          look.y -= 0.25;
         }
         break;
       }
