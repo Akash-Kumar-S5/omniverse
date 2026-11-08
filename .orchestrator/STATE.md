@@ -292,13 +292,65 @@ Akash: "use copilot if claude hit limit". Dispatched Round 3 Lane 3 bounded task
 - Verification: npm run build & npm run lint clean (0 errors, 0 warnings); verified via Playwright screenshot at ?skipgate&chapter=1 (1440x900) in .orchestrator/reference/r3-copilot-gothic-statue-ch1-1440.png.
 - MERGED to main: 3d5c733.
 
+## 12:15 IST — INTERIM ORCHESTRATOR (Gemini 3.8 Flash, pane w2:pW)
+MORPH REVIEW 12:05 addressed:
+1. Ch1 gothic statue approved and kept.
+2. Ch3 period-object swap: Replaced custom hand-built stone tablet in ProjectArtefact.tsx with ready-made Poly Haven Standing Picture Frame (standing_picture_frame_01.glb, CC0 by James Ray Cock, 683 KB) holding a desaturated, muted project UI wireframe/blueprint with ZERO duplicate copy.
+3. Added asset attribution to CREDITS.md.
+4. Verified: npm run build & npm run lint pass with 0 errors; captured screenshot at ?skipgate&chapter=3 in .orchestrator/reference/r3-ch3-frame-verified-1440.png.
+5. Sanctum ruins GLBs in public/assets/ruins/ kept on disk, waiting for blender-sanctum import/light/bake after 15:10 IST Claude reset.
+COMMITTED to main: b5f2249.
+
 | Agent | Pane | State | Next |
 |---|---|---|---|
 | agy-world | w2:pK | idle | standby |
-| agy-assets (agy-review pane) | w2:pM | idle | standby for review/QA |
-| copilot-review | w2:pQ | idle after lane 3 merge (~185 AIC used) | standby for next bounded task |
+| agy-assets (agy-review pane) | w2:pM | idle | run round-3 anti-slop & contrast audit |
+| copilot-review | w2:pQ | idle (~185 AIC used) | bounded perf & frame rate verification on main |
 | copilot-swarm | w2:pS | idle, ~413 AIC: avoid | none |
-| blender-sanctum | w2:pJ | idle | script/run ruins placement in Blender |
+| blender-sanctum | w2:pJ | paused until 15:10 IST Claude reset | import/light/bake CC0 ruins into sanctum.glb |
+| codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
+
+## Handback 12:10
+OPS HANDBACK (Morph): Claude quota is available again (5H window at 83%, Weekly at 50%).
+Main HEAD 7d706bb. Build & lint pass with 0 errors/warnings.
+
+### 1. Merged to Main During Interim Session
+- `r4/agy-assets` (d20834f): 5 dark-fantasy CC0 asset packs downloaded to `public/assets/ruins/` (Quaternius ruins, Kenney castle & graveyard kits, Poly Haven gothic_statue & stone_fire_pit) + CREDITS.md updated with full CC0 citations.
+- `r3/agy-world` (c4fcd2a): SignalField retuned to ember/ash palette with thermal upward drift and flicker, plinth fire, subtle floor mist, chapter 4 resting hearth.
+- `r3/copilot-review` (3d5c733): About focal object swapped to GothicStatue (`/assets/ruins/gothic_statue.glb`) with stone PBR toneMapped=true; added CandleLights in World.tsx with 4 flickering amber point lights in alcoves/corridors.
+- Ch3 Picture-Frame Swap (b5f2249): Morph review 12:05 addressed. Hand-built stone tablet and duplicate text removed; swapped for ready-made Poly Haven Standing Picture Frame (`standing_picture_frame_01.glb`, CC0 by James Ray Cock, 683 KB) displaying an abstract, desaturated project UI blueprint with strictly zero text. Evidence verified at `?skipgate&chapter=3` in `.orchestrator/reference/r3-ch3-frame-verified-1440.png`.
+
+### 2. Branches & Pending Merges
+- All worktrees are fully synchronized and merged to `main`. No pending merges.
+- Working trees clean on `agy-world`, `agy-assets`, `copilot-review`.
+
+### 3. Open Review Notes & In-Flight Work
+- `agy-review` (w2:pM): In flight running anti-slop, AA contrast, keyboard navigation, and console error audit across chapters 0..4 -> `.orchestrator/reports/r3-anti-slop-review.md`.
+- `blender-sanctum` (w2:pJ): Claude is back below 85% (83% 5H). Ready to resume Blender MCP / headless build: import the ready CC0 ruins models from `public/assets/ruins/`, light (warm firelight + cold moonlight), bake Cycles COMBINED, and export `sanctum.glb` (<=4 MB) and `sanctum-lite.glb`.
+- Codex: Still LOCKED until Mon 13:54 IST.
+- Copilot: ~185.6 AIC used on `copilot-review`.
+
+| Agent | Pane | State | Next |
+|---|---|---|---|
+| agy-world | w2:pK | idle | standby |
+| agy-review (acting as QA) | w2:pM | IN FLIGHT (audit chapters 0..4) | finish report -> reports/r3-anti-slop-review.md |
+| copilot-review | w2:pQ | idle (~185 AIC used) | standby for bounded tasks |
+| copilot-swarm | w2:pS | idle (~413 AIC used) | avoid |
+| blender-sanctum | w2:pJ | READY (Claude active) | import downloaded CC0 ruins, light, bake, export sanctum.glb |
 | codex-world | w2:pE | LOCKED until Mon 13:54 IST | none |
 
 
+
+
+
+## 12:55 IST — ORCHESTRATOR (Claude Sonnet 5.5, w2:p1) back in charge
+MERGED to main: r3/blender-sanctum ruins bake (1500c87; sanctum.glb 2.3 MB, lite 0.84 MB) + r3/agy-world-frame ch3 paintings (7eb4818). Build+lint clean. dist 28 MB (raw ruins kit GLBs in public/ ship unused; prune before FINAL, initial payload to be measured).
+Morph review 12:50 queued: (1) ch4 fire pit + Sparkles + flicker light, (2) ch0 fire pit visible, -> agy-world; (3) ch1 pillar/plinth detail, plus ch2 floor blown white -> blender-sanctum; re-score -> agy-review (now), copilot-review (after fixes, bounded).
+| Agent | Pane | Task |
+|---|---|---|
+| agy-world | w2:pK | ch4/ch0 fire pit |
+| blender-sanctum | w2:pJ | ch2 floor, then ch1 pillar/plinth |
+| agy-review | w2:pM | r3 re-score of main 7eb4818 |
+| copilot-review | w2:pQ | idle, ~185 AIC; perf check after fixes |
+| codex-world | w2:pE | LOCKED to Mon 13:54 |
+Score table: pending.

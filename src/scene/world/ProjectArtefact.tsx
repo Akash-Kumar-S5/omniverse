@@ -1,121 +1,23 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Float, RoundedBox } from "@react-three/drei";
+import { Float, useGLTF, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useOmni } from "../../state/store";
-import { projects, type Project } from "../../content";
+import { projects } from "../../content";
 import { getProjectGlyphAnchor } from "../particles/targets";
 
-/**
- * Renders an engraved stone tablet / parchment plate for the project.
- * Strictly anti-slop: warm muted stone, ember, and ash palette with classical
- * typography. Zero neon, zero blue glow, zero sci-fi HUD elements.
- */
-function buildStonePlateTexture(project: Project, index: number): THREE.CanvasTexture {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 720;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return new THREE.CanvasTexture(canvas);
+const FRAME_MODEL_URL = "/assets/models/standing_picture_frame_01.glb";
 
-  // Weathered dark basalt / charcoal stone base
-  ctx.fillStyle = "#151311";
-  ctx.fillRect(0, 0, 1024, 720);
-
-  // Subtle natural stone grain
-  ctx.fillStyle = "rgba(255, 240, 220, 0.015)";
-  for (let i = 0; i < 4000; i++) {
-    const rx = Math.random() * 1024;
-    const ry = Math.random() * 720;
-    ctx.fillRect(rx, ry, 1.5, 1.5);
-  }
-
-  // Soft vignette simulating ambient shadow across carved surface
-  const vignette = ctx.createRadialGradient(512, 360, 120, 512, 360, 520);
-  vignette.addColorStop(0, "rgba(32, 28, 25, 0.35)");
-  vignette.addColorStop(1, "rgba(8, 7, 6, 0.85)");
-  ctx.fillStyle = vignette;
-  ctx.fillRect(0, 0, 1024, 720);
-
-  // Muted carved border line in weathered ash
-  ctx.strokeStyle = "rgba(180, 165, 150, 0.18)";
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(36, 36, 952, 648);
-
-  // Inner subtle border
-  ctx.strokeStyle = "rgba(180, 165, 150, 0.08)";
-  ctx.lineWidth = 1;
-  ctx.strokeRect(44, 44, 936, 632);
-
-  // Top chapter/index marker
-  ctx.fillStyle = "#8a7e72";
-  ctx.font = "14px 'Cinzel', serif";
-  ctx.textAlign = "center";
-  ctx.letterSpacing = "0.2em";
-  ctx.fillText(`·  PROJECT 0${index + 1} OF 0${projects.length}  ·`, 512, 95);
-
-  // Subtle engraved divider
-  ctx.strokeStyle = "rgba(180, 165, 150, 0.15)";
-  ctx.beginPath();
-  ctx.moveTo(380, 120);
-  ctx.lineTo(644, 120);
-  ctx.stroke();
-
-  // Project Title (classical serif, carved bone tone)
-  ctx.fillStyle = "#e8dfd5";
-  ctx.font = "500 52px 'Playfair Display', 'Cinzel', serif";
-  ctx.textAlign = "center";
-  ctx.fillText(project.title, 512, 215);
-
-  // Category descriptor (muted warm ash)
-  ctx.fillStyle = "#a89a8a";
-  ctx.font = "13px 'Cinzel', serif";
-  ctx.letterSpacing = "0.18em";
-  ctx.fillText(project.category.toUpperCase(), 512, 260);
-
-  // Project hook / brief in classical serif
-  if (project.hook) {
-    ctx.fillStyle = "#c8beb4";
-    ctx.font = "italic 22px 'Playfair Display', serif";
-    ctx.textAlign = "center";
-    ctx.fillText(`"${project.hook}"`, 512, 340);
-  }
-
-  // Description body copy (split into two lines if needed)
-  ctx.fillStyle = "#9a8e82";
-  ctx.font = "17px sans-serif";
-  ctx.textAlign = "center";
-  const descWords = project.description.split(" ");
-  const mid = Math.ceil(descWords.length / 2);
-  const line1 = descWords.slice(0, mid).join(" ");
-  const line2 = descWords.slice(mid).join(" ");
-  ctx.fillText(line1, 512, 430);
-  ctx.fillText(line2, 512, 465);
-
-  // Bottom divider
-  ctx.strokeStyle = "rgba(180, 165, 150, 0.12)";
-  ctx.beginPath();
-  ctx.moveTo(120, 540);
-  ctx.lineTo(904, 540);
-  ctx.stroke();
-
-  // Tech stack pills in quiet stone tones
-  ctx.fillStyle = "#8a7e72";
-  ctx.font = "14px 'Cinzel', monospace";
-  ctx.textAlign = "center";
-  ctx.fillText(project.tags.join("   ·   "), 512, 595);
-
-  // Quiet footer
-  ctx.fillStyle = "#5c544c";
-  ctx.font = "12px monospace";
-  ctx.fillText(project.github?.replace("https://github.com/", "") || "", 512, 645);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.generateMipmaps = false;
-  return texture;
-}
+const PAINTING_URLS = [
+  "/assets/paintings/painting_0.jpg",
+  "/assets/paintings/painting_1.jpg",
+  "/assets/paintings/painting_2.jpg",
+  "/assets/paintings/painting_3.jpg",
+  "/assets/paintings/painting_4.jpg",
+  "/assets/paintings/painting_5.jpg",
+  "/assets/paintings/painting_6.jpg",
+  "/assets/paintings/painting_7.jpg",
+];
 
 export default function ProjectArtefact() {
   const section = useOmni((s) => s.section);
@@ -124,27 +26,66 @@ export default function ProjectArtefact() {
   const currentPos = useRef(new THREE.Vector3());
   const targetPos = useRef(new THREE.Vector3());
 
-  // Pre-generate textures for all projects to guarantee 0 runtime allocations
-  const textures = useMemo(() => {
-    if (typeof document === "undefined") return [];
-    return projects.map((p, idx) => buildStonePlateTexture(p, idx));
-  }, []);
+  // Load the ready-made Poly Haven Standing Picture Frame (CC0)
+  const { scene } = useGLTF(FRAME_MODEL_URL, false);
+
+  // Load authentic CC0 public domain masterwork paintings (Met Open Access)
+  const textures = useTexture(PAINTING_URLS);
 
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = textures[safeIdx];
   const isEven = safeIdx % 2 === 0;
 
-  // Orient towards the camera for Chapter 3 gallery view
-  const rotY = isEven ? Math.PI * 0.26 : -Math.PI * 0.26;
+  // Build the frame model with custom artwork material and hide occluding glass
+  const frameScene = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        const mat = mesh.material as THREE.Material;
+        const matName = mat?.name || "";
+
+        if (matName.includes("glass")) {
+          // Hide glass to avoid reflections or occlusion on the artwork
+          mesh.visible = false;
+        } else if (matName.includes("artwork")) {
+          mesh.material = new THREE.MeshStandardMaterial({
+            map: activeTexture,
+            roughness: 0.82,
+            metalness: 0.0,
+            emissive: new THREE.Color("#1e1710"),
+            emissiveIntensity: 0.38,
+            toneMapped: true,
+          });
+        } else {
+          // Wooden frame and easel stand
+          if (mesh.material) {
+            const m = (mesh.material as THREE.Material).clone();
+            m.toneMapped = true;
+            mesh.material = m;
+          }
+        }
+      }
+    });
+    return clone;
+  }, [scene, activeTexture]);
+
+  // Orient towards the camera: model artwork faces +X locally,
+  // rotating -PI/2 in Y makes it face +Z, then adjust angle toward aisle
+  const rotY = isEven ? -Math.PI * 0.5 + 0.18 : -Math.PI * 0.5 - 0.18;
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     const dest = getProjectGlyphAnchor(activeProject);
-    dest.y = 1.68;
+    // Position frame easel lower and to the side of the celestial ember glyph,
+    // pulled fully inside the 1440x900 viewport without bottom or right cropping.
+    dest.y = 1.78;
     if (isEven) {
-      dest.x = -1.18;
+      dest.x = -1.35;
+      dest.z += 0.22;
     } else {
-      dest.x = 1.18;
+      dest.x = 2.05;
+      dest.z -= 0.22;
     }
     targetPos.current.copy(dest);
 
@@ -160,47 +101,24 @@ export default function ProjectArtefact() {
 
   return (
     <group ref={groupRef}>
-      <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.16} floatingRange={[-0.02, 0.02]}>
+      <Float speed={1.2} rotationIntensity={0.04} floatIntensity={0.1} floatingRange={[-0.012, 0.012]}>
         <group rotation={[0, rotY, 0]}>
-          {/* Carved Dark Stone Tablet / Ruin Easel */}
-          <RoundedBox
-            args={[1.34, 0.94, 0.07]}
-            radius={0.025}
-            smoothness={3}
-            castShadow={false}
-            receiveShadow={false}
-          >
-            <meshStandardMaterial
-              color="#1a1816"
-              roughness={0.92}
-              metalness={0.05}
-              toneMapped={true}
-            />
-          </RoundedBox>
+          {/* Authentic CC0 Poly Haven standing picture frame */}
+          <primitive object={frameScene} scale={[4.2, 4.2, 4.2]} position={[0, -0.15, 0]} />
 
-          {/* Inset Inscription Stone Surface */}
-          <mesh position={[0, 0, 0.036]}>
-            <planeGeometry args={[1.28, 0.88]} />
-            <meshStandardMaterial
-              map={activeTexture}
-              roughness={0.88}
-              metalness={0.02}
-              emissive="#18120c"
-              emissiveIntensity={0.25}
-              toneMapped={true}
-            />
-          </mesh>
-
-          {/* Soft warm hearth firelight illuminating the tablet */}
+          {/* Soft warm firelight illuminating the easel frame */}
           <pointLight
-            position={[0, 0, 0.7]}
-            intensity={1.6}
-            distance={4.0}
+            position={[0.8, 0.4, 0.7]}
+            intensity={2.2}
+            distance={4.5}
             color="#d6782a"
-            decay={1.3}
+            decay={1.2}
           />
         </group>
       </Float>
     </group>
   );
 }
+
+useGLTF.preload(FRAME_MODEL_URL, false);
+useTexture.preload(PAINTING_URLS);

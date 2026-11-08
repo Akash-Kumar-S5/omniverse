@@ -35,3 +35,24 @@ and CC0 material. Don't name anything after their games or items ("bonfire" as a
 - The anti-slop rules still apply; the fantasy mood must not drift into clichés (no gothic blackletter fonts, keep the type).
 - Reuse-first: drei Sparkles/Cloud for mist, existing SignalField sim retuned (not rewritten), Blender scripts extended.
 - Evidence = screenshots per section via ?skipgate&chapter=N; both reviewers score again afterwards (improvement loop).
+
+## DIRECTION 13:05 IST (Akash via Morph): real props replace the glowing shapes
+Replace the ember-swarm glyphs/rings/astrolabe in EVERY chapter with real souls-style 3D props from ready-made free assets
+(Sketchfab free/CC0/CC-BY, Poly Haven, Quaternius, Kenney): armour stands, helmets, greatswords, shields, broken statues, skulls,
+chains, banners, lanterns, candelabra, braziers. Banned: ripped FromSoftware files; fan recreations of iconic items (no coiled sword
+in a fire, no Estus flask, no named characters). Licence is not a gate, but every asset is credited in CREDITS.md.
+- ch0 hero: armoured knight figure / armour stand by the fire pit, lit only by the fire.
+- ch1 About: keep the gothic statue (improve pillar/plinth detail).
+- ch2 Work: one prop per job (shield / helmet / sword on a stand) instead of the ember column. Keep the corridor.
+- ch3 Projects: keep the framed painting, drop the ember glyph.
+- ch4 Contact: fire pit/brazier with a real flame (animated free fire asset if one exists) beside 'Say hello.'.
+- Light only from fire, candles, moonlight. Embers stay only as a few small sparks rising from real fires.
+Lanes: agy-assets (pane w2:pM) sources+downloads; blender-sanctum places/lights/bakes; agy-world removes glyph swarm code and wires props.
+Evidence per chapter via ?skipgate=1&chapter=N, then re-score with both reviewers.
+
+## ADDENDUM 13:25 IST: two original figures (generic only)
+No ripped models, fan recreations or lookalikes of any FromSoftware character, and no such names anywhere (code, copy, credits, commits, reports).
+(a) A hooded, veiled woman kneeling or seated by the fire pit (generic "hooded woman" / "praying nun" / "mourning statue") as the quiet keeper of the hall, ch0/ch4.
+(b) A tall cloaked female knight statue with sword and cape (generic "female knight" / "valkyrie statue" / "warrior woman") in an alcove for ch2, or as the ch0 hero instead of the armoured knight.
+Reject any asset whose title, tags or design references such a character (winged helm with prosthetic arm, red hair plus golden arm, eye-cutout mask over a hooded veil).
+Same pipeline: agy-assets sources and credits, blender-sanctum places and lights by fire and moon, evidence via ?skipgate=1&chapter=N.
