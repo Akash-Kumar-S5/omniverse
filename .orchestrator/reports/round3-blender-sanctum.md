@@ -68,3 +68,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch2: scan albedos desaturated and darkened in Blender (shield 0.22 sat / 0.5 value), job warm accents 95 W, props emissive 0.62; shield reads as aged metal, not flat orange.
 - ch1: Kenney box altar deleted, brick pedestal tinted to grey stone; two altar candlesticks removed.
 - Exports: sanctum.glb 3.87 MB, sanctum-lite.glb 0.997 MB (shrink_lite.py, LITE_PROPS=256). Evidence: .orchestrator/reference/r6-scenes-ch0..4.png.
+
+## Round 7 scenes (r7/blender-scenes)
+- ch0/ch4: bevelled floor tiles deleted; one flat cobblestone floor at 1.1 m tile, darker tint; oculus sun cut to 2.5 and hearth bake lights halved, so only a ~2 m ring around the fire catches light and the rest falls to black. Plinth is now a 0.34 m stone skinned with the floor material and hidden under the pit. The candlestick ring (the stray figurine in ch4) is gone. Mourner relief turned 28 deg. Pit albedo x0.5.
+- ch1: wooden candelabra front-left of the statue plus one point light (#ffb070) exported inside sanctum.glb (KHR light, RAW candela) because the statue is a runtime model; niche-mouth arch pier (the black box) removed.
+- ch2: shield is role 0, 2.5 m ahead of the camera and hard right (screen x > 1000 px), metallic 0.8 / roughness 0.45; wall sconce on the right arch (90 W); moon spots (source of the white patches at the right edge) removed.
+- Exports: sanctum.glb 3.07 MB, sanctum-lite.glb 0.77 MB. Evidence: .orchestrator/reference/r7-scenes-ch0..4.png. Limits: the pit scan's own bowl top still glows peach under the fire light (runtime, in Fire.tsx); the shield albedo reads tan leather with a dark metal boss.

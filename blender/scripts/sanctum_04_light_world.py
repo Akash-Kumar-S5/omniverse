@@ -26,7 +26,7 @@ except TypeError: pass
 vt.exposure = 0.6
 
 # ---- sun: tilt 7 deg so the shaft lands on the plinth (oculus is offset to y=-1.5) ----
-sd = bpy.data.lights.new("SUN_shaft", "SUN"); sd.energy = 10.0; sd.angle = math.radians(0.4); sd.color = (1.0, 0.86, 0.68)
+sd = bpy.data.lights.new("SUN_shaft", "SUN"); sd.energy = 2.5; sd.angle = math.radians(0.4); sd.color = (1.0, 0.86, 0.68)
 sun = bpy.data.objects.new("SUN_shaft", sd); sc.collection.objects.link(sun)
 sun.location = (0, -10, 30); sun.rotation_euler = (math.radians(7), 0, 0)
 

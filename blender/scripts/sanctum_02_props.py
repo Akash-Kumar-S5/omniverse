@@ -8,7 +8,7 @@ from sanctum_lib import *
 
 # central plinth under the shaft: two steps
 # r6: small hearth stone, no wide step disc; flagstones (step 9) run right up to it
-cyl("plinth_top", 1.08, 0, 0.42, r2=0.98)
+cyl("plinth_top", 0.9, 0, 0.34, r2=0.86)   # r7: hidden under the pit; pit base sits at 0.335
 
 # bust pedestal in the E niche (proxy bust is NOT exported; real bust is marble_bust_01.glb)
 box("bust_pedestal", 10.5, 11.5, -0.5, 0.5, 0, 1.15)

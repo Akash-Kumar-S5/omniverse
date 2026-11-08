@@ -110,3 +110,14 @@ No new third-party assets. Reuse of already credited CC0 files in new places:
 | cobblestone_floor_13, castle_brick_broken_06 | Poly Haven | CC0 | Ch0/Ch4 hearth stone and flagstone surround; ch1 pedestal (greyer tint) |
 | Floor Squares (Quaternius Ultimate Modular Ruins) | Quaternius | CC0 | Flagstones now run up to the hearth stone |
 | Shield / helmet / cuirass / arming sword scans | see Scans section | CC0 | Ch2: albedo desaturated and darkened in Blender so they read as aged metal |
+
+## Round 7 scenes (blender-scenes)
+
+No new third-party assets; reused CC0 files in new places.
+
+| Asset | Source | Licence | New use |
+|---|---|---|---|
+| cobblestone_floor_13 (floor, 1.1 m tile, plinth skin) | Poly Haven | CC0 | Flat real-scale stone floor and hearth stone, replaces bevelled tile pieces |
+| Wall torch (`public/assets/props/torch-wall.glb`) | see Props section | CC0 | Ch2 right-arch wall sconce |
+| Candelabra (`candelabra-tall.glb`) | see Props section | CC0 | Ch1 warm practical front-left of the statue |
+| Stone fire pit scan (`stone_fire_pit.draco.glb`) | Poly Haven | CC0 | Albedo darkened 50% so the ring rocks read as the dark scan stone under the fire light |

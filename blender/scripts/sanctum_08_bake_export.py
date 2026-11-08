@@ -136,12 +136,12 @@ bpy.context.view_layer.update()
 # ---------- 8. export ----------
 def export(variant, fn):
     assign(variant); bpy.context.view_layer.update()
-    sel(arch, floor, ped, props, osh, ax)
+    sel(arch, floor, ped, props, osh, ax, *[o for o in D.objects if o.name.startswith("RT_")])
     bpy.ops.export_scene.gltf(
         filepath=os.path.join(OUT, fn), export_format="GLB", use_selection=True, export_apply=True,
         export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7,
         export_draco_position_quantization=14, export_draco_normal_quantization=8, export_draco_texcoord_quantization=12,
-        export_lights=False, export_cameras=False, export_extras=True, export_yup=True,
+        export_lights=True, export_import_convert_lighting_mode="RAW", export_cameras=False, export_extras=True, export_yup=True,
         export_image_format="AUTO", export_normals=False, export_texcoords=True, export_materials="EXPORT")
     log("exported", fn, os.path.getsize(os.path.join(OUT, fn)))
 export("high", "sanctum.glb")

@@ -82,7 +82,7 @@ for x in (-14, -19, -24, -29):                    # experience: one pointed arch
 R("ruins-arch-gothic", -9.2, 0, 0, 90, 1.9)       # corridor mouth
 for y in (9.2, 14.4, 19.4, 24.4, 29.4):           # projects: hall mouth + between the slab pairs (spans X)
     R("ruins-arch-gothic", 0, y, 0, 0, 2.3)
-R("ruins-arch-gothic", 8.35, 0, 0, 90, 1.1)       # about: niche mouth
+# r7: the niche-mouth arch pier read as a black box behind the statue, removed       # about: niche mouth
 R("ruins-arch-gothic", 0, -10.0, 0, 0, 2.0)       # contact: passage arch
 R("ruins-arch-gothic", 0, -22.2, 0, 0, 2.0)       # contact: far arch framing the open sky
 R("ruins-wall-hole", -5.2, -12.4, 0, 0, 1.6)
@@ -107,9 +107,6 @@ CANDLES = [(10.42, 0.45, 1.25), (10.42, -0.45, 1.25),
            (11.6, 0.5, 1.25), (11.6, -0.5, 1.25)]
 for i, (x, y, z) in enumerate(CANDLES):
     firelight(f"FIRE_candle{i}", (x, y, z + 0.3), 14, (1.0, 0.62, 0.3), 0.05)
-for i, a in enumerate(range(20, 360, 70)):        # candles ring the plinth steps
-    px, py = 2.35 * math.cos(math.radians(a)), 2.35 * math.sin(math.radians(a))
-    firelight(f"FIRE_pcandle{i}", (px, py, 0.5), 8, (1.0, 0.6, 0.28), 0.05)
 
 # ---- 6. fire baskets along the corridor and hall (practical warm lights) ----
 BASKETS = []
@@ -122,8 +119,8 @@ for i, (x, y) in enumerate(BASKETS):
     firelight(f"FIRE_basket{i}", (x, y, 0.75), 70, (1.0, 0.5, 0.2), 0.2)
 
 # ---- 7. THE fire: warm key over the pit on cold stone (runtime adds the flicker) ----
-firelight("FIRE_hearth", (0, 0, 1.35), 300, (1.0, 0.48, 0.18), 0.35)
-firelight("FIRE_hearth_low", (0, 0, 0.8), 120, (1.0, 0.42, 0.14), 0.3)
+firelight("FIRE_hearth", (0, 0, 1.35), 150, (1.0, 0.48, 0.18), 0.35)
+firelight("FIRE_hearth_low", (0, 0, 0.8), 50, (1.0, 0.42, 0.14), 0.3)
 
 # ---- 8. ruined paving: floor-squares in the rotunda + a runner down corridor, hall and court (join the floor mesh) ----
 import bmesh
@@ -138,7 +135,7 @@ for ix in range(-4, 5):
     for iy in range(-4, 5):
         x, y = ix * 2.0, iy * 2.0
         r = math.hypot(x, y)
-        if r > 6.5 or (r >= 2.9 and random.random() < 0.5): continue   # r6: solid flagstones round the hearth, ruined further out
+        continue   # r6: solid flagstones round the hearth, ruined further out
         tile(x, y, random.choice((0, 90, 180, 270))); tiles += 1
 print("tiles", tiles)
 
