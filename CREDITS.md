@@ -57,4 +57,17 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 | Fuel Dispenser RFID App | *Evening: Landscape with an Aqueduct* | Théodore Géricault (French, 1791–1824), 1818 | [The Metropolitan Museum of Art (Object 436455)](https://www.metmuseum.org/art/collection/search/436455) | CC0 1.0 Universal | `public/assets/paintings/painting_6.jpg` |
 | GenAI Experiments | *Copenhagen Harbor by Moonlight* | Johan Christian Dahl (Norwegian, 1788–1857), 1846 | [The Metropolitan Museum of Art (Object 439343)](https://www.metmuseum.org/art/collection/search/439343) | CC0 1.0 Universal | `public/assets/paintings/painting_7.jpg` |
 
+## Chapter Souls-Style 3D Props (Round 3 Direction 13:05)
+
+| Asset | Author | Source | Licence | File / Use |
+|---|---|---|---|---|
+| Single Knight Pack (`KnightCharacter.glb`, `Helmet*.glb`, `Sword.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/knight.glb`, `helmet-*.glb`, `sword-knight.glb` (Ch0 hero resting knight; Ch2 job helmet & sword) |
+| Medieval Weapons Pack (`Claymore.glb`, `Shield_*.glb`, `Axe_Double.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/greatsword.glb`, `shield-heater.glb`, `shield-round.glb`, `battleaxe.glb` (Ch2 job weapons/shields) |
+| Modular Dungeon Pack (`Candelabrum*.glb`, `Torch_wall.glb`, `Bones.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/candelabra-tall.glb`, `candelabra.glb`, `torch-wall.glb`, `skull-bones.glb` (Ch0/1/2 sanctuary lighting & crypt props) |
+| Survival Pack (`Bonfire_Fire.glb`, `Bonfire.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/fire-flame-3d.glb`, `hearth-logs.glb` (Ch0 & Ch4 central hearth 3D flame and firewood) |
+| Modular Medieval Buildings (`Banner.glb`) | Quaternius | https://quaternius.com | CC0 1.0 Universal | `public/assets/props/banner.glb` (Ch2 corridor pillar banner) |
+| Particle Pack (Flame & Fire Sprites) | Kenney | https://kenney.nl/assets/particle-pack | CC0 1.0 Universal | `public/assets/props/textures/flame-spritesheet-6x1.png`, `flame_0*.png`, `fire_0*.png` (Ch0 & Ch4 animated flame flipbook) |
+| Graveyard Kit (`fire-basket.glb`, `candle-multiple.glb`) | Kenney | https://kenney.nl/assets/graveyard-kit | CC0 1.0 Universal | `public/assets/props/brazier-fire-basket.glb`, `candles-altar.glb` (Ch0/Ch4 brazier and Ch1 altar candles) |
+
+
 
