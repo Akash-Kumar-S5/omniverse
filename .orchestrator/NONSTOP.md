@@ -52,3 +52,9 @@ list applies; perf must not regress below DONE §3 (a rejected upgrade is better
   claude orchestrator is restarted fresh on Sonnet and resumes from STATE.md.
 - STATE.md is the single source of truth. Whoever is active keeps it current after every merge or assignment.
 - While Claude is limited, assign new work to codex, agy or copilot agents; claude sub-agents just pause and resume.
+
+## Critic loop (Akash 14:20 IST 08-Nov: "take screenshots, ask a separate agent for feedback, improve non-stop")
+- `critic` (w2:pX, claude Opus, fresh context, never builds) runs briefs/critic-loop.md: screenshots main itself, scores, top-5 fixes.
+- Orchestrator: on each reports/critic-cycle-N.md, dispatch the top fixes in parallel to idle lanes (check usage first),
+  merge when evidence passes, then prompt critic for cycle N+1 (after `/clear` in its pane). Repeat without waiting for Akash.
+- Stop only on critic verdict SHIP (overall >= 8.5, no chapter < 8). Keep the critic independent: never show it builders' reports.
