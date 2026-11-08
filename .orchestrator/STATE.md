@@ -388,3 +388,4 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - 00:02 merged agy-world ch4 fix (flame visible). waiting r7/blender-scenes
 - 00:02 merged r7/blender-scenes; critic cycle 4 prompted (main e4c9e6a)
 - 00:07 critic c4 = 6.0; dispatched r8/blender-scenes + r8/agy-world
+- 01:32 merged r8/blender-scenes (526c2ad). agy-world reset to chapterLook/Fire/embers; copilot-review (fusion) on r8/copilot-ui (CSS seam, ch1 heading, streak, ch3 lantern, scrollbar)
