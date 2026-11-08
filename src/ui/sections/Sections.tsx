@@ -18,7 +18,7 @@ export default function Sections() {
     <>
       {/* Background 0->60% black scrim only where the 3D scene is bright (ch2, ch3). No glass. */}
       <div
-        className={`sections-scrim-left ${isBrightScene ? "scrim-active" : ""}`}
+        className={`sections-scrim-left ${isBrightScene ? "scrim-active" : ""} ${active === "about" ? "scrim-about" : ""}`}
         aria-hidden="true"
       />
 
