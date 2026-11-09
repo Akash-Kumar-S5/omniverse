@@ -451,3 +451,5 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - asset-research-1 top swaps dispatched: #1 flame flipbook->copilot-swarm, #2 frame->agy-review, #3/#4/#5->blender (after plinth)
 - asset research already dispatched (r19 lanes)
 - r18 lane B merged (ch1 warm key restored, ch2 slab gone). critic c14 dispatched (desktop)
+- critic c14 = 8.0 desktop (ch0 8.0 ch1 8.2 ch2 8.0 ch3 8.0 ch4 7.8); folding c14 fixes into r19 lanes + agy-world room edges
+- CGHEVEN paywalled; flame swap falls back to Unity Labs Flame02/03 + additive blending fix
