@@ -1,4 +1,4 @@
-import { Suspense, useRef, useMemo, useEffect } from "react";
+import { lazy, Suspense, useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { Environment, Clouds, Cloud } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -406,6 +406,10 @@ export default function World() {
           <HeroArmour />
         </Suspense>
       )}
+      <Suspense fallback={null}>
+        <EffigyKnight />
+        <RuinChurch />
+      </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 
