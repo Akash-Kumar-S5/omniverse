@@ -470,3 +470,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - ch2 plinth stone + glow soften -> copilot-review r22/plinth-ch2
 - r22/plinth-ch2 merged (stone plinth; a bit pale, watch in c17). Pending: blender #4/#5 scans, ch3 pool smoothing (agy-review)
 - critic c17 dispatched (full-screen) while blender scans in flight
+- critic c17 = 8.0 full-screen (ch0 8.3 ch1 8.3 ch2 7.1 ch3 8.3 ch4 8.0). ch2 is the only blocker. Dispatch r23: A ch2 (copilot-review), B fire shell/wall glow (copilot-swarm), C ch3 hang (agy-review), E ch0 comp (agy-world), D ch1 plinth scale queued to blender after scans
