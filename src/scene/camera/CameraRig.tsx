@@ -185,6 +185,12 @@ export default function CameraRig() {
           // r17 Lane C: pan/yaw camera so cuirass sits at x~1000-1300 with 80+ px air to right edge
           pos.z -= 0.25;
           look.z -= 0.20;
+          if (activeRole === 0) {
+            pos.x = spots.cameras.exp_role_0.position[0];
+            pos.y = 0.9;
+            look.y = 0.45;
+            look.z = -0.3 + (size.width / size.height - 1512 / 982) * 0.45;
+          }
         }
         if (window.innerWidth < 600) {
           pos.set(-8, 1.5, -1.2);
