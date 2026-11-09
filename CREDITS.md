@@ -192,3 +192,7 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 ## Round 20 (blender-plinth lane)
 
 - `public/assets/ruins/textures/stone_block_512.jpg` is the Poly Haven Concrete Road Barrier 02 diffuse map (https://polyhaven.com/a/concrete_road_barrier_02, CC0), resized to 512 px, now also on the ch2 stand. Same source as the ch1 plinth credited in Round 18.
+
+## Round 24b (ch2 breastplate)
+
+- "1964.88 Armor for Man and Horse" by the Cleveland Museum of Art, https://sketchfab.com/3d-models/196488-armor-for-man-and-horse-faca2ad557f64809b598c3a646a8804f, licence CC0 Public Domain. Only the rider's breastplate is kept (torso box crop, largest piece, 2,400 tris, 768 px textures, Draco): `public/assets/models/ch2-breastplate.glb`, made by `blender/scripts/make_breastplate.py`. The raw download stays git-ignored; re-fetch with `bun tools/sketchfab-dl.ts faca2ad557f64809b598c3a646a8804f blender/props/cleveland-armour`.
