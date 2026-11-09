@@ -400,3 +400,4 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - r11/blender-scenes merged (e412297); waiting r11/agy-world
 - r11/agy-world merged b0a0ed1; build+lint clean; critic cycle 8 dispatched
 - critic c8 = 6.7 (ch1 8); dispatched r12/blender-scenes + r12/agy-world
+- r12/blender-scenes merged ac93f56 (pebbles gone, shield dark); waiting r12/agy-world (glow rect, spots, embers, mobile)
