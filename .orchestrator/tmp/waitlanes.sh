@@ -2,7 +2,7 @@
 cd ~/Documents/Personal/portfolio/omniverse
 for i in $(seq 1 14); do
   r=""
-  for b in $(git branch --format='%(refname:short)' | grep '^r16/'); do
+  for b in $(git branch --format='%(refname:short)' | grep '^r17/'); do
     [ "$(git log --oneline main..$b | wc -l)" -gt 0 ] && r="$r $b"
   done
   [ -n "$r" ] && { echo "ready:$r"; break; }

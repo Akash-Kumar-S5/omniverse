@@ -431,3 +431,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - critic c12 = 7.6 (ch0 7.5, ch1 8.5, ch2 7.5, ch3 8, ch4 7.5, mobile 6.5); dispatched r17 lanes A fire(blender) B fog(agy-world) C framing(orchestrator-b) D ch3(agy-review)
 - r16/copilot-perf merged (lite sanctum first); r17 prompts resent to agy-world, orchestrator-b
 - r17 lane E mobile -> copilot-review (r17/copilot-ui); Lane C desktop-only
+- r17/copilot-ui merged (mobile framing ch1-3). Pending: A fire, B fog, C desktop framing, D ch3
