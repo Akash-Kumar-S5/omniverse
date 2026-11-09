@@ -29,8 +29,13 @@ export function FirePit() {
         const mesh = child as THREE.Mesh;
         if (mesh.material) {
           const m = (mesh.material as THREE.MeshStandardMaterial).clone();
-          // r16: keep the scan's own roughness/metalness maps; only a light albedo trim so the rust and rivets stay readable
+          // r16: light albedo trim so the rust and rivets stay readable
           m.color.multiplyScalar(0.85);
+          // r17: rivets caught the near-floor warm lights as a hot dot ring; pin the scan to a matte iron (metalness<=0.3, roughness>=0.7)
+          m.metalnessMap = null;
+          m.roughnessMap = null;
+          m.metalness = 0.25;
+          m.roughness = 0.78;
           m.envMapIntensity = 0.6;
           mesh.material = m;
         }
@@ -48,6 +53,11 @@ export function FirePit() {
   return (
     <group position={[0, PLINTH_TOP - 0.085, 0]}>
       <primitive object={pit} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />
+      {/* r17: the scan's air-intake holes at the base showed the lit interior as a ring of hot dots; a black unlit liner behind them turns the holes dark */}
+      <mesh position={[0, 0.13, 0]}>
+        <cylinderGeometry args={[0.37, 0.37, 0.26, 32, 1, true]} />
+        <meshBasicMaterial color="#000000" side={THREE.DoubleSide} toneMapped={false} />
+      </mesh>
       {/* Dark charcoal coal bed inside the mouth: deep orange at <=30% intensity to eliminate pink/white reflection */}
       <mesh position={[0, 0.62, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.38, 32]} />
@@ -188,12 +198,12 @@ function Flames() {
   });
   useEffect(() => () => glow.dispose(), [glow]);
 
-  // r16: 3 crossed cards at different heights, scales and frame offsets (~1.4x taller), plus a small ember glow on the coals
+  // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
     <group position={[0, 0.52, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={0.55 * k} height={1.4 * k} />
-      <group position={[0, 0.03, 0]}><FlamePlane rotationY={Math.PI / 3} phase={0.37} width={0.48 * k} height={1.2 * k} /></group>
-      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.71} width={0.42 * k} height={1.0 * k} /></group>
+      <FlamePlane rotationY={0} phase={0} width={0.72 * k} height={2.24 * k} />
+      <group position={[0, 0.03, 0]}><FlamePlane rotationY={Math.PI / 3} phase={0.37} width={0.62 * k} height={1.92 * k} /></group>
+      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.71} width={0.54 * k} height={1.6 * k} /></group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.3, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
@@ -218,17 +228,17 @@ function FireLight() {
     const t = state.clock.elapsedTime;
     // ~8 Hz organic flicker, +-15%
     const flicker = 0.6 * Math.sin(t * 8 * Math.PI * 2) + 0.4 * Math.sin(t * 5.3 * Math.PI * 2 + 1.7);
-    l.intensity = 8.5 * (1 + 0.15 * flicker);
-    if (mouthRef.current) mouthRef.current.intensity = 3.2 * (1 + 0.15 * flicker);
+    l.intensity = 7.2 * (1 + 0.15 * flicker);
+    if (mouthRef.current) mouthRef.current.intensity = 2.7 * (1 + 0.15 * flicker);
   });
 
   return (
     <>
-      <pointLight ref={ref} color="#ff8a3d" intensity={7.5} distance={0} decay={2} position={[0, 0.95, 0]} />
+      <pointLight ref={ref} color="#ff8a3d" intensity={6.4} distance={0} decay={2} position={[0, 0.95, 0]} />
       {/* low warm light just inside the mouth: the inner rim and rust catch flame light */}
-      <pointLight ref={mouthRef} color="#ff7a30" intensity={3.2} distance={1.5} decay={2} position={[0, 0.74, 0]} />
+      <pointLight ref={mouthRef} color="#ff7a30" intensity={2.7} distance={1.5} decay={2} position={[0, 0.66, 0]} />
       {/* off-screen warm key on the camera side (same side as the ch4 camera): rivets and rust read on the barrel's visible face */}
-      <pointLight color="#ffb070" intensity={2.4} distance={4.2} decay={2} position={[-1.7, 0.75, 1.7]} />
+      <pointLight color="#ffb070" intensity={2.4} distance={4.2} decay={2} position={[-1.7, 1.4, 1.7]} />
     </>
   );
 }
