@@ -197,7 +197,7 @@ export default function CameraRig() {
           look.set(-1.1, 0.75, 0.0);
           targetFov = 44;
         } else {
-          // mobile 390: elevated angle so fire sits in bottom 30% below the CTA row
+          // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
           pos.set(-1.8, 1.85, 4.2);
           look.set(-0.3, 2.25, 0.0);
           targetFov = 54;

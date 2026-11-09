@@ -48,9 +48,28 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     if (!(image instanceof HTMLImageElement)) {
       throw new Error("Flame sprite sheet must be an image");
     }
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(image, 0, 0);
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const d = imgData.data;
+      // Purge background red haze (a < 45 or g < 15): make it pure transparent black (0,0,0,0)
+      for (let i = 0; i < d.length; i += 4) {
+        if (d[i + 3] < 45 || d[i + 1] < 15) {
+          d[i] = 0;
+          d[i + 1] = 0;
+          d[i + 2] = 0;
+          d[i + 3] = 0;
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
     const insetX = 1 / image.naturalWidth;
     const insetY = 1 / image.naturalHeight;
-    const t = sheet.clone();
+    const t = new THREE.CanvasTexture(canvas);
     t.needsUpdate = true;
     t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = THREE.ClampToEdgeWrapping;
@@ -62,18 +81,19 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     return { tex: t, insetX, insetY };
   }, [sheet]);
 
-  // Radially mask the flame billboard so no straight edges or rectangular glow can ever show
+  // Radially mask the flame billboard: alpha hits 0 well inside the quad (radius 44 in 128x128)
   const radialMask = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 128;
     canvas.height = 128;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const grad = ctx.createRadialGradient(64, 68, 6, 64, 68, 54);
-      grad.addColorStop(0, "white");
-      grad.addColorStop(0.50, "white");
-      grad.addColorStop(0.82, "rgba(255,255,255,0.3)");
-      grad.addColorStop(1, "black");
+      const grad = ctx.createRadialGradient(64, 70, 4, 64, 70, 44);
+      grad.addColorStop(0, "rgba(255,255,255,1.0)");
+      grad.addColorStop(0.35, "rgba(255,255,255,0.85)");
+      grad.addColorStop(0.65, "rgba(255,255,255,0.30)");
+      grad.addColorStop(0.90, "rgba(255,255,255,0.05)");
+      grad.addColorStop(1.0, "rgba(0,0,0,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
     }
@@ -104,6 +124,7 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
           map={tex}
           alphaMap={radialMask}
           transparent
+          alphaTest={0.05}
           opacity={0.38}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
@@ -162,8 +183,13 @@ function FireLight() {
 }
 
 export default function Fire() {
+  const section = useOmni((s) => s.section);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
+  // Lower pit on mobile Contact (ch4) so flame tips stay >=40px below the GitHub/LinkedIn link row
+  const offsetY = (isMobile && section === "contact") ? -0.48 : 0;
+
   return (
-    <group>
+    <group position={[0, offsetY, 0]}>
       <FirePit />
       <FireLight />
       <Flames />
