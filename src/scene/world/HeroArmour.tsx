@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { useGLTF, useTexture } from "@react-three/drei";
+import { RoundedBox, useGLTF, useTexture } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 
 /**
@@ -14,16 +14,24 @@ const BASE: [number, number, number] = [-12.5, 0, -1.2];
 export default function HeroArmour() {
   const section = useOmni((s) => s.section);
   const { scene } = useGLTF(URL, "/draco/");
-  // r20: the ch1 scanned stone block (Poly Haven concrete_road_barrier_02, CC0, 512 px) on the ch2 stand, kept dark
   const stoneTex = useTexture("/assets/ruins/textures/stone_block_512.jpg");
-  const stoneMat = useMemo(() => {
-    const t = stoneTex.clone();
+  const stoneTile = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Cannot create stone texture");
+    const image = stoneTex.image;
+    if (!(image instanceof HTMLImageElement)) throw new Error("Stone texture image is unavailable");
+    // The source is a scan atlas: exclude its stretched UV padding.
+    context.drawImage(image, 110, 300, 280, 135, 0, 0, 256, 256);
+    const t = new THREE.CanvasTexture(canvas);
     t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(0.5, 1.6);
-    t.needsUpdate = true;
-    return new THREE.MeshStandardMaterial({ map: t, color: new THREE.Color(0.13, 0.15, 0.17), roughness: 1, metalness: 0 });
+    t.repeat.set(1, 2.5);
+    return t;
   }, [stoneTex]);
+  useEffect(() => () => stoneTile.dispose(), [stoneTile]);
   const obj = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((c) => {
@@ -56,15 +64,21 @@ export default function HeroArmour() {
   return (
     <group position={BASE}>
       <primitive object={target} />
-      {/* dark stone stand (covers the shorter baked block) */}
-      <mesh position={[0, STAND_TOP / 2, 0]}>
-        <boxGeometry args={[0.6, STAND_TOP, 0.6]} />
-        <primitive object={stoneMat} attach="material" />
-      </mesh>
-      {/* black contact shadow cap to eliminate diffuse reflection on the stand top */}
+      <RoundedBox args={[0.6, STAND_TOP, 0.6]} radius={0.025} smoothness={3} position={[0, STAND_TOP / 2, 0]}>
+        <meshStandardMaterial
+          map={stoneTile}
+          color="#777a7d"
+          roughness={0.9}
+          bumpMap={stoneTile}
+          bumpScale={0.015}
+          emissive="#5e6062"
+          emissiveMap={stoneTile}
+          emissiveIntensity={0.2}
+        />
+      </RoundedBox>
       <mesh position={[0, STAND_TOP + 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[0.61, 0.61]} />
-        <meshBasicMaterial color="#010101" />
+        <circleGeometry args={[0.24, 32]} />
+        <meshBasicMaterial color="#010101" transparent opacity={0.75} depthWrite={false} />
       </mesh>
       {/* kill stray baked warm column at screen x: 150-220, y: 780-880 */}
       <mesh position={[0.7, 1.1, 2.0]} rotation={[0, -Math.PI / 4, 0]}>
