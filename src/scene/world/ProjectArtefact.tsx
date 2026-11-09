@@ -155,10 +155,10 @@ export default function ProjectArtefact() {
       <group ref={lanternRef} position={[0.35, 1.33, 0.52]}>
         <primitive object={lanternObj} />
         {/* r14: a plain iron chain runs from the lantern up out of frame, so it hangs from something */}
-        {Array.from({ length: 22 }, (_, i) => (
-          <mesh key={i} position={[0, 0.36 + i * 0.145, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
-            <torusGeometry args={[0.034, 0.0085, 6, 14]} />
-            <meshBasicMaterial color="#4a3321" toneMapped={false} />
+        {Array.from({ length: 64 }, (_, i) => (
+          <mesh key={i} position={[0, 0.28 + i * 0.05, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+            <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
+            <meshBasicMaterial color="#5a3d27" toneMapped={false} />
           </mesh>
         ))}
         <pointLight ref={lightRef} color="#ffb066" intensity={3.15} distance={1.6} decay={2} />

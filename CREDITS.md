@@ -176,3 +176,7 @@ No new third-party assets. Changes to credited CC0 files:
 ## Round 14 scenes (blender-scenes)
 
 No new third-party assets. Reused CC0 files in new roles: the hooded-mourner relief scan is now the single ch4 subject (stood on the floor with a baked contact shadow, lit by the barrel's light from off-screen); the iron-barrel scan (Round 13) stays in the scene but is hidden at ch4. The ch3 lantern chain is a procedural torus chain (no asset). No Poly Haven model exists for a stone plinth, so the ch1/ch2 stands remain textured stone blocks (Poly Haven cobblestone_floor_13 texture, CC0).
+
+## Round 15 scenes (blender-scenes)
+
+No new third-party assets. The Poly Haven barrel_stove scan (CC0) is again the ch4 subject beside the scanned relief; the ch3 chain is procedural.

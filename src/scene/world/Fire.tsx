@@ -257,17 +257,12 @@ function FloorVignette() {
 }
 
 export default function Fire() {
-  const section = useOmni((s) => s.section);
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
-  // Lower pit on mobile Contact (ch4) so flame tips stay >=40px below the GitHub/LinkedIn link row
-  const offsetY = (isMobile && section === "contact") ? -0.48 : 0;
-
+  // r15: the barrel and its real flame are the ch4 subject again; the mobile camera frames them
   return (
-    <group position={[0, offsetY, 0]}>
-      {/* r14: at ch4 the barrel and its flame cards are out of shot; the light stays, so the scanned relief is lit from off-screen */}
-      {section !== "contact" && <FirePit />}
+    <group>
+      <FirePit />
       <FireLight />
-      {section !== "contact" && <Flames />}
+      <Flames />
       <FloorVignette />
     </group>
   );

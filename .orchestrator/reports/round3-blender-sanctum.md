@@ -124,3 +124,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch3: chain of 22 links runs from the lantern to the top of frame; alternate links are edge-on so it reads as a dotted chain (r14-scenes-ch3).
 - ch2: cool rim light (#8fb0ff) behind and above the cuirass; stand is still a textured block, no Poly Haven plinth model exists; ch1 plinth unchanged (r14-scenes-ch2).
 - sanctum.glb 1.76 MB, sanctum-lite.glb under 0.6 MB. Dev server (port 5211) stopped. The CameraRig contact case was edited in addition to chapterLook (the ch4 framing lives there, not in chapterLook.ts).
+
+## Round 15 scenes (r15/blender-scenes)
+- ch4 desktop: barrel + real flame are the subject again, seen from a low side camera (rim edge-on, interior hidden); relief behind, dark (albedo x0.07, no extra fill) but still catches the fire light (r15-scenes-ch4).
+- Floor ellipse: it was the oculus sun (SUN_shaft) baked into the lightmap; sun set to 0, the floor is baked with the fire points only. Crops r15-floor-crop-ch0.png and r15-floor-crop-ch4.png show a soft falloff and no edge.
+- Mobile 390: ch0 and ch4 use one portrait camera (pos -4.4,0.9,5.2 / look 0,3.0,0 / fov 62): barrel, flame and relief fully in frame, flame top ~100 px below the link row, ~100 px of floor under the barrel (r15-scenes-ch0-390, ch4-390). The first try at 8 m put the camera inside a wall pilaster (black frame); r = 6.8 m fixes it.
+- ch2: the #8fb0ff rim sits behind the cuirass at half strength (1.7), stand darker (r15-scenes-ch2). ch3: 64 small links (about 1/3 size) run to the lantern finial (r15-scenes-ch3).
+- Edited: Fire.tsx (contact guards and mobile offset removed), CameraRig.tsx (contact + portrait boot), HeroArmour.tsx, ProjectArtefact.tsx. Dev server 5211 stopped.
