@@ -78,6 +78,7 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 | Veiled Mourner (US National Gallery of Art scan) | Thomas Flynn (nebulousflynn) | https://sketchfab.com/3d-models/veiled-mourner-8cde4ece6b8041ae9e6b4bf9afff3912 | CC Attribution 4.0 | `public/assets/scans/statue-hooded-mourner.glb` (Ch0 Hero: 16th c. French follower of Germain Pilon hooded mourner sculpture by hearth; 26,267 tris, 714 KB) |
 | Lion-Head Sallet — Renaissance Helmet | viktorinsky | https://sketchfab.com/3d-models/lion-head-sallet-renaissance-helmet-9a9de021922e453d9d4728a2882c5b2e | CC Attribution 4.0 | `public/assets/scans/helmet-sallet-scan.glb` (Ch2 Work: Zamek Nowy Wiśnicz historical Renaissance helmet scan for Job 1 plinth; 34,185 tris, 519 KB) |
 | Leather Cuirass 17 | Peris Digital | https://sketchfab.com/3d-models/leather-cuirass-17-fa78d8d2ce994e889279a1b854950943 | CC Attribution 4.0 | `public/assets/scans/armour-cuirass-scan.glb` (Ch2 Work: 144 Sony Alpha camera RAW photogrammetry cuirass scan for Job 2 plinth; 30,254 tris, 1075 KB) |
+| Armor for Man and Horse, 1964.88 | Cleveland Museum of Art | https://sketchfab.com/3d-models/196488-armor-for-man-and-horse-faca2ad557f64809b598c3a646a8804f | CC0 Public Domain | `public/assets/scans/armour-torso.glb` (Ch2 Work: isolated torso, 4,203 triangles, 1K textures) |
 | Moonbrand (Early 14th C Arming Sword) | The Oakeshott Institute | https://sketchfab.com/3d-models/moonbrand-early-14th-c-arming-sword-80fa91fc8c974fd0acd2a55cc513edec | CC Attribution 4.0 | `public/assets/scans/sword-arming-scan.glb` (Ch2 Work: 14th c. European arming sword museum photogrammetry scan for Job 3 plinth; 11,492 tris, 860 KB) |
 | Viking Age Round Shield | Rigsters | https://sketchfab.com/3d-models/viking-age-round-shield-b6aeee50315a437fa261d20ad0e39aae | CC Attribution 4.0 | `public/assets/scans/shield-round-scan.glb` (Ch2 Work: Society for Combat Archaeology round shield scan; 9,070 tris, 225 KB) |
 | Brass Candleholders | Tina / Poly Haven | https://polyhaven.com/a/brass_candleholders | CC0 1.0 Universal | `public/assets/scans/candles-brass.glb` (Ch1 About & Ch4 Contact: antique engraved brass candleholders with real wax taper candles; 38,176 tris, 757 KB) |
@@ -171,7 +172,7 @@ No new third-party assets. Changes to credited CC0 files:
 | Asset | Author | Source | Licence | Used for |
 |---|---|---|---|---|
 | Barrel Stove (scan, 1k, `blender/props/barrel_stove/`, processed to `public/assets/ruins/fire_barrel.draco.glb`) | Poly Haven | https://polyhaven.com/a/barrel_stove | CC0 1.0 Universal | Ch0/ch4: the one complete fire vessel (open iron drum widened 1.35x, albedo x0.55), replaces the rocks-and-logs pit |
-| Armour Cuirass scan (`public/assets/scans/armour-cuirass-scan.glb`, listed in the Scans section) | see Scans | CC0 | Ch2: the one subject, loaded at runtime at full detail on a dark stone stand |
+| Armour torso (`public/assets/scans/armour-torso.glb`, listed in the Scans section) | Cleveland Museum of Art | CC0 Public Domain | Ch2: isolated museum scan, loaded on demand without a plinth |
 
 ## Round 14 scenes (blender-scenes)
 

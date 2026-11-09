@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect, lazy, Suspense } from "react";
+import { Suspense, useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { Environment, Clouds, Cloud } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -51,7 +51,7 @@ function ExperienceLighting() {
 
   const cuirassTarget = useMemo(() => {
     const t = new THREE.Object3D();
-    t.position.set(-12.5, 2.3, -1.2);
+    t.position.set(-12.5, 0.65, -1.2);
     return t;
   }, []);
 
@@ -91,19 +91,19 @@ function ExperienceLighting() {
       {/* 1. Warm rim spot from behind-left on the cuirass (world +Z is screen left, world -X is behind) */}
       <spotLight
         color="#ffaa55"
-        intensity={7.5}
-        distance={3.6}
+        intensity={8}
+        distance={4.0}
         angle={Math.PI / 4}
         penumbra={0.8}
         decay={2}
-        position={[-13.6, 2.5, -0.6]}
+        position={[-13.3, 1.4, 0.0]}
         target={cuirassTarget}
       />
 
       {/* 2. Faint warm floor pool behind the cuirass (decay: 2, penumbra: 1.0 for seamless feathering) */}
       <spotLight
         color="#df7c38"
-        intensity={1.1}
+        intensity={0.25}
         distance={4.5}
         angle={Math.PI / 5}
         penumbra={1.0}
@@ -114,7 +114,7 @@ function ExperienceLighting() {
 
       {/* 3. Soft warm atmospheric fog gradient in the void behind cuirass (layered depth, zero straight edges) */}
       {hazeTexture && (
-        <mesh position={[-16.0, 2.2, -2.0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
+        <mesh position={[-16.0, 0.9, -2.0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
           <planeGeometry args={[3.2, 2.4]} />
           <meshBasicMaterial
             map={hazeTexture}
@@ -401,11 +401,11 @@ export default function World() {
       <SubjectRimLight />
       <SparksAndMist />
       <Fire />
-      <HeroArmour />
-      <Suspense fallback={null}>
-        <EffigyKnight />
-        <RuinChurch />
-      </Suspense>
+      {section === "experience" && (
+        <Suspense fallback={null}>
+          <HeroArmour />
+        </Suspense>
+      )}
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 
