@@ -409,6 +409,10 @@
     pointer-events: none;
     z-index: -1;
   }
+  .chapter-hero::before,
+  .chapter-contact::before {
+    background: linear-gradient(180deg, rgba(6, 5, 5, 0) 0%, rgba(6, 5, 5, 1) 20%, rgba(6, 5, 5, 1) 90%, rgba(6, 5, 5, 0) 100%);
+  }
   .chapter-view > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
 
   .hero-title { font-size: clamp(2.4rem, 11vw, 3.8rem); line-height: 1.0; }
@@ -423,6 +427,13 @@
     padding: var(--space-4);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  @media (max-width: 767px) and (min-height: 700px) {
+    .chapter-hero,
+    .chapter-contact {
+      translate: 0 -32px;
+    }
   }
 
   .exp-tabs {
