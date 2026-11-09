@@ -157,3 +157,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Restored the c14 ch1 warm key (3.2, d 4.2, pos 8.8,2.2,-1.0) and cool rim (0.85, d 2.2, pos 11.8,1.8,0.4); ch1 ambient 0.16 to 0.30, key 1.4 to 1.9, fog 4.8-8.2 to 6-14 (c14 had 0.38 / 2.2 / 8-28; I stopped short of that so the wall edges stay hidden). ch1 camera look.y +0.13: crown now at y~112 at 1440x900.
 - ch2: the stand cuboid takes the same stone as a 512 px texture (the ch1 atlas tile cannot be addressed at runtime), colour (0.13, 0.15, 0.17), dark.
 - Proof: `.orchestrator/reference/r20-blender-plinth-ch1-1920.png`, `-ch2-1920.png` (1920x1080 DPR1). Not shot at 1512x982 DPR2.
+
+## r21 Lane D (ch1 plinth finish, relief dim, stray object)
+- ch1 camera pulled back ~0.85 m (pos 4.85,1.63,-1.67): at 1512x982 DPR2 the plinth base sits at about y 890 of 982 with floor in frame; the crown is at y~195 at 1920x1080. Fog 6.2-9.5 (was 6-14): the bottom-right floor corner is dimmer but a faint diagonal edge still shows at 1920.
+- Plinth material: colour (0.17, 0.19, 0.21), roughness 0.72. On my regions plinth 19.1 vs statue 37.5 (0.51x, marginal). It still reads as rough brown stone because the baked atlas carries the warm tint; a true fix needs a rebake with a neutral tile.
+- Relief (ch0/ch4): colour, emissive and envMapIntensity at 0.35 on the baked props. ch4 at 1920: relief 21.6 vs barrel 53.9 (0.40x).
+- ch4 stray object at the right edge (1920): it was the runtime ch1 statue, which rendered in every chapter and fell at the frame edge on wide screens. It now mounts only in ch1; the ch4 edge region measures 4.6 (dark).
+- Proof: `.orchestrator/reference/r21-blender-plinth-ch{0,1,4}-1920.png` and `-ch{1,4}-1512dpr2.png`. No new assets. The Sketchfab effigy swap (R19 b) is not done.

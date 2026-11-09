@@ -163,7 +163,7 @@ export default function CameraRig() {
         // Position camera to frame the marble bust on the RIGHT side of desktop viewport,
         // completely clear of the left-side text column, yawed so back-right corner is out of frame
         if (!isPortrait) {
-          pos.set(5.7, 1.62, -1.6);
+          pos.set(4.85, 1.63, -1.67);   // r21: pulled back ~0.85 m so the plinth base clears y<=900 of 982 at 1512 and floor shows
           look.set(11.0, 1.58, -1.15);   // r20: +0.13 so the statue crown sits at y>=110 (was ~75, under the nav line)
         } else {
           pos.set(5.8, 1.7, 0.0);
