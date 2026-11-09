@@ -37,6 +37,95 @@ function WorldLighting() {
 }
 
 /**
+ * R20 ch2: Experience backdrop lighting & depth
+ * - One warm rim spot from behind-left on the cuirass
+ * - Faint warm floor pool behind the cuirass (penumbra 1.0)
+ * - Faint atmospheric warm fog haze gradient in the void behind it for layered depth
+ */
+function ExperienceLighting() {
+  const section = useOmni((s) => s.section);
+
+  const cuirassTarget = useMemo(() => {
+    const t = new THREE.Object3D();
+    t.position.set(-12.5, 2.3, -1.2);
+    return t;
+  }, []);
+
+  const floorTarget = useMemo(() => {
+    const t = new THREE.Object3D();
+    // Centered on the floor directly behind the cuirass stand (accounting for perspective depth)
+    t.position.set(-14.8, 0, -1.8);
+    return t;
+  }, []);
+
+  const hazeTexture = useMemo(() => {
+    if (typeof document === "undefined") return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const grad = ctx.createRadialGradient(128, 128, 10, 128, 128, 120);
+      grad.addColorStop(0, "rgba(230, 135, 60, 0.85)");
+      grad.addColorStop(0.35, "rgba(180, 95, 35, 0.50)");
+      grad.addColorStop(0.7, "rgba(85, 36, 12, 0.16)");
+      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    return tex;
+  }, []);
+
+  if (section !== "experience") return null;
+
+  return (
+    <group>
+      <primitive object={cuirassTarget} />
+      <primitive object={floorTarget} />
+
+      {/* 1. Warm rim spot from behind-left on the cuirass (world +Z is screen left, world -X is behind) */}
+      <spotLight
+        color="#ffaa55"
+        intensity={7.5}
+        distance={3.6}
+        angle={Math.PI / 4}
+        penumbra={0.8}
+        decay={2}
+        position={[-13.6, 2.5, -0.6]}
+        target={cuirassTarget}
+      />
+
+      {/* 2. Faint warm floor pool behind the cuirass (decay: 2, penumbra: 1.0 for seamless feathering) */}
+      <spotLight
+        color="#df7c38"
+        intensity={3.6}
+        distance={5.8}
+        angle={Math.PI / 3.2}
+        penumbra={1.0}
+        decay={2}
+        position={[-14.8, 3.4, -1.8]}
+        target={floorTarget}
+      />
+
+      {/* 3. Soft warm atmospheric fog gradient in the void behind cuirass (layered depth, zero straight edges) */}
+      {hazeTexture && (
+        <mesh position={[-16.0, 2.2, -2.0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
+          <planeGeometry args={[6.0, 4.2]} />
+          <meshBasicMaterial
+            map={hazeTexture}
+            transparent
+            opacity={0.32}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+/**
  * Subject rim and key lights: confined strictly to subjects with short distance / spot cones (decay: 2)
  * so light never washes background walls or creates false boxes.
  */
@@ -60,8 +149,8 @@ function SubjectRimLight() {
     );
   }
   if (section === "experience") {
-    // ch2: cool rim spot cone is handled in HeroArmour.tsx strictly aimed at the cuirass (zero back wall emission)
-    return null;
+    // ch2: warm rim spot from behind-left on cuirass + faint warm floor pool & atmospheric depth
+    return <ExperienceLighting />;
   }
   if (section === "contact") {
     // ch4: low cool rim behind barrel & relief
