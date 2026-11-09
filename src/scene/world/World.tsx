@@ -99,9 +99,9 @@ function ExperienceLighting() {
       {/* 2. Faint warm floor pool behind the cuirass (decay: 2, penumbra: 1.0 for seamless feathering) */}
       <spotLight
         color="#df7c38"
-        intensity={3.6}
-        distance={5.8}
-        angle={Math.PI / 3.2}
+        intensity={1.1}
+        distance={4.5}
+        angle={Math.PI / 5}
         penumbra={1.0}
         decay={2}
         position={[-14.8, 3.4, -1.8]}
@@ -111,11 +111,11 @@ function ExperienceLighting() {
       {/* 3. Soft warm atmospheric fog gradient in the void behind cuirass (layered depth, zero straight edges) */}
       {hazeTexture && (
         <mesh position={[-16.0, 2.2, -2.0]} rotation={[0, Math.PI / 2 + 0.12, 0]}>
-          <planeGeometry args={[6.0, 4.2]} />
+          <planeGeometry args={[3.2, 2.4]} />
           <meshBasicMaterial
             map={hazeTexture}
             transparent
-            opacity={0.32}
+            opacity={0.04}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
           />
