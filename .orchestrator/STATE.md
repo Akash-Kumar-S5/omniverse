@@ -476,3 +476,6 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r24 ch2 swap dispatched to copilot-review; rejected branch renamed rejected-copilot-ch2
 - r23/world ch0 camera tilt merged; 1920 shot verified (flame, barrel, relief framed, no bleed).
 - Morph: R24 split. copilot-review = wiring+camera only (placeholder ch2-breastplate.glb); blender-sanctum queued R24b (isolate+decimate breastplate) after R22.
+- Merged r22 (effigy, church), r24 breastplate swap; fixed World.tsx import/JSX after -X theirs. Build+lint clean. ch2 1920 shot: whole breastplate, no plinth. Next: critic c18.
+- critic c18 dispatched (port 4420).
+- R25 dispatched after c18 (8.0, ch2 7.2 blocker): A copilot-review r25/ch2-ground, B copilot-swarm r25/fire-glow, C agy-world r25/effigy-dpr, E blender-sanctum r25/ch1-plinth; agy-review r23 ch3 hang still pending.
