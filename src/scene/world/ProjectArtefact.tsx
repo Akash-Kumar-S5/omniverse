@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { useOmni } from "../../state/store";
 import { projects } from "../../content";
 import { getProjectGlyphAnchor } from "../particles/targets";
+import { stageFor } from "./projectStaging";
 
 const FRAME_MODEL_URL = "/assets/models/fancy_picture_frame_02.glb";
 // warm practical that lights the painting: Poly Haven lantern chandelier (CC0), hung above-front of the frame
@@ -15,6 +16,34 @@ const FRAME_SCALE = 2.0;
 const PAINTING_URLS = projects.map(
   (p, i) => p.image || `/assets/paintings/painting_${i % 8}.webp`
 );
+
+/** a lantern on its chain with an emissive core and two warm lights; colour and strength come from the project's stage */
+function LanternRig({ lantern, position, chain = 15, color, k, lightRef }: {
+  lantern: THREE.Object3D;
+  position: [number, number, number];
+  chain?: number;
+  color: string;
+  k: number;
+  lightRef: React.RefObject<THREE.PointLight | null>;
+}) {
+  return (
+    <group position={position}>
+      <primitive object={lantern} />
+      {Array.from({ length: chain }, (_, i) => (
+        <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+          <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
+          <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+        </mesh>
+      ))}
+      <mesh>
+        <sphereGeometry args={[0.065, 12, 10]} />
+        <meshBasicMaterial color={color} toneMapped={false} />
+      </mesh>
+      <pointLight color={color} intensity={2 * k} distance={1} decay={2} position={[0, -0.12, 0.1]} />
+      <pointLight ref={lightRef} color={color} intensity={2.8 * k} distance={3.6} decay={1.8} />
+    </group>
+  );
+}
 
 export default function ProjectArtefact() {
   const section = useOmni((s) => s.section);
@@ -27,6 +56,7 @@ export default function ProjectArtefact() {
   const { scene } = useGLTF(FRAME_MODEL_URL, "/draco/");
 
   // r32: only the active painting blocks the first paint; the rest stream in right after, so later swaps hit the cache
+  const stage = stageFor(activeProject);
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = useTexture(PAINTING_URLS[safeIdx]);
   useEffect(() => {
@@ -154,6 +184,11 @@ export default function ProjectArtefact() {
             }
           }
 
+          // r34: a per-project crop of the artwork (zoom window), so each frame shows a different part of its own painting
+          const win = 1 / stage.zoom;
+          activeTexture.repeat.set(win, win);
+          activeTexture.offset.set(stage.cropX * (1 - win), stage.cropY * (1 - win));
+          activeTexture.needsUpdate = true;
           mesh.material = new THREE.MeshStandardMaterial({
             map: activeTexture,
             color: new THREE.Color("#ffffff"),
@@ -175,7 +210,7 @@ export default function ProjectArtefact() {
       }
     });
     return clone;
-  }, [scene, activeTexture]);
+  }, [scene, activeTexture, stage]);
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
@@ -191,8 +226,8 @@ export default function ProjectArtefact() {
     const dest = getProjectGlyphAnchor(activeProject);
     dest.y = 1.85;
     // Shift frame group right (~80px of screen) along camera right vector so chain lands at x >= 1060 and copy never collides
-    dest.addScaledVector(camRight, 0.82);
-    dest.addScaledVector(camUp, 0.48);
+    dest.addScaledVector(camRight, 0.82 + stage.dx);
+    dest.addScaledVector(camUp, 0.48 + stage.dy);
 
     targetPos.current.copy(dest);
 
@@ -210,7 +245,7 @@ export default function ProjectArtefact() {
     if (lightRef.current) {
       const tt = performance.now() / 1000;
       // Controlled, non-glinting gentle lantern flicker illuminating frame and canvas
-      lightRef.current.intensity = 2.8 * (1 + 0.06 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      lightRef.current.intensity = 2.8 * stage.lightK * (1 + 0.06 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -223,62 +258,98 @@ export default function ProjectArtefact() {
       {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.1px keystone */}
       <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
         <group ref={turnRef}>
-          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat, facing camera directly (dark backing card deleted) */}
-          <primitive
-            object={frameScene}
-            scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
-            position={[0, 0, 0]}
-          />
-
-          {/* r30: feathered stone wall behind the frame, and a soft shadow thrown down-right onto it */}
-          <mesh position={[0, -0.02, -0.2]}>
-            <planeGeometry args={[3.4, 3.8]} />
-            <meshStandardMaterial map={wall.stone} alphaMap={wall.feather} transparent depthWrite={false} color="#4a423a" roughness={1} metalness={0} />
-          </mesh>
-          <mesh position={[0.1, -0.1, -0.18]}>
-            <planeGeometry args={[2.1, 2.45]} />
-            <meshBasicMaterial map={wall.shade} transparent depthWrite={false} toneMapped={false} />
-          </mesh>
-
           {/* r27: dark feathered card between the frame and the back wall; hides the hard vertical wall band at the left */}
           <mesh position={[-1.55, -0.2, 0.4]}>
             <planeGeometry args={[1.5, 6]} />
             <meshBasicMaterial map={bandFog} transparent depthWrite={false} toneMapped={false} />
           </mesh>
 
-          {/* Hook at the frame's top centre, chain slanting up to the lantern base (lantern group sits at [0,1.10,0.30]) */}
-          <mesh position={[0, 0.775, 0.03]}>
-            <torusGeometry args={[0.018, 0.005, 6, 12, Math.PI * 1.5]} />
-            <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-          </mesh>
-          <group position={[0, 0.79, 0.03]} rotation={[Math.atan2(0.27, 0.19), 0, 0]}>
-            {Array.from({ length: 14 }, (_, i) => (
-              <mesh key={i} position={[0, 0.012 + i * 0.0235, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
-                <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
-                <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-              </mesh>
-            ))}
-          </group>
+          {/* r34: the staged group: this project's own scale, roll, yaw and pitch */}
+          <group rotation={[stage.pitch, stage.yaw, stage.roll]} scale={stage.scale}>
+            {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 */}
+            <primitive object={frameScene} scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]} position={[0, 0, 0]} />
 
-          {/* Lantern hangs centered directly above frame with >= 25px air gap */}
-          <group position={[0, 1.10, 0.30]}>
-            <primitive object={lanternObj} />
-            {/* Chain starting below nav line (starts below y=80 in screen space, lands at x >= 1060) */}
-            {Array.from({ length: 15 }, (_, i) => (
-              <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
-                <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
-                <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-              </mesh>
-            ))}
-            {/* Emissive core so the lantern reads as lit */}
-            <mesh>
-              <sphereGeometry args={[0.065, 12, 10]} />
-              <meshBasicMaterial color="#ffb060" toneMapped={false} />
+            {/* r30: feathered stone wall behind the frame, and a soft shadow thrown down-right onto it (r34: tint and size per project) */}
+            <mesh position={[0, -0.02, -0.2]} scale={stage.wallScale}>
+              <planeGeometry args={[3.4, 3.8]} />
+              <meshStandardMaterial map={wall.stone} alphaMap={wall.feather} transparent depthWrite={false} color={stage.wall} roughness={1} metalness={0} />
             </mesh>
-            {/* r27: short warm light that lifts the frame top */}
-            <pointLight color="#ffb060" intensity={2} distance={1} decay={2} position={[0, -0.12, 0.1]} />
-            {/* Lantern point light illuminating canvas and carved gilt frame */}
-            <pointLight ref={lightRef} color="#ffb066" intensity={2.8} distance={3.6} decay={1.8} />
+            <mesh position={[0.1, -0.1, -0.18]}>
+              <planeGeometry args={[2.1, 2.45]} />
+              <meshBasicMaterial map={wall.shade} transparent depthWrite={false} toneMapped={false} />
+            </mesh>
+
+            {stage.fixture === "hang" && (
+              <>
+                {/* Hook at the frame's top centre, chain slanting up to the lantern base (lantern group sits at [0,1.10,0.30]) */}
+                <mesh position={[0, 0.775, 0.03]}>
+                  <torusGeometry args={[0.018, 0.005, 6, 12, Math.PI * 1.5]} />
+                  <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+                </mesh>
+                <group position={[0, 0.79, 0.03]} rotation={[Math.atan2(0.27, 0.19), 0, 0]}>
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <mesh key={i} position={[0, 0.012 + i * 0.0235, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+                      <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
+                      <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+                    </mesh>
+                  ))}
+                </group>
+                <LanternRig lantern={lanternObj} position={[0, 1.1, 0.3]} color={stage.light} k={stage.lightK} lightRef={lightRef} />
+              </>
+            )}
+
+            {stage.fixture === "side" && (
+              <>
+                {/* a short iron arm out of the wall; the lantern hangs from its end beside the frame */}
+                <mesh position={[stage.side * 1.0, 1.0, 0.04]}>
+                  <boxGeometry args={[0.5, 0.035, 0.05]} />
+                  <meshStandardMaterial color="#1c1814" roughness={0.8} metalness={0.4} />
+                </mesh>
+                <LanternRig lantern={lanternObj} position={[stage.side * 1.18, 0.62, 0.25]} chain={11} color={stage.light} k={stage.lightK} lightRef={lightRef} />
+              </>
+            )}
+
+            {stage.fixture === "candles" && (
+              <>
+                {/* a stone ledge under the frame with three candles; the light comes from below */}
+                <mesh position={[0, -0.84, 0.16]}>
+                  <boxGeometry args={[1.5, 0.07, 0.42]} />
+                  <meshStandardMaterial map={wall.stone} color="#4a443c" roughness={0.95} />
+                </mesh>
+                {[-0.32, 0.05, 0.36].map((cx, i) => (
+                  <group key={i} position={[cx * (stage.side === 1 ? 1 : -1), -0.805, 0.18]}>
+                    <mesh position={[0, 0.07 + (i % 2) * 0.03, 0]}>
+                      <cylinderGeometry args={[0.02, 0.024, 0.14 + (i % 2) * 0.06, 14]} />
+                      <meshStandardMaterial color="#cdb98c" roughness={0.92} />
+                    </mesh>
+                    <mesh position={[0, 0.17 + (i % 2) * 0.06, 0]} scale={[1, 1.9, 1]}>
+                      <sphereGeometry args={[0.011, 10, 8]} />
+                      <meshBasicMaterial color="#ffd9a0" toneMapped={false} />
+                    </mesh>
+                  </group>
+                ))}
+                <pointLight ref={lightRef} color={stage.light} intensity={2.6 * stage.lightK} distance={3.2} decay={1.8} position={[0, -0.55, 0.45]} />
+              </>
+            )}
+
+            {stage.fixture === "sconce" && (
+              <>
+                {/* a wall sconce beside the frame: iron arm, a small cup and a steady flame */}
+                <mesh position={[stage.side * 1.12, 0.35, 0.05]}>
+                  <boxGeometry args={[0.04, 0.5, 0.04]} />
+                  <meshStandardMaterial color="#1c1814" roughness={0.8} metalness={0.4} />
+                </mesh>
+                <mesh position={[stage.side * 1.12, 0.62, 0.11]}>
+                  <cylinderGeometry args={[0.07, 0.04, 0.07, 14]} />
+                  <meshStandardMaterial color="#2a241d" roughness={0.7} metalness={0.5} />
+                </mesh>
+                <mesh position={[stage.side * 1.12, 0.72, 0.11]}>
+                  <sphereGeometry args={[0.028, 10, 8]} />
+                  <meshBasicMaterial color="#ffc890" toneMapped={false} />
+                </mesh>
+                <pointLight ref={lightRef} color={stage.light} intensity={2.8 * stage.lightK} distance={3.6} decay={1.8} position={[stage.side * 1.0, 0.7, 0.35]} />
+              </>
+            )}
           </group>
         </group>
       </Float>

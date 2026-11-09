@@ -151,6 +151,9 @@ function SubjectRimLight() {
         <pointLight color="#ffc882" intensity={3.2} distance={4.2} decay={2} position={[8.8, 2.2, -1.0]} />
         {/* Confined cool rim behind statue to give crisp silhouette separation without wall wash */}
         <pointLight color="#6a7a90" intensity={0.85} distance={2.2} decay={2} position={[11.8, 1.8, 0.4]} />
+        {/* r34: a stronger cool back-rim from behind-right and a warm kicker from behind-left, so both contours of the statue separate from the wall */}
+        <pointLight color="#9db4d8" intensity={2.4} distance={3.4} decay={2} position={[12.4, 2.9, 1.0]} />
+        <pointLight color="#ff9a52" intensity={2.0} distance={3.0} decay={2} position={[11.9, 2.2, -1.5]} />
       </>
     );
   }
@@ -357,7 +360,33 @@ function HearthEmbers() {
   );
 }
 
+/** r34: a soft puff texture drawn locally, so the floor mist no longer fetches drei's default cloud.png from a third-party CDN (a flake and an offline break) */
+function makePuffDataUrl(): string {
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d");
+  if (!g) return "";
+  let seed = 7;
+  const rnd = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  g.clearRect(0, 0, 128, 128);
+  for (let i = 0; i < 26; i++) {
+    const r = 18 + rnd() * 26;
+    const x = 64 + (rnd() - 0.5) * 50;
+    const y = 64 + (rnd() - 0.5) * 50;
+    const grad = g.createRadialGradient(x, y, 0, x, y, r);
+    grad.addColorStop(0, "rgba(255,255,255,0.32)");
+    grad.addColorStop(1, "rgba(255,255,255,0)");
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 128, 128);
+  }
+  return c.toDataURL("image/png");
+}
+
 function SparksAndMist() {
+  const puff = useMemo(() => makePuffDataUrl(), []);
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
   const isContact = section === "contact";
@@ -370,7 +399,7 @@ function SparksAndMist() {
       <HearthEmbers />
 
       {/* Low subtle floor mist across the cold stone ruins */}
-      <Clouds material={THREE.MeshBasicMaterial} limit={40}>
+      <Clouds material={THREE.MeshBasicMaterial} limit={40} texture={puff}>
         <Cloud
           seed={42}
           segments={quality === "lite" ? 8 : 16}
