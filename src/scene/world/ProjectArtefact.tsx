@@ -29,6 +29,42 @@ export default function ProjectArtefact() {
   // Load authentic archival manuscript and ledger textures
   const textures = useTexture(PAINTING_URLS);
 
+  // r30: the frame floated in a black void. A feathered stone wall behind it (the CC0 stone block texture already in the repo, very dark and
+  // lit only by the lantern light) plus a soft offset shadow gives it something to hang on.
+  const stoneSrc = useTexture("/assets/ruins/textures/stone_block_512.jpg");
+  const wall = useMemo(() => {
+    const stone = stoneSrc.clone();
+    stone.colorSpace = THREE.SRGBColorSpace;
+    stone.wrapS = stone.wrapT = THREE.RepeatWrapping;
+    stone.repeat.set(1.6, 2);
+    stone.needsUpdate = true;
+    const mk = (draw: (g: CanvasRenderingContext2D) => void) => {
+      const c = document.createElement("canvas");
+      c.width = c.height = 128;
+      const g = c.getContext("2d");
+      if (g) draw(g);
+      return new THREE.CanvasTexture(c);
+    };
+    // alpha map: opaque centre, fully transparent well before the quad edge, so the wall dissolves into the dark
+    const feather = mk((g) => {
+      const r = g.createRadialGradient(64, 64, 6, 64, 64, 62);
+      r.addColorStop(0, "#ffffff");
+      r.addColorStop(0.55, "#9a9a9a");
+      r.addColorStop(1, "#000000");
+      g.fillStyle = r;
+      g.fillRect(0, 0, 128, 128);
+    });
+    const shade = mk((g) => {
+      const r = g.createRadialGradient(64, 64, 10, 64, 64, 62);
+      r.addColorStop(0, "rgba(0,0,0,0.85)");
+      r.addColorStop(0.6, "rgba(0,0,0,0.45)");
+      r.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = r;
+      g.fillRect(0, 0, 128, 128);
+    });
+    return { stone, feather, shade };
+  }, [stoneSrc]);
+
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = textures[safeIdx];
 
@@ -190,6 +226,16 @@ export default function ProjectArtefact() {
             scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
             position={[0, 0, 0]}
           />
+
+          {/* r30: feathered stone wall behind the frame, and a soft shadow thrown down-right onto it */}
+          <mesh position={[0, -0.02, -0.2]}>
+            <planeGeometry args={[3.4, 3.8]} />
+            <meshStandardMaterial map={wall.stone} alphaMap={wall.feather} transparent depthWrite={false} color="#4a423a" roughness={1} metalness={0} />
+          </mesh>
+          <mesh position={[0.1, -0.1, -0.18]}>
+            <planeGeometry args={[2.1, 2.45]} />
+            <meshBasicMaterial map={wall.shade} transparent depthWrite={false} toneMapped={false} />
+          </mesh>
 
           {/* r27: dark feathered card between the frame and the back wall; hides the hard vertical wall band at the left */}
           <mesh position={[-1.55, -0.2, 0.4]}>

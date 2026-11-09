@@ -2,10 +2,11 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 
-const URL = "/assets/scans/armour-torso.glb";
+// r30: a clean museum breastplate scan (Cleveland Museum of Art 1916.1521, CC0, see CREDITS.md) replaces the low-poly torso that read melted at Retina
+const URL = "/assets/scans/armour-breastplate-scan.glb";
 const BASE: [number, number, number] = [-12.6, 0.04, -1.4];   // r27: stand pulled back 0.1 m so the front foot clears the frame bottom at 1920
 const HEIGHT = 0.95;
-// r25: the torso rests on a wooden armour stand (Sketchfab, CC-BY, see CREDITS.md): the post carries it, the crossbar is inside the plate
+// r25: the plate rests on a wooden armour stand (Sketchfab, CC-BY, see CREDITS.md): the post carries it
 const STAND_URL = "/assets/scans/armour-stand-scan.glb";
 const STAND_SCALE = 0.3;   // scan is 3.0 wide x 4.57 tall -> 0.9 m feet, 1.37 m tall
 const TORSO_LIFT = 0.62;   // plate bottom above the floor: the post shows below it
@@ -36,11 +37,13 @@ export default function HeroArmour() {
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
         const material = child.material.clone();
-        material.color.set("#777b80");
-        material.metalness = 0.45;
-        material.roughness = 0.72;
+        // keep the scan's own banded iron and bronze texture; trim it a little so the pauldron highlights do not blow out under the warm key
+        material.color.set("#b9b4ad");
+        material.metalness = Math.min(material.metalness, 0.6);
+        material.roughness = Math.max(material.roughness, 0.55);
         material.emissive.set(0x000000);
         material.emissiveMap = null;
+        material.envMapIntensity = 0.5;
         child.material = material;
       }
     });
@@ -51,70 +54,8 @@ export default function HeroArmour() {
     const holder = new THREE.Group();
     holder.add(clone);
     holder.scale.setScalar(scale);
-    // r29: built-in vertex colours (no shader code): the floating strap tab (found by picking its pixels, holder-local about 0.07, 0.266, 0.114)
-    // goes near-black, and the torn top rim above 0.93 of the plate height fades into shadow
-    holder.updateMatrixWorld(true);
-    const p = new THREE.Vector3();
-    let minY = Infinity;
-    let maxY = -Infinity;
-    holder.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        const pos = child.geometry.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          p.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
-          holder.worldToLocal(p);
-          minY = Math.min(minY, p.y);
-          maxY = Math.max(maxY, p.y);
-        }
-      }
-    });
-    holder.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
-        const geo = child.geometry;
-        const pos = geo.attributes.position;
-        const colors = new Float32Array(pos.count * 3);
-        for (let i = 0; i < pos.count; i++) {
-          p.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
-          holder.worldToLocal(p);
-          let shade = 1;
-          const dxz = Math.hypot(p.x - 0.07, p.z - 0.114);
-          const dy = Math.abs(p.y - 0.266);
-          const strap = Math.max(0, 1 - Math.max(dxz / 0.085, dy / 0.04));
-          shade = Math.min(shade, 1 - 0.88 * Math.min(1, strap * 2.5));
-          const top = (p.y - minY) / (maxY - minY);
-          if (top > 0.93) shade = Math.min(shade, 1 - 0.6 * Math.min(1, (top - 0.93) / 0.05));
-          colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = shade;
-        }
-        geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-        child.material.vertexColors = true;
-        child.material.needsUpdate = true;
-      }
-    });
     return holder;
   }, [scene]);
-
-  // r28: a short dark collar seated on the torn neck opening (found from the scan's highest vertices), so the hole does not read from the front
-  const collar = useMemo(() => {
-    armour.updateMatrixWorld(true);
-    const v = new THREE.Vector3();
-    const pts: THREE.Vector3[] = [];
-    let maxY = -Infinity;
-    armour.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        const pos = child.geometry.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          v.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
-          pts.push(v.clone());
-          if (v.y > maxY) maxY = v.y;
-        }
-      }
-    });
-    const top = pts.filter((p) => p.y > maxY - 0.07);
-    const cx = top.reduce((s, p) => s + p.x, 0) / top.length;
-    const cz = top.reduce((s, p) => s + p.z, 0) / top.length;
-    const r = Math.max(...top.map((p) => Math.hypot(p.x - cx, p.z - cz)));
-    return { x: cx, z: cz, y: maxY, r: Math.min(0.2, r * 0.7) };
-  }, [armour]);
 
   const shadow = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -150,12 +91,8 @@ export default function HeroArmour() {
       <ArmourStand />
       <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.2, 0]}>
         <primitive object={armour} />
-        <mesh position={[collar.x, collar.y - 0.16, collar.z]}>
-          <cylinderGeometry args={[collar.r, collar.r * 1.1, 0.1, 28, 1, true]} />
-          <meshStandardMaterial color="#0d0b09" roughness={0.9} metalness={0.1} side={THREE.DoubleSide} />
-        </mesh>
       </group>
-      {/* r26: warm rim from behind-left so the dark plate edges catch light (c19: the breastplate read mostly black) */}
+      {/* r26: warm rim from behind-left so the dark plate edges catch light */}
       <pointLight color="#ffb070" intensity={2.6} distance={3.2} decay={2} position={[-0.9, 1.5, -0.9]} />
       <spotLight
         color="#ffc890"

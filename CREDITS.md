@@ -214,6 +214,7 @@ No new assets. Existing scans only (barrel stove and lantern chandelier from Pol
 
 No new assets: the ch4 base glow reuses the existing canvas ember gradient; the ch0 shadow is a canvas gradient.
 
-## Round 30 (flow)
+## Round 30 (assets lane)
 
-No new assets.
+- "1916.1521 Breastplate From Hussar's Cuirass" by the Cleveland Museum of Art, https://sketchfab.com/3d-models/19161521-breastplate-from-hussars-cuirass-3056e857cf244a3fb651f9d07a66c5a9, licence CC0 Public Domain. Joined, decimated to 50k tris, 1K textures, Draco, 596 KB: `public/assets/scans/armour-breastplate-scan.glb` (ch2, replaces `armour-torso.glb`, which is now unused), made by `blender/scripts/make_hussar_breastplate.py`. The raw download is git-ignored; re-fetch with `bun tools/sketchfab-dl.ts 3056e857cf244a3fb651f9d07a66c5a9 blender/props/hussar-breastplate`.
+- The Poly Haven Concrete Road Barrier 02 stone texture (CC0, credited in Round 18) now also textures the ch1 plinth slabs and the ch3 wall behind the frame (`public/assets/ruins/textures/stone_block_512.jpg`).

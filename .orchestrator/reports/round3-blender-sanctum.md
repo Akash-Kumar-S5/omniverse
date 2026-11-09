@@ -205,3 +205,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Collar: open-ended cylinder (#0d0b09, double-sided), dropped to 0.16 m under the top vertex, so no flat lid shows.
 - ch1: a thin straight base course (1.42 x 0.08 x 1.42 m, #2d2926) squares the lumpy foot; fogFar stays at 7.4 (set in r28). The bottom-right corner diagonal is still faintly visible.
 - Merge gate: `vite preview` on 5234, ch0 to ch4 at 1920x1080, 0 exceptions and 0 console errors on all five. Lint and build clean. At 1512 the plate-to-copy gap is unchanged from r28 (about 50 px). Proof: `.orchestrator/reference/r29-ch{1,2}-1920.png` and `-1512dpr2.png`.
+
+## r30 assets (judge cycle 1)
+- ch2: the melted low-poly torso is replaced by a clean museum breastplate scan (Cleveland 1916.1521, CC0, 50k tris, 596 KB). It keeps its own banded iron and bronze texture (colour trimmed to #b9b4ad, metalness capped 0.6). The torn-rim, strap and collar workarounds are gone; stand, shadow, key and rim are kept. At 1512 DPR2 the plate starts about 75 px right of the copy. `armour-torso.glb` stays in the repo but is no longer loaded.
+- ch3: a feathered stone wall behind the frame (stone texture, #4a423a, radial alpha map, lit by the lantern light) and a soft offset shadow on it, so the frame hangs against a warm wall and the lantern lights stone. Screen texture unchanged and legible.
+- ch1: the pedestal gets the stone texture on the base course, three stepped cap courses and the body skin, so it reads as moulded stone, not an extruded box. Statue 33.4, plinth 19.7 on my regions (0.59x).
+- Merge gate: `vite preview` on 5235, ch0 to ch4 at 1920x1080 DPR1 and 1512x982 DPR2: 10 of 10 rendered (shots 1.1 to 3.8 MB; blank frames were under 30 KB), 0 exceptions, 0 console errors. Lint and build clean. The judge's ch0 deep-link blank at 1920 did not reproduce here (1.67 MB shot). Proof: `.orchestrator/reference/r30-*`.
