@@ -199,3 +199,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Not done: the floating strap tab. It is not a separate island (two islands, 2441 and 1762 faces, and colour does not isolate it, the whole texture is tan), so I left it rather than guess faces to delete.
 - ch1: no runtime normal map exists, so the plinth body gets a half-transparent flat stone skin (#26231f at 0.5, 1.31 x 1.2 x 1.31 m) that halves the visible clay relief and matches the cap slabs; fogFar 7.8 to 7.4. The bottom-right corner diagonal is still faintly visible.
 - Merge gate: `vite preview` on 5233, ch0 to ch4 at 1920x1080, 0 exceptions and 0 console errors on all five. Lint and build clean. Proof: `.orchestrator/reference/r28-ch{1,2}-1920.png` and `-1512dpr2.png`.
+
+## r29 ch2 + ch1 (critic c22)
+- ch2 strap tab: it was not part of the torso scan. A temporary pixel-picker (removed) showed the bar was the armour stand's own upper crossbar arms poking through the plate. `make_armour_stand.py` now cuts every face above z 1.9 with a vertex further than 0.3 from the post, so only the post, legs and feet remain (143 KB). Vertex-colour darkening on the torso (built-in `vertexColors`, no shader code) also fades the torn top rim above 0.93 of plate height and keeps a strap-sized dark patch, which is now redundant but harmless.
+- Collar: open-ended cylinder (#0d0b09, double-sided), dropped to 0.16 m under the top vertex, so no flat lid shows.
+- ch1: a thin straight base course (1.42 x 0.08 x 1.42 m, #2d2926) squares the lumpy foot; fogFar stays at 7.4 (set in r28). The bottom-right corner diagonal is still faintly visible.
+- Merge gate: `vite preview` on 5234, ch0 to ch4 at 1920x1080, 0 exceptions and 0 console errors on all five. Lint and build clean. At 1512 the plate-to-copy gap is unchanged from r28 (about 50 px). Proof: `.orchestrator/reference/r29-ch{1,2}-1920.png` and `-1512dpr2.png`.
