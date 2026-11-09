@@ -496,3 +496,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Merged r27/ch0. All R27 merged on main; gate green (build+lint, ch0..ch4 0 console errors). NEXT: critic c21 (not yet dispatched; usage limit reached). Then Stage-2 judge on SHIP, GLB prune, FINAL.md.
 - Usage reset. Critic c21 dispatched (port 4500).
 - c21 = 8.3 (ch0 8.5, ch1 8.5, ch2 7.8 REGRESSION from r27 camera/turn, ch3 8.5, ch4 8.4): NOT SHIP. R28 dispatched: blender-sanctum r28/ch2-ch1, sonnet-b r28/ch4-ch3. Copilot parked.
+- Merged r28/ch2-ch1 + r28/ch4-ch3; gate green (build+lint, ch0..ch4 0 console errors). Critic c22 dispatched (port 4520).
