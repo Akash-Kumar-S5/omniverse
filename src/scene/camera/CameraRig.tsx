@@ -145,11 +145,13 @@ export default function CameraRig() {
         // Morph composition rule: keep swarm footprint to the RIGHT of ~58% width and clear of right viewport edge
         if (!isPortrait) {
           look.x -= 1.45;
-          look.y -= 0.25;
+          // r14: lower ch0 camera a few degrees so the barrel rim is edge-on and the interior is not visible
+          pos.y -= 0.68;
+          look.y -= 0.65;
         } else {
-          // Mobile 390: drop camera target so fire sits in bottom 30% below body copy (>=40px below CTA)
-          look.y += 1.05;
-          pos.y += 0.45;
+          // Mobile 390: lower camera so barrel rim is edge-on, fire sits in bottom 30% below body copy
+          pos.y -= 0.25;
+          look.y += 0.40;
         }
         break;
       }

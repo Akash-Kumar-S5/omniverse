@@ -23,6 +23,20 @@ export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
   const pit = useMemo(() => {
     const clone = scene.clone(true);
+    // Darken interior albedo and ensure roughness is high so the interior does not reflect point light as a bright disc
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        if (mesh.material) {
+          const m = (mesh.material as THREE.MeshStandardMaterial).clone();
+          m.roughness = 0.96;
+          m.metalness = 0.04;
+          // Subdue albedo so the mouth interior doesn't blow out
+          m.color.multiplyScalar(0.45);
+          mesh.material = m;
+        }
+      }
+    });
     const box = new THREE.Box3().setFromObject(clone);
     const centre = box.getCenter(new THREE.Vector3());
     const holder = new THREE.Group();
@@ -31,7 +45,23 @@ export function FirePit() {
     holder.add(clone);
     return holder;
   }, [scene]);
-  return <primitive object={pit} position={[0, PLINTH_TOP - 0.085, 0]} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />;
+
+  return (
+    <group position={[0, PLINTH_TOP - 0.085, 0]}>
+      <primitive object={pit} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />
+      {/* Dark charcoal coal bed inside the mouth: deep orange at <=30% intensity to eliminate pink/white reflection */}
+      <mesh position={[0, 0.64, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.38, 32]} />
+        <meshStandardMaterial
+          color="#0c0907"
+          roughness={0.98}
+          metalness={0.02}
+          emissive="#ff4000"
+          emissiveIntensity={0.18}
+        />
+      </mesh>
+    </group>
+  );
 }
 
 interface FlamePlaneProps {
@@ -81,18 +111,18 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     return { tex: t, insetX, insetY };
   }, [sheet]);
 
-  // Radially mask the flame billboard: alpha hits 0 well inside the quad (radius 44 in 128x128)
+  // Radially mask the flame billboard: alpha hits 0 well inside the quad (soft additive edge)
   const radialMask = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 128;
     canvas.height = 128;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const grad = ctx.createRadialGradient(64, 70, 4, 64, 70, 44);
+      const grad = ctx.createRadialGradient(64, 70, 2, 64, 70, 38);
       grad.addColorStop(0, "rgba(255,255,255,1.0)");
-      grad.addColorStop(0.35, "rgba(255,255,255,0.85)");
-      grad.addColorStop(0.65, "rgba(255,255,255,0.30)");
-      grad.addColorStop(0.90, "rgba(255,255,255,0.05)");
+      grad.addColorStop(0.30, "rgba(255,255,255,0.75)");
+      grad.addColorStop(0.60, "rgba(255,255,255,0.25)");
+      grad.addColorStop(0.85, "rgba(255,255,255,0.04)");
       grad.addColorStop(1.0, "rgba(0,0,0,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
@@ -117,15 +147,15 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
   return (
     <group rotation={[0, rotationY, 0]}>
-      {/* Plane bottom sits at coals level and rises ~0.98m tall */}
+      {/* Plane bottom sits at coals level and rises ~1.0m tall */}
       <mesh position={[0, height * 0.5, 0]} renderOrder={5}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           map={tex}
           alphaMap={radialMask}
           transparent
-          alphaTest={0.05}
-          opacity={0.38}
+          alphaTest={0.04}
+          opacity={0.22}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -139,16 +169,19 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  // Flame billboards scaled ~1.4x (1.37m tall, width 1.23m) so it fills the boulder ring
+  // Narrower flame cards so no single card silhouette reads
   const h = quality === "lite" ? 0.86 : 1.0;
-  const w = h * 0.90;
+  const w = quality === "lite" ? 0.38 : 0.44;
 
-  // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
+  // 6 crossed additive soft-alpha billboards at 30-degree intervals resting directly on coals bed
   return (
-    <group position={[0, 0.52, 0]}>   {/* r13: coals bed inside the barrel, flames rise out of its open top (rim at y~0.8) */}
+    <group position={[0, 0.52, 0]}>
       <FlamePlane rotationY={0} phase={0} width={w} height={h} />
-      <FlamePlane rotationY={Math.PI / 3} phase={0.33} width={w * 0.95} height={h} />
-      <FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.67} width={w * 0.95} height={h} />
+      <FlamePlane rotationY={Math.PI / 6} phase={0.17} width={w * 0.94} height={h} />
+      <FlamePlane rotationY={(Math.PI * 2) / 6} phase={0.34} width={w} height={h} />
+      <FlamePlane rotationY={(Math.PI * 3) / 6} phase={0.51} width={w * 0.94} height={h} />
+      <FlamePlane rotationY={(Math.PI * 4) / 6} phase={0.68} width={w} height={h} />
+      <FlamePlane rotationY={(Math.PI * 5) / 6} phase={0.85} width={w * 0.96} height={h} />
     </group>
   );
 }
@@ -175,10 +208,51 @@ function FireLight() {
       ref={ref}
       color="#ff8a3d"
       intensity={7.5}
-      distance={11}
+      distance={0}
       decay={2}
-      position={[0, 1.0, 0]}
+      position={[0, 0.95, 0]}
     />
+  );
+}
+
+/**
+ * Soft radial vignette at floor level that smoothly dissolves the rotunda floor
+ * into the ambient darkness (#060505), eliminating the hard circular edge.
+ */
+function FloorVignette() {
+  const tex = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      // 128 is center (0,0), radius 128 = 8.0m in world space.
+      // Ultra-wide feather from 1.0m (radius 16) all the way to 7.5m (radius 120)
+      const grad = ctx.createRadialGradient(128, 128, 16, 128, 128, 120);
+      grad.addColorStop(0, "rgba(6, 5, 5, 0)");
+      grad.addColorStop(0.20, "rgba(6, 5, 5, 0.05)");
+      grad.addColorStop(0.40, "rgba(6, 5, 5, 0.20)");
+      grad.addColorStop(0.65, "rgba(6, 5, 5, 0.50)");
+      grad.addColorStop(0.85, "rgba(6, 5, 5, 0.85)");
+      grad.addColorStop(1.0, "rgba(6, 5, 5, 1.0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+    }
+    const t = new THREE.CanvasTexture(canvas);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }, []);
+
+  return (
+    <mesh position={[0, 0.035, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={3}>
+      <planeGeometry args={[16, 16]} />
+      <meshBasicMaterial
+        map={tex}
+        transparent
+        depthWrite={false}
+        toneMapped={false}
+      />
+    </mesh>
   );
 }
 
@@ -193,6 +267,7 @@ export default function Fire() {
       <FirePit />
       <FireLight />
       <Flames />
+      <FloorVignette />
     </group>
   );
 }

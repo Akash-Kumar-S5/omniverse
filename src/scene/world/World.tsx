@@ -1,5 +1,7 @@
+import { useRef, useMemo } from "react";
 import * as THREE from "three";
-import { Environment, Sparkles, Clouds, Cloud } from "@react-three/drei";
+import { Environment, Clouds, Cloud } from "@react-three/drei";
+import { useThree, useFrame } from "@react-three/fiber";
 import { useOmni } from "../../state/store";
 import { chapterLook } from "./chapterLook";
 import Sanctum from "./Sanctum";
@@ -33,6 +35,176 @@ function WorldLighting() {
   );
 }
 
+const emberVertexShader = `
+uniform float uTime;
+uniform float uPixelRatio;
+uniform float uStartY;
+uniform float uHeightRange;
+
+attribute float aSize;
+attribute float aSpeed;
+attribute float aOpacity;
+attribute vec3 aNoise;
+attribute vec3 aColor;
+
+varying vec3 vColor;
+varying float vOpacity;
+
+void main() {
+  vec3 pos = position;
+  float rise = mod(pos.y - uStartY + uTime * aSpeed, uHeightRange);
+  pos.y = uStartY + rise;
+
+  // Gentle organic drift
+  float driftPhase = uTime * aSpeed * 1.4 + pos.y * 1.8;
+  pos.x += sin(driftPhase + aNoise.x) * 0.14 * (rise / uHeightRange);
+  pos.z += cos(driftPhase + aNoise.y) * 0.14 * (rise / uHeightRange);
+
+  vec4 mvPosition = viewMatrix * modelMatrix * vec4(pos, 1.0);
+  gl_Position = projectionMatrix * mvPosition;
+
+  // Size in screen pixels (1.5-3 px at 1440)
+  float distFactor = clamp(6.0 / -mvPosition.z, 0.75, 1.35);
+  gl_PointSize = aSize * uPixelRatio * distFactor;
+
+  vColor = aColor;
+  // Fade in as they emerge from coals, fade out before top
+  float fadeIn = smoothstep(0.0, 0.20, rise);
+  float fadeOut = smoothstep(uHeightRange, uHeightRange * 0.72, rise);
+  vOpacity = aOpacity * fadeIn * fadeOut;
+}
+`;
+
+const emberFragmentShader = `
+uniform float uPixelRatio;
+uniform float uIsMobile;
+uniform float uViewportHeight;
+
+varying vec3 vColor;
+varying float vOpacity;
+
+void main() {
+  // Mobile protection: keep 0-390 x 480-560 completely free of embers
+  if (uIsMobile > 0.5) {
+    float screenX = gl_FragCoord.x / uPixelRatio;
+    float screenY = uViewportHeight - (gl_FragCoord.y / uPixelRatio);
+    if (screenX >= 0.0 && screenX <= 390.0 && screenY >= 475.0 && screenY <= 565.0) {
+      discard;
+    }
+  }
+
+  // Slight vertical stretch (1.6x height relative to width)
+  vec2 p = gl_PointCoord - vec2(0.5);
+  vec2 stretched = vec2(p.x * 1.6, p.y);
+  float dist = length(stretched);
+  if (dist > 0.5) discard;
+
+  // Crisp solid spark core, NO halo sprite flare
+  float alpha = smoothstep(0.5, 0.15, dist) * vOpacity;
+
+  gl_FragColor = vec4(vColor, alpha);
+}
+`;
+
+function HearthEmbers() {
+  const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
+  const isContact = section === "contact";
+  const { size } = useThree();
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+
+  const count = quality === "lite" ? 48 : 84;
+  const countMult = isContact ? 0.6 : 1.0;
+  const activeCount = Math.round(count * countMult);
+
+  const { geometry, uniforms } = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(activeCount * 3);
+    const sizes = new Float32Array(activeCount);
+    const speeds = new Float32Array(activeCount);
+    const opacities = new Float32Array(activeCount);
+    const noises = new Float32Array(activeCount * 3);
+    const colors = new Float32Array(activeCount * 3);
+
+    const warmPalette = [
+      new THREE.Color("#ffd48a"), // warm gold
+      new THREE.Color("#ffa842"), // warm fiery amber
+      new THREE.Color("#ffc26a"), // golden yellow
+      new THREE.Color("#ff9234"), // warm ember orange
+    ];
+
+    const startY = 0.70;
+    const heightRange = 3.2;
+
+    for (let i = 0; i < activeCount; i++) {
+      // Randomise across barrel mouth radius (r <= 0.36)
+      const r = Math.sqrt(Math.random()) * 0.36;
+      const theta = Math.random() * Math.PI * 2;
+      positions[i * 3 + 0] = r * Math.cos(theta);
+      positions[i * 3 + 1] = startY + Math.random() * heightRange;
+      positions[i * 3 + 2] = r * Math.sin(theta);
+
+      // Sizes: 1.5 - 2.8 px at 1440
+      sizes[i] = 1.5 + Math.random() * 1.3;
+      // Speeds
+      speeds[i] = 0.28 + Math.random() * 0.35;
+      // Dimmer opacities (0.35 - 0.55)
+      opacities[i] = 0.35 + Math.random() * 0.20;
+
+      noises[i * 3 + 0] = Math.random() * 10;
+      noises[i * 3 + 1] = Math.random() * 10;
+      noises[i * 3 + 2] = Math.random() * 10;
+
+      const c = warmPalette[Math.floor(Math.random() * warmPalette.length)];
+      colors[i * 3 + 0] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+    }
+
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+    geo.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
+    geo.setAttribute("aOpacity", new THREE.BufferAttribute(opacities, 1));
+    geo.setAttribute("aNoise", new THREE.BufferAttribute(noises, 3));
+    geo.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+
+    const u = {
+      uTime: { value: 0 },
+      uPixelRatio: { value: Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2) },
+      uIsMobile: { value: 0 },
+      uViewportHeight: { value: 900 },
+      uStartY: { value: startY },
+      uHeightRange: { value: heightRange },
+    };
+
+    return { geometry: geo, uniforms: u };
+  }, [activeCount]);
+
+  useFrame((state) => {
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      const isMobile = size.width < 600 ? 1.0 : 0.0;
+      matRef.current.uniforms.uIsMobile.value = isMobile;
+      matRef.current.uniforms.uViewportHeight.value = size.height;
+      matRef.current.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
+    }
+  });
+
+  return (
+    <points geometry={geometry}>
+      <shaderMaterial
+        ref={matRef}
+        vertexShader={emberVertexShader}
+        fragmentShader={emberFragmentShader}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+}
+
 function SparksAndMist() {
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
@@ -40,48 +212,10 @@ function SparksAndMist() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
   const offsetY = (isMobile && isContact) ? -0.48 : 0;
 
-  // Ember count multiplier on ch4 (Contact)
-  const countMult = isContact ? 0.6 : 1.0;
-  const sizeMult = 1.0;
-
   return (
     <group position={[0, offsetY, 0]}>
-      {/* Warm golden-amber embers only (zero red halo, no fat bokeh): 2-4px crisp sparks, more of them, dimmer */}
-      {/* 1. Fine glowing spark motes: warm gold, fast rise, randomised across pit radius */}
-      <Sparkles
-        count={Math.round((quality === "lite" ? 24 : 48) * countMult)}
-        scale={[2.4, 2.5, 2.4]}
-        position={[0, 1.35, 0]}
-        color="#ffd48a"
-        speed={0.75}
-        size={(quality === "lite" ? 0.9 : 1.3) * sizeMult}
-        noise={[0.85, 0.5, 0.85]}
-        opacity={0.65}
-      />
-
-      {/* 2. Mid-sized ember sparks: warm amber-orange (no red halo), organic drift across pit */}
-      <Sparkles
-        count={Math.round((quality === "lite" ? 18 : 36) * countMult)}
-        scale={[2.2, 2.2, 2.2]}
-        position={[0, 1.25, 0]}
-        color="#ffa842"
-        speed={0.50}
-        size={(quality === "lite" ? 1.2 : 1.7) * sizeMult}
-        noise={[0.75, 0.5, 0.75]}
-        opacity={0.52}
-      />
-
-      {/* 3. Small floating ember flakes: warm fiery gold (no red halo, capped size 2-4px) */}
-      <Sparkles
-        count={Math.round((quality === "lite" ? 14 : 28) * countMult)}
-        scale={[2.0, 1.9, 2.0]}
-        position={[0, 1.15, 0]}
-        color="#ff882e"
-        speed={0.35}
-        size={(quality === "lite" ? 1.5 : 2.0) * sizeMult}
-        noise={[0.65, 0.5, 0.65]}
-        opacity={0.42}
-      />
+      {/* Crisp 1.5-3px elongated sparks without halo sprites */}
+      <HearthEmbers />
 
       {/* Low subtle floor mist across the cold stone ruins */}
       <Clouds material={THREE.MeshBasicMaterial} limit={40}>
