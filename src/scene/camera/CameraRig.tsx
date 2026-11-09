@@ -188,7 +188,7 @@ export default function CameraRig() {
           look.z -= 0.20;
           if (activeRole === 0) {
             pos.x = spots.cameras.exp_role_0.position[0];
-            pos.y = 1.0;
+            pos.y = 0.7;   // r27: camera ~4 deg lower so the neck hole falls behind its own rim
             look.y = 0.8;   // r25: torso lifted onto its stand (plate 0.62-1.57 m, stand feet on the floor)
             look.z = -0.3 + (size.width / size.height - 1512 / 982) * 0.45;
           }

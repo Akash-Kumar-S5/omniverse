@@ -188,3 +188,8 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Not fixed: the neck rim stays partly ragged at the top of the plate, and the left-hand shoulder edge is still jagged. A dark gorget cap or a camera tilt would be the next step.
 - Merge gate: `vite preview` on port 5231, ch0 to ch4 at 1920x1080 via the CDP script (no Playwright installed here): 0 exceptions, 0 console errors on every chapter, after merging main's effigy hotfix. Lint and build clean.
 - Proof: `.orchestrator/reference/r26-ch2-armour-1920.png` and `-1512dpr2.png`; copy contrast shots `r26-ch2-copy-*`.
+
+## r27 ch2 + ch1 (critic c20)
+- ch2: camera 0.3 m lower (about 4 deg) so the neck hole falls behind its own rim; armour turned a further 0.15 rad (1.35) which turns the armpit tear away; stand pulled back 0.1 m (front foot now ends near y 945 of 1080); the contact shadow plane is 2.1 m at opacity 0.6 under the stand. Not done: the floating strap tab is part of the scan's main island (not a separate piece), so it stays; a dark gorget cap was not needed after the camera drop.
+- ch1: stepped 4 cm cap slab on the plinth (1.32/1.28 m, #35312d then #47423c, top at y 1.25), room shell colour 0.25 (was 0.45) and fog 6.2-7.8. The bottom-right corner diagonal is softer but still faintly visible (its near end is not fogged). No bump or normal map exists at runtime (baked atlas), so the clay texture is darkened, not halved.
+- Merge gate: `vite preview` on 5232, ch0 to ch4 at 1920x1080, 0 exceptions and 0 console errors on all five. Lint and build clean. Proof: `.orchestrator/reference/r27-ch{1,2}-1920.png` and `-1512dpr2.png`.

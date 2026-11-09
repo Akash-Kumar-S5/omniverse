@@ -8,6 +8,22 @@ const STATUE_URL = "/assets/ruins/gothic_statue.glb";
 const FIRE_URL = "/assets/ruins/fire_barrel.draco.glb";
 const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 
+/** r27: a stepped 4 cm cap slab (slightly lighter stone) on the scanned plinth, so its top reads as a dressed edge, not clay. Top face at the statue's base (y 1.25). */
+function PlinthCap() {
+  return (
+    <group position={[11, 0, 0]}>
+      <mesh position={[0, 1.215, 0]}>
+        <boxGeometry args={[1.32, 0.02, 1.32]} />
+        <meshStandardMaterial color="#35312d" roughness={0.85} metalness={0} />
+      </mesh>
+      <mesh position={[0, 1.2375, 0]}>
+        <boxGeometry args={[1.28, 0.025, 1.28]} />
+        <meshStandardMaterial color="#47423c" roughness={0.8} metalness={0} />
+      </mesh>
+    </group>
+  );
+}
+
 function GothicStatue() {
   const { scene } = useGLTF(STATUE_URL, false);
   const statue = useMemo(() => {
@@ -97,7 +113,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
           }
           // r25 ch1: the room shell at half brightness, so the bottom-right corner edge and the wall band lose contrast (the back glow stays)
           if ((section === "about" || section === "projects") && mesh.name.includes("architecture")) {
-            (mesh.material as THREE.MeshStandardMaterial).color.setScalar(0.45);
+            (mesh.material as THREE.MeshStandardMaterial).color.setScalar(0.25);
           }
           // r21: the scanned relief is fire-side lit only and at most half the barrel's luminance on ch0 and ch4
           if (isProps && propGlow < 0.3) {
@@ -136,6 +152,7 @@ export default function Sanctum() {
       <Suspense fallback={null}>
         {/* r21: the statue only exists in ch1; elsewhere it sat as a lit sliver at the right frame edge (ch4 at 1920) */}
         {section === "about" ? <GothicStatue /> : null}
+        {section === "about" ? <PlinthCap /> : null}
       </Suspense>
     </group>
   );
