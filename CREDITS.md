@@ -188,3 +188,7 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 ## Round 18 plinth (blender-plinth lane)
 
 - Concrete Road Barrier 02, Poly Haven (https://polyhaven.com/a/concrete_road_barrier_02), CC0. Stood on end, lifting hooks cut off, albedo darkened and stretched to the ch1 statue-plinth footprint; baked into sanctum.glb. Source files: `blender/props/concrete_road_barrier_02/`.
+
+## Round 20 (blender-plinth lane)
+
+- `public/assets/ruins/textures/stone_block_512.jpg` is the Poly Haven Concrete Road Barrier 02 diffuse map (https://polyhaven.com/a/concrete_road_barrier_02, CC0), resized to 512 px, now also on the ch2 stand. Same source as the ch1 plinth credited in Round 18.

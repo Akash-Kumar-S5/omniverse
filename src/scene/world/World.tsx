@@ -52,9 +52,10 @@ function SubjectRimLight() {
     return (
       <>
         {/* Warm key on statue (c12 bar): confined warm amber highlight positioned close to statue so wall stays unlit */}
-        <pointLight color="#ffc882" intensity={3.8} distance={3.2} decay={2} position={[9.4, 2.0, -0.6]} />
+        {/* r20: c14 key restored (c14 measured statue 33.6, back glow 4.9) */}
+        <pointLight color="#ffc882" intensity={3.2} distance={4.2} decay={2} position={[8.8, 2.2, -1.0]} />
         {/* Confined cool rim behind statue to give crisp silhouette separation without wall wash */}
-        <pointLight color="#6a7a90" intensity={0.95} distance={1.8} decay={2} position={[11.5, 1.6, 0.3]} />
+        <pointLight color="#6a7a90" intensity={0.85} distance={2.2} decay={2} position={[11.8, 1.8, 0.4]} />
       </>
     );
   }

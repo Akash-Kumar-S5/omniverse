@@ -151,3 +151,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - The scan's other long face has a large hole; the build rotates -90 deg so the intact face looks at the ch1 camera (a first bake with +90 showed the hole).
 - Sizes: sanctum.glb 1.79 MB (limit 4), sanctum-lite.glb 0.68 MB (limit 1). Build, tsc and eslint clean.
 - Proof: `.orchestrator/reference/r18-blender-plinth-ch1.png`. Poly Haven has no real pedestal model, so a concrete block was the closest scan; the Blender MCP was not connected, so I downloaded from the Poly Haven API directly.
+
+## r20 plinth regression (critic c15 Lane B)
+- ch1 plinth: runtime material on the pedestal mesh set to rgb (0.26, 0.30, 0.34), envMapIntensity 0.2. Measured on my regions at 1440x900: plinth 19.6 vs statue 42.5 (0.46x); at 1920x1080 16.9 vs 36.3 (0.47x). Background right of the statue 5.3 (c14: 4.9). My regions differ from the critic's, so only the ratios and the background compare.
+- Restored the c14 ch1 warm key (3.2, d 4.2, pos 8.8,2.2,-1.0) and cool rim (0.85, d 2.2, pos 11.8,1.8,0.4); ch1 ambient 0.16 to 0.30, key 1.4 to 1.9, fog 4.8-8.2 to 6-14 (c14 had 0.38 / 2.2 / 8-28; I stopped short of that so the wall edges stay hidden). ch1 camera look.y +0.13: crown now at y~112 at 1440x900.
+- ch2: the stand cuboid takes the same stone as a 512 px texture (the ch1 atlas tile cannot be addressed at runtime), colour (0.13, 0.15, 0.17), dark.
+- Proof: `.orchestrator/reference/r20-blender-plinth-ch1-1920.png`, `-ch2-1920.png` (1920x1080 DPR1). Not shot at 1512x982 DPR2.

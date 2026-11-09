@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 
 /**
@@ -14,6 +14,16 @@ const BASE: [number, number, number] = [-12.5, 0, -1.2];
 export default function HeroArmour() {
   const section = useOmni((s) => s.section);
   const { scene } = useGLTF(URL, "/draco/");
+  // r20: the ch1 scanned stone block (Poly Haven concrete_road_barrier_02, CC0, 512 px) on the ch2 stand, kept dark
+  const stoneTex = useTexture("/assets/ruins/textures/stone_block_512.jpg");
+  const stoneMat = useMemo(() => {
+    const t = stoneTex.clone();
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(0.5, 1.6);
+    t.needsUpdate = true;
+    return new THREE.MeshStandardMaterial({ map: t, color: new THREE.Color(0.13, 0.15, 0.17), roughness: 1, metalness: 0 });
+  }, [stoneTex]);
   const obj = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((c) => {
@@ -49,7 +59,7 @@ export default function HeroArmour() {
       {/* dark stone stand (covers the shorter baked block) */}
       <mesh position={[0, STAND_TOP / 2, 0]}>
         <boxGeometry args={[0.6, STAND_TOP, 0.6]} />
-        <meshStandardMaterial color="#020202" roughness={1} metalness={0} />
+        <primitive object={stoneMat} attach="material" />
       </mesh>
       {/* black contact shadow cap to eliminate diffuse reflection on the stand top */}
       <mesh position={[0, STAND_TOP + 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>

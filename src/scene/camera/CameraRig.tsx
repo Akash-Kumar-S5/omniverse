@@ -164,7 +164,7 @@ export default function CameraRig() {
         // completely clear of the left-side text column, yawed so back-right corner is out of frame
         if (!isPortrait) {
           pos.set(5.7, 1.62, -1.6);
-          look.set(11.0, 1.45, -1.15);
+          look.set(11.0, 1.58, -1.15);   // r20: +0.13 so the statue crown sits at y>=110 (was ~75, under the nav line)
         } else {
           pos.set(5.8, 1.7, 0.0);
           look.set(11.0, 1.45, 0.0);

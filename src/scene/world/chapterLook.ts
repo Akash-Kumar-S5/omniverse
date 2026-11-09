@@ -22,13 +22,13 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     fogFar: 22,
   },
   about: {
-    ambientIntensity: 0.16,
+    ambientIntensity: 0.30,   // r20: back toward c14 (0.38) so the warm back glow returns; the wall edges stay hidden by fog and the hidden floor
     ambientColor: "#262220",
-    keyLightIntensity: 1.4,
+    keyLightIntensity: 1.9,
     keyLightColor: "#fff0da",
     fogColor: "#0b0907",
-    fogNear: 4.8,
-    fogFar: 8.2,
+    fogNear: 6,
+    fogFar: 14,
   },
   experience: {
     ambientIntensity: 0.10,

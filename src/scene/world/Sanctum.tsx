@@ -85,6 +85,11 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
             metalness: 0.04,
             toneMapped: true,
           });
+          // r20: the scanned plinth sits in the pedestal atlas; keep its mean luminance at or under half the statue's (c15 regression)
+          if (mesh.name.includes("pedestal")) {
+            (mesh.material as THREE.MeshStandardMaterial).color.setRGB(0.26, 0.30, 0.34);   // darker and slightly cooler so the baked rust-brown reads as dressed stone
+            (mesh.material as THREE.MeshStandardMaterial).envMapIntensity = 0.2;
+          }
           mesh.castShadow = false;
           mesh.receiveShadow = false;
         }
