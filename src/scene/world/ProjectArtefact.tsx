@@ -65,7 +65,7 @@ export default function ProjectArtefact() {
     if (g) {
       const gr = g.createLinearGradient(0, 0, 64, 0);
       gr.addColorStop(0, "rgba(5,4,3,0)");
-      gr.addColorStop(0.5, "rgba(5,4,3,0.85)");
+      gr.addColorStop(0.5, "rgba(5,4,3,0.95)");
       gr.addColorStop(1, "rgba(5,4,3,0)");
       g.fillStyle = gr; g.fillRect(0, 0, 64, 4);
     }
@@ -191,8 +191,8 @@ export default function ProjectArtefact() {
           />
 
           {/* r27: dark feathered card between the frame and the back wall; hides the hard vertical wall band at the left */}
-          <mesh position={[-1.4, -0.2, 0.4]}>
-            <planeGeometry args={[1.2, 6]} />
+          <mesh position={[-1.55, -0.2, 0.4]}>
+            <planeGeometry args={[1.5, 6]} />
             <meshBasicMaterial map={bandFog} transparent depthWrite={false} toneMapped={false} />
           </mesh>
 

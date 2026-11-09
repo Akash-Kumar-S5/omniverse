@@ -87,7 +87,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
         }
         if (mesh.name.includes("architecture")) {
           // ch2 (R19 fix 3): hide the background architecture slab in ch2 so no angular slab/plane edge reads
-          mesh.visible = section !== "experience";
+          mesh.visible = section !== "experience" && section !== "projects"; // r29: ch3 also drops the shell, which carried the wall band and the floor diagonal
         }
         if (mesh.material) {
           const mat = mesh.material as THREE.MeshStandardMaterial;
