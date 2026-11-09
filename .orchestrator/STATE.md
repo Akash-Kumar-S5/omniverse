@@ -445,3 +445,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Morph reinforcement sent: ch3 no pseudo-text; ch1 revert r17 lane B light changes for ch1 only
 - r17/framing-world merged (ch2 streaks)
 - r18 lane C ch3 merged (no pseudo-text, chain+wall). Pending B rim/ch1, F plinth
+- lane F copilot approved path prompt; lane B running on agy-world (r18/agy-world). c14 after B+F
