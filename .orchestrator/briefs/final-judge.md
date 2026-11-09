@@ -40,3 +40,6 @@ fallback) and returns SCORE, 3 defects with pixel regions, and 1 thing that work
 (.orchestrator/openrouter-usage.json). Use it once per cycle on the 1920 shots (5 requests) and append its output to the
 critic/judge report under "Cross-vendor check". It is advisory: the Claude critic/judge score stays the gate, but any defect it
 finds that the critic missed must be addressed or explicitly rejected with a reason. Never use it for code-building lanes.
+
+## Rig rule (R35, reliability-1.md)
+Use ONE browser at a time (headed Chrome, fresh context per load). Do not run other GPU work, previews or agents' browsers while judging. 200 cold loads on main bdcb9c6 gave 0 black frames solo and under 3-browser contention, so a black canvas in your run is evidence only if it reproduces on a second fresh load with window.__omniDiag captured; record that dump with the claim.
