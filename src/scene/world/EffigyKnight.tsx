@@ -19,7 +19,8 @@ export default function EffigyKnight() {
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Cannot create effigy contact shadow");
     const gradient = context.createRadialGradient(64, 64, 2, 64, 64, 64);
-    gradient.addColorStop(0, "rgba(0,0,0,0.65)");
+    gradient.addColorStop(0, "rgba(0,0,0,0.7)");
+    gradient.addColorStop(0.55, "rgba(0,0,0,0.6)"); // r29: holds ~0.6 across the slab footprint, then feathers out
     gradient.addColorStop(1, "rgba(0,0,0,0)");
     context.fillStyle = gradient;
     context.fillRect(0, 0, 128, 128);
@@ -51,7 +52,7 @@ export default function EffigyKnight() {
     <group position={section === "boot" ? [-1, 0, -0.25] : [1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 + 0.35 : -0.82, 0]}>
       {section === "boot" && (
         <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[2, 0.75]} />
+          <planeGeometry args={[2.5, 1.05]} />
           <meshBasicMaterial map={shadow} transparent depthWrite={false} />
         </mesh>
       )}

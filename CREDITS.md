@@ -209,3 +209,7 @@ No new assets: the ch3 fog card is a canvas gradient, the lantern is the Poly Ha
 ## Round 28 (ch4/ch3/ch0)
 
 No new assets. Existing scans only (barrel stove and lantern chandelier from Poly Haven, CC0; effigy and ruin church credited above).
+
+## Round 29 (ch4/ch3/ch0)
+
+No new assets: the ch4 base glow reuses the existing canvas ember gradient; the ch0 shadow is a canvas gradient.

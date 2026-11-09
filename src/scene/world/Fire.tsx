@@ -84,9 +84,10 @@ interface FlamePlaneProps {
   width: number;
   height: number;
   core?: boolean;
+  contactOpacity?: number;
 }
 
-function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlaneProps) {
+function FlamePlane({ rotationY, phase, width, height, core = false, contactOpacity = 0.12 }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
   const contact = useOmni((s) => s.section) === "contact";
   const { tex, insetX, insetY } = useMemo(() => {
@@ -187,7 +188,7 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
           map={tex}
           alphaMap={radialMask}
           transparent
-          opacity={core ? 1 : contact ? 0.12 : 0.6}
+          opacity={core ? 1 : contact ? contactOpacity : 0.6}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -230,8 +231,13 @@ function Flames() {
       <group scale={[1, flameHeight, 1]}>
         <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} core />
         <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.12} width={1.0 * k} height={1.92 * k} /></group>
-        <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.55} width={0.9 * k} height={1.6 * k} /></group>
+        <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.55} contactOpacity={0.05} width={0.9 * k} height={1.6 * k} /></group>
       </group>
+      {/* r29: small warm glow standing at the flame base so the flame has a root at the rim from a low camera */}
+      <mesh position={[0, 0.17, 0.05]} renderOrder={4}>
+        <planeGeometry args={[0.8, 0.36]} />
+        <meshBasicMaterial map={glow} transparent opacity={0.6} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      </mesh>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.34, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />

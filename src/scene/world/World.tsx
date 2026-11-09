@@ -400,7 +400,10 @@ export default function World() {
       <WorldLighting />
       <SubjectRimLight />
       <SparksAndMist />
-      <Fire />
+      {/* r29: the fire is far off-screen in ch3; hiding it removes its bloom/DOF contribution (ghost disc behind the pager) */}
+      <group visible={section !== "projects"}>
+        <Fire />
+      </group>
       {section === "experience" && (
         <Suspense fallback={null}>
           <HeroArmour />
