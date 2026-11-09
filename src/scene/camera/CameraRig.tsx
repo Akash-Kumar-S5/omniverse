@@ -181,6 +181,11 @@ export default function CameraRig() {
         look.set(...roleCam.target);
         // r16 ch2: frame cuirass prominently, push corridor floor litter (500-1100, 700-900) out of bottom frame
         look.y += 0.42;
+        if (!isPortrait) {
+          // r17 Lane C: pan/yaw camera so cuirass sits at x~1000-1300 with 80+ px air to right edge
+          pos.z -= 0.25;
+          look.z -= 0.20;
+        }
         if (window.innerWidth < 600) {
           pos.set(-8, 1.5, -1.2);
           look.set(-12.5, 4.5, -1.2);
@@ -215,7 +220,8 @@ export default function CameraRig() {
         if (!isPortrait) {
           // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
           pos.set(-3.0, 0.42, 2.25);   // r16: ~0.5 m left of before, so the far pillar no longer lines up with the flame axis
-          look.set(-0.68, 0.95, 0.1);   // ~2 deg yaw left of r15: the far statue slips off the right edge
+          // r17 Lane C: yaw left (counter-clockwise away from right edge) so clipped statue at x1385-1440 is completely out of frame
+          look.set(-0.95, 0.95, 0.05);
           targetFov = 44;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
