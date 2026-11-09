@@ -150,8 +150,10 @@ export default function CameraRig() {
           look.y -= 0.65;
         } else {
           // Mobile 390: lower camera so barrel rim is edge-on, fire sits in bottom 30% below body copy
-          pos.y -= 0.25;
-          look.y += 0.40;
+          // r15: whole subject (barrel, flame, relief) in frame, >=40 px under the link row and ~60 px of floor under it
+          pos.set(-4.4, 0.9, 5.2);
+          look.set(0.0, 3.0, 0.0);
+          targetFov = 62;
         }
         break;
       }
@@ -194,15 +196,15 @@ export default function CameraRig() {
         pos.set(...sky.position);
         look.set(...sky.target);
         if (!isPortrait) {
-          // r14 ch4: ONE finished subject, the scanned relief stood on the floor right of centre, lit by the barrel's light from off-screen
-          pos.set(-0.9, 1.1, 3.3);
-          look.set(0.6, 0.8, 0.3);
+          // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
+          pos.set(-2.6, 0.42, 2.6);
+          look.set(-0.55, 0.95, 0.2);
           targetFov = 44;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
-          pos.set(-0.5, 1.0, 3.6);
-          look.set(0.9, 2.55, 0.2);
-          targetFov = 54;
+          pos.set(-4.4, 0.9, 5.2);
+          look.set(0.0, 3.0, 0.0);
+          targetFov = 62;
         }
         break;
       }

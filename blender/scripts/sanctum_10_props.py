@@ -26,7 +26,7 @@ _b.inputs["Base Color"].default_value = (0.009, 0.008, 0.007, 1); _b.inputs["Rou
 
 DEC = {"../../../blender/props/kite_shield/kite_shield_1k": 6000, "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": 3000, "../scans/candles-brass": 6000, "../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 16000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
 # r6: (saturation, value) pulled down on the albedo so scans read as aged metal under warm light, not flat orange
-TUNE = {"../scans/helmet-sallet-scan": (0.55, 0.32), "../../../blender/props/kite_shield/kite_shield_1k": (0.6, 0.35), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.4, 0.15), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
+TUNE = {"../scans/helmet-sallet-scan": (0.55, 0.32), "../../../blender/props/kite_shield/kite_shield_1k": (0.6, 0.35), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.35, 0.07), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
 METAL = {"../scans/shield-round-scan": (0.8, 0.45)}
 _cache = {}
 def source(fn):
@@ -135,7 +135,7 @@ for i, (yw, dz, ox, oy) in enumerate(()):   # r12: logs removed: even as flat ch
 # r12: the outer rock ring (scan_ring) is deleted: the dark boulders of the pit scan are the only ring
 P("../scans/statue-hooded-mourner", 1.2, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
 firelight("FIRE_flame", (0, 0, 1.6), 70, (1.0, 0.5, 0.18), 0.3)
-firelight("FIRE_mourner_low", (0.55, 0.45, 0.9), 25, (1.0, 0.45, 0.15), 0.15)
+# r15: no extra fill on the relief (it sits dim behind the fire at ch4)
 
 # r13: the runtime fire barrel (0.80 m across, 0.81 m tall) has no twin in the bake, so a near-black occluder stands in for it:
 # it throws the contact shadow into the baked floor and is the black coals bed seen from above (top at 0.55, below the rim)
