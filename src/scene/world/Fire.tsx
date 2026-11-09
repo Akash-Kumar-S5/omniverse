@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useGLTF, useTexture } from "@react-three/drei";
+import { Billboard, useGLTF, useTexture } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 
 /**
@@ -19,6 +19,7 @@ const COLS = 6;
 const ROWS = 1;
 const TOTAL_FRAMES = 6;
 const FLAME_COLOR = new THREE.Color(1, 1, 1).multiplyScalar(2.5);
+const FLAME_SHELL_COLOR = new THREE.Color(2.5, 1.3, 0.65);
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -96,13 +97,16 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
       ctx.drawImage(image, 0, 0);
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const d = imgData.data;
-      const tip = [194, 65, 12], body = [255, 154, 60], core = [255, 243, 208];
+      const tip = core ? [194, 65, 12] : [184, 54, 15];
+      const body = core ? [255, 154, 60] : [255, 138, 42];
+      const hotCore = [255, 243, 208];
       // Map the greyscale sprite from dark orange tips to a pale hot core.
       for (let i = 0; i < d.length; i += 4) {
         const light = d[i] / 255;
-        const from = light < 0.5 ? tip : body;
-        const to = light < 0.5 ? body : core;
-        const mix = light < 0.5 ? light * 2 : (light - 0.5) * 2;
+        const from = core && light >= 0.5 ? body : tip;
+        const to = core && light >= 0.5 ? hotCore : body;
+        const y = Math.floor(i / 4 / canvas.width) / canvas.height;
+        const mix = core ? (light < 0.5 ? light * 2 : (light - 0.5) * 2) : Math.min(1, 0.2 + light * 0.5 + y * 0.45);
         d[i] = from[0] + (to[0] - from[0]) * mix;
         d[i + 1] = from[1] + (to[1] - from[1]) * mix;
         d[i + 2] = from[2] + (to[2] - from[2]) * mix;
@@ -121,7 +125,7 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
     t.magFilter = THREE.LinearFilter;
     t.repeat.set(1 / COLS - 2 * insetX, 1 / ROWS - 2 * insetY);
     return { tex: t, insetX, insetY };
-  }, [sheet]);
+  }, [sheet, core]);
 
   // Radially mask the flame billboard: alpha hits 0 well inside the quad (soft additive edge)
   const radialMask = useMemo(() => {
@@ -178,10 +182,11 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
           map={tex}
           alphaMap={radialMask}
           transparent
+          opacity={core ? 1 : 0.6}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
-          color={FLAME_COLOR}
+          color={core ? FLAME_COLOR : FLAME_SHELL_COLOR}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -193,7 +198,6 @@ function Flames() {
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
   const k = quality === "lite" ? 0.86 : 1.0;
-  const width = section === "contact" ? 1.5 : 1;
   const glow = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = 128; c.height = 128;
@@ -216,13 +220,21 @@ function Flames() {
   // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
     <group position={[0, 0.49, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={1.15 * k * width} height={2.24 * k} core />
-      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k * width} height={1.92 * k} /></group>
-      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k * width} height={1.6 * k} /></group>
+      <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} core />
+      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
+      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.45, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
+      {(section === "boot" || section === "contact") && (
+        <Billboard position={[0.5, 0.95, -0.6]}>
+          <mesh renderOrder={3}>
+            <circleGeometry args={[1.15, 48]} />
+            <meshBasicMaterial map={glow} transparent opacity={0.055} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+          </mesh>
+        </Billboard>
+      )}
     </group>
   );
 }
@@ -231,9 +243,26 @@ function Flames() {
 function FireLight() {
   const ref = useRef<THREE.PointLight>(null);
   const mouthRef = useRef<THREE.PointLight>(null);
+  const hiddenCandleLights = useRef(new Map<THREE.Object3D, boolean>());
   const section = useOmni((s) => s.section);
 
+  useEffect(() => {
+    const hidden = hiddenCandleLights.current;
+    return () => {
+      hidden.forEach((visible, light) => { light.visible = visible; });
+      hidden.clear();
+    };
+  }, [section]);
+
   useFrame((state) => {
+    if (section === "boot" || section === "contact") {
+      // The sanctum's chapter-one candle otherwise spills onto the distant fire-chapter wall.
+      const candle = state.scene.getObjectByName("RT_ch1_candle");
+      if (candle) {
+        if (!hiddenCandleLights.current.has(candle)) hiddenCandleLights.current.set(candle, candle.visible);
+        candle.visible = false;
+      }
+    }
     const l = ref.current;
     if (!l) return;
     if (section === "projects" || section === "about" || section === "experience") {
