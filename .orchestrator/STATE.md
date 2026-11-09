@@ -461,3 +461,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - flame narrowed to copilot-swarm r20/flame; critic told about full-screen sizes
 - r19/agy-review (ch3 hang fix) merged. Pending: blender (ch1 plinth regress, #3/#4/#5), agy-world ch2, copilot flame
 - r20/flame merged (additive glowing flame, 1920x1080 verified). Pending: blender ch1 plinth regress + #3/#4/#5, agy-world ch2. Then c16 at 1920x1080 DPR1 + 1512x982 DPR2
+- r20/blender-plinth merged (ch1 regress fixed). critic c16 dispatched at 1920x1080 DPR1 + 1512x982 DPR2, worse-of-two
