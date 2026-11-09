@@ -125,22 +125,6 @@ export default function ProjectArtefact() {
     return clone;
   }, [scene, activeTexture]);
 
-  // Feathered radial alpha map so backing stone wall fades seamlessly into fog with zero hard edges
-  const wallAlphaMap = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 128;
-    canvas.height = 128;
-    const ctx = canvas.getContext("2d")!;
-    const grad = ctx.createRadialGradient(64, 64, 28, 64, 64, 64);
-    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
-    grad.addColorStop(0.72, "rgba(255, 255, 255, 0.75)");
-    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 128, 128);
-    const tex = new THREE.CanvasTexture(canvas);
-    return tex;
-  }, []);
-
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
@@ -153,8 +137,8 @@ export default function ProjectArtefact() {
 
     const dest = getProjectGlyphAnchor(activeProject);
     dest.y = 1.85;
-    // Offset along camera right vector so chain and frame land at x >= 1060 (clearing nav)
-    dest.addScaledVector(camRight, 0.72);
+    // Shift frame group right (~80px of screen) along camera right vector so chain lands at x >= 1060 and copy never collides
+    dest.addScaledVector(camRight, 0.82);
     dest.addScaledVector(camUp, 0.48);
 
     targetPos.current.copy(dest);
@@ -172,8 +156,8 @@ export default function ProjectArtefact() {
 
     if (lightRef.current) {
       const tt = performance.now() / 1000;
-      // Controlled, non-glinting gentle lantern flicker with spill onto stone wall
-      lightRef.current.intensity = 2.6 * (1 + 0.06 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      // Controlled, non-glinting gentle lantern flicker illuminating frame and canvas
+      lightRef.current.intensity = 2.8 * (1 + 0.06 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -186,26 +170,7 @@ export default function ProjectArtefact() {
       {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.1px keystone */}
       <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
         <group ref={turnRef}>
-          {/* Backing wall wider than the frame (2.8m x 3.2m), centered directly behind frame, fading into fog */}
-          <mesh position={[0, 0, -0.04]}>
-            <planeGeometry args={[2.8, 3.2]} />
-            <meshStandardMaterial
-              color="#221c17"
-              roughness={0.92}
-              metalness={0.02}
-              alphaMap={wallAlphaMap}
-              transparent
-              opacity={0.88}
-            />
-          </mesh>
-
-          {/* Soft ambient contact shadow centered directly behind carved frame perimeter */}
-          <mesh position={[0, 0, -0.015]}>
-            <planeGeometry args={[1.45, 1.68]} />
-            <meshBasicMaterial color="#000000" transparent opacity={0.45} />
-          </mesh>
-
-          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat, facing camera directly */}
+          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat, facing camera directly (dark backing card deleted) */}
           <primitive
             object={frameScene}
             scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
@@ -215,15 +180,15 @@ export default function ProjectArtefact() {
           {/* Lantern hangs centered directly above frame with >= 25px air gap */}
           <group position={[0, 1.10, 0.30]}>
             <primitive object={lanternObj} />
-            {/* Chain starting below nav line (starts below y=80 in screen space) */}
+            {/* Chain starting below nav line (starts below y=80 in screen space, lands at x >= 1060) */}
             {Array.from({ length: 15 }, (_, i) => (
               <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
                 <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
                 <meshBasicMaterial color="#5a3d27" toneMapped={false} />
               </mesh>
             ))}
-            {/* Lantern point light illuminating canvas and spilling onto centered stone wall behind */}
-            <pointLight ref={lightRef} color="#ffb066" intensity={2.6} distance={3.4} decay={1.8} />
+            {/* Lantern point light illuminating canvas and carved gilt frame */}
+            <pointLight ref={lightRef} color="#ffb066" intensity={2.8} distance={3.6} decay={1.8} />
           </group>
         </group>
       </Float>
