@@ -48,8 +48,8 @@ function SubjectRimLight() {
     return <pointLight color="#6a7a90" intensity={0.32} distance={4.5} decay={2} position={[0.7, 1.25, -0.8]} />;
   }
   if (section === "experience") {
-    // ch2: low cool rim behind cuirass
-    return <pointLight color="#6a7a90" intensity={0.3} distance={3.8} decay={2} position={[-13.4, 2.5, -1.7]} />;
+    // ch2: cool rim reduced so no vertical streaks read on the background wall/pillar
+    return null;
   }
   if (section === "contact") {
     // ch4: low cool rim behind barrel & relief

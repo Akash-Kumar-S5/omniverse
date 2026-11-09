@@ -51,8 +51,8 @@ export default function HeroArmour() {
       <group position={[0, STAND_TOP, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]} scale={1.35}>
         <primitive object={obj} />
       </group>
-      {/* cool rim from behind and above (~30% of the ch1 rim): separates the weave from the wall, elevated clear of stand */}
-      <pointLight color="#8fb0ff" intensity={1.7} distance={3.0} decay={2} position={[-0.75, STAND_TOP + 0.75, 0.0]} />
+      {/* low cool rim to separate weave without casting streaks on background wall */}
+      <pointLight color="#6a7a90" intensity={0.4} distance={2.2} decay={2} position={[-0.75, STAND_TOP + 0.75, 0.0]} />
       {/* warm key light raised ~40% (6 -> 8.5) so plates and rivets catch clear warm highlights */}
       <pointLight color="#ffb070" intensity={8.5} distance={4.5} decay={2} position={[1.4, STAND_TOP + 0.85, 0.85]} />
     </group>
