@@ -285,3 +285,10 @@ export default function ProjectArtefact() {
     </group>
   );
 }
+
+// r34: warm the chapter's assets shortly after first paint, so scrolling into the projects never meets an empty stage
+window.setTimeout(() => {
+  useGLTF.preload(FRAME_MODEL_URL, "/draco/");
+  useGLTF.preload(LANTERN_URL, false);
+  useTexture.preload("/assets/ruins/textures/stone_block_512.jpg");
+}, 1500);

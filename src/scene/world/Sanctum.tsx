@@ -189,3 +189,6 @@ export default function Sanctum() {
 
 useGLTF.preload(FIRE_URL, "/draco/");
 useGLTF.preload(SANCTUM_FILES.lite, "/draco/");
+
+// r34: warm the About statue after first paint (it was fetched only on arrival, finishing at 22 s on a slow link)
+window.setTimeout(() => useGLTF.preload(STATUE_URL, false), 3000);

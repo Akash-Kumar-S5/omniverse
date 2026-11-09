@@ -1,9 +1,9 @@
 export function detectWebGL(): boolean {
   try {
     const c = document.createElement("canvas");
+    // r34: no loseContext() on this probe. Forcing a loss on a throwaway context while the real canvas is about to be created is a suspect
+    // for the silent blank loads (unproven); an unreferenced probe is simply garbage collected.
     const gl = c.getContext("webgl2") || c.getContext("webgl");
-    // Release the probe context right away so it never counts against the browser's context cap.
-    gl?.getExtension("WEBGL_lose_context")?.loseContext();
     return !!gl;
   } catch {
     return false;

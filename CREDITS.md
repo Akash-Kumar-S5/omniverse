@@ -226,3 +226,7 @@ No new assets.
 ## Round 33 (load time)
 
 No new assets. Existing credited assets were re-encoded only: paintings, floor roughness and flame sheet to WebP; JPEG textures inside fire_barrel, sanctum, fancy_picture_frame_02 and effigy-knight GLBs resized to 70% (tools/glb-recompress.mjs). 77 unreferenced asset files removed.
+
+## Round 34 (never blank)
+
+No new assets.
