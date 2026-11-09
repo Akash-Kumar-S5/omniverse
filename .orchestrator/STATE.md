@@ -416,3 +416,4 @@ After r12 merges + critic c9, for every chapter still <7.5: replace the subject 
 - Morph: ch4 must keep a real flame (ROUND-3-DARK-FANTASY.md). Barrel/brazier from low side angle, relief dim behind. Don't change Akash's chapter subjects; ask Morph first if unworkable.
 - critic c10 = 7.6; dispatched r15/blender-scenes (ch4 flame back, mobile, floor rebake, ch2/ch3) + r15/agy-world (embers)
 - r15/agy-world merged (embers)
+- r15/blender-scenes merged (ch4 flame back, low side angle, floor spot rebaked, mobile framed); critic c11 dispatched
