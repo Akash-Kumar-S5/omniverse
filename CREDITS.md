@@ -205,3 +205,7 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 ## Round 27 (ch3+ch4)
 
 No new assets: the ch3 fog card is a canvas gradient, the lantern is the Poly Haven lantern chandelier (CC0) credited earlier.
+
+## Round 28 (ch4/ch3/ch0)
+
+No new assets. Existing scans only (barrel stove and lantern chandelier from Poly Haven, CC0; effigy and ruin church credited above).

@@ -48,7 +48,7 @@ export default function EffigyKnight() {
 
   if (section !== "boot" && section !== "contact") return null;
   return (
-    <group position={section === "boot" ? [-1, 0, -0.25] : [1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 : -0.82, 0]}>
+    <group position={section === "boot" ? [-1, 0, -0.25] : [1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 + 0.35 : -0.82, 0]}>
       {section === "boot" && (
         <mesh position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[2, 0.75]} />
