@@ -466,3 +466,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r21/blender-plinth merged (ch1 fit, relief 0.35, ch4 stray removed). Pending: flame hi-res (copilot-swarm), ch2 (agy-world), ch3 (agy-review), blender #3/#4/#5
 - r21/copilot-flame merged (smooth hi-res flame; reads a bit smoky). Pending ch2 (agy-world), ch3 (agy-review), blender #3/#4/#5
 - r20/agy-review merged (ch3 layout, backing card removed). Pending ch2 (agy-world), ch3 pool smoothing, blender #3/#4/#5
+- r22 blender #4 effigy + #5 church dispatched (sketchfab-dl.ts). r20/world (ch2 rim/pool/fog) merged
