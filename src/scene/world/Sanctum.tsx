@@ -52,6 +52,9 @@ function GothicStatue() {
 
 function SanctumModel({ file, onReady }: { file: string; onReady?: () => void }) {
   const { scene } = useGLTF(file, "/draco/");
+  const section = useOmni((s) => s.section);
+  // r18 light hierarchy flame > barrel > relief: the baked props (relief) glow at ~0.35 of usual next to the fire
+  const propGlow = section === "boot" || section === "contact" ? 0.22 : 0.62;
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -69,7 +72,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
             map: baked,
             emissiveMap: isProps ? baked : null,
             emissive: isProps ? new THREE.Color(1, 1, 1) : new THREE.Color(0, 0, 0),
-            emissiveIntensity: isProps ? 0.62 : 0,
+            emissiveIntensity: isProps ? propGlow : 0,
             roughness: 0.88,
             metalness: 0.04,
             toneMapped: true,
@@ -80,7 +83,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
       }
     });
     onReady?.();
-  }, [scene, onReady]);
+  }, [scene, onReady, propGlow]);
 
   return <primitive object={scene} />;
 }

@@ -31,11 +31,10 @@ export function FirePit() {
           const m = (mesh.material as THREE.MeshStandardMaterial).clone();
           // r16: light albedo trim so the rust and rivets stay readable
           m.color.multiplyScalar(0.85);
-          // r17: rivets caught the near-floor warm lights as a hot dot ring; pin the scan to a matte iron (metalness<=0.3, roughness>=0.7)
-          m.metalnessMap = null;
-          m.roughnessMap = null;
-          m.metalness = 0.25;
-          m.roughness = 0.78;
+          // r18: the scan's own rust and roughness maps are back (the hot base dots were the air holes, now lined); factors keep the iron matte
+          m.color.multiplyScalar(1.5);
+          m.metalness = 0.35;
+          m.roughness = 1;
           m.envMapIntensity = 0.6;
           mesh.material = m;
         }
@@ -129,9 +128,10 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     if (ctx) {
       const grad = ctx.createRadialGradient(64, 70, 2, 64, 70, 38);
       grad.addColorStop(0, "rgba(255,255,255,1.0)");
-      grad.addColorStop(0.30, "rgba(255,255,255,0.75)");
-      grad.addColorStop(0.60, "rgba(255,255,255,0.25)");
-      grad.addColorStop(0.85, "rgba(255,255,255,0.04)");
+      grad.addColorStop(0.25, "rgba(255,255,255,0.7)");
+      grad.addColorStop(0.5, "rgba(255,255,255,0.32)");
+      grad.addColorStop(0.75, "rgba(255,255,255,0.09)");
+      grad.addColorStop(0.9, "rgba(255,255,255,0.015)");
       grad.addColorStop(1.0, "rgba(0,0,0,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
@@ -200,10 +200,10 @@ function Flames() {
 
   // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
-    <group position={[0, 0.52, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={0.72 * k} height={2.24 * k} />
-      <group position={[0, 0.03, 0]}><FlamePlane rotationY={Math.PI / 3} phase={0.37} width={0.62 * k} height={1.92 * k} /></group>
-      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.71} width={0.54 * k} height={1.6 * k} /></group>
+    <group position={[0, 0.49, 0]}>
+      <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} />
+      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
+      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.3, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
@@ -238,6 +238,8 @@ function FireLight() {
       {/* low warm light just inside the mouth: the inner rim and rust catch flame light */}
       <pointLight ref={mouthRef} color="#ff7a30" intensity={2.7} distance={1.5} decay={2} position={[0, 0.66, 0]} />
       {/* off-screen warm key on the camera side (same side as the ch4 camera): rivets and rust read on the barrel's visible face */}
+      {/* r18: short warm light just outside the barrel at rim height, camera side, so the top third of the wall shows its rust */}
+      <pointLight color="#ff8a40" intensity={1.8} distance={1.3} decay={2} position={[-0.7, 0.85, 0.5]} />
       <pointLight color="#ffb070" intensity={2.4} distance={4.2} decay={2} position={[-1.7, 1.4, 1.7]} />
     </>
   );

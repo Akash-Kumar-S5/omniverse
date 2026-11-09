@@ -178,12 +178,12 @@ function HearthEmbers() {
       new THREE.Color("#ff9234"), // warm ember orange
     ];
 
-    const startY = 0.65;
+    const startY = 0.70;   // r18: 5 cm inside the barrel mouth (rim y~0.745)
     const heightRange = 2.4;
 
     for (let i = 0; i < activeCount; i++) {
       // Wider spawn spread (radius r <= 0.95m) so no column forms
-      const r = Math.sqrt(Math.random()) * 0.95;
+      const r = Math.sqrt(Math.random()) * 0.35;
       const theta = Math.random() * Math.PI * 2;
       positions[i * 3 + 0] = r * Math.cos(theta);
       positions[i * 3 + 1] = startY + Math.random() * heightRange;

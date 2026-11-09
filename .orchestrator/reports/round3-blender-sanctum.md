@@ -138,3 +138,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Flame cards 1.6x taller (and ~1.3x wider); floor-pool lights -15% (main 8.5 to 7.2, mouth 3.2 to 2.7).
 - Proof: `.orchestrator/reference/r17-blender-scenes-ch{0,4}-{1440,390}.png`. Lighting references: `ref-threejspunk.png`, `ref-rottensouls.png` (title gate only; the in-game scene did not load headless).
 - Embers already spawn at y 0.65 (World.tsx), unchanged. Build, tsc and eslint clean.
+
+## r18 Lane A (fire seat + light hierarchy, desktop)
+- Flame: card widths 0.9-1.15 m (base ~45% of the mouth in the crop, short of the 60% target), stack sunk 3 cm, yaws 0/55/115 deg, softer radial alpha falloff (existing mask, no new shader).
+- Embers: start y 0.70 (5 cm inside the rim) and spawn radius 0.35 (World.tsx, two constants).
+- Barrel: the scan's rust and roughness maps are back (r17 had dropped them; the hot base dots were the air holes, which stay lined); colour x1.5, metalness factor 0.35, roughness factor 1. New short warm light (r 1.3 m) at rim height on the camera side lights the top third.
+- Relief: baked prop glow 0.62 to 0.22 (~0.35x) on ch0 and ch4 only (Sanctum.tsx). It reads dimmer than the barrel on ch0; on ch4 its lit face is still close to the barrel's.
+- Proof: `.orchestrator/reference/r18-blender-scenes-ch{0,4}-1440.png` and `r18-blender-scenes-ch4-crop-flamebase.png`.
