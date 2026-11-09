@@ -426,3 +426,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - codex-world rate-limited until Dec 7 (not Monday); don't use
 - r16/copilot-ui merged (mobile readability). ch4 priority: r16 blender merged; re-score at c12
 - r16/agy-world merged (ch2 cuirass lit; now cropped at right edge, check c12)
+- Akash lighting references forwarded to all lanes + critic (.orchestrator/briefs/lighting-references.md); reference only, no WebGPU until after SHIP
