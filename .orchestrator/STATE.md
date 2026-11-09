@@ -499,3 +499,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Merged r28/ch2-ch1 + r28/ch4-ch3; gate green (build+lint, ch0..ch4 0 console errors). Critic c22 dispatched (port 4520).
 - c22 = 8.42 (ch0 8.6, ch1 8.5, ch2 8.0, ch3 8.5, ch4 8.5): NOT SHIP (<8.5). R29 dispatched: blender-sanctum r29/ch2-ch1 (collar/strap/corner), sonnet-b r29/ch4-ch3 (smoke lobe, glow, ch3 band/disc, effigy shadow).
 - Merged r29/ch4-ch3; gate green. Waiting on r29/ch2-ch1 (blender-sanctum), then critic c23.
+- Merged r29/ch2-ch1; gate green. Critic c23 dispatched (port 4550). On SHIP -> stage-2 judge (briefs/final-judge.md).
