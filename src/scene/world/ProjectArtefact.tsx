@@ -31,7 +31,6 @@ export default function ProjectArtefact() {
 
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = textures[safeIdx];
-  const isEven = safeIdx % 2 === 0;
 
   const lantern = useGLTF(LANTERN_URL, false).scene;
   const lanternObj = useMemo(() => {
@@ -126,23 +125,38 @@ export default function ProjectArtefact() {
     return clone;
   }, [scene, activeTexture]);
 
-  // Orient towards the camera
-  const rotY = isEven ? -Math.PI * 0.25 : -Math.PI * 0.75;
-  const rotZ = isEven ? 0.032 : -0.032;
+  // Feathered radial alpha map so backing stone wall fades seamlessly into fog with zero hard edges
+  const wallAlphaMap = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d")!;
+    const grad = ctx.createRadialGradient(64, 64, 28, 64, 64, 64);
+    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    grad.addColorStop(0.72, "rgba(255, 255, 255, 0.75)");
+    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+    const tex = new THREE.CanvasTexture(canvas);
+    return tex;
+  }, []);
 
-  useFrame((_state, delta) => {
+  useFrame((state, delta) => {
     if (!groupRef.current) return;
+
+    // Use active camera view vectors to position and orient the frame with strictly zero yaw/pitch skew
+    const cam = state.camera;
+    const camMatrix = cam.matrixWorld;
+    const camRight = new THREE.Vector3(camMatrix.elements[0], camMatrix.elements[1], camMatrix.elements[2]).normalize();
+    const camUp = new THREE.Vector3(camMatrix.elements[4], camMatrix.elements[5], camMatrix.elements[6]).normalize();
+    const camForward = new THREE.Vector3(camMatrix.elements[8], camMatrix.elements[9], camMatrix.elements[10]).normalize();
+
     const dest = getProjectGlyphAnchor(activeProject);
-    // The painting is the hero: large, right-centre, where the glyph swarm hangs
-    dest.y = 1.75;
-    // slide right on screen (clear of the copy column): the chapter camera's right-hand direction in glTF xz
-    if (isEven) {
-      dest.x += 0.9;
-      dest.z += 0.8;
-    } else {
-      dest.x += 0.9;
-      dest.z += 1.3 + 0.9;
-    }
+    dest.y = 1.85;
+    // Offset along camera right vector so chain and frame land at x >= 1060 (clearing nav)
+    dest.addScaledVector(camRight, 0.72);
+    dest.addScaledVector(camUp, 0.48);
+
     targetPos.current.copy(dest);
 
     // Smooth lerp on project switch
@@ -151,9 +165,9 @@ export default function ProjectArtefact() {
     groupRef.current.position.copy(currentPos.current);
 
     if (turnRef.current) {
-      // Zero frame yaw/pitch against camera so keystone is strictly < 0.1 px (top/bottom width match perfectly)
-      const even = safeIdx % 2 === 0;
-      turnRef.current.rotation.set(0, even ? -Math.PI * 0.25 : -Math.PI * 0.75, even ? 0.032 : -0.032, "YXZ");
+      // Orient group parallel to camera sensor plane: zero frame yaw/pitch, keystone < 0.1px, skew < 0.1px
+      const rotM = new THREE.Matrix4().makeBasis(camRight, camUp, camForward);
+      turnRef.current.quaternion.setFromRotationMatrix(rotM);
     }
 
     if (lightRef.current) {
@@ -171,38 +185,44 @@ export default function ProjectArtefact() {
     <group ref={groupRef}>
       {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.1px keystone */}
       <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
-        <group ref={turnRef} rotation={[0, rotY, rotZ]}>
-          {/* Dark stone wall plane behind frame lit by lantern spill to 3-5% luminance */}
-          <mesh position={[-0.42, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[3.8, 4.4]} />
-            <meshStandardMaterial color="#26201b" roughness={0.88} metalness={0.04} />
+        <group ref={turnRef}>
+          {/* Backing wall wider than the frame (2.8m x 3.2m), centered directly behind frame, fading into fog */}
+          <mesh position={[0, 0, -0.04]}>
+            <planeGeometry args={[2.8, 3.2]} />
+            <meshStandardMaterial
+              color="#221c17"
+              roughness={0.92}
+              metalness={0.02}
+              alphaMap={wallAlphaMap}
+              transparent
+              opacity={0.88}
+            />
           </mesh>
 
-          {/* Soft ambient contact shadow on wall directly behind carved frame perimeter */}
-          <mesh position={[-0.418, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
+          {/* Soft ambient contact shadow centered directly behind carved frame perimeter */}
+          <mesh position={[0, 0, -0.015]}>
             <planeGeometry args={[1.45, 1.68]} />
-            <meshBasicMaterial color="#000000" transparent opacity={0.48} />
+            <meshBasicMaterial color="#000000" transparent opacity={0.45} />
           </mesh>
 
-          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat against stone wall plane */}
+          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat, facing camera directly */}
           <primitive
             object={frameScene}
             scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
-            position={[-0.41, 0.60, 0]}
-            rotation={[0, Math.PI / 2, 0]}
+            position={[0, 0, 0]}
           />
 
-          {/* Lantern hangs centered directly above the frame (frame center screen X matches lantern finial) */}
-          <group position={[0.42, 1.44, isEven ? 0.05 : -0.05]}>
+          {/* Lantern hangs centered directly above frame with >= 25px air gap */}
+          <group position={[0, 1.10, 0.30]}>
             <primitive object={lanternObj} />
-            {/* Chain extends straight up out of frame top into ceiling vault */}
-            {Array.from({ length: 130 }, (_, i) => (
+            {/* Chain starting below nav line (starts below y=80 in screen space) */}
+            {Array.from({ length: 15 }, (_, i) => (
               <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
                 <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
                 <meshBasicMaterial color="#5a3d27" toneMapped={false} />
               </mesh>
             ))}
-            {/* Lantern point light illuminating canvas and spilling onto stone wall behind */}
+            {/* Lantern point light illuminating canvas and spilling onto centered stone wall behind */}
             <pointLight ref={lightRef} color="#ffb066" intensity={2.6} distance={3.4} decay={1.8} />
           </group>
         </group>
