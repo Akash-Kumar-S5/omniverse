@@ -49,7 +49,16 @@ function WorldLighting({ late }: { late: boolean }) {
  * - Faint warm floor pool behind the cuirass (penumbra 1.0)
  * - Faint atmospheric warm fog haze gradient in the void behind it for layered depth
  */
+// r39: each role gets its own key angle and colour temperature so the four steps do not share one light
+const ROLE_LIGHT = [
+  { color: "#ffaa55", pos: [-13.3, 1.4, 0.0] },
+  { color: "#ffc27a", pos: [-13.2, 1.9, 0.9] },
+  { color: "#ff8c3a", pos: [-13.3, 0.9, -0.9] },
+  { color: "#ffe0b8", pos: [-13.0, 2.1, 0.3] },
+] as const;
+
 function ExperienceLighting() {
+  const role = useOmni((s) => Math.max(0, Math.min(3, s.activeRole)));
   const section = useOmni((s) => s.section);
 
   const cuirassTarget = useMemo(() => {
@@ -93,13 +102,13 @@ function ExperienceLighting() {
 
       {/* 1. Warm rim spot from behind-left on the cuirass (world +Z is screen left, world -X is behind) */}
       <spotLight
-        color="#ffaa55"
+        color={ROLE_LIGHT[role].color}
         intensity={8}
         distance={4.0}
         angle={Math.PI / 4}
         penumbra={0.8}
         decay={2}
-        position={[-13.3, 1.4, 0.0]}
+        position={[...ROLE_LIGHT[role].pos]}
         target={cuirassTarget}
       />
 
@@ -141,7 +150,13 @@ function SubjectRimLight() {
 
   if (section === "boot") {
     // ch0: low cool rim behind fire barrel & mourner relief
-    return <pointLight color="#6a7a90" intensity={0.32} distance={2.8} decay={2} position={[0.7, 1.25, -0.8]} />;
+    return (
+      <>
+        <pointLight color="#6a7a90" intensity={0.32} distance={2.8} decay={2} position={[0.7, 1.25, -0.8]} />
+        {/* r39: a low cool moon wash from high behind the ruins so the church silhouettes and back wall lift out of the black */}
+        <pointLight color="#8fa6cf" intensity={14} distance={20} decay={2} position={[7, 7, -9]} />
+      </>
+    );
   }
   if (section === "about") {
     // ch1: c12 warm key on the statue (highlights drapery, face and weapon) confined strictly to statue, zero wall spill
@@ -450,7 +465,7 @@ export default function World() {
       )}
       <Suspense fallback={null}>
         {(section === "boot" || section === "contact") && <EffigyKnight />}
-        {(section === "boot" || section === "contact") && <RuinChurch />}
+        {(section === "boot" || section === "contact" || section === "experience") && <RuinChurch />}
         {section === "boot" && <HeroFloor />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}

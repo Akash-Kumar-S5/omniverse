@@ -233,3 +233,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch4: camera raised and pulled back (-1.0, 1.0, 4.2; look -1.3, 1.7, -0.4), so the brazier feet sit ~140 px above the bottom edge at 1920 and 1512; the left slabs fall into darkness; the flame is full strength at DPR2.
 - ch0: `HeroFloor.tsx` adds a fallen breastplate scan (already in the repo) and six stone-block rubble pieces on the empty lower floor, lit by the fire only.
 - Gate (headed Chrome, fresh context, shots at 3/6/12 s): 10 of 10, 0 console errors; right-half mean from 6 s is 10.6 to 20.1 (ch4: 13.7 at 1920, 15.0 at 1512 DPR2). Lint and build clean.
+
+## r39 (branch r39/work-fire)
+- Fire.tsx: the flat horizontal additive disc under the flame is removed; the small vertical root glow drops from 0.6 to 0.22 opacity; coal bed emissive 2 to 0.9. The real flame is unchanged.
+- ch2: camera drift is now sideways and height only (dx 0 for every role), so the armour keeps one on-screen size; each role gets its own key spot angle and colour temperature (`ROLE_LIGHT`); two ruin-church scan pieces stand far behind the armour as a fogged back wall (`RuinChurch.tsx`, existing asset). Chapter subjects unchanged.
+- ch0: one low cool moon point light (#8fa6cf, 14, from high behind the ruins). It lifts the floor and shell; the church pieces are unlit basic material, so they stay as dim as before.
+- Gate (headed Chrome, fresh context, shots at 3/6/12 s): 10 of 10, 0 console errors, right-half mean from 6 s 10.6 to 19.8. Lint and build clean. Proof: `.orchestrator/reference/r39-*`. No new assets, CREDITS.md unchanged.
