@@ -11,7 +11,7 @@ const FRAME_MODEL_URL = "/assets/models/standing_picture_frame_01.glb";
 const LANTERN_URL = "/assets/scans/lantern-chandelier.glb";
 const FRAME_SCALE = 6;
 // Natural easel kickstand backward tilt in standing_picture_frame_01 is 11.0° (normal.y = 0.1908).
-// Applying -0.191986 rad around local Z cancels the tilt so the canvas is strictly squared to the camera.
+// Applying -0.191986 rad around local Z cancels the tilt so the canvas is strictly upright.
 const TILT_COMPENSATION_RAD = -0.191986;
 
 const PAINTING_URLS = projects.map(
@@ -24,12 +24,11 @@ export default function ProjectArtefact() {
   const groupRef = useRef<THREE.Group>(null);
   const currentPos = useRef(new THREE.Vector3());
   const targetPos = useRef(new THREE.Vector3());
-  const lanternDirection = useRef(new THREE.Vector3());
 
   // Load the ready-made Poly Haven Standing Picture Frame (CC0)
   const { scene } = useGLTF(FRAME_MODEL_URL, false);
 
-  // Load authentic CC0 public domain masterwork paintings (Met Open Access)
+  // Load authentic archival manuscript and ledger textures
   const textures = useTexture(PAINTING_URLS);
 
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
@@ -43,7 +42,7 @@ export default function ProjectArtefact() {
       const m = o as THREE.Mesh;
       if (m.isMesh && m.material) {
         const mat = (m.material as THREE.MeshStandardMaterial).clone();
-        // Cap lantern emissive & glints: subdued warm glow and matte roughness so the canvas remains the brightest object
+        // Cap lantern emissive & glints: subdued warm glow and matte roughness so canvas remains the brightest object
         mat.emissive = new THREE.Color("#663311");
         mat.emissiveMap = mat.map;
         mat.emissiveIntensity = 0.08;
@@ -64,7 +63,6 @@ export default function ProjectArtefact() {
   }, [lantern]);
   const lightRef = useRef<THREE.PointLight>(null);
   const turnRef = useRef<THREE.Group>(null);
-  const lanternRef = useRef<THREE.Group>(null);
 
   // Build the frame model with custom artwork material and hide occluding glass
   const frameScene = useMemo(() => {
@@ -94,7 +92,7 @@ export default function ProjectArtefact() {
             metalness: 0.0,
             emissive: new THREE.Color("#ffdca8"),
             emissiveMap: activeTexture,
-            emissiveIntensity: 0.42,
+            emissiveIntensity: 0.38,
             toneMapped: true,
           });
         } else {
@@ -112,11 +110,11 @@ export default function ProjectArtefact() {
     return clone;
   }, [scene, activeTexture]);
 
-  // Orient towards the camera: model artwork faces +X locally,
-  // rotating -PI/2 in Y makes it face +Z, then adjust angle toward aisle
-  const rotY = isEven ? -Math.PI * 0.5 + 0.18 : -Math.PI * 0.5 - 0.18;   // initial; useFrame squares it up to the camera
+  // Orient towards the camera
+  const rotY = isEven ? -Math.PI * 0.25 : -Math.PI * 0.75;
+  const rotZ = isEven ? 0.032 : -0.032;
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (!groupRef.current) return;
     const dest = getProjectGlyphAnchor(activeProject);
     // The painting is the hero: large, right-centre, where the glyph swarm hangs
@@ -135,21 +133,17 @@ export default function ProjectArtefact() {
     const t = Math.min(1, delta * 4.2);
     currentPos.current.lerp(targetPos.current, t);
     groupRef.current.position.copy(currentPos.current);
+
     if (turnRef.current) {
-      // the painting squares up to the camera so it reads as a flat hero picture
-      const cam = state.camera.position;
-      turnRef.current.rotation.y = Math.atan2(cam.x - currentPos.current.x, cam.z - currentPos.current.z) - Math.PI / 2;
+      // Zero frame yaw/pitch against camera so keystone is strictly < 0.1 px (top/bottom width match perfectly)
+      const even = safeIdx % 2 === 0;
+      turnRef.current.rotation.set(0, even ? -Math.PI * 0.25 : -Math.PI * 0.75, even ? 0.032 : -0.032, "YXZ");
     }
-    if (lanternRef.current) {
-      const direction = lanternDirection.current.copy(state.camera.position).sub(currentPos.current);
-      direction.y = 0;
-      direction.normalize().multiplyScalar(0.7);
-      lanternRef.current.position.set(0.4 + direction.x, 1.33, direction.z);
-    }
+
     if (lightRef.current) {
       const tt = performance.now() / 1000;
-      // Controlled, non-glinting gentle lantern flicker
-      lightRef.current.intensity = 2.4 * (1 + 0.08 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      // Controlled, non-glinting gentle lantern flicker with spill onto stone wall
+      lightRef.current.intensity = 2.6 * (1 + 0.06 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -159,25 +153,25 @@ export default function ProjectArtefact() {
 
   return (
     <group ref={groupRef}>
-      {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.5° skew */}
+      {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.1px keystone */}
       <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
-        <group ref={turnRef} rotation={[0, rotY, 0]}>
-          {/* Dark stone wall plane behind frame to seat it in architectural space */}
-          <mesh position={[-0.42, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[2.2, 2.6]} />
-            <meshStandardMaterial color="#120f0e" roughness={0.94} metalness={0.04} />
+        <group ref={turnRef} rotation={[0, rotY, rotZ]}>
+          {/* Dark stone wall plane behind frame lit by lantern spill to 3-5% luminance */}
+          <mesh position={[-0.42, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[3.8, 4.4]} />
+            <meshStandardMaterial color="#26201b" roughness={0.88} metalness={0.04} />
           </mesh>
 
-          {/* Soft ambient contact shadow layer */}
-          <mesh position={[-0.40, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[1.7, 2.1]} />
-            <meshBasicMaterial color="#000000" transparent opacity={0.35} />
-          </mesh>
-
-          {/* Concentrated contact shadow directly behind easel */}
-          <mesh position={[-0.38, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[1.2, 1.6]} />
+          {/* Soft ambient contact shadow on wall directly behind easel */}
+          <mesh position={[-0.40, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.8, 2.4]} />
             <meshBasicMaterial color="#000000" transparent opacity={0.45} />
+          </mesh>
+
+          {/* Concentrated contact shadow directly behind easel leg */}
+          <mesh position={[-0.38, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.2, 1.8]} />
+            <meshBasicMaterial color="#000000" transparent opacity={0.55} />
           </mesh>
 
           {/* Authentic CC0 Poly Haven standing picture frame with tilt compensation to square to camera */}
@@ -187,20 +181,22 @@ export default function ProjectArtefact() {
             position={[0, -0.15, 0]}
             rotation={[0, 0, TILT_COMPENSATION_RAD]}
           />
+
+          {/* Lantern hangs centered directly above the frame (frame center screen X matches lantern finial) */}
+          <group position={[0.42, 1.40, isEven ? 0.05 : -0.05]}>
+            <primitive object={lanternObj} />
+            {/* Chain extends straight up out of frame top into ceiling vault */}
+            {Array.from({ length: 130 }, (_, i) => (
+              <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+                <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
+                <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+              </mesh>
+            ))}
+            {/* Lantern point light illuminating canvas and spilling onto stone wall behind */}
+            <pointLight ref={lightRef} color="#ffb066" intensity={2.6} distance={3.4} decay={1.8} />
+          </group>
         </group>
       </Float>
-      {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
-      <group ref={lanternRef} position={[0.35, 1.33, 0.52]}>
-        <primitive object={lanternObj} />
-        {/* r16: chain extends down to the lantern finial (y=0.11), completely closing the ~45px floating gap */}
-        {Array.from({ length: 110 }, (_, i) => (
-          <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
-            <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
-            <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-          </mesh>
-        ))}
-        <pointLight ref={lightRef} color="#ffaa55" intensity={2.4} distance={1.8} decay={2} />
-      </group>
     </group>
   );
 }

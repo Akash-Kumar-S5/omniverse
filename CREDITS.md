@@ -49,14 +49,14 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 
 | Project | Painting Title | Artist / Date | Source | Licence | File |
 |---|---|---|---|---|---|
-| SalarySync | *SalarySync Enterprise Payroll UI Architecture Blueprint* (Sepia edition) | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg`, `public/assets/paintings/salarysync_ui.jpg` |
-| Rentify | *A Colonnade in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437475)](https://www.metmuseum.org/art/collection/search/437475) | CC0 1.0 Universal | `public/assets/paintings/painting_1.jpg` |
-| Website Performance Monitor | *Aqueduct in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437471)](https://www.metmuseum.org/art/collection/search/437471) | CC0 1.0 Universal | `public/assets/paintings/painting_2.jpg` |
-| Innovation Sprint 2025 | *Gothic Windows in the Ruins of the Monastery at Oybin* | Carl Gustav Carus (German, 1789–1869), ca. 1828 | [The Metropolitan Museum of Art (Object 439122)](https://www.metmuseum.org/art/collection/search/439122) | CC0 1.0 Universal | `public/assets/paintings/painting_3.jpg` |
-| MediHub | *The Parthenon* | Frederic Edwin Church (American, 1826–1900), 1871 | [The Metropolitan Museum of Art (Object 10482)](https://www.metmuseum.org/art/collection/search/10482) | CC0 1.0 Universal | `public/assets/paintings/painting_4.jpg` |
-| Finaca | *The Old Castle* | Emanuel Murant (Dutch, 1622–ca. 1700), 17th c. | [The Metropolitan Museum of Art (Object 437171)](https://www.metmuseum.org/art/collection/search/437171) | CC0 1.0 Universal | `public/assets/paintings/painting_5.jpg` |
-| Fuel Dispenser RFID App | *Evening: Landscape with an Aqueduct* | Théodore Géricault (French, 1791–1824), 1818 | [The Metropolitan Museum of Art (Object 436455)](https://www.metmuseum.org/art/collection/search/436455) | CC0 1.0 Universal | `public/assets/paintings/painting_6.jpg` |
-| GenAI Experiments | *Copenhagen Harbor by Moonlight* | Johan Christian Dahl (Norwegian, 1788–1857), 1846 | [The Metropolitan Museum of Art (Object 439343)](https://www.metmuseum.org/art/collection/search/439343) | CC0 1.0 Universal | `public/assets/paintings/painting_7.jpg` |
+| SalarySync | *SalarySync Archival Ruled Ledger & Cryptographic Seal* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg`, `public/assets/paintings/salarysync_ui.jpg` |
+| Rentify | *Isometric Architectural Volume & Floorplan Blueprint* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_1.jpg` |
+| Website Performance Monitor | *Harmonic Golden Ratio Calibration & Spiral Study* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_2.jpg` |
+| Innovation Sprint 2025 | *Constellation Network Topology & Orbital Rings* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_3.jpg` |
+| MediHub | *Proportional Sacred Geometry Armature Folio* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_4.jpg` |
+| Finaca | *Double-Entry Archival Balance Sheet & Cumulative Chart* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_5.jpg` |
+| Fuel Dispenser RFID App | *Electromagnetic Flux Fields & Circuit Blueprint* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_6.jpg` |
+| GenAI Experiments | *High-Dimensional Lattice & Hypercube Projection* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_7.jpg` |
 
 ## Chapter Souls-Style 3D Props (Round 3 Direction 13:05)
 
