@@ -54,6 +54,29 @@ export default function HeroArmour() {
     return holder;
   }, [scene]);
 
+  // r28: a short dark collar seated on the torn neck opening (found from the scan's highest vertices), so the hole does not read from the front
+  const collar = useMemo(() => {
+    armour.updateMatrixWorld(true);
+    const v = new THREE.Vector3();
+    const pts: THREE.Vector3[] = [];
+    let maxY = -Infinity;
+    armour.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        const pos = child.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          v.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
+          pts.push(v.clone());
+          if (v.y > maxY) maxY = v.y;
+        }
+      }
+    });
+    const top = pts.filter((p) => p.y > maxY - 0.07);
+    const cx = top.reduce((s, p) => s + p.x, 0) / top.length;
+    const cz = top.reduce((s, p) => s + p.z, 0) / top.length;
+    const r = Math.max(...top.map((p) => Math.hypot(p.x - cx, p.z - cz)));
+    return { x: cx, z: cz, y: maxY, r: Math.min(0.2, r * 0.7) };
+  }, [armour]);
+
   const shadow = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 128;
@@ -83,11 +106,15 @@ export default function HeroArmour() {
       </mesh>
       <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2.1, 2.1]} />
-        <meshBasicMaterial map={shadow} transparent opacity={0.6} depthWrite={false} />
+        <meshBasicMaterial map={shadow} transparent opacity={0.8} depthWrite={false} />
       </mesh>
       <ArmourStand />
-      <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.35, 0]}>
+      <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.2, 0]}>
         <primitive object={armour} />
+        <mesh position={[collar.x, collar.y - 0.12, collar.z]}>
+          <cylinderGeometry args={[collar.r, collar.r * 1.1, 0.1, 28, 1, false]} />
+          <meshStandardMaterial color="#161310" roughness={0.9} metalness={0.1} />
+        </mesh>
       </group>
       {/* r26: warm rim from behind-left so the dark plate edges catch light (c19: the breastplate read mostly black) */}
       <pointLight color="#ffb070" intensity={2.6} distance={3.2} decay={2} position={[-0.9, 1.5, -0.9]} />

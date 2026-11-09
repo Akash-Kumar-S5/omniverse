@@ -12,6 +12,11 @@ const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 function PlinthCap() {
   return (
     <group position={[11, 0, 0]}>
+      {/* r28: the baked plinth body reads as clay; a half-transparent flat stone skin over it halves its visible relief and ties it to the cap slabs */}
+      <mesh position={[0, 0.6, 0]}>
+        <boxGeometry args={[1.31, 1.2, 1.31]} />
+        <meshStandardMaterial color="#26231f" roughness={0.88} metalness={0} transparent opacity={0.5} depthWrite={false} />
+      </mesh>
       <mesh position={[0, 1.215, 0]}>
         <boxGeometry args={[1.32, 0.02, 1.32]} />
         <meshStandardMaterial color="#35312d" roughness={0.85} metalness={0} />
