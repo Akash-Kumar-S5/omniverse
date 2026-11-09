@@ -194,14 +194,14 @@ export default function CameraRig() {
         pos.set(...sky.position);
         look.set(...sky.target);
         if (!isPortrait) {
-          // ch4: pit seen from above ~26 deg like ch0; lower-right; email text over black
-          pos.set(-2.75, 2.75, 3.75);
-          look.set(-1.1, 0.75, 0.0);
+          // r14 ch4: ONE finished subject, the scanned relief stood on the floor right of centre, lit by the barrel's light from off-screen
+          pos.set(-0.9, 1.1, 3.3);
+          look.set(0.6, 0.8, 0.3);
           targetFov = 44;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
-          pos.set(-1.8, 1.85, 4.2);
-          look.set(-0.3, 2.25, 0.0);
+          pos.set(-0.5, 1.0, 3.6);
+          look.set(0.9, 2.55, 0.2);
           targetFov = 54;
         }
         break;

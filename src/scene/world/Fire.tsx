@@ -264,9 +264,10 @@ export default function Fire() {
 
   return (
     <group position={[0, offsetY, 0]}>
-      <FirePit />
+      {/* r14: at ch4 the barrel and its flame cards are out of shot; the light stays, so the scanned relief is lit from off-screen */}
+      {section !== "contact" && <FirePit />}
       <FireLight />
-      <Flames />
+      {section !== "contact" && <Flames />}
       <FloorVignette />
     </group>
   );

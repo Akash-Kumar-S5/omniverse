@@ -47,6 +47,8 @@ export default function HeroArmour() {
         <primitive object={obj} />
       </group>
       {/* one warm practical, up and toward the camera and the screen-right wall: the weave and rim catch it, the rest stays black */}
+      {/* cool rim from behind and above (~30% of the ch1 rim): separates the weave from the wall */}
+      <pointLight color="#8fb0ff" intensity={3.4} distance={3.6} decay={2} position={[-1.1, STAND_TOP + 1.2, 0.4]} />
       <pointLight color="#ffb070" intensity={6} distance={4.2} decay={2} position={[1.5, STAND_TOP + 0.9, 0.9]} />
     </group>
   );

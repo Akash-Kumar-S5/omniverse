@@ -117,3 +117,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch2: the shield is gone. The subject is the scanned woven cuirass (src/scene/world/HeroArmour.tsx, full-detail runtime mesh) on a dark stone stand, dark albedo (x0.5), one warm practical; nothing else lit. The first pick, helmet-sallet-scan, turned out to be a lion-head mask with red cloth and two rods, so it was dropped. Verified in r13-scenes-ch2.
 - Not verified: no mobile shots this round.
 - sanctum.glb 1.75 MB, sanctum-lite.glb 0.52 MB. Dev server (port 5211) stopped.
+
+## Round 14 scenes (r14/blender-scenes)
+- ch4: ONE subject, the scanned relief, upright on the floor right of centre with a baked contact shadow, lit by the barrel's point light; Fire.tsx hides the barrel and flame cards at ch4 (the light stays); CameraRig contact camera moved (landscape and mobile). Mobile 390: relief top ~60 px below the GitHub/LinkedIn row. Shots r14-scenes-ch4 and r14-scenes-ch4-390.
+- ch0: relief moved 0.55 m left, right edge ~1290 px, standing on the floor with its shadow (r14-scenes-ch0).
+- ch3: chain of 22 links runs from the lantern to the top of frame; alternate links are edge-on so it reads as a dotted chain (r14-scenes-ch3).
+- ch2: cool rim light (#8fb0ff) behind and above the cuirass; stand is still a textured block, no Poly Haven plinth model exists; ch1 plinth unchanged (r14-scenes-ch2).
+- sanctum.glb 1.76 MB, sanctum-lite.glb under 0.6 MB. Dev server (port 5211) stopped. The CameraRig contact case was edited in addition to chapterLook (the ch4 framing lives there, not in chapterLook.ts).

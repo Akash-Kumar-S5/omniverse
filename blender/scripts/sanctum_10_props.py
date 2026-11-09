@@ -133,13 +133,13 @@ for o in [o for o in bpy.data.objects if o.type == "LIGHT" and (o.name.startswit
 for i, (yw, dz, ox, oy) in enumerate(()):   # r12: logs removed: even as flat charcoal their baked atlas islands read pale blond at runtime
     P("../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k", ox, oy, dz, 0.26, yw, fit=(1.0, 0.26), mat=M_CHAR, tag="scan_log")   # r10: scanned dead trunk, charred (albedo <= 0.3)
 # r12: the outer rock ring (scan_ring) is deleted: the dark boulders of the pit scan are the only ring
-P("../scans/statue-hooded-mourner", 1.75, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
+P("../scans/statue-hooded-mourner", 1.2, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
 firelight("FIRE_flame", (0, 0, 1.6), 70, (1.0, 0.5, 0.18), 0.3)
-firelight("FIRE_mourner_low", (0.7, 0.5, 0.9), 25, (1.0, 0.45, 0.15), 0.15)
+firelight("FIRE_mourner_low", (0.55, 0.45, 0.9), 25, (1.0, 0.45, 0.15), 0.15)
 
 # r13: the runtime fire barrel (0.80 m across, 0.81 m tall) has no twin in the bake, so a near-black occluder stands in for it:
 # it throws the contact shadow into the baked floor and is the black coals bed seen from above (top at 0.55, below the rim)
-_o = cyl("RUIN_barrelproxy", 0.38, 0.0, 0.55)
+_o = cyl("RUIN_barrelproxy", 0.5, 0.0, 0.012)   # r14: a flat scorch/contact-shadow disc only: at ch4 the barrel is out of shot, so nothing tall may remain
 _o.data.materials.clear(); _o.data.materials.append(bpy.data.materials["mat_plinth_polished"])
 
 # ---- ch1: altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----

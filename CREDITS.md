@@ -172,3 +172,7 @@ No new third-party assets. Changes to credited CC0 files:
 |---|---|---|---|---|
 | Barrel Stove (scan, 1k, `blender/props/barrel_stove/`, processed to `public/assets/ruins/fire_barrel.draco.glb`) | Poly Haven | https://polyhaven.com/a/barrel_stove | CC0 1.0 Universal | Ch0/ch4: the one complete fire vessel (open iron drum widened 1.35x, albedo x0.55), replaces the rocks-and-logs pit |
 | Armour Cuirass scan (`public/assets/scans/armour-cuirass-scan.glb`, listed in the Scans section) | see Scans | CC0 | Ch2: the one subject, loaded at runtime at full detail on a dark stone stand |
+
+## Round 14 scenes (blender-scenes)
+
+No new third-party assets. Reused CC0 files in new roles: the hooded-mourner relief scan is now the single ch4 subject (stood on the floor with a baked contact shadow, lit by the barrel's light from off-screen); the iron-barrel scan (Round 13) stays in the scene but is hidden at ch4. The ch3 lantern chain is a procedural torus chain (no asset). No Poly Haven model exists for a stone plinth, so the ch1/ch2 stands remain textured stone blocks (Poly Haven cobblestone_floor_13 texture, CC0).
