@@ -171,13 +171,15 @@ export default function CameraRig() {
         break;
       }
       case "experience": {
-        targetFov = spots.cameras.exp_role_0.fov;
+        targetFov = isPortrait ? 60 : 48;
         const roleT = clamp((activeRole + p * 0.5) / 3, 0, 1);
         expPath.getPointAt(roleT, sampledPosition.current);
         pos.copy(sampledPosition.current);
         const roleTargetKey = `exp_role_${clamp(activeRole, 0, 3)}` as keyof typeof spots.cameras;
         const roleCam = spots.cameras[roleTargetKey] ?? spots.cameras.exp_role_0;
         look.set(...roleCam.target);
+        // r16 ch2: frame cuirass prominently, push corridor floor litter (500-1100, 700-900) out of bottom frame
+        look.y += 0.42;
         break;
       }
       case "projects": {
