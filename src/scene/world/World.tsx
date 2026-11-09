@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, lazy, Suspense } from "react";
 import * as THREE from "three";
 import { Environment, Clouds, Cloud } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -10,6 +10,10 @@ import Floor from "./Floor";
 import ProjectArtefact from "./ProjectArtefact";
 import Fire from "./Fire";
 import HeroArmour from "./HeroArmour";
+
+// r22: the effigy and the church backdrop are lazy chunks (not in the initial payload)
+const EffigyKnight = lazy(() => import("./EffigyKnight"));
+const RuinChurch = lazy(() => import("./RuinChurch"));
 
 /**
  * Light is fire + moon only. The single warm source is the flickering point light in Fire.tsx.
@@ -398,6 +402,10 @@ export default function World() {
       <SparksAndMist />
       <Fire />
       <HeroArmour />
+      <Suspense fallback={null}>
+        <EffigyKnight />
+        <RuinChurch />
+      </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 

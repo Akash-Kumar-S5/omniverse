@@ -133,7 +133,10 @@ for o in [o for o in bpy.data.objects if o.type == "LIGHT" and (o.name.startswit
 for i, (yw, dz, ox, oy) in enumerate(()):   # r12: logs removed: even as flat charcoal their baked atlas islands read pale blond at runtime
     P("../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k", ox, oy, dz, 0.26, yw, fit=(1.0, 0.26), mat=M_CHAR, tag="scan_log")   # r10: scanned dead trunk, charred (albedo <= 0.3)
 # r12: the outer rock ring (scan_ring) is deleted: the dark boulders of the pit scan are the only ring
-P("../scans/statue-hooded-mourner", 1.2, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
+# r22: the baked standing relief is gone; a recumbent effigy scan is loaded at runtime beside the fire (src/scene/world/EffigyKnight.tsx).
+# The props atlas (RUIN_prop_scan*) needs at least one mesh for the bake/export pipeline: a 1 cm stub two metres under the floor, never seen.
+_stub = box("RUIN_prop_scan_stub", 0.0, 0.01, 0.0, 0.01, -2.0, -1.99)
+_stub.data.materials.clear(); _stub.data.materials.append(bpy.data.materials["mat_plinth_polished"])
 firelight("FIRE_flame", (0, 0, 1.6), 70, (1.0, 0.5, 0.18), 0.3)
 # r15: no extra fill on the relief (it sits dim behind the fire at ch4)
 

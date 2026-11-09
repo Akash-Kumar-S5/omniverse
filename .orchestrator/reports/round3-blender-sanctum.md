@@ -164,3 +164,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Relief (ch0/ch4): colour, emissive and envMapIntensity at 0.35 on the baked props. ch4 at 1920: relief 21.6 vs barrel 53.9 (0.40x).
 - ch4 stray object at the right edge (1920): it was the runtime ch1 statue, which rendered in every chapter and fell at the frame edge on wide screens. It now mounts only in ch1; the ch4 edge region measures 4.6 (dark).
 - Proof: `.orchestrator/reference/r21-blender-plinth-ch{0,1,4}-1920.png` and `-ch{1,4}-1512dpr2.png`. No new assets. The Sketchfab effigy swap (R19 b) is not done.
+
+## r22 scans (R19 b and c)
+- Both downloaded with tools/sketchfab-dl.ts (token never printed). Effigy (CC-BY, Shiro Morturn): 73.9k faces to 36k, back wall and carpet cut off, 1.7 m long, 476 KB Draco. Church (CC-BY, andreidrmb): 330k faces to 50k, 512 px texture, 436 KB.
+- The baked standing relief is removed from the bake. The props atlas needs at least one mesh, so a 1 cm stub sits 2 m under the floor. Rebake: sanctum.glb 1.53 MB (limit 4), sanctum-lite.glb 0.46 MB (limit 1).
+- Runtime: `EffigyKnight.tsx` and `RuinChurch.tsx`, both `React.lazy` in World.tsx and mounted only in ch0 and ch4, so neither is in the initial payload (about 0.9 MB total when a chapter needs them). The effigy takes the fire lights with a dark material; the church is an unlit dark material (0.11, 0.12, 0.16) that the fog eats, as two silhouettes at 15-25 m.
+- The church reads as a very faint set of pale roof edges at the right of ch4 and is almost invisible in ch0; making it stronger turned it into a pale wall, so I kept it subtle.
+- Proof: `.orchestrator/reference/r22-blender-scans-ch{0,4}-1920.png` and `-1512dpr2.png`.
