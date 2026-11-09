@@ -417,3 +417,8 @@ After r12 merges + critic c9, for every chapter still <7.5: replace the subject 
 - critic c10 = 7.6; dispatched r15/blender-scenes (ch4 flame back, mobile, floor rebake, ch2/ch3) + r15/agy-world (embers)
 - r15/agy-world merged (embers)
 - r15/blender-scenes merged (ch4 flame back, low side angle, floor spot rebaked, mobile framed); critic c11 dispatched
+
+## Parallel per-chapter lanes (Akash: use ALL resources) — from c11 (7.4)
+Each lane own worktree/branch r16/<lane>, merge the moment evidence passes (no round barrier). Critic scores only changed chapters between full cycles.
+blender-sanctum: ch0+ch4 (Fire.tsx owner) | agy-world: ch2 | agy-review: ch3 | orchestrator-b: ch1 | copilot-review: mobile 390 | copilot-swarm: perf/cold-load | codex-world: motion review after 13:54 IST.
+Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview servers; never touch 5173/5197. On SHIP start stage-2 judge immediately.
