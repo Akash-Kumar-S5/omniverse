@@ -10,6 +10,9 @@ const FRAME_MODEL_URL = "/assets/models/standing_picture_frame_01.glb";
 // warm practical that lights the painting: Poly Haven lantern chandelier (CC0), hung above-front of the frame
 const LANTERN_URL = "/assets/scans/lantern-chandelier.glb";
 const FRAME_SCALE = 6;
+// Natural easel kickstand backward tilt in standing_picture_frame_01 is 11.0° (normal.y = 0.1908).
+// Applying -0.191986 rad around local Z cancels the tilt so the canvas is strictly squared to the camera.
+const TILT_COMPENSATION_RAD = -0.191986;
 
 const PAINTING_URLS = projects.map(
   (p, i) => p.image || `/assets/paintings/painting_${i % 8}.jpg`
@@ -40,9 +43,12 @@ export default function ProjectArtefact() {
       const m = o as THREE.Mesh;
       if (m.isMesh && m.material) {
         const mat = (m.material as THREE.MeshStandardMaterial).clone();
-        mat.emissive = new THREE.Color("#ff9a4a");
+        // Cap lantern emissive & glints: subdued warm glow and matte roughness so the canvas remains the brightest object
+        mat.emissive = new THREE.Color("#663311");
         mat.emissiveMap = mat.map;
-        mat.emissiveIntensity = 0.5;
+        mat.emissiveIntensity = 0.08;
+        mat.roughness = Math.max(0.78, mat.roughness);
+        mat.metalness = Math.min(0.2, mat.metalness);
         m.material = mat;
       }
     });
@@ -74,17 +80,21 @@ export default function ProjectArtefact() {
           mesh.visible = false;
         } else if (matName.includes("artwork")) {
           if (activeTexture) {
-            activeTexture.anisotropy = 8;
-            activeTexture.generateMipmaps = true;
+            // Maximum sharpness: disable mipmap blur, bilinear filtering, max hardware anisotropy
+            activeTexture.generateMipmaps = false;
+            activeTexture.minFilter = THREE.LinearFilter;
+            activeTexture.magFilter = THREE.LinearFilter;
+            activeTexture.anisotropy = 16;
+            activeTexture.needsUpdate = true;
           }
           mesh.material = new THREE.MeshStandardMaterial({
             map: activeTexture,
-            color: new THREE.Color("#fbf6ee"),
-            roughness: 0.72,
+            color: new THREE.Color("#ffffff"),
+            roughness: 0.75,
             metalness: 0.0,
-            emissive: new THREE.Color("#ffe8cc"),
+            emissive: new THREE.Color("#ffdca8"),
             emissiveMap: activeTexture,
-            emissiveIntensity: 0.22,
+            emissiveIntensity: 0.42,
             toneMapped: true,
           });
         } else {
@@ -138,7 +148,8 @@ export default function ProjectArtefact() {
     }
     if (lightRef.current) {
       const tt = performance.now() / 1000;
-      lightRef.current.intensity = 4.5 * (1 + 0.12 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
+      // Controlled, non-glinting gentle lantern flicker
+      lightRef.current.intensity = 2.4 * (1 + 0.08 * (0.6 * Math.sin(tt * 8.3) + 0.4 * Math.sin(tt * 19.1 + 1.3)));
     }
   });
 
@@ -148,11 +159,34 @@ export default function ProjectArtefact() {
 
   return (
     <group ref={groupRef}>
-      <Float speed={1.2} rotationIntensity={0.04} floatIntensity={0.1} floatingRange={[-0.012, 0.012]}>
+      {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.5° skew */}
+      <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
         <group ref={turnRef} rotation={[0, rotY, 0]}>
-          {/* Authentic CC0 Poly Haven standing picture frame */}
-          <primitive object={frameScene} scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]} position={[0, -0.15, 0]} />
+          {/* Dark stone wall plane behind frame to seat it in architectural space */}
+          <mesh position={[-0.42, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[2.2, 2.6]} />
+            <meshStandardMaterial color="#120f0e" roughness={0.94} metalness={0.04} />
+          </mesh>
 
+          {/* Soft ambient contact shadow layer */}
+          <mesh position={[-0.40, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.7, 2.1]} />
+            <meshBasicMaterial color="#000000" transparent opacity={0.35} />
+          </mesh>
+
+          {/* Concentrated contact shadow directly behind easel */}
+          <mesh position={[-0.38, 0.58, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.2, 1.6]} />
+            <meshBasicMaterial color="#000000" transparent opacity={0.45} />
+          </mesh>
+
+          {/* Authentic CC0 Poly Haven standing picture frame with tilt compensation to square to camera */}
+          <primitive
+            object={frameScene}
+            scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
+            position={[0, -0.15, 0]}
+            rotation={[0, 0, TILT_COMPENSATION_RAD]}
+          />
         </group>
       </Float>
       {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
@@ -165,7 +199,7 @@ export default function ProjectArtefact() {
             <meshBasicMaterial color="#5a3d27" toneMapped={false} />
           </mesh>
         ))}
-        <pointLight ref={lightRef} color="#ffb066" intensity={3.15} distance={1.6} decay={2} />
+        <pointLight ref={lightRef} color="#ffaa55" intensity={2.4} distance={1.8} decay={2} />
       </group>
     </group>
   );
