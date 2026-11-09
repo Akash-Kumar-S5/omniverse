@@ -432,3 +432,6 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - r16/copilot-perf merged (lite sanctum first); r17 prompts resent to agy-world, orchestrator-b
 - r17 lane E mobile -> copilot-review (r17/copilot-ui); Lane C desktop-only
 - r17/copilot-ui merged (mobile framing ch1-3). Pending: A fire, B fog, C desktop framing, D ch3
+
+## DESKTOP ONLY (Akash, via Morph, 07:00 UTC): skip mobile for now
+Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, no chapter < 8. No more mobile lanes (merged mobile work kept). copilot-review -> r17 lane F ch1 plinth.
