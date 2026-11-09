@@ -177,6 +177,20 @@ export default function ProjectArtefact() {
             position={[0, 0, 0]}
           />
 
+          {/* Hook at the frame's top centre, chain slanting up to the lantern base (lantern group sits at [0,1.10,0.30]) */}
+          <mesh position={[0, 0.775, 0.03]}>
+            <torusGeometry args={[0.018, 0.005, 6, 12, Math.PI * 1.5]} />
+            <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+          </mesh>
+          <group position={[0, 0.79, 0.03]} rotation={[Math.atan2(0.27, 0.19), 0, 0]}>
+            {Array.from({ length: 14 }, (_, i) => (
+              <mesh key={i} position={[0, 0.012 + i * 0.0235, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+                <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
+                <meshBasicMaterial color="#5a3d27" toneMapped={false} />
+              </mesh>
+            ))}
+          </group>
+
           {/* Lantern hangs centered directly above frame with >= 25px air gap */}
           <group position={[0, 1.10, 0.30]}>
             <primitive object={lanternObj} />
@@ -187,6 +201,11 @@ export default function ProjectArtefact() {
                 <meshBasicMaterial color="#5a3d27" toneMapped={false} />
               </mesh>
             ))}
+            {/* Emissive core so the lantern reads as lit */}
+            <mesh>
+              <sphereGeometry args={[0.045, 12, 10]} />
+              <meshBasicMaterial color="#ffb060" toneMapped={false} />
+            </mesh>
             {/* Lantern point light illuminating canvas and carved gilt frame */}
             <pointLight ref={lightRef} color="#ffb066" intensity={2.8} distance={3.6} decay={1.8} />
           </group>

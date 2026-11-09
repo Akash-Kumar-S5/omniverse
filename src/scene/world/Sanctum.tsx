@@ -96,7 +96,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
             mesh.position.set(11 - 1.3 * 11, 0, 0);
           }
           // r25 ch1: the room shell at half brightness, so the bottom-right corner edge and the wall band lose contrast (the back glow stays)
-          if (section === "about" && mesh.name.includes("architecture")) {
+          if ((section === "about" || section === "projects") && mesh.name.includes("architecture")) {
             (mesh.material as THREE.MeshStandardMaterial).color.setScalar(0.45);
           }
           // r21: the scanned relief is fire-side lit only and at most half the barrel's luminance on ch0 and ch4
