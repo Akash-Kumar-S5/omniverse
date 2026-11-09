@@ -145,3 +145,12 @@ No new third-party assets; reused CC0 files in new places.
 | Dead Tree Trunk 02 (scan, 1k, `blender/props/dead_tree_trunk_02/`) | Poly Haven | https://polyhaven.com/a/dead_tree_trunk_02 | CC0 1.0 Universal | Ch0/ch4: three charred logs laid crosswise in the pit (albedo darkened to <= 0.3), replace the pale kindling |
 | Boulder 01 / Rubble Rock Moss (`public/assets/scans/rubble-boulder.glb`, `rubble-rock-moss.glb`) | Rico Cilliers, Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: nine dark half-sunk scanned rocks ring the pit foot |
 | Kite Shield, Brass Candleholders, wall torch | see Round 8 | CC0 | Re-lit, re-placed (ch2 shield on a taller pedestal, ch1 candles removed from the foreground) |
+
+## Round 11 scenes (blender-scenes)
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
+| Stone fire pit scan (`stone_fire_pit.draco.glb`, albedo x0.35, ground disc darkened) | Poly Haven | https://polyhaven.com/a/stone_fire_pit | CC0 1.0 Universal | Ch0/ch4: the pit keeps its own dark boulders, ground is now dark ash |
+| Boulder 01 (`rubble-boulder.glb`) | Rico Cilliers, Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: nine-stone dark ring (darker albedo, boulder only) |
+| Dead Tree Trunk 02 (shape only, flat charcoal material) | Poly Haven | https://polyhaven.com/a/dead_tree_trunk_02 | CC0 1.0 Universal | Ch0/ch4: charred log shapes |
+| cobblestone_floor_13, concrete_wall_003 | Poly Haven | CC0 | Dark rough stone for the ch1 plinth; plaster backdrop planes behind the ch3 paintings |

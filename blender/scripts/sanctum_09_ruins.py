@@ -139,6 +139,19 @@ for ix in range(-4, 5):
         tile(x, y, random.choice((0, 90, 180, 270))); tiles += 1
 print("tiles", tiles)
 
+# ---- 8b. r11: a dark plaster wall plane behind each ch3 painting (glTF -> blender: x, -z, y) ----
+for i in range(8):
+    p, even = i // 2, i % 2 == 0
+    zs = -13.5 - 5.0 * p
+    px, pz = (-1.15, zs + 0.15) if even else (3.75, zs + 3.05)
+    cx_, cz_ = (0.9, -(9.9 + 5.0 * p)) if even else (-0.9, -(9.9 + 5.0 * p))
+    dx, dz = px - cx_, pz - cz_; ln = math.hypot(dx, dz); dx, dz = dx / ln, dz / ln
+    wx, wy = px + dx * 1.9, -(pz + dz * 1.9)           # blender position
+    bw = box(f"RUIN_backwall_{i}", -2.6, 2.6, -0.06, 0.06, -0.2, 5.2)
+    bw.rotation_euler = (0, 0, math.atan2(-dx, -dz))
+    bw.location = (wx, wy, 0.0)
+    bw.data.materials.clear(); bw.data.materials.append(bpy.data.materials["mat_plaster"])
+
 # ---- 9. cold moonlight shaft kept; warm fire on top ----
 sun = bpy.data.lights.get("SUN_shaft")
 if sun: sun.color = (0.72, 0.82, 1.0)
