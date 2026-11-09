@@ -148,7 +148,8 @@ export default function ProjectArtefact() {
     const camUp = new THREE.Vector3(camMatrix.elements[4], camMatrix.elements[5], camMatrix.elements[6]).normalize();
     const camForward = new THREE.Vector3(camMatrix.elements[8], camMatrix.elements[9], camMatrix.elements[10]).normalize();
 
-    const dest = getProjectGlyphAnchor(activeProject);
+    // r30: one fixed anchor for every project, so the frame no longer travels (and crosses the title or clips at the right edge) on a swap
+    const dest = getProjectGlyphAnchor(0);
     dest.y = 1.85;
     // Shift frame group right (~80px of screen) along camera right vector so chain lands at x >= 1060 and copy never collides
     dest.addScaledVector(camRight, 0.82);

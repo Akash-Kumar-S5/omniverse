@@ -282,6 +282,7 @@
 
 .project-display-title {
   grid-column: 1 / span 9;
+  max-width: 56vw; /* r30: long titles wrap before the frame and lantern column */
   font-size: clamp(2.7rem, 6.4vw, 6.4rem);
   line-height: 0.98;
   letter-spacing: -0.02em;

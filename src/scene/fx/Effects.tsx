@@ -3,7 +3,6 @@ import { useFrame } from "@react-three/fiber";
 import {
   EffectComposer,
   Bloom,
-  ChromaticAberration,
   DepthOfField,
   Noise,
   SMAA,
@@ -11,11 +10,10 @@ import {
   Vignette,
 } from "@react-three/postprocessing";
 import { ToneMappingMode } from "postprocessing";
-import { Vector2, Vector3 } from "three";
+import { Vector3 } from "three";
 import { useOmni } from "../../state/store";
 import { signal } from "../../state/signal";
 
-const fringe = new Vector2(0.0006, 0.0006);
 
 export default function Effects() {
   const quality = useOmni((s) => s.quality);
@@ -69,14 +67,14 @@ export default function Effects() {
           target={dofTarget.current}
           bokehScale={bokehScale}
           focalLength={0.02}
+          resolutionScale={0.5}
         />
       )}
 
       {/* AgX tone mapping for brutalist filmic contrast */}
       <ToneMapping mode={ToneMappingMode.AGX} />
 
-      {/* Subtle chromatic fringe, grain, and vignette */}
-      <ChromaticAberration offset={fringe} />
+      {/* Grain and vignette (the 0.0006 chromatic fringe was invisible and cost a pass) */}
       <Noise opacity={section === "projects" ? 0.024 : 0.03} />
       <Vignette eskil={false} offset={0.14} darkness={0.42} />
     </EffectComposer>
