@@ -1,10 +1,12 @@
-import { useGLTF } from "@react-three/drei";
-import { useEffect, useMemo } from "react";
+import { useGLTF, useTexture } from "@react-three/drei";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { useOmni } from "../../state/store";
 import { SANCTUM_FILES } from "../../state/signal";
 
 const STATUE_URL = "/assets/ruins/gothic_statue.glb";
+const FIRE_URL = "/assets/ruins/fire_barrel.draco.glb";
+const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 
 function GothicStatue() {
   const { scene } = useGLTF(STATUE_URL, false);
@@ -48,9 +50,7 @@ function GothicStatue() {
   );
 }
 
-export default function Sanctum() {
-  const quality = useOmni((s) => s.quality);
-  const file = quality === "lite" ? SANCTUM_FILES.lite : SANCTUM_FILES.high;
+function SanctumModel({ file, onReady }: { file: string; onReady?: () => void }) {
   const { scene } = useGLTF(file, "/draco/");
 
   useEffect(() => {
@@ -79,16 +79,36 @@ export default function Sanctum() {
         }
       }
     });
-  }, [scene]);
+    onReady?.();
+  }, [scene, onReady]);
+
+  return <primitive object={scene} />;
+}
+
+export default function Sanctum() {
+  const quality = useOmni((s) => s.quality);
+  const [liteReady, setLiteReady] = useState(false);
+  const markLiteReady = useCallback(() => setLiteReady(true), []);
+
+  const lite = <SanctumModel file={SANCTUM_FILES.lite} onReady={markLiteReady} />;
 
   return (
     <group>
-      <primitive object={scene} />
-      <GothicStatue />
+      <Suspense fallback={null}>
+        {liteReady && quality !== "lite" ? (
+          <Suspense fallback={lite}>
+            <SanctumModel file={SANCTUM_FILES.high} />
+          </Suspense>
+        ) : lite}
+      </Suspense>
+      <Suspense fallback={null}>
+        <GothicStatue />
+      </Suspense>
     </group>
   );
 }
 
-useGLTF.preload(SANCTUM_FILES.high, "/draco/");
-useGLTF.preload(SANCTUM_FILES.lite, "/draco/");
+useGLTF.preload(FIRE_URL, "/draco/");
+useTexture.preload(FLAME_URL);
 useGLTF.preload(STATUE_URL, false);
+useGLTF.preload(SANCTUM_FILES.lite, "/draco/");
