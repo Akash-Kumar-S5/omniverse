@@ -474,3 +474,5 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r23/copilot-fire merged (wall halo, saturated outer flame). Pending A ch2 (copilot-review), C ch3 hang, E ch0 comp, blender scans + D
 - r23/copilot-ch2 REJECTED (cuirass tiny on tall dark pillar). Morph: stop patching ch2 plinth -> swap subject: CMA CC0 armour (Sketchfab 1964.88, breastplate isolated) or scanned armour stand, c14 camera framing
 - r24 ch2 swap dispatched to copilot-review; rejected branch renamed rejected-copilot-ch2
+- r23/world ch0 camera tilt merged; 1920 shot verified (flame, barrel, relief framed, no bleed).
+- Morph: R24 split. copilot-review = wiring+camera only (placeholder ch2-breastplate.glb); blender-sanctum queued R24b (isolate+decimate breastplate) after R22.
