@@ -28,7 +28,7 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightColor: "#fff0da",
     fogColor: "#0b0907",
     fogNear: 6.2,
-    fogFar: 9.5,   // r21: the bottom-right room corner falls into fog (starts just behind the statue)
+    fogFar: 8.4,   // r25: the bottom-right room corner (~7.7 m) falls mostly into fog; the statue (~6.2 m) is ahead of fogNear
   },
   experience: {
     ambientIntensity: 0.12,

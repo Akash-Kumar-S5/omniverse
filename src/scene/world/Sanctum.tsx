@@ -87,9 +87,17 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
           });
           // r20: the scanned plinth sits in the pedestal atlas; keep its mean luminance at or under half the statue's (c15 regression)
           if (mesh.name.includes("pedestal")) {
-            (mesh.material as THREE.MeshStandardMaterial).color.setRGB(0.17, 0.19, 0.21);   // r21: near-neutral, cooler grey so the baked rust-brown reads as worn dressed stone, not mud
-            (mesh.material as THREE.MeshStandardMaterial).roughness = 0.72;
+            // r25: darker again (the baked scan relief reads as mud; no runtime normal map exists to halve) and wider
+            (mesh.material as THREE.MeshStandardMaterial).color.setRGB(0.1, 0.11, 0.125);
+            (mesh.material as THREE.MeshStandardMaterial).roughness = 0.85;
             (mesh.material as THREE.MeshStandardMaterial).envMapIntensity = 0.2;
+            // scale the plinth ~1.3x in X/Z about the statue axis (x=11, z=0) so its top is wider than the statue's base; heights stay (statue stands at y=1.25)
+            mesh.scale.set(1.3, 1, 1.3);
+            mesh.position.set(11 - 1.3 * 11, 0, 0);
+          }
+          // r25 ch1: the room shell at half brightness, so the bottom-right corner edge and the wall band lose contrast (the back glow stays)
+          if (section === "about" && mesh.name.includes("architecture")) {
+            (mesh.material as THREE.MeshStandardMaterial).color.setScalar(0.45);
           }
           // r21: the scanned relief is fire-side lit only and at most half the barrel's luminance on ch0 and ch4
           if (isProps && propGlow < 0.3) {
