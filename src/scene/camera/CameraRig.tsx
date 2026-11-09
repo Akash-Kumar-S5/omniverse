@@ -45,6 +45,8 @@ function getTransitionWaypoints(from: SectionId, to: SectionId): Vector3[] {
   const iFrom = SECTION_INDEX[from];
   const iTo = SECTION_INDEX[to];
   if (iFrom === iTo) return [];
+  // r39: Work <-> Projects is a direct move: the spline flew through empty corridors, so the right half was black for several frames
+  if (iFrom + iTo === 5 && Math.abs(iFrom - iTo) === 1) return [];
 
   const forwardTransitions: Record<string, Vector3[]> = {
     "boot->about": [WAYPOINTS.rotundaOculus, WAYPOINTS.eastDoorway],
@@ -104,6 +106,7 @@ export default function CameraRig() {
   const activeSpline = useRef<CatmullRomCurve3 | null>(null);
   const splineProgress = useRef({ value: 1 });
   const prevSection = useRef<SectionId | null>(null);
+  const fastUntil = useRef(0);
 
   useEffect(() => {
     touchDevice.current = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
@@ -283,6 +286,9 @@ export default function CameraRig() {
 
     // On chapter change after initialization, build a spline through open doorways
     if (initialized.current && prevSection.current && prevSection.current !== section) {
+      if ((prevSection.current === "experience" && section === "projects") || (prevSection.current === "projects" && section === "experience")) {
+        fastUntil.current = performance.now() + 1500; // r39: quicker settle so the next subject is on screen sooner
+      }
       const waypoints = getTransitionWaypoints(prevSection.current, section);
       if (waypoints.length > 0) {
         const splinePoints = [camera.position.clone(), ...waypoints, pos.clone()];
@@ -312,8 +318,9 @@ export default function CameraRig() {
       easing.damp3(lookTarget.current, look, 0.45, delta);
     } else {
       activeSpline.current = null;
-      easing.damp3(camera.position, pos, 0.45, delta);
-      easing.damp3(lookTarget.current, look, 0.45, delta);
+      const smooth = performance.now() < fastUntil.current ? 0.2 : 0.45;
+      easing.damp3(camera.position, pos, smooth, delta);
+      easing.damp3(lookTarget.current, look, smooth, delta);
     }
     camera.lookAt(lookTarget.current);
 

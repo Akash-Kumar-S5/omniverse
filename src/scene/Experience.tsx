@@ -1,6 +1,6 @@
 // Orchestrator-owned composition.
 import { useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { PerformanceMonitor } from "@react-three/drei";
 import { useOmni } from "../state/store";
 import SceneGuard from "./SceneGuard";
@@ -15,6 +15,34 @@ import spotsData from "../../public/assets/models/sanctum.spots.json";
 import type { SanctumSpots } from "../state/signal";
 
 const sanctumSpots = spotsData as unknown as SanctumSpots;
+
+/** r39: while the page scrolls, render at most 1.25x pixels; restore the full cap 350 ms after the last scroll */
+function ScrollDpr({ full }: { full: number }) {
+  const setDpr = useThree((s) => s.setDpr);
+  useEffect(() => {
+    let t = 0;
+    let low = false;
+    const cap = Math.min(window.devicePixelRatio || 1, full);
+    const onScroll = () => {
+      if (cap <= 1.25) return;
+      if (!low) {
+        low = true;
+        setDpr(1.25);
+      }
+      window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        low = false;
+        setDpr(cap);
+      }, 350);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(t);
+    };
+  }, [setDpr, full]);
+  return null;
+}
 
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
@@ -92,6 +120,7 @@ export default function Experience() {
         />
       )}
       <SceneGuard />
+      {quality !== "lite" && <ScrollDpr full={1.5} />}
       <color attach="background" args={["#060505"]} />
       <Starfield />
       {/* r34: the gate shows only the lit hall: the particle cloud (clipped at the top edge) stays hidden until Enter */}

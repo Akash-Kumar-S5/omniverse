@@ -427,6 +427,20 @@ export default function World() {
     return () => window.clearTimeout(id);
   }, []);
 
+  // r39: keep the armour on screen for 1.4 s after Work -> Projects so the right half is never empty while the camera moves
+  const [armourHold, setArmourHold] = useState(false);
+  const prevSec = useRef(section);
+  useEffect(() => {
+    const was = prevSec.current;
+    prevSec.current = section;
+    if (was === "experience" && section === "projects") {
+      setArmourHold(true);
+      const id = window.setTimeout(() => setArmourHold(false), 1400);
+      return () => window.clearTimeout(id);
+    }
+    setArmourHold(false);
+  }, [section]);
+
   useEffect(() => {
     threeScene.background = new THREE.Color(look.fogColor);
   }, [threeScene, look.fogColor]);
@@ -443,7 +457,7 @@ export default function World() {
           {(section !== "projects" || armed) && <Fire />}
         </Suspense>
       </group>
-      {section === "experience" && (
+      {(section === "experience" || armourHold) && (
         <Suspense fallback={null}>
           <HeroArmour />
         </Suspense>

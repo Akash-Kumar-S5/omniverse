@@ -271,12 +271,14 @@ export default function ProjectArtefact() {
     }
   });
 
-  if (section !== "projects" || !activeTexture) {
+  if (!activeTexture) {
     return null;
   }
 
+  // r39: also visible during Work, so the frame (and its lights) is already in the scene when the camera flies to Projects:
+  // no mount, no light-count change and no empty right half at the chapter switch
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} visible={section === "projects" || section === "experience"}>
       {/* Zero rotationIntensity ensures frame stays squared to camera with <= 0.1px keystone */}
       <Float speed={0.8} rotationIntensity={0.0} floatIntensity={0.03} floatingRange={[-0.006, 0.006]}>
         <group ref={turnRef}>
