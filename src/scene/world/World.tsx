@@ -20,7 +20,7 @@ const RuinChurch = lazy(() => import("./RuinChurch"));
  * The single cold source is one moon key down the oculus, at about 30% of the old key intensity.
  * The old per-chapter blue fills, rim lights and warm candle/spot lights are gone: the walls fall to black.
  */
-function WorldLighting() {
+function WorldLighting({ late }: { late: boolean }) {
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
   const look = chapterLook[section];
@@ -30,14 +30,14 @@ function WorldLighting() {
       <ambientLight intensity={look.ambientIntensity} color={look.ambientColor} />
       {/* Moon key angled through the ruins using per-chapter key color */}
       <directionalLight position={[-6, 14, 4]} intensity={look.keyLightIntensity * 0.45} color={look.keyLightColor} />
-      <Suspense fallback={null}>
+      {late && <Suspense fallback={null}>
         <Environment
         files="/assets/hdri/studio_small_09_1k.exr"
         resolution={quality === "lite" ? 128 : 256}
         background={false}
         environmentIntensity={0.06}
         />
-      </Suspense>
+      </Suspense>}
     </>
   );
 }
@@ -404,13 +404,13 @@ export default function World() {
   return (
     <>
       <color attach="background" args={[look.fogColor]} />
-      <WorldLighting />
+      <WorldLighting late={armed} />
       <SubjectRimLight />
       <SparksAndMist />
       {/* r29: the fire is far off-screen in ch3; hiding it removes its bloom/DOF contribution (ghost disc behind the pager) */}
       <group visible={section !== "projects"}>
         <Suspense fallback={null}>
-          <Fire />
+          {(section !== "projects" || armed) && <Fire />}
         </Suspense>
       </group>
       {section === "experience" && (
@@ -419,8 +419,8 @@ export default function World() {
         </Suspense>
       )}
       <Suspense fallback={null}>
-        <EffigyKnight />
-        <RuinChurch />
+        {(section === "boot" || section === "contact") && <EffigyKnight />}
+        {(section === "boot" || section === "contact") && <RuinChurch />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
