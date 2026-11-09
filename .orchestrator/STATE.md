@@ -435,3 +435,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 
 ## DESKTOP ONLY (Akash, via Morph, 07:00 UTC): skip mobile for now
 Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, no chapter < 8. No more mobile lanes (merged mobile work kept). copilot-review -> r17 lane F ch1 plinth.
+- r17 lane B (fog/rim) merged
