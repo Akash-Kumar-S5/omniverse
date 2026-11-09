@@ -13,10 +13,10 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 
 // r37: per-role drift of the cuirass shot (dolly x, height, sideways of camera and look target)
 const ROLE_DRIFT = [
-  { dx: 0, dy: 0, dz: 0, ly: 0, lz: 0 },
-  { dx: 0.3, dy: 0.1, dz: 0.12, ly: 0.04, lz: 0.1 },
-  { dx: -0.22, dy: -0.06, dz: -0.1, ly: 0.07, lz: -0.1 },
-  { dx: 0.42, dy: 0.14, dz: 0.05, ly: -0.03, lz: 0.05 },
+  { dx: 0, dy: 0, dz: 0, ly: 0, lz: 0 },   // r39: dx is 0 for every role so the camera distance, and so the armour size on screen, never changes
+  { dx: 0, dy: 0.06, dz: 0.14, ly: 0.02, lz: 0.12 },
+  { dx: 0, dy: -0.04, dz: -0.12, ly: 0.04, lz: -0.12 },
+  { dx: 0, dy: 0.08, dz: 0.06, ly: -0.01, lz: 0.06 },
 ] as const;
 
 // Architectural waypoints connecting rooms through open portals and rotunda hub

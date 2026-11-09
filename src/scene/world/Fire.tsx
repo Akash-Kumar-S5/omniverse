@@ -67,7 +67,7 @@ export function FirePit() {
           roughness={0.98}
           metalness={0.02}
           emissive="#ff7a2a"
-          emissiveIntensity={2}
+          emissiveIntensity={0.9}
         />
       </mesh>
     </group>
@@ -232,11 +232,7 @@ function Flames() {
       {/* r29: small warm glow standing at the flame base so the flame has a root at the rim from a low camera */}
       <mesh position={[0, 0.17, 0.05]} renderOrder={4}>
         <planeGeometry args={[0.8, 0.36]} />
-        <meshBasicMaterial map={glow} transparent opacity={0.6} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
-      </mesh>
-      <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
-        <circleGeometry args={[0.34, 32]} />
-        <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <meshBasicMaterial map={glow} transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
     </group>
   );
