@@ -149,7 +149,7 @@ export default function CameraRig() {
           // r14: lower ch0 camera a few degrees so the barrel rim is edge-on and the interior is not visible
           // r23 Lane E: adjust target Y so barrel+relief sit at y~55% and empty bottom floor shrinks from ~45% to ~30%
           pos.y -= 0.68;
-          look.y -= 0.15;
+          look.y += 0.05;
         } else {
           // Mobile 390: lower camera so barrel rim is edge-on, fire sits in bottom 30% below body copy
           // r15: whole subject (barrel, flame, relief) in frame, >=40 px under the link row and ~60 px of floor under it
