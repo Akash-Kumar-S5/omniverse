@@ -10,25 +10,39 @@ const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 
 /** r27: a stepped 4 cm cap slab (slightly lighter stone) on the scanned plinth, so its top reads as a dressed edge, not clay. Top face at the statue's base (y 1.25). */
 function PlinthCap() {
+  // r30: the CC0 stone block texture (already in the repo) on the slabs and the body skin, plus a third stepped course for a chamfered cap
+  const src = useTexture("/assets/ruins/textures/stone_block_512.jpg");
+  const stone = useMemo(() => {
+    const t = src.clone();
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(1.4, 1.4);
+    t.needsUpdate = true;
+    return t;
+  }, [src]);
   return (
     <group position={[11, 0, 0]}>
       {/* r28: the baked plinth body reads as clay; a half-transparent flat stone skin over it halves its visible relief and ties it to the cap slabs */}
       <mesh position={[0, 0.6, 0]}>
         <boxGeometry args={[1.31, 1.2, 1.31]} />
-        <meshStandardMaterial color="#26231f" roughness={0.88} metalness={0} transparent opacity={0.5} depthWrite={false} />
+        <meshStandardMaterial map={stone} color="#4a4540" roughness={0.88} metalness={0} transparent opacity={0.55} depthWrite={false} />
       </mesh>
       {/* r29: a thin straight base course squares off the lumpy foot of the scan */}
       <mesh position={[0, 0.04, 0]}>
         <boxGeometry args={[1.42, 0.08, 1.42]} />
-        <meshStandardMaterial color="#2d2926" roughness={0.88} metalness={0} />
+        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
+      </mesh>
+      <mesh position={[0, 1.1925, 0]}>
+        <boxGeometry args={[1.37, 0.02, 1.37]} />
+        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
       </mesh>
       <mesh position={[0, 1.215, 0]}>
         <boxGeometry args={[1.32, 0.02, 1.32]} />
-        <meshStandardMaterial color="#35312d" roughness={0.85} metalness={0} />
+        <meshStandardMaterial map={stone} color="#6a625a" roughness={0.85} metalness={0} />
       </mesh>
       <mesh position={[0, 1.2375, 0]}>
         <boxGeometry args={[1.28, 0.025, 1.28]} />
-        <meshStandardMaterial color="#47423c" roughness={0.8} metalness={0} />
+        <meshStandardMaterial map={stone} color="#7a7168" roughness={0.8} metalness={0} />
       </mesh>
     </group>
   );
