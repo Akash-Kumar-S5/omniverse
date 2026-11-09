@@ -490,3 +490,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - HOTFIX: EffigyKnight crashed all chapters (mat.emissive.set on unlit scan material, from cad69ba/copilot-effigy-dpr). Fixed by rebuilding a MeshStandardMaterial from the scan's map/normalMap. Verified: build+lint clean, ch0..ch4 load in Playwright with 0 console errors.
 - MERGE GATE (standing, from Morph): no merge without runtime check: build + lint + load ch0..ch4 in a browser with 0 console errors/pageerrors. Build+lint alone is not enough (this crash passed both).
 - c19 fixes dispatched: blender-sanctum r26/ch2-copy (armour tilt/left/stand/warm key + copy contrast), copilot-swarm r26/ch0-effigy (effigy tint/position). Gate required on both.
+- Merged r26/ch2-copy (be6b446) + r26/ch0-effigy (ae4d6f4). Gate on main: build+lint clean, ch0..ch4 0 console errors. Critic c20 dispatched (port 4470, OR cross-check).
