@@ -18,15 +18,16 @@ export default function EffigyKnight() {
     clone.traverse((c) => {
       const m = c as THREE.Mesh;
       if (m.isMesh && m.material) {
-        const mat = (m.material as THREE.MeshStandardMaterial).clone();
-        mat.color.set("#8a7560");
-        mat.emissive.set("#000000");
-        mat.emissiveMap = null;
-        mat.roughness = 0.9;
-        mat.metalness = 0;
-        mat.metalnessMap = null;
-        mat.envMapIntensity = 0.2;
-        m.material = mat;
+        // The scan can arrive unlit (no emissive/roughness), so rebuild a lit standard material from its albedo.
+        const src = m.material as THREE.MeshStandardMaterial;
+        m.material = new THREE.MeshStandardMaterial({
+          map: src.map ?? null,
+          normalMap: src.normalMap ?? null,
+          color: "#8a7560",
+          roughness: 0.9,
+          metalness: 0,
+          envMapIntensity: 0.2,
+        });
       }
     });
     return clone;
