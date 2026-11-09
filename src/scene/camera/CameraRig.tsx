@@ -6,6 +6,7 @@ import { useOmni, type SectionId } from "../../state/store";
 import spotsData from "../../../public/assets/models/sanctum.spots.json";
 import type { SanctumSpots } from "../../state/signal";
 import { getProjectGlyphAnchor } from "../particles/targets";
+import { stageFor } from "../world/projectStaging";
 
 const spots = spotsData as unknown as SanctumSpots;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -208,6 +209,18 @@ export default function CameraRig() {
         look.set(...projCam.target);
         // Tilt camera slightly down so lantern is not clipped by top nav
         look.y -= 0.28;
+        {
+          // r34: each project gets its own camera (dolly, height, fov, sideways lean) so the eight stagings do not share one shot
+          const c = stageFor(activeProject).cam;
+          const fwd = look.clone().sub(pos);
+          fwd.y = 0;
+          fwd.normalize();
+          pos.addScaledVector(fwd, c.dolly);
+          pos.x += -fwd.z * c.lean;
+          pos.z += fwd.x * c.lean;
+          pos.y += c.dy;
+          targetFov += c.fov;
+        }
         if (window.innerWidth < 600) {
           const anchor = getProjectGlyphAnchor(activeProject);
           const even = activeProject % 2 === 0;
@@ -215,7 +228,7 @@ export default function CameraRig() {
           const z = anchor.z + (even ? 0.8 : 2.2);
           pos.set(x, 1.8, z + 5.35);
           look.set(x, 5.1, z);
-          targetFov = 70;
+          targetFov = 66;
         }
         break;
       }
@@ -226,10 +239,10 @@ export default function CameraRig() {
         look.set(...sky.target);
         if (!isPortrait) {
           // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
-          pos.set(3.7, 0.7, 2.5);   // r32 arrival: from the effigy side, low, across the effigy toward the fire and the hall beyond (was a low side view like the hero)
+          pos.set(-1.3, 0.34, 3.0);   // r34 arrival: a low wide-angle look UP the ember column toward the oculus, fire at the bottom right, effigy out of frame
           // r17 Lane C: yaw left (counter-clockwise away from right edge) so clipped statue at x1385-1440 is completely out of frame
-          look.set(-1.2, 1.5, 0.65);
-          targetFov = 52;
+          look.set(-1.35, 2.0, -0.4);
+          targetFov = 60;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
           pos.set(-4.4, 0.9, 5.2);

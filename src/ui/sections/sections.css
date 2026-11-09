@@ -182,13 +182,13 @@
 }
 
 .about-pitch {
-  grid-column: 3 / span 4;
+  grid-column: 1 / span 5;   /* r34: aligned to the headline edge (was indented two columns) */
   max-width: var(--measure);
   color: var(--fg);
 }
 
 .about-facts {
-  grid-column: 3 / span 4;
+  grid-column: 1 / span 5;
   margin: 0;
   display: grid;
   row-gap: var(--space-3);
@@ -204,7 +204,7 @@
 .about-facts dt { color: var(--fg-muted); font-size: var(--step--1); padding-top: 0.12em; }
 .about-facts dd { margin: 0; color: var(--fg); }
 
-.about-actions { grid-column: 3 / span 4; }
+.about-actions { grid-column: 1 / span 5; }
 
 /* ---------- 3. Experience ---------- */
 .chapter-experience { row-gap: var(--space-8); align-content: center; }

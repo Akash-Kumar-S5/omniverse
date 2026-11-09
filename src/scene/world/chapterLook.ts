@@ -49,12 +49,12 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     fogFar: 24,
   },
   contact: {
-    ambientIntensity: 0.14,
+    ambientIntensity: 0.34,
     ambientColor: "#201e24",
-    keyLightIntensity: 1.2,
+    keyLightIntensity: 3.4,
     keyLightColor: "#8aaae0",
     fogColor: "#0b0907",
-    fogNear: 4,
-    fogFar: 20,
+    fogNear: 6,
+    fogFar: 30,
   },
 };
