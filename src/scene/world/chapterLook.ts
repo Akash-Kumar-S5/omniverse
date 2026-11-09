@@ -22,13 +22,13 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     fogFar: 22,
   },
   about: {
-    ambientIntensity: 0.38,
+    ambientIntensity: 0.16,
     ambientColor: "#262220",
-    keyLightIntensity: 2.2,
+    keyLightIntensity: 1.4,
     keyLightColor: "#fff0da",
     fogColor: "#0b0907",
-    fogNear: 8,
-    fogFar: 28,
+    fogNear: 4.8,
+    fogFar: 8.2,
   },
   experience: {
     ambientIntensity: 0.10,

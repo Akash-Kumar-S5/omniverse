@@ -159,12 +159,12 @@ export default function CameraRig() {
         break;
       }
       case "about": {
-        targetFov = 38;
+        targetFov = 36;
         // Position camera to frame the marble bust on the RIGHT side of desktop viewport,
-        // completely clear of the left-side text column
+        // completely clear of the left-side text column, yawed so back-right corner is out of frame
         if (!isPortrait) {
-          pos.set(5.5, 1.65, -1.8);
-          look.set(10.8, 1.48, -1.5);
+          pos.set(5.7, 1.62, -1.6);
+          look.set(11.0, 1.45, -1.15);
         } else {
           pos.set(5.8, 1.7, 0.0);
           look.set(11.0, 1.45, 0.0);

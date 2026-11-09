@@ -64,6 +64,10 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
           // ch1: hide the baked floor slab edge at x=12.5 (y~705 in shot) so floor seamlessly uses Floor.tsx
           mesh.visible = section !== "about";
         }
+        if (mesh.name.includes("architecture")) {
+          // ch2 (R19 fix 3): hide the background architecture slab in ch2 so no angular slab/plane edge reads
+          mesh.visible = section !== "experience";
+        }
         if (mesh.material) {
           const mat = mesh.material as THREE.MeshStandardMaterial;
           // Standard material with baked lightmap so runtime directional/spot/rim lights

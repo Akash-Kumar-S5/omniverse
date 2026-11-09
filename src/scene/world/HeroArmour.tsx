@@ -64,15 +64,15 @@ export default function HeroArmour() {
       <group position={[0, STAND_TOP, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]} scale={1.35}>
         <primitive object={obj} />
       </group>
-      {/* cool rim spot cone aimed strictly at the cuirass from behind: zero emission backward onto back wall */}
+      {/* cool rim spot cone aimed strictly at the cuirass from behind to crisply separate plates from dark void */}
       <spotLight
         color="#6a7a90"
-        intensity={1.8}
-        distance={2.6}
-        angle={Math.PI / 4}
+        intensity={4.5}
+        distance={2.8}
+        angle={Math.PI / 3.5}
         penumbra={0.8}
         decay={2}
-        position={[-0.75, STAND_TOP + 0.8, 0.0]}
+        position={[-0.85, STAND_TOP + 0.85, 0.1]}
         target={target}
       />
       {/* warm key spot cone aimed strictly at the cuirass from the front: zero spill onto left pillar at z=0.8 */}
