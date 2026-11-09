@@ -5,7 +5,7 @@ import { useOmni } from "../../state/store";
 
 /**
  * ch0 + ch4 relief: a recumbent effigy on its slab, lying low beside the fire (Sketchfab, CC-BY, see CREDITS.md).
- * 1.7 m long, base on y=0, front toward +Z. Lit only by the fire lights; the scan's albedo is already dark bronze/stone.
+ * 1.7 m long, base on y=0, front toward +Z. Lit by the fire lights.
  * Loaded lazily (World.tsx) and mounted only in ch0 and ch4.
  */
 const URL = "/assets/scans/effigy-knight-scan.glb";
@@ -19,7 +19,9 @@ export default function EffigyKnight() {
       const m = c as THREE.Mesh;
       if (m.isMesh && m.material) {
         const mat = (m.material as THREE.MeshStandardMaterial).clone();
-        mat.color = new THREE.Color(0.28, 0.26, 0.25);
+        mat.color.set("#8a7560");
+        mat.emissive.set("#000000");
+        mat.emissiveMap = null;
         mat.roughness = 0.9;
         mat.metalness = 0;
         mat.metalnessMap = null;
@@ -33,7 +35,7 @@ export default function EffigyKnight() {
   if (section !== "boot" && section !== "contact") return null;
   // beside the barrel on the camera-right side, its length across the view, front toward the camera
   return (
-    <group position={[1.1, 0, 0.1]} rotation={[0, -0.82, 0]}>
+    <group position={[1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 : -0.82, 0]}>
       <primitive object={obj} />
     </group>
   );

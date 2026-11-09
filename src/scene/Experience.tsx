@@ -51,7 +51,7 @@ export default function Experience() {
   return (
     <Canvas
       frameloop={visible ? "always" : "never"}
-      dpr={quality === "high" ? [1, 1.5] : 1}
+      dpr={quality === "lite" ? 1 : [1, 1.5]}
       gl={{ antialias: false, powerPreference: "high-performance" }}
       camera={{ fov: 62, near: 0.1, far: 200, position: [-4.6, 1.7, 5.2] }}
     >
