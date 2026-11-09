@@ -27,3 +27,8 @@ pirated, no push, no deploy, no rm -rf.
 "lets skip mobile devices for now, concentrate purely on web view." Score and gate on desktop (1440 ch0-4 plus
 motion/load/console) only. No 390 shots, no mobile score, no mobile lanes until Akash re-enables it. Mobile must not
 crash or show a blank page, but it is out of scope for quality.
+
+## Update 17:05 IST 09-Nov (Akash): validate at true full-screen sizes
+Shots so far were 1440x900 at DPR 1, which is smaller and softer than a real full screen. From c16 on, the critic and judge shoot
+every chapter at 1920x1080 DPR 1 (common desktop monitor) and at 1512x982 DPR 2 (MacBook 14" full-screen, Retina).
+Score the worse of the two. Keep 1440x900 only for comparison with older cycles.
