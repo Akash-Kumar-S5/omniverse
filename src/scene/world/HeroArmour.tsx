@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 
 const URL = "/assets/scans/armour-torso.glb";
-const BASE: [number, number, number] = [-12.5, 0.04, -1.5];   // r25: shifted 0.3 m so the plate clears the copy column at 1512
+const BASE: [number, number, number] = [-12.5, 0.04, -1.4];   // r26: balanced between the copy column (>=45 px at 1512) and the stand feet at the right edge
 const HEIGHT = 0.95;
 // r25: the torso rests on a wooden armour stand (Sketchfab, CC-BY, see CREDITS.md): the post carries it, the crossbar is inside the plate
 const STAND_URL = "/assets/scans/armour-stand-scan.glb";
@@ -26,7 +26,7 @@ function ArmourStand() {
     });
     return clone;
   }, [scene]);
-  return <primitive object={stand} scale={STAND_SCALE} />;
+  return <primitive object={stand} scale={[STAND_SCALE * 1.45, STAND_SCALE, STAND_SCALE * 1.45]} />;   // r26: post and feet 1.45x thicker (c19: a thin sawhorse)
 }
 
 export default function HeroArmour() {
@@ -86,12 +86,14 @@ export default function HeroArmour() {
         <meshBasicMaterial map={shadow} transparent depthWrite={false} />
       </mesh>
       <ArmourStand />
-      <group position={[0, TORSO_LIFT, 0]} rotation={[0, 0.85, 0]}>
+      <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.2, 0]}>
         <primitive object={armour} />
       </group>
+      {/* r26: warm rim from behind-left so the dark plate edges catch light (c19: the breastplate read mostly black) */}
+      <pointLight color="#ffb070" intensity={2.6} distance={3.2} decay={2} position={[-0.9, 1.5, -0.9]} />
       <spotLight
-        color="#c8d1d8"
-        intensity={5}
+        color="#ffc890"
+        intensity={9}
         distance={3.6}
         angle={Math.PI / 4}
         penumbra={0.8}

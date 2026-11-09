@@ -182,3 +182,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Built off main, not copilot's `r25/ch2-ground` (its wall mount and the 0.12 x 1.2 bracket plane that drew the stray slab are not taken). The torso now sits on a scanned wooden armour stand (post visible below the plate, feet on the floor, contact shadow kept), turned 0.85 rad so the shoulder tears face away, torso 0.95 m, group shifted 0.3 m. At 1512 the plate starts about 78 px right of the copy column; right-edge air about 42 px.
 - Camera look.y 0.45 to 0.8 and pos.y 1.0 for ch2 role 0. Not polished: the plate is still a rough scan, the neck and left hem keep ragged edges, and the stand is only lit by the existing spot.
 - Proof: `.orchestrator/reference/r25-ch2-ground2-1920.png`, `-1512dpr2.png`. lint, build clean.
+
+## r26 ch2 (c19): armour finish + merge gate
+- Armour turned a further 0.35 rad (1.2 total), group z -1.4, stand post and feet 1.45x thicker (X/Z), warm key #ffc890 at 9 (was cool #c8d1d8 at 5) plus a warm #ffb070 rim from behind-left. At 1512 DPR2: plate about 56 px from the copy column, stand's right foot about 41 px from the right edge.
+- Not fixed: the neck rim stays partly ragged at the top of the plate, and the left-hand shoulder edge is still jagged. A dark gorget cap or a camera tilt would be the next step.
+- Merge gate: `vite preview` on port 5231, ch0 to ch4 at 1920x1080 via the CDP script (no Playwright installed here): 0 exceptions, 0 console errors on every chapter, after merging main's effigy hotfix. Lint and build clean.
+- Proof: `.orchestrator/reference/r26-ch2-armour-1920.png` and `-1512dpr2.png`; copy contrast shots `r26-ch2-copy-*`.
