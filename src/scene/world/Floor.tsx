@@ -6,7 +6,7 @@ import { TIERS } from "../../state/signal";
 
 function ReflectorFloorMesh() {
   const quality = useOmni((s) => s.quality);
-  const roughnessMap = useTexture("/assets/textures/concrete_floor_worn_001_rough_2k.jpg");
+  const roughnessMap = useTexture("/assets/textures/concrete_floor_worn_001_rough_1k.webp");
 
   useMemo(() => {
     if (roughnessMap) {

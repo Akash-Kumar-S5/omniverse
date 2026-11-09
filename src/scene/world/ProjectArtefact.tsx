@@ -13,7 +13,7 @@ const LANTERN_URL = "/assets/scans/lantern-chandelier.glb";
 const FRAME_SCALE = 2.0;
 
 const PAINTING_URLS = projects.map(
-  (p, i) => p.image || `/assets/paintings/painting_${i % 8}.jpg`
+  (p, i) => p.image || `/assets/paintings/painting_${i % 8}.webp`
 );
 
 export default function ProjectArtefact() {
@@ -30,7 +30,8 @@ export default function ProjectArtefact() {
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = useTexture(PAINTING_URLS[safeIdx]);
   useEffect(() => {
-    PAINTING_URLS.forEach((u) => useTexture.preload(u));
+    const id = window.setTimeout(() => PAINTING_URLS.forEach((u) => useTexture.preload(u)), 2500);
+    return () => window.clearTimeout(id);
   }, []);
 
   // r30: the frame floated in a black void. A feathered stone wall behind it (the CC0 stone block texture already in the repo, very dark and

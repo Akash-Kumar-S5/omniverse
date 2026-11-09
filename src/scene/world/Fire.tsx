@@ -7,12 +7,12 @@ import { useOmni } from "../../state/store";
 /**
  * Authentic hearth fire with CC0 animated flame flipbook and crossed additive billboards:
  *  - stone_fire_pit.draco.glb: Poly Haven scan (CC0), Draco-compressed
- *  - flame-spritesheet-6x1.png: Kenney CC0 flame sprites
+ *  - flame-spritesheet-6x1.webp: Kenney CC0 flame sprites
  *  - 3 crossed additive billboards (~0.6m tall) inside the coals with warm core (#ffd29a)
  *  - ONE warm point light (#ff8a3d) on the plinth fire with organic flicker
  */
 const PIT_URL = "/assets/ruins/fire_barrel.draco.glb";   // r13: ONE scanned iron fire barrel (Poly Haven barrel_stove, CC0), 0.80 m across, 0.81 m tall, base on the floor
-const FLAME_URL = "/assets/props/textures/flame-spritesheet-6x1.png";
+const FLAME_URL = "/assets/props/textures/flame-spritesheet-6x1.webp";
 const PIT_SCALE = 1.0;
 const PLINTH_TOP = 0.06;
 const COLS = 6;

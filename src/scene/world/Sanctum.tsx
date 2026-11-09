@@ -6,7 +6,6 @@ import { SANCTUM_FILES } from "../../state/signal";
 
 const STATUE_URL = "/assets/ruins/gothic_statue.glb";
 const FIRE_URL = "/assets/ruins/fire_barrel.draco.glb";
-const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
 
 /** r27: a stepped 4 cm cap slab (slightly lighter stone) on the scanned plinth, so its top reads as a dressed edge, not clay. Top face at the statue's base (y 1.25). */
 function PlinthCap() {
@@ -161,13 +160,19 @@ export default function Sanctum() {
   const section = useOmni((s) => s.section);
   const [liteReady, setLiteReady] = useState(false);
   const markLiteReady = useCallback(() => setLiteReady(true), []);
+  // r33: the 1.5 MB high-detail shell waits until after first paint; the lite shell is what a cold load shows
+  const [late, setLate] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setLate(true), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
 
   const lite = <SanctumModel file={SANCTUM_FILES.lite} onReady={markLiteReady} />;
 
   return (
     <group>
       <Suspense fallback={null}>
-        {liteReady && quality !== "lite" ? (
+        {liteReady && late && quality !== "lite" ? (
           <Suspense fallback={lite}>
             <SanctumModel file={SANCTUM_FILES.high} />
           </Suspense>
@@ -183,6 +188,4 @@ export default function Sanctum() {
 }
 
 useGLTF.preload(FIRE_URL, "/draco/");
-useTexture.preload(FLAME_URL);
-useGLTF.preload(STATUE_URL, false);
 useGLTF.preload(SANCTUM_FILES.lite, "/draco/");
