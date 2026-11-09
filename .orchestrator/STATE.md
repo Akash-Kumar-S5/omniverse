@@ -473,3 +473,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - critic c17 = 8.0 full-screen (ch0 8.3 ch1 8.3 ch2 7.1 ch3 8.3 ch4 8.0). ch2 is the only blocker. Dispatch r23: A ch2 (copilot-review), B fire shell/wall glow (copilot-swarm), C ch3 hang (agy-review), E ch0 comp (agy-world), D ch1 plinth scale queued to blender after scans
 - r23/copilot-fire merged (wall halo, saturated outer flame). Pending A ch2 (copilot-review), C ch3 hang, E ch0 comp, blender scans + D
 - r23/copilot-ch2 REJECTED (cuirass tiny on tall dark pillar). Morph: stop patching ch2 plinth -> swap subject: CMA CC0 armour (Sketchfab 1964.88, breastplate isolated) or scanned armour stand, c14 camera framing
+- r24 ch2 swap dispatched to copilot-review; rejected branch renamed rejected-copilot-ch2
