@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useMemo, useEffect } from "react";
+import { lazy, Suspense, useRef, useMemo, useEffect, useState } from "react";
 import * as THREE from "three";
 import { Environment, Clouds, Cloud } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -30,12 +30,14 @@ function WorldLighting() {
       <ambientLight intensity={look.ambientIntensity} color={look.ambientColor} />
       {/* Moon key angled through the ruins using per-chapter key color */}
       <directionalLight position={[-6, 14, 4]} intensity={look.keyLightIntensity * 0.45} color={look.keyLightColor} />
-      <Environment
+      <Suspense fallback={null}>
+        <Environment
         files="/assets/hdri/studio_small_09_1k.exr"
         resolution={quality === "lite" ? 128 : 256}
         background={false}
         environmentIntensity={0.06}
-      />
+        />
+      </Suspense>
     </>
   );
 }
@@ -389,6 +391,11 @@ export default function World() {
   const section = useOmni((s) => s.section);
   const look = chapterLook[section];
   const { scene: threeScene } = useThree();
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setArmed(true), 4000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     threeScene.background = new THREE.Color(look.fogColor);
@@ -402,7 +409,9 @@ export default function World() {
       <SparksAndMist />
       {/* r29: the fire is far off-screen in ch3; hiding it removes its bloom/DOF contribution (ghost disc behind the pager) */}
       <group visible={section !== "projects"}>
-        <Fire />
+        <Suspense fallback={null}>
+          <Fire />
+        </Suspense>
       </group>
       {section === "experience" && (
         <Suspense fallback={null}>
@@ -423,7 +432,12 @@ export default function World() {
       <Floor />
 
       {/* Lit readable hero artefact per project beside the active slab */}
-      <ProjectArtefact />
+      {/* r32: its 9 textures and 2 GLBs used to hold the whole canvas (root suspense) until loaded; now they stream in after first paint */}
+      {(armed || section === "projects") && (
+        <Suspense fallback={null}>
+          <ProjectArtefact />
+        </Suspense>
+      )}
 
       {/* Soft oculus light and floating motes */}
       <VolumeCone />

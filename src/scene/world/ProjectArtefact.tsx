@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Float, useGLTF, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -26,8 +26,12 @@ export default function ProjectArtefact() {
   // Load the ready-made Poly Haven Fancy Picture Frame 02 (CC0)
   const { scene } = useGLTF(FRAME_MODEL_URL, "/draco/");
 
-  // Load authentic archival manuscript and ledger textures
-  const textures = useTexture(PAINTING_URLS);
+  // r32: only the active painting blocks the first paint; the rest stream in right after, so later swaps hit the cache
+  const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
+  const activeTexture = useTexture(PAINTING_URLS[safeIdx]);
+  useEffect(() => {
+    PAINTING_URLS.forEach((u) => useTexture.preload(u));
+  }, []);
 
   // r30: the frame floated in a black void. A feathered stone wall behind it (the CC0 stone block texture already in the repo, very dark and
   // lit only by the lantern light) plus a soft offset shadow gives it something to hang on.
@@ -65,8 +69,6 @@ export default function ProjectArtefact() {
     return { stone, feather, shade };
   }, [stoneSrc]);
 
-  const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
-  const activeTexture = textures[safeIdx];
 
   const lantern = useGLTF(LANTERN_URL, false).scene;
   const lanternObj = useMemo(() => {
@@ -184,8 +186,8 @@ export default function ProjectArtefact() {
     const camUp = new THREE.Vector3(camMatrix.elements[4], camMatrix.elements[5], camMatrix.elements[6]).normalize();
     const camForward = new THREE.Vector3(camMatrix.elements[8], camMatrix.elements[9], camMatrix.elements[10]).normalize();
 
-    // r30: one fixed anchor for every project, so the frame no longer travels (and crosses the title or clips at the right edge) on a swap
-    const dest = getProjectGlyphAnchor(0);
+    // r32: the camera moves to each project's own slab, so the frame must follow that project's anchor (a fixed anchor left projects 2-8 empty)
+    const dest = getProjectGlyphAnchor(activeProject);
     dest.y = 1.85;
     // Shift frame group right (~80px of screen) along camera right vector so chain lands at x >= 1060 and copy never collides
     dest.addScaledVector(camRight, 0.82);
@@ -282,7 +284,3 @@ export default function ProjectArtefact() {
     </group>
   );
 }
-
-useGLTF.preload(FRAME_MODEL_URL, "/draco/");
-useGLTF.preload(LANTERN_URL, false);
-useTexture.preload(PAINTING_URLS);
