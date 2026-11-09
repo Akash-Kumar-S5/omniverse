@@ -519,3 +519,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - JUDGE 4 = 7.8 ITERATE (ch0 8.3, ch1 8.4, ch2 7.0 roles 2-4 empty right half, ch3 7.6 floor seam+monotony, ch4 7.8 brazier cropped, motion 8.0). No blank canvas: rig rule held. Dispatched r37 lanes: sonnet-b (ch2 all roles framed, ch3 floor+variety+lantern), blender-sanctum (ch4 reframe, brazier asset swap, ch0 floor detail).
 - MERGED r37/work-floor + r37/contact-brazier (build+lint clean, lane gates 10/10 each). Combined runtime gate dispatched to sonnet-b, then judge 5.
 - R38 combined gate PASS on main 46183b3. Judge 5 dispatched.
+- JUDGE 5 = 8.2 ITERATE (ch0 8.3, ch1 8.5, ch2 8.2, ch3 8.0, ch4 8.4, motion 8.0). Defects: duplicate/4-motif project paintings, scroll jank p95 60ms, flat halo disc Fire.tsx:237, empty frame Work->Projects, Work no variety. Dispatched r39 lanes.
