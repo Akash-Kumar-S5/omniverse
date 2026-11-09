@@ -484,3 +484,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Merged r25/ch1-plinth (build+lint clean). Rejected as-is: r25/ch2-ground (stray slab, armour still hovers); refine via ch2-ground2.
 - copilot-swarm uses branch r25/copilot-effigy-dpr (r25/effigy-dpr was held by the agy-world worktree).
 - Merged r25/copilot-effigy-dpr (effigy warm stone, dpr floor [1,1.5] except lite). Copilot lane now idle; keep parked.
+- Merged r25/ch3-hang (chain to hook, lantern core, wall shell dimmed). Build+lint clean. Waiting on blender-sanctum r25/ch2-ground2, then critic c19.
