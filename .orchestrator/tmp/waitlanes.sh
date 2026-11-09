@@ -10,7 +10,7 @@ for i in $(seq 1 14); do
     t=$(herdr pane read $p 2>/dev/null | tail -16)
     echo "$t" | grep -q "4. No, cancel" && herdr pane send-keys $p Down Down Enter
     echo "$t" | grep -q "Yes, accept this change" && herdr pane send-keys $p Enter
-    echo "$t" | grep -qE "4. No \(Esc\)|Yes, allow creation|enter accept|tab Amend" && herdr pane send-keys $p Enter
+    echo "$t" | grep -qE "4. No \(Esc\)|3. No \(Esc\)|Yes, allow creation|enter accept|tab Amend" && herdr pane send-keys $p Enter
   done
   sleep 30
 done

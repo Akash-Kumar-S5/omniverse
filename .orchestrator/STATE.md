@@ -455,3 +455,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - CGHEVEN paywalled; flame swap falls back to Unity Labs Flame02/03 + additive blending fix
 - r19/world merged (room edges ch1/ch2). Pending: flame (copilot-swarm), frame+hang (agy-review), plinth/textures/effigy/backdrop (blender)
 - r19 #2 gilt frame merged (chain/nav addendum may follow). Pending flame (copilot-swarm), blender #3/#4/#5
+- r18/blender-plinth merged (scanned stone plinth ch1). critic c15 dispatched on current main (flame/effigy/#5 still in flight)
