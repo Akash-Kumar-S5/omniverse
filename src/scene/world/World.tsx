@@ -37,48 +37,50 @@ function SparksAndMist() {
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
   const isContact = section === "contact";
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
+  const offsetY = (isMobile && isContact) ? -0.48 : 0;
 
-  // Halve ember count and size on ch4 (Contact) as required
-  const countMult = isContact ? 0.5 : 1.0;
-  const sizeMult = isContact ? 0.5 : 1.0;
+  // Ember count multiplier on ch4 (Contact)
+  const countMult = isContact ? 0.6 : 1.0;
+  const sizeMult = 1.0;
 
   return (
-    <group>
-      {/* Warm-only embers (hue 15-40deg, zero blue/cyan): layered sizes and brightness */}
-      {/* 1. Fine glowing spark motes: warm gold (hue 36°), fast rise, randomised across pit radius */}
+    <group position={[0, offsetY, 0]}>
+      {/* Warm golden-amber embers only (zero red halo, no fat bokeh): 2-4px crisp sparks, more of them, dimmer */}
+      {/* 1. Fine glowing spark motes: warm gold, fast rise, randomised across pit radius */}
       <Sparkles
-        count={Math.round((quality === "lite" ? 16 : 32) * countMult)}
+        count={Math.round((quality === "lite" ? 24 : 48) * countMult)}
         scale={[2.4, 2.5, 2.4]}
         position={[0, 1.35, 0]}
-        color="#ffc46a"
-        speed={0.80}
-        size={(quality === "lite" ? 1.0 : 1.4) * sizeMult}
+        color="#ffd48a"
+        speed={0.75}
+        size={(quality === "lite" ? 0.9 : 1.3) * sizeMult}
         noise={[0.85, 0.5, 0.85]}
-        opacity={0.88}
+        opacity={0.65}
       />
 
-      {/* 2. Mid-sized ember sparks: warm fiery orange (hue 24°), organic drift across pit */}
+      {/* 2. Mid-sized ember sparks: warm amber-orange (no red halo), organic drift across pit */}
       <Sparkles
-        count={Math.round((quality === "lite" ? 12 : 24) * countMult)}
+        count={Math.round((quality === "lite" ? 18 : 36) * countMult)}
         scale={[2.2, 2.2, 2.2]}
         position={[0, 1.25, 0]}
-        color="#ff761a"
-        speed={0.55}
-        size={(quality === "lite" ? 2.0 : 2.5) * sizeMult}
+        color="#ffa842"
+        speed={0.50}
+        size={(quality === "lite" ? 1.2 : 1.7) * sizeMult}
         noise={[0.75, 0.5, 0.75]}
-        opacity={0.76}
+        opacity={0.52}
       />
 
-      {/* 3. Larger cooling ember flakes: deep warm red-orange (hue 16°), slow rise across pit */}
+      {/* 3. Small floating ember flakes: warm fiery gold (no red halo, capped size 2-4px) */}
       <Sparkles
-        count={Math.round((quality === "lite" ? 6 : 12) * countMult)}
+        count={Math.round((quality === "lite" ? 14 : 28) * countMult)}
         scale={[2.0, 1.9, 2.0]}
         position={[0, 1.15, 0]}
-        color="#d6440c"
+        color="#ff882e"
         speed={0.35}
-        size={(quality === "lite" ? 3.0 : 3.8) * sizeMult}
+        size={(quality === "lite" ? 1.5 : 2.0) * sizeMult}
         noise={[0.65, 0.5, 0.65]}
-        opacity={0.55}
+        opacity={0.42}
       />
 
       {/* Low subtle floor mist across the cold stone ruins */}
