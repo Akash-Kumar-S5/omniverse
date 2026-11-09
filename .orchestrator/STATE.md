@@ -408,3 +408,4 @@ After r12 merges + critic c9, for every chapter still <7.5: replace the subject 
 - ch2: if shield flagged again, swap for a single high-detail scanned helmet/armour piece on a stand, dark albedo.
 - Rule per chapter: one subject, darker than the type, contact shadow, black negative space, nothing else in frame. Copy ch1 (scores 8).
 - dispatched r13/blender-scenes (swap pit + ch2 subject)
+- r13/blender-scenes merged d0dccca (iron barrel pit, cuirass). ch0 barrel small; red glow + bokeh embers pending agy r12. Next: rebase agy on main
