@@ -50,7 +50,7 @@ export default function ProjectArtefact() {
     });
     const box = new THREE.Box3().setFromObject(c);
     const size = box.getSize(new THREE.Vector3());
-    const k = 0.24 / size.y;
+    const k = 0.36 / size.y; // r27: 1.5x so it stops reading as a jewel
     const ctr = box.getCenter(new THREE.Vector3());
     const holder = new THREE.Group();
     c.position.set(-ctr.x, -ctr.y, -ctr.z);
@@ -58,6 +58,19 @@ export default function ProjectArtefact() {
     holder.scale.setScalar(k);
     return holder;
   }, [lantern]);
+  const bandFog = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = 64; c.height = 4;
+    const g = c.getContext("2d");
+    if (g) {
+      const gr = g.createLinearGradient(0, 0, 64, 0);
+      gr.addColorStop(0, "rgba(5,4,3,0)");
+      gr.addColorStop(0.5, "rgba(5,4,3,0.85)");
+      gr.addColorStop(1, "rgba(5,4,3,0)");
+      g.fillStyle = gr; g.fillRect(0, 0, 64, 4);
+    }
+    return new THREE.CanvasTexture(c);
+  }, []);
   const lightRef = useRef<THREE.PointLight>(null);
   const turnRef = useRef<THREE.Group>(null);
 
@@ -177,6 +190,12 @@ export default function ProjectArtefact() {
             position={[0, 0, 0]}
           />
 
+          {/* r27: dark feathered card between the frame and the back wall; hides the hard vertical wall band at the left */}
+          <mesh position={[-1.25, -0.2, 0.4]}>
+            <planeGeometry args={[0.9, 6]} />
+            <meshBasicMaterial map={bandFog} transparent depthWrite={false} toneMapped={false} />
+          </mesh>
+
           {/* Hook at the frame's top centre, chain slanting up to the lantern base (lantern group sits at [0,1.10,0.30]) */}
           <mesh position={[0, 0.775, 0.03]}>
             <torusGeometry args={[0.018, 0.005, 6, 12, Math.PI * 1.5]} />
@@ -203,9 +222,11 @@ export default function ProjectArtefact() {
             ))}
             {/* Emissive core so the lantern reads as lit */}
             <mesh>
-              <sphereGeometry args={[0.045, 12, 10]} />
+              <sphereGeometry args={[0.065, 12, 10]} />
               <meshBasicMaterial color="#ffb060" toneMapped={false} />
             </mesh>
+            {/* r27: short warm light that lifts the frame top */}
+            <pointLight color="#ffb060" intensity={2} distance={1} decay={2} position={[0, -0.12, 0.1]} />
             {/* Lantern point light illuminating canvas and carved gilt frame */}
             <pointLight ref={lightRef} color="#ffb066" intensity={2.8} distance={3.6} decay={1.8} />
           </group>
