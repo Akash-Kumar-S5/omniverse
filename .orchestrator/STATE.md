@@ -462,3 +462,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r19/agy-review (ch3 hang fix) merged. Pending: blender (ch1 plinth regress, #3/#4/#5), agy-world ch2, copilot flame
 - r20/flame merged (additive glowing flame, 1920x1080 verified). Pending: blender ch1 plinth regress + #3/#4/#5, agy-world ch2. Then c16 at 1920x1080 DPR1 + 1512x982 DPR2
 - r20/blender-plinth merged (ch1 regress fixed). critic c16 dispatched at 1920x1080 DPR1 + 1512x982 DPR2, worse-of-two
+- critic c16 = 7.8 full-screen worse-of-two (ch0 7.8 ch1 8.2 ch2 7.5 ch3 8.1 ch4 7.6). Dispatch r21: A flame hi-res (copilot-swarm), B ch2 reframe (agy-world), C ch3 polish (agy-review), D ch1 plinth fit (blender)
