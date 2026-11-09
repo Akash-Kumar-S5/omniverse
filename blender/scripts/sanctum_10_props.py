@@ -153,6 +153,30 @@ rto = bpy.data.objects.new("RT_ch1_candle", rt); sc.collection.objects.link(rto)
 box("RUIN_stand_hero", -12.5 - 0.42, -12.5 + 0.42, 1.2 - 0.42, 1.2 + 0.42, 0.0, 1.15)
 bpy.data.objects["RUIN_stand_hero"].data.materials.clear(); bpy.data.objects["RUIN_stand_hero"].data.materials.append(bpy.data.materials["mat_rough_stone"])
 
+# ---- r18 ch1: the statue plinth is a scanned stone block (Poly Haven concrete_road_barrier_02, CC0), stood on end, lifting hooks cut off,
+# stretched to the old pedestal footprint (x 10.5..11.5, y -0.5..0.5, top z 1.25). The old box pedestal and cap are shrunk inside it.
+import bmesh
+_pf = "../../../blender/props/concrete_road_barrier_02/concrete_road_barrier_02_1k"
+DEC[_pf] = 5000; TUNE[_pf] = (0.55, 0.3)
+_t = source(_pf)
+_me = _t.data.copy()
+_me.transform(mathutils.Euler((0, 0, math.radians(-90)), "XYZ").to_matrix().to_4x4())   # long face toward the camera side (spans y); the other face of the scan has a large hole
+_bm = bmesh.new(); _bm.from_mesh(_me)
+_zmin = min(v.co.z for v in _bm.verts)
+_res = bmesh.ops.bisect_plane(_bm, geom=_bm.verts[:] + _bm.edges[:] + _bm.faces[:], plane_co=(0, 0, _zmin + 1.04), plane_no=(0, 0, 1), clear_outer=True)   # hooks off
+bmesh.ops.holes_fill(_bm, edges=[e for e in _bm.edges if e.is_boundary], sides=0)
+_lo = [min(v.co[i] for v in _bm.verts) for i in range(3)]; _hi = [max(v.co[i] for v in _bm.verts) for i in range(3)]
+_sx, _sy, _sz = 1.0 / (_hi[0] - _lo[0]), 1.0 / (_hi[1] - _lo[1]), 1.25 / (_hi[2] - _lo[2])
+for v in _bm.verts:
+    v.co.x = (v.co.x - (_lo[0] + _hi[0]) / 2) * _sx + 11.0
+    v.co.y = (v.co.y - (_lo[1] + _hi[1]) / 2) * _sy
+    v.co.z = (v.co.z - _lo[2]) * _sz
+_bm.to_mesh(_me); _bm.free()
+_pl = bpy.data.objects.new("RUIN_prop_scan_plinth", _me); sc.collection.objects.link(_pl)
+for _nm in ("bust_pedestal", "bust_pedestal_cap"):   # hide the old boxes inside the scan (they stay in the bake's pedestal list)
+    for v in bpy.data.objects[_nm].data.vertices:
+        v.co.x = 11.0 + (v.co.x - 11.0) * 0.3; v.co.y *= 0.3; v.co.z *= 0.6
+
 # ---- ch4: braziers + tall candelabra flank the court (camera at y=-14.6 looks up and away) ----
 for i, sx in enumerate((-2.3, 2.3)):
     P("brazier-fire-basket", sx, -16.0, 0, 0.55, 0, mat=M_IRON, tag="brazier")

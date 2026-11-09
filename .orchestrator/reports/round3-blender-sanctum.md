@@ -145,3 +145,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Barrel: the scan's rust and roughness maps are back (r17 had dropped them; the hot base dots were the air holes, which stay lined); colour x1.5, metalness factor 0.35, roughness factor 1. New short warm light (r 1.3 m) at rim height on the camera side lights the top third.
 - Relief: baked prop glow 0.62 to 0.22 (~0.35x) on ch0 and ch4 only (Sanctum.tsx). It reads dimmer than the barrel on ch0; on ch4 its lit face is still close to the barrel's.
 - Proof: `.orchestrator/reference/r18-blender-scenes-ch{0,4}-1440.png` and `r18-blender-scenes-ch4-crop-flamebase.png`.
+
+## r18 Lane F (ch1 plinth)
+- The bare black box under the ch1 statue is replaced by a scanned stone block: Poly Haven concrete_road_barrier_02 (CC0), stood on end, hooks cut at 1.04 m and capped, decimated to ~5k tris, albedo to sat 0.55 / value 0.3, stretched to the old footprint (x 10.5-11.5, y +-0.5, top 1.25). The old pedestal boxes are kept but shrunk inside it. It bakes into the pedestal atlas; the contact shadow comes from the bake.
+- The scan's other long face has a large hole; the build rotates -90 deg so the intact face looks at the ch1 camera (a first bake with +90 showed the hole).
+- Sizes: sanctum.glb 1.79 MB (limit 4), sanctum-lite.glb 0.68 MB (limit 1). Build, tsc and eslint clean.
+- Proof: `.orchestrator/reference/r18-blender-plinth-ch1.png`. Poly Haven has no real pedestal model, so a concrete block was the closest scan; the Blender MCP was not connected, so I downloaded from the Poly Haven API directly.

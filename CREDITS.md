@@ -184,3 +184,7 @@ No new third-party assets. The Poly Haven barrel_stove scan (CC0) is again the c
 ## Round 16 (blender-scenes lane)
 
 No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 albedo with its own roughness/metalness, and the existing CC0 OpenGameArt 8x8 flame flipbook as 3 crossed cards plus a procedural ember-glow card (canvas gradient, no asset).
+
+## Round 18 plinth (blender-plinth lane)
+
+- Concrete Road Barrier 02, Poly Haven (https://polyhaven.com/a/concrete_road_barrier_02), CC0. Stood on end, lifting hooks cut off, albedo darkened and stretched to the ch1 statue-plinth footprint; baked into sanctum.glb. Source files: `blender/props/concrete_road_barrier_02/`.
