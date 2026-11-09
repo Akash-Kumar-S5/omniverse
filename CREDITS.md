@@ -180,3 +180,7 @@ No new third-party assets. Reused CC0 files in new roles: the hooded-mourner rel
 ## Round 15 scenes (blender-scenes)
 
 No new third-party assets. The Poly Haven barrel_stove scan (CC0) is again the ch4 subject beside the scanned relief; the ch3 chain is procedural.
+
+## Round 16 (blender-scenes lane)
+
+No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 albedo with its own roughness/metalness, and the existing CC0 OpenGameArt 8x8 flame flipbook as 3 crossed cards plus a procedural ember-glow card (canvas gradient, no asset).

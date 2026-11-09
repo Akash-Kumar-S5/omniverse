@@ -29,10 +29,9 @@ export function FirePit() {
         const mesh = child as THREE.Mesh;
         if (mesh.material) {
           const m = (mesh.material as THREE.MeshStandardMaterial).clone();
-          m.roughness = 0.96;
-          m.metalness = 0.04;
-          // Subdue albedo so the mouth interior doesn't blow out
-          m.color.multiplyScalar(0.45);
+          // r16: keep the scan's own roughness/metalness maps; only a light albedo trim so the rust and rivets stay readable
+          m.color.multiplyScalar(0.85);
+          m.envMapIntensity = 0.6;
           mesh.material = m;
         }
       }
@@ -50,13 +49,13 @@ export function FirePit() {
     <group position={[0, PLINTH_TOP - 0.085, 0]}>
       <primitive object={pit} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />
       {/* Dark charcoal coal bed inside the mouth: deep orange at <=30% intensity to eliminate pink/white reflection */}
-      <mesh position={[0, 0.64, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh position={[0, 0.62, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.38, 32]} />
         <meshStandardMaterial
           color="#0c0907"
           roughness={0.98}
           metalness={0.02}
-          emissive="#ff4000"
+          emissive="#ff6a1a"
           emissiveIntensity={0.18}
         />
       </mesh>
@@ -169,19 +168,36 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  // Narrower flame cards so no single card silhouette reads
-  const h = quality === "lite" ? 0.86 : 1.0;
-  const w = quality === "lite" ? 0.38 : 0.44;
+  const k = quality === "lite" ? 0.86 : 1.0;
+  const glow = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = 128; c.height = 128;
+    const g = c.getContext("2d");
+    if (g) {
+      const r = g.createRadialGradient(64, 64, 2, 64, 64, 62);
+      r.addColorStop(0, "rgba(255,120,40,1)");
+      r.addColorStop(0.35, "rgba(255,80,20,0.55)");
+      r.addColorStop(1, "rgba(255,60,10,0)");
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+    }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  }, []);
+  const glowRef = useRef<THREE.MeshBasicMaterial>(null);
+  useFrame((state) => {
+    if (glowRef.current) glowRef.current.opacity = 0.5 * (1 + 0.15 * Math.sin(state.clock.elapsedTime * 8 * Math.PI * 2 * 0.5));
+  });
+  useEffect(() => () => glow.dispose(), [glow]);
 
-  // 6 crossed additive soft-alpha billboards at 30-degree intervals resting directly on coals bed
+  // r16: 3 crossed cards at different heights, scales and frame offsets (~1.4x taller), plus a small ember glow on the coals
   return (
     <group position={[0, 0.52, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={w} height={h} />
-      <FlamePlane rotationY={Math.PI / 6} phase={0.17} width={w * 0.94} height={h} />
-      <FlamePlane rotationY={(Math.PI * 2) / 6} phase={0.34} width={w} height={h} />
-      <FlamePlane rotationY={(Math.PI * 3) / 6} phase={0.51} width={w * 0.94} height={h} />
-      <FlamePlane rotationY={(Math.PI * 4) / 6} phase={0.68} width={w} height={h} />
-      <FlamePlane rotationY={(Math.PI * 5) / 6} phase={0.85} width={w * 0.96} height={h} />
+      <FlamePlane rotationY={0} phase={0} width={0.55 * k} height={1.4 * k} />
+      <group position={[0, 0.03, 0]}><FlamePlane rotationY={Math.PI / 3} phase={0.37} width={0.48 * k} height={1.2 * k} /></group>
+      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.71} width={0.42 * k} height={1.0 * k} /></group>
+      <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
+        <circleGeometry args={[0.3, 32]} />
+        <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      </mesh>
     </group>
   );
 }
@@ -189,6 +205,7 @@ function Flames() {
 /** The one warm light, on the plinth fire. */
 function FireLight() {
   const ref = useRef<THREE.PointLight>(null);
+  const mouthRef = useRef<THREE.PointLight>(null);
   const section = useOmni((s) => s.section);
 
   useFrame((state) => {
@@ -199,19 +216,20 @@ function FireLight() {
       return;
     }
     const t = state.clock.elapsedTime;
-    const flicker = 0.55 * Math.sin(t * 9.1) + 0.3 * Math.sin(t * 17.3 + 1.7) + 0.15 * Math.sin(t * 31.9 + 0.4);
+    // ~8 Hz organic flicker, +-15%
+    const flicker = 0.6 * Math.sin(t * 8 * Math.PI * 2) + 0.4 * Math.sin(t * 5.3 * Math.PI * 2 + 1.7);
     l.intensity = 8.5 * (1 + 0.15 * flicker);
+    if (mouthRef.current) mouthRef.current.intensity = 3.2 * (1 + 0.15 * flicker);
   });
 
   return (
-    <pointLight
-      ref={ref}
-      color="#ff8a3d"
-      intensity={7.5}
-      distance={0}
-      decay={2}
-      position={[0, 0.95, 0]}
-    />
+    <>
+      <pointLight ref={ref} color="#ff8a3d" intensity={7.5} distance={0} decay={2} position={[0, 0.95, 0]} />
+      {/* low warm light just inside the mouth: the inner rim and rust catch flame light */}
+      <pointLight ref={mouthRef} color="#ff7a30" intensity={3.2} distance={1.5} decay={2} position={[0, 0.74, 0]} />
+      {/* off-screen warm key on the camera side (same side as the ch4 camera): rivets and rust read on the barrel's visible face */}
+      <pointLight color="#ffb070" intensity={2.4} distance={4.2} decay={2} position={[-1.7, 0.75, 1.7]} />
+    </>
   );
 }
 
