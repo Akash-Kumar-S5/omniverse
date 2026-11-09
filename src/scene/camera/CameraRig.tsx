@@ -226,10 +226,10 @@ export default function CameraRig() {
         look.set(...sky.target);
         if (!isPortrait) {
           // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
-          pos.set(-3.0, 0.42, 2.25);   // r16: ~0.5 m left of before, so the far pillar no longer lines up with the flame axis
+          pos.set(3.7, 0.7, 2.5);   // r32 arrival: from the effigy side, low, across the effigy toward the fire and the hall beyond (was a low side view like the hero)
           // r17 Lane C: yaw left (counter-clockwise away from right edge) so clipped statue at x1385-1440 is completely out of frame
-          look.set(-0.95, 0.95, 0.05);
-          targetFov = 44;
+          look.set(-1.2, 1.5, 0.65);
+          targetFov = 52;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
           pos.set(-4.4, 0.9, 5.2);

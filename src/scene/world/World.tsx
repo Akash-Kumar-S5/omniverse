@@ -284,7 +284,7 @@ function HearthEmbers() {
     ];
 
     const startY = 0.70;   // r18: 5 cm inside the barrel mouth (rim y~0.745)
-    const heightRange = 2.4;
+    const heightRange = isContact ? 4.6 : 2.4;   // r32: on the contact chapter the embers climb toward the oculus
 
     for (let i = 0; i < activeCount; i++) {
       // Wider spawn spread (radius r <= 0.95m) so no column forms
@@ -328,7 +328,7 @@ function HearthEmbers() {
     };
 
     return { geometry: geo, uniforms: u };
-  }, [activeCount]);
+  }, [activeCount, isContact]);
 
   useFrame((state) => {
     if (matRef.current) {
