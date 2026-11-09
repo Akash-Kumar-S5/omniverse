@@ -24,9 +24,9 @@ M_CHAR = bpy.data.materials.new("mat_charcoal"); M_CHAR.use_nodes = True   # r11
 _b = next(n for n in M_CHAR.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
 _b.inputs["Base Color"].default_value = (0.009, 0.008, 0.007, 1); _b.inputs["Roughness"].default_value = 0.9
 
-DEC = {"../../../blender/props/kite_shield/kite_shield_1k": 6000, "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": 3000, "../scans/candles-brass": 6000, "../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 5000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
+DEC = {"../../../blender/props/kite_shield/kite_shield_1k": 6000, "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": 3000, "../scans/candles-brass": 6000, "../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 16000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
 # r6: (saturation, value) pulled down on the albedo so scans read as aged metal under warm light, not flat orange
-TUNE = {"../../../blender/props/kite_shield/kite_shield_1k": (0.6, 0.35), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.4, 0.15), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
+TUNE = {"../scans/helmet-sallet-scan": (0.55, 0.32), "../../../blender/props/kite_shield/kite_shield_1k": (0.6, 0.35), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.4, 0.15), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
 METAL = {"../scans/shield-round-scan": (0.8, 0.45)}
 _cache = {}
 def source(fn):
@@ -137,6 +137,11 @@ P("../scans/statue-hooded-mourner", 1.75, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dy
 firelight("FIRE_flame", (0, 0, 1.6), 70, (1.0, 0.5, 0.18), 0.3)
 firelight("FIRE_mourner_low", (0.7, 0.5, 0.9), 25, (1.0, 0.45, 0.15), 0.15)
 
+# r13: the runtime fire barrel (0.80 m across, 0.81 m tall) has no twin in the bake, so a near-black occluder stands in for it:
+# it throws the contact shadow into the baked floor and is the black coals bed seen from above (top at 0.55, below the rim)
+_o = cyl("RUIN_barrelproxy", 0.38, 0.0, 0.55)
+_o.data.materials.clear(); _o.data.materials.append(bpy.data.materials["mat_plinth_polished"])
+
 # ---- ch1: altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
 # the statue itself is a runtime model, so the light that reveals its face and folds ships inside sanctum.glb (#ffb070)
 rt = bpy.data.lights.new("RT_ch1_candle", "POINT"); rt.energy = 2.4; rt.color = (1.0, 0.434, 0.162)
@@ -144,18 +149,9 @@ rto = bpy.data.objects.new("RT_ch1_candle", rt); sc.collection.objects.link(rto)
 
 # ---- ch2: one job prop per role, on a stone stand to the right of each arch (camera at x+4.2 looks -X; +Y is screen right) ----
 # (file, height m, pre-rotation): the sword stands upright (blade up) so it reads from eye level
-JOB = (("../../../blender/props/kite_shield/kite_shield_1k", 1.2, None, 1.75), ("../scans/helmet-sallet-scan", 0.55, None, 0.75), ("../scans/sword-arming-scan", 1.3, (0, 90, 0), 0.75), ("../scans/armour-cuirass-scan", 0.8, None, 0.75))
-for k, (x, (fn, h, rot, ph)) in enumerate(zip((-14, -19, -24, -29), JOB)):
-    if k > 0: continue   # r11: only the shield; the small bright pieces under the bullets are gone
-    sx, sy = (x + 1.5, 1.2) if k == 0 else (x + 0.5, 2.0)   # r8: role 0 shield at screen x 1000-1300; later stands hug the right wall, clear of the bullets
-    P("../ruins/ruins-column-square" if k == 0 else "../ruins/altar-stone", sx, sy, 0, ph, 90, mat=bpy.data.materials.get("mat_brick") or M_WALL, tag="stand")
-    P(fn, sx, sy, ph, h, face=(x + 4.2, 0), rot=rot, tag=f"scan_job{k}")
-    firelight(f"FIRE_job{k}", (sx + 0.4, sy - 0.8, ph - 0.2 if k == 0 else ph + 1.0), 55 if k == 0 else 40, (1.0, 0.62, 0.3), 0.1)
-# one wall sconce on the right-hand wall (torch prop) + a spot aimed straight at the shield face
-P("torch-wall", -11.2, 2.3, 2.6, 0.6, face=(-11.2, 0), tag="sconce")
-sp = bpy.data.lights.new("SCONCE_shield", "SPOT"); sp.energy = 65; sp.color = (1.0, 0.68, 0.36)
-sp.spot_size = math.radians(38); sp.spot_blend = 0.55; sp.shadow_soft_size = 0.1
-spo = bpy.data.objects.new("SCONCE_shield", sp); sc.collection.objects.link(spo); spo.location = (-12.3, 2.2, 2.6); look_at(spo, (-12.5, 1.2, 2.4))
+# r13: ch2's subject is the scanned cuirass, loaded at runtime (src/scene/world/HeroArmour.tsx) at full detail; the bake only holds its dark stone stand.
+box("RUIN_stand_hero", -12.5 - 0.42, -12.5 + 0.42, 1.2 - 0.42, 1.2 + 0.42, 0.0, 1.15)
+bpy.data.objects["RUIN_stand_hero"].data.materials.clear(); bpy.data.objects["RUIN_stand_hero"].data.materials.append(bpy.data.materials["mat_rough_stone"])
 
 # ---- ch4: braziers + tall candelabra flank the court (camera at y=-14.6 looks up and away) ----
 for i, sx in enumerate((-2.3, 2.3)):

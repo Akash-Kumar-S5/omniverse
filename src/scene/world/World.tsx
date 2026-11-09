@@ -7,6 +7,7 @@ import VolumeCone from "./VolumeCone";
 import Floor from "./Floor";
 import ProjectArtefact from "./ProjectArtefact";
 import Fire from "./Fire";
+import HeroArmour from "./HeroArmour";
 
 /**
  * Light is fire + moon only. The single warm source is the flickering point light in Fire.tsx.
@@ -107,6 +108,7 @@ export default function World() {
       <WorldLighting />
       <SparksAndMist />
       <Fire />
+      <HeroArmour />
       {/* Fog precisely matching background (#060505) with seamless falloff */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 

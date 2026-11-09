@@ -165,3 +165,10 @@ No new third-party assets. Changes to credited CC0 files:
 | Met Open Access paintings (`public/assets/paintings/painting_0..7.jpg`) | The Metropolitan Museum of Art | CC0 | Flipped vertically so they read upright in the frame |
 | Boulder 01 ring props | Poly Haven | CC0 | Outer ring removed entirely |
 | Dead Tree Trunk 02 | Poly Haven | CC0 | Logs removed from the pit (they read blond even as flat charcoal) |
+
+## Round 13 scenes (blender-scenes): swap the subject
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
+| Barrel Stove (scan, 1k, `blender/props/barrel_stove/`, processed to `public/assets/ruins/fire_barrel.draco.glb`) | Poly Haven | https://polyhaven.com/a/barrel_stove | CC0 1.0 Universal | Ch0/ch4: the one complete fire vessel (open iron drum widened 1.35x, albedo x0.55), replaces the rocks-and-logs pit |
+| Armour Cuirass scan (`public/assets/scans/armour-cuirass-scan.glb`, listed in the Scans section) | see Scans | CC0 | Ch2: the one subject, loaded at runtime at full detail on a dark stone stand |

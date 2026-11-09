@@ -11,10 +11,10 @@ import { useOmni } from "../../state/store";
  *  - 3 crossed additive billboards (~0.6m tall) inside the coals with warm core (#ffd29a)
  *  - ONE warm point light (#ff8a3d) on the plinth fire with organic flicker
  */
-const PIT_URL = "/assets/ruins/stone_fire_pit.draco.glb";
+const PIT_URL = "/assets/ruins/fire_barrel.draco.glb";   // r13: ONE scanned iron fire barrel (Poly Haven barrel_stove, CC0), 0.80 m across, 0.81 m tall, base on the floor
 const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
-const PIT_SCALE = 1.7;
-const PLINTH_TOP = 0.42;
+const PIT_SCALE = 1.0;
+const PLINTH_TOP = 0.06;
 const COLS = 8;
 const ROWS = 8;
 const TOTAL_FRAMES = 64;
@@ -119,12 +119,12 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 function Flames() {
   const quality = useOmni((s) => s.quality);
   // Flame billboards scaled ~1.4x (1.37m tall, width 1.23m) so it fills the boulder ring
-  const h = quality === "lite" ? 1.19 : 1.37;
+  const h = quality === "lite" ? 0.86 : 1.0;
   const w = h * 0.90;
 
   // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
   return (
-    <group position={[0, 0.60, 0]}>
+    <group position={[0, 0.52, 0]}>   {/* r13: coals bed inside the barrel, flames rise out of its open top (rim at y~0.8) */}
       <FlamePlane rotationY={0} phase={0} width={w} height={h} />
       <FlamePlane rotationY={Math.PI / 3} phase={0.33} width={w * 0.95} height={h} />
       <FlamePlane rotationY={(Math.PI * 2) / 3} phase={0.67} width={w * 0.95} height={h} />
@@ -156,7 +156,7 @@ function FireLight() {
       intensity={7.5}
       distance={11}
       decay={2}
-      position={[0, 0.85, 0]}
+      position={[0, 1.0, 0]}
     />
   );
 }

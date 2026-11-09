@@ -111,3 +111,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch3: the 8 painting JPEGs flipped vertically (src untouched except ProjectArtefact pointLight 4.5 -> 3.15, -30%); the painting reads upright (r12-before/after-ch3-painting).
 - Not done (not in my files): the red glow rectangle and ember size live in Fire.tsx.
 - sanctum.glb 1.78 MB, sanctum-lite.glb 0.53 MB. Dev server on port 5211 stopped.
+
+## Round 13 scenes (r13/blender-scenes) — swap the subject
+- ch0/ch4: Fire.tsx now loads fire_barrel.draco.glb (Poly Haven barrel_stove, one object, dark albedo, 0.80 m across x 0.81 m tall, base on the floor); flames re-seated at y 0.52 (1.0 m tall, lite 0.86), light at y 1.0. No rocks, logs or pebbles remain. A near-black occluder inside the barrel footprint throws a contact shadow into the baked floor. Verified in r13-scenes-ch0 / ch4.
+- ch2: the shield is gone. The subject is the scanned woven cuirass (src/scene/world/HeroArmour.tsx, full-detail runtime mesh) on a dark stone stand, dark albedo (x0.5), one warm practical; nothing else lit. The first pick, helmet-sallet-scan, turned out to be a lion-head mask with red cloth and two rods, so it was dropped. Verified in r13-scenes-ch2.
+- Not verified: no mobile shots this round.
+- sanctum.glb 1.75 MB, sanctum-lite.glb 0.52 MB. Dev server (port 5211) stopped.
