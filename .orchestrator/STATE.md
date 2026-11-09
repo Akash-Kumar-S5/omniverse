@@ -414,3 +414,4 @@ After r12 merges + critic c9, for every chapter still <7.5: replace the subject 
 - r14/agy-world merged (glow disc gone, embers narrower); waiting r14/blender-scenes
 - r14/blender-scenes merged (conflict in Fire.tsx resolved: Flames hidden at ch4 + FloorVignette kept); critic c10 dispatched
 - Morph: ch4 must keep a real flame (ROUND-3-DARK-FANTASY.md). Barrel/brazier from low side angle, relief dim behind. Don't change Akash's chapter subjects; ask Morph first if unworkable.
+- critic c10 = 7.6; dispatched r15/blender-scenes (ch4 flame back, mobile, floor rebake, ch2/ch3) + r15/agy-world (embers)
