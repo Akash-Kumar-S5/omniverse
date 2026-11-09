@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useThree } from "@react-three/fiber";
 import { useOmni } from "../../state/store";
 
 function random(seed: number) {
@@ -13,6 +14,7 @@ function random(seed: number) {
 }
 
 export default function Starfield() {
+  const isNarrow = useThree((s) => s.size.width < 600);
   const section = useOmni((s) => s.section);
   const quality = useOmni((s) => s.quality);
   const count = quality === "lite" ? 1000 : 3000;
@@ -32,7 +34,8 @@ export default function Starfield() {
   }, [count]);
 
   // Stars are only visible when looking up through the open oculus to the sky (boot and contact)
-  if (section === "about" || section === "experience" || section === "projects") {
+  // Cull starfield at narrow aspect (<600px) so no speckle cloud reads as a render glitch
+  if (isNarrow || section === "about" || section === "experience" || section === "projects") {
     return null;
   }
 

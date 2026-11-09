@@ -44,39 +44,39 @@ function SparksAndMist() {
   return (
     <group>
       {/* Warm-only embers (hue 15-40deg, zero blue/cyan): layered sizes and brightness */}
-      {/* 1. Fine glowing spark motes: warm gold (hue 36°), fast rise */}
+      {/* 1. Fine glowing spark motes: warm gold (hue 36°), fast rise, randomised across pit radius */}
       <Sparkles
         count={Math.round((quality === "lite" ? 16 : 32) * countMult)}
-        scale={[0.85, 2.6, 0.85]}
-        position={[0, 1.3, 0]}
+        scale={[2.4, 2.5, 2.4]}
+        position={[0, 1.35, 0]}
         color="#ffc46a"
         speed={0.80}
         size={(quality === "lite" ? 1.0 : 1.4) * sizeMult}
-        noise={[0.2, 0.8, 0.2]}
+        noise={[0.85, 0.5, 0.85]}
         opacity={0.88}
       />
 
-      {/* 2. Mid-sized ember sparks: warm fiery orange (hue 24°), steady drift */}
+      {/* 2. Mid-sized ember sparks: warm fiery orange (hue 24°), organic drift across pit */}
       <Sparkles
         count={Math.round((quality === "lite" ? 12 : 24) * countMult)}
-        scale={[0.9, 2.2, 0.9]}
+        scale={[2.2, 2.2, 2.2]}
         position={[0, 1.25, 0]}
         color="#ff761a"
         speed={0.55}
         size={(quality === "lite" ? 2.0 : 2.5) * sizeMult}
-        noise={[0.25, 0.7, 0.25]}
+        noise={[0.75, 0.5, 0.75]}
         opacity={0.76}
       />
 
-      {/* 3. Larger cooling ember flakes: deep warm red-orange (hue 16°), slow rise */}
+      {/* 3. Larger cooling ember flakes: deep warm red-orange (hue 16°), slow rise across pit */}
       <Sparkles
         count={Math.round((quality === "lite" ? 6 : 12) * countMult)}
-        scale={[0.95, 1.8, 0.95]}
+        scale={[2.0, 1.9, 2.0]}
         position={[0, 1.15, 0]}
         color="#d6440c"
         speed={0.35}
         size={(quality === "lite" ? 3.0 : 3.8) * sizeMult}
-        noise={[0.3, 0.6, 0.3]}
+        noise={[0.65, 0.5, 0.65]}
         opacity={0.55}
       />
 
