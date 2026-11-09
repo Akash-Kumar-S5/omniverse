@@ -440,3 +440,5 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r17 lane D (ch3 canvas/frame/wall) merged. Pending C framing, F plinth
 - orchestrator-b stalled on dialogs; lane C reassigned to agy-world (r17/framing-world); lane F retried on copilot-review
 - r17 lane C framing merged (orchestrator-b delivered). critic c13 dispatched DESKTOP ONLY
+- critic c13 = 7.7 desktop (ch0 7.8 ch1 8 ch2 8 ch3 7.5 ch4 7.5); dispatched r18 A fire (blender), B rim leak (agy-world), C ch3 art+hang (agy-review)
+- r18 lane A fire merged (rusty barrel, seated flame, relief dimmed). Pending B rim leak, C ch3, F plinth
