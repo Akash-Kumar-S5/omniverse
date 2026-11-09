@@ -40,6 +40,7 @@ uniform float uTime;
 uniform float uPixelRatio;
 uniform float uStartY;
 uniform float uHeightRange;
+uniform float uViewportHeight;
 
 attribute float aSize;
 attribute float aSpeed;
@@ -49,29 +50,41 @@ attribute vec3 aColor;
 
 varying vec3 vColor;
 varying float vOpacity;
+varying float vScreenY;
 
 void main() {
   vec3 pos = position;
   float rise = mod(pos.y - uStartY + uTime * aSpeed, uHeightRange);
   pos.y = uStartY + rise;
 
-  // Gentle organic drift
-  float driftPhase = uTime * aSpeed * 1.4 + pos.y * 1.8;
-  pos.x += sin(driftPhase + aNoise.x) * 0.14 * (rise / uHeightRange);
-  pos.z += cos(driftPhase + aNoise.y) * 0.14 * (rise / uHeightRange);
+  // Wide organic spread as embers rise (no column formation)
+  float spreadFactor = rise / uHeightRange;
+  float driftPhase = uTime * aSpeed * 1.2 + pos.y * 1.5;
+  pos.x += (aNoise.x - 0.5) * 1.6 * spreadFactor + sin(driftPhase + aNoise.z) * 0.28 * spreadFactor;
+  pos.z += (aNoise.y - 0.5) * 1.6 * spreadFactor + cos(driftPhase + aNoise.z) * 0.28 * spreadFactor;
 
   vec4 mvPosition = viewMatrix * modelMatrix * vec4(pos, 1.0);
-  gl_Position = projectionMatrix * mvPosition;
+  vec4 clipPos = projectionMatrix * mvPosition;
+  gl_Position = clipPos;
 
-  // Size in screen pixels (1.5-3 px at 1440)
-  float distFactor = clamp(6.0 / -mvPosition.z, 0.75, 1.35);
-  gl_PointSize = aSize * uPixelRatio * distFactor;
+  // Thin 1.5-3 px sparks at 1440
+  gl_PointSize = aSize * uPixelRatio;
+
+  // Screen Y in CSS pixels from top of viewport
+  float ndcY = clipPos.y / clipPos.w; // -1 at bottom, +1 at top
+  float screenY = (1.0 - ndcY) * 0.5 * uViewportHeight;
+  vScreenY = screenY;
 
   vColor = aColor;
-  // Fade in as they emerge from coals, fade out before top
-  float fadeIn = smoothstep(0.0, 0.20, rise);
+
+  // Fade in as they emerge from fire
+  float fadeIn = smoothstep(0.0, 0.22, rise);
+  // Fade out before top
   float fadeOut = smoothstep(uHeightRange, uHeightRange * 0.72, rise);
-  vOpacity = aOpacity * fadeIn * fadeOut;
+  // Cap height below nav: fade to zero between 140px and 96px from top of 1440x900 viewport
+  float navFade = smoothstep(96.0, 140.0, screenY);
+
+  vOpacity = aOpacity * fadeIn * fadeOut * navFade;
 }
 `;
 
@@ -82,25 +95,34 @@ uniform float uViewportHeight;
 
 varying vec3 vColor;
 varying float vOpacity;
+varying float vScreenY;
 
 void main() {
+  // Hard cap below nav: strictly none draw above y=90px (nav) at 1440x900
+  if (vScreenY <= 92.0) {
+    discard;
+  }
+
   // Mobile protection: keep 0-390 x 480-560 completely free of embers
   if (uIsMobile > 0.5) {
     float screenX = gl_FragCoord.x / uPixelRatio;
-    float screenY = uViewportHeight - (gl_FragCoord.y / uPixelRatio);
-    if (screenX >= 0.0 && screenX <= 390.0 && screenY >= 475.0 && screenY <= 565.0) {
+    if (screenX >= 0.0 && screenX <= 390.0 && vScreenY >= 475.0 && vScreenY <= 565.0) {
       discard;
     }
   }
 
-  // Slight vertical stretch (1.6x height relative to width)
+  if (vOpacity <= 0.01) {
+    discard;
+  }
+
+  // Thin spark with slender vertical stretch (2.4x height relative to width)
   vec2 p = gl_PointCoord - vec2(0.5);
-  vec2 stretched = vec2(p.x * 1.6, p.y);
+  vec2 stretched = vec2(p.x * 2.4, p.y);
   float dist = length(stretched);
   if (dist > 0.5) discard;
 
-  // Crisp solid spark core, NO halo sprite flare
-  float alpha = smoothstep(0.5, 0.15, dist) * vOpacity;
+  // Crisp solid spark core, NO round halo
+  float alpha = smoothstep(0.5, 0.22, dist) * vOpacity;
 
   gl_FragColor = vec4(vColor, alpha);
 }
@@ -133,27 +155,27 @@ function HearthEmbers() {
       new THREE.Color("#ff9234"), // warm ember orange
     ];
 
-    const startY = 0.70;
-    const heightRange = 3.2;
+    const startY = 0.65;
+    const heightRange = 2.4;
 
     for (let i = 0; i < activeCount; i++) {
-      // Randomise across barrel mouth radius (r <= 0.36)
-      const r = Math.sqrt(Math.random()) * 0.36;
+      // Wider spawn spread (radius r <= 0.95m) so no column forms
+      const r = Math.sqrt(Math.random()) * 0.95;
       const theta = Math.random() * Math.PI * 2;
       positions[i * 3 + 0] = r * Math.cos(theta);
       positions[i * 3 + 1] = startY + Math.random() * heightRange;
       positions[i * 3 + 2] = r * Math.sin(theta);
 
-      // Sizes: 1.5 - 2.8 px at 1440
-      sizes[i] = 1.5 + Math.random() * 1.3;
+      // Sizes: thin 1.5 - 2.5 px at 1440
+      sizes[i] = 1.6 + Math.random() * 0.9;
       // Speeds
-      speeds[i] = 0.28 + Math.random() * 0.35;
-      // Dimmer opacities (0.35 - 0.55)
-      opacities[i] = 0.35 + Math.random() * 0.20;
+      speeds[i] = 0.20 + Math.random() * 0.25;
+      // Dimmer opacities (0.30 - 0.50)
+      opacities[i] = 0.30 + Math.random() * 0.20;
 
-      noises[i * 3 + 0] = Math.random() * 10;
-      noises[i * 3 + 1] = Math.random() * 10;
-      noises[i * 3 + 2] = Math.random() * 10;
+      noises[i * 3 + 0] = Math.random();
+      noises[i * 3 + 1] = Math.random();
+      noises[i * 3 + 2] = Math.random() * 6.28;
 
       const c = warmPalette[Math.floor(Math.random() * warmPalette.length)];
       colors[i * 3 + 0] = c.r;
