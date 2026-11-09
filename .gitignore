@@ -30,7 +30,4 @@ blender/sanctum.blend
 blender/props/*.glb
 blender/bake/
 .playwright-mcp/
-
-# r22: raw Sketchfab downloads (re-fetch with tools/sketchfab-dl.ts; UIDs in CREDITS.md)
-blender/props/effigy-knight/
-blender/props/ruin-church/
+blender/props/cleveland-armour/

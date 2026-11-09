@@ -193,8 +193,6 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 
 - `public/assets/ruins/textures/stone_block_512.jpg` is the Poly Haven Concrete Road Barrier 02 diffuse map (https://polyhaven.com/a/concrete_road_barrier_02, CC0), resized to 512 px, now also on the ch2 stand. Same source as the ch1 plinth credited in Round 18.
 
-## Round 22 (blender-scans lane)
+## Round 24b (ch2 breastplate)
 
-- "Effigy of a knight probably Sir John Rossington" by Shiro Morturn, https://sketchfab.com/3d-models/effigy-of-a-knight-probably-sir-john-rossington-9a5f5ceec9eb48b0b2f7cbcfdf6f5197, licence CC Attribution (CC-BY). Back wall and carpet cut away, decimated to 36k tris, Draco, 1K texture: `public/assets/scans/effigy-knight-scan.glb`, loaded lazily in ch0 and ch4 (`src/scene/world/EffigyKnight.tsx`). Replaces the baked standing relief.
-- "Ruined Church" by andreidrmb, https://sketchfab.com/3d-models/ruined-church-85968ae9da6941bea41614cedfcd3e11, licence CC Attribution (CC-BY). Joined, decimated to 50k tris, 512 px texture, Draco: `public/assets/scans/ruin-church-scan.glb`, two dark fog-depth silhouettes behind ch0 and ch4 (`src/scene/world/RuinChurch.tsx`).
-- Process script: `blender/scripts/make_effigy_church.py`. Source downloads are git-ignored; re-fetch with `bun tools/sketchfab-dl.ts <uid> <dir>`.
+- "1964.88 Armor for Man and Horse" by the Cleveland Museum of Art, https://sketchfab.com/3d-models/196488-armor-for-man-and-horse-faca2ad557f64809b598c3a646a8804f, licence CC0 Public Domain. Only the rider's breastplate is kept (torso box crop, largest piece, 2,400 tris, 768 px textures, Draco): `public/assets/models/ch2-breastplate.glb`, made by `blender/scripts/make_breastplate.py`. The raw download stays git-ignored; re-fetch with `bun tools/sketchfab-dl.ts faca2ad557f64809b598c3a646a8804f blender/props/cleveland-armour`.
