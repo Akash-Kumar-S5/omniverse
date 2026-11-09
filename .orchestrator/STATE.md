@@ -450,3 +450,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Akash: critic researching OSS 3D replacements -> .orchestrator/reports/asset-research-1.md; dispatch top swaps to free lanes on landing; c14 runs meanwhile (after critic frees up)
 - asset-research-1 top swaps dispatched: #1 flame flipbook->copilot-swarm, #2 frame->agy-review, #3/#4/#5->blender (after plinth)
 - asset research already dispatched (r19 lanes)
+- r18 lane B merged (ch1 warm key restored, ch2 slab gone). critic c14 dispatched (desktop)
