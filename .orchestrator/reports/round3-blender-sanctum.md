@@ -94,3 +94,11 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch2: shield albedo toned to mid-grey (sat .75 / value .5), wall spot cut to 260 W and moved to graze from the side, pedestal 1.75 m so its top shows at y~640, pedestal fill light; the small helmet under the body text removed.
 - ch1: both foreground candelabras removed.
 - sanctum.glb 2.54 MB, sanctum-lite.glb 0.81 MB. Evidence r10-scenes-ch0..4.png. Dev server (port 5211) stopped.
+
+## Round 11 scenes (r11/blender-scenes)
+- Pit: kept the scan's own dark boulders (albedo x0.35, ground disc x0.12 = dark ash), my ring is boulder-only and darker; the rock-moss pebbles are gone. Logs are flat charcoal (0.03). The pale crossed sticks still visible in ch4 are not the baked logs (those are now near-black); they appear to be a runtime flame element in Fire.tsx (not mine, not verified).
+- ch2: shield albedo x0.4 (sat .7), spot 130 W; only the shield stands in the corridor so the small bright bust under the bullets is gone (verified in r11-scenes-ch2).
+- ch0/ch4 relief: albedo x0.3, lit from the side at 45 W.
+- ch1: bust pedestal is dark rough cobble stone (not brick), the five candlesticks and their lights are deleted, wall tint 0.12, key light 2.4. The pedestal height could not be cut by 25%: the runtime statue is fixed at y=1.25 in Sanctum.tsx.
+- ch3: eight plaster backdrop planes (one per painting) added behind the frames; in r11-scenes-ch3 the backdrop reads almost black, so the effect is subtle.
+- sanctum.glb 1.90 MB, sanctum-lite.glb 0.69 MB. Dev server on port 5211 stopped.
