@@ -6,13 +6,11 @@ import { useOmni } from "../../state/store";
 import { projects } from "../../content";
 import { getProjectGlyphAnchor } from "../particles/targets";
 
-const FRAME_MODEL_URL = "/assets/models/standing_picture_frame_01.glb";
+const FRAME_MODEL_URL = "/assets/models/fancy_picture_frame_02.glb";
 // warm practical that lights the painting: Poly Haven lantern chandelier (CC0), hung above-front of the frame
 const LANTERN_URL = "/assets/scans/lantern-chandelier.glb";
-const FRAME_SCALE = 6;
-// Natural easel kickstand backward tilt in standing_picture_frame_01 is 11.0° (normal.y = 0.1908).
-// Applying -0.191986 rad around local Z cancels the tilt so the canvas is strictly upright.
-const TILT_COMPENSATION_RAD = -0.191986;
+// Poly Haven Fancy Picture Frame 02 native height is 0.771m; scale 2.0 gives ~1.54m hero presence
+const FRAME_SCALE = 2.0;
 
 const PAINTING_URLS = projects.map(
   (p, i) => p.image || `/assets/paintings/painting_${i % 8}.jpg`
@@ -25,8 +23,8 @@ export default function ProjectArtefact() {
   const currentPos = useRef(new THREE.Vector3());
   const targetPos = useRef(new THREE.Vector3());
 
-  // Load the ready-made Poly Haven Standing Picture Frame (CC0)
-  const { scene } = useGLTF(FRAME_MODEL_URL, false);
+  // Load the ready-made Poly Haven Fancy Picture Frame 02 (CC0)
+  const { scene } = useGLTF(FRAME_MODEL_URL, "/draco/");
 
   // Load authentic archival manuscript and ledger textures
   const textures = useTexture(PAINTING_URLS);
@@ -64,7 +62,7 @@ export default function ProjectArtefact() {
   const lightRef = useRef<THREE.PointLight>(null);
   const turnRef = useRef<THREE.Group>(null);
 
-  // Build the frame model with custom artwork material and hide occluding glass
+  // Build the frame model with custom artwork material and authentic carved gilt frame
   const frameScene = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
@@ -72,11 +70,12 @@ export default function ProjectArtefact() {
         const mesh = child as THREE.Mesh;
         const mat = mesh.material as THREE.Material;
         const matName = mat?.name || "";
+        const meshName = mesh.name || "";
 
         if (matName.includes("glass")) {
           // Hide glass to avoid reflections or occlusion on the artwork
           mesh.visible = false;
-        } else if (matName.includes("artwork")) {
+        } else if (matName.includes("canvas") || matName.includes("artwork") || meshName.includes("canvas")) {
           if (activeTexture) {
             // Maximum sharpness: disable mipmap blur, bilinear filtering, max hardware anisotropy
             activeTexture.generateMipmaps = false;
@@ -85,6 +84,25 @@ export default function ProjectArtefact() {
             activeTexture.anisotropy = 16;
             activeTexture.needsUpdate = true;
           }
+
+          // Remap UVs to cover [0, 1] fully based on vertex positions
+          const posAttr = mesh.geometry.attributes.position;
+          const uvAttr = mesh.geometry.attributes.uv;
+          if (posAttr && uvAttr) {
+            mesh.geometry.computeBoundingBox();
+            const b = mesh.geometry.boundingBox;
+            if (b) {
+              const width = b.max.x - b.min.x;
+              const height = b.max.y - b.min.y;
+              for (let i = 0; i < posAttr.count; i++) {
+                const u = (posAttr.getX(i) - b.min.x) / width;
+                const v = (posAttr.getY(i) - b.min.y) / height;
+                uvAttr.setXY(i, u, v);
+              }
+              uvAttr.needsUpdate = true;
+            }
+          }
+
           mesh.material = new THREE.MeshStandardMaterial({
             map: activeTexture,
             color: new THREE.Color("#ffffff"),
@@ -96,12 +114,10 @@ export default function ProjectArtefact() {
             toneMapped: true,
           });
         } else {
-          // Wooden frame, mat surround, and easel stand
+          // Carved ornate gilt frame with worn patina
           if (mesh.material) {
             const m = (mesh.material as THREE.MeshStandardMaterial).clone();
             m.toneMapped = true;
-            // Darken the mat to <= 40% luminance (aged paper tint, not white)
-            m.color = new THREE.Color(0.38, 0.34, 0.30);
             mesh.material = m;
           }
         }
@@ -162,28 +178,22 @@ export default function ProjectArtefact() {
             <meshStandardMaterial color="#26201b" roughness={0.88} metalness={0.04} />
           </mesh>
 
-          {/* Soft ambient contact shadow on wall directly behind easel */}
-          <mesh position={[-0.40, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[1.8, 2.4]} />
-            <meshBasicMaterial color="#000000" transparent opacity={0.45} />
+          {/* Soft ambient contact shadow on wall directly behind carved frame perimeter */}
+          <mesh position={[-0.418, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
+            <planeGeometry args={[1.45, 1.68]} />
+            <meshBasicMaterial color="#000000" transparent opacity={0.48} />
           </mesh>
 
-          {/* Concentrated contact shadow directly behind easel leg */}
-          <mesh position={[-0.38, 0.60, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <planeGeometry args={[1.2, 1.8]} />
-            <meshBasicMaterial color="#000000" transparent opacity={0.55} />
-          </mesh>
-
-          {/* Authentic CC0 Poly Haven standing picture frame with tilt compensation to square to camera */}
+          {/* Authentic CC0 Poly Haven Fancy Picture Frame 02 hung flat against stone wall plane */}
           <primitive
             object={frameScene}
             scale={[FRAME_SCALE, FRAME_SCALE, FRAME_SCALE]}
-            position={[0, -0.15, 0]}
-            rotation={[0, 0, TILT_COMPENSATION_RAD]}
+            position={[-0.41, 0.60, 0]}
+            rotation={[0, Math.PI / 2, 0]}
           />
 
           {/* Lantern hangs centered directly above the frame (frame center screen X matches lantern finial) */}
-          <group position={[0.42, 1.40, isEven ? 0.05 : -0.05]}>
+          <group position={[0.42, 1.44, isEven ? 0.05 : -0.05]}>
             <primitive object={lanternObj} />
             {/* Chain extends straight up out of frame top into ceiling vault */}
             {Array.from({ length: 130 }, (_, i) => (
@@ -201,6 +211,6 @@ export default function ProjectArtefact() {
   );
 }
 
-useGLTF.preload(FRAME_MODEL_URL, false);
+useGLTF.preload(FRAME_MODEL_URL, "/draco/");
 useGLTF.preload(LANTERN_URL, false);
 useTexture.preload(PAINTING_URLS);
