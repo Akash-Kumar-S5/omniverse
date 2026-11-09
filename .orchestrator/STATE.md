@@ -401,3 +401,9 @@ Scheduled wakeup 16:20 in the Claude orchestrator is moot while failed over; the
 - r11/agy-world merged b0a0ed1; build+lint clean; critic cycle 8 dispatched
 - critic c8 = 6.7 (ch1 8); dispatched r12/blender-scenes + r12/agy-world
 - r12/blender-scenes merged ac93f56 (pebbles gone, shield dark); waiting r12/agy-world (glow rect, spots, embers, mobile)
+
+## Strategy (Morph, after c8=6.7): SWAP the subject, don't tune it
+After r12 merges + critic c9, for every chapter still <7.5: replace the subject with ONE finished scanned asset (Sketchfab CC0/CC-BY, Poly Haven).
+- ch0/ch4: one complete scanned fire pit or iron brazier, lit only by its flame.
+- ch2: if shield flagged again, swap for a single high-detail scanned helmet/armour piece on a stand, dark albedo.
+- Rule per chapter: one subject, darker than the type, contact shadow, black negative space, nothing else in frame. Copy ch1 (scores 8).
