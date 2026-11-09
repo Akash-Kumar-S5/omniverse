@@ -427,3 +427,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - r16/copilot-ui merged (mobile readability). ch4 priority: r16 blender merged; re-score at c12
 - r16/agy-world merged (ch2 cuirass lit; now cropped at right edge, check c12)
 - Akash lighting references forwarded to all lanes + critic (.orchestrator/briefs/lighting-references.md); reference only, no WebGPU until after SHIP
+- r16/agy-world (ch3 chain + SalarySync texture) merged; c12 dispatched (pending: agy-ui ch1, copilot-perf)
