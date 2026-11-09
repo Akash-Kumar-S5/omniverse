@@ -170,3 +170,9 @@ body {
   html { scroll-behavior: auto; }
   .text-link::after { transition: none; }
 }
+
+/* r34: while the gate is up the page beneath it is fully hidden: no ghosted hero copy, no nav, no callouts */
+.overlay[inert],
+.hud-root[inert] {
+  visibility: hidden;
+}

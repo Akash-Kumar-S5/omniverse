@@ -107,3 +107,9 @@ export default function HeroArmour() {
     </group>
   );
 }
+
+// r34: warm the Work chapter's pieces after first paint so scrolling into it never meets an empty stage
+window.setTimeout(() => {
+  useGLTF.preload(STAND_URL, "/draco/");
+  useGLTF.preload(URL, "/draco/");
+}, 2500);
