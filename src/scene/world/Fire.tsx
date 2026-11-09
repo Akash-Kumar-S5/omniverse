@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { Billboard, useGLTF, useTexture } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useOmni } from "../../state/store";
 
 /**
@@ -197,7 +197,9 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
 function Flames() {
   const quality = useOmni((s) => s.quality);
   const section = useOmni((s) => s.section);
+  const { width, height } = useThree((state) => state.size);
   const k = quality === "lite" ? 0.86 : 1.0;
+  const flameHeight = section === "contact" && width >= height ? 0.78 : 1;
   const glow = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = 128; c.height = 128;
@@ -220,21 +222,15 @@ function Flames() {
   // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
     <group position={[0, 0.49, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} core />
-      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
-      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
+      <group scale={[1, flameHeight, 1]}>
+        <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} core />
+        <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
+        <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
+      </group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.45, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
-      {(section === "boot" || section === "contact") && (
-        <Billboard position={[0.5, 0.95, -0.6]}>
-          <mesh renderOrder={3}>
-            <circleGeometry args={[1.15, 48]} />
-            <meshBasicMaterial map={glow} transparent opacity={0.055} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
-          </mesh>
-        </Billboard>
-      )}
     </group>
   );
 }
@@ -279,6 +275,9 @@ function FireLight() {
   return (
     <>
       <pointLight ref={ref} color="#ff8a3d" intensity={6.4} distance={0} decay={2} position={[0, 0.95, 0]} />
+      {(section === "boot" || section === "contact") && (
+        <pointLight color="#ff7a30" intensity={3} distance={3} decay={2} position={[0.4, 1.5, -0.3]} />
+      )}
       {/* low warm light just inside the mouth: the inner rim and rust catch flame light */}
       <pointLight ref={mouthRef} color="#ff7a30" intensity={2.7} distance={1.5} decay={2} position={[0, 0.66, 0]} />
       {/* off-screen warm key on the camera side (same side as the ch4 camera): rivets and rust read on the barrel's visible face */}
