@@ -29,7 +29,8 @@
   .sections-scrim-left.scrim-experience {
     width: 62vw;
     opacity: 1;
-    background: linear-gradient(90deg, rgba(6, 5, 5, 0.98) 0%, rgba(6, 5, 5, 0.98) 55%, rgba(6, 5, 5, 0) 85%);
+    /* r26: opaque a little further so the role card (35-58vw) sits on the scrim, not on the scene glow; the fade still ends before the armour (about 69vw) */
+    background: linear-gradient(90deg, rgba(6, 5, 5, 0.98) 0%, rgba(6, 5, 5, 0.98) 78%, rgba(6, 5, 5, 0) 100%);
   }
   .sections-scrim-left.scrim-projects {
     width: 52vw;
@@ -268,8 +269,9 @@
 }
 .role-title em { font-style: italic; }
 .role-location { color: var(--fg-muted); font-size: var(--step--1); margin: var(--space-2) 0 var(--space-4); }
-.role-desc { color: var(--fg); margin-bottom: var(--space-4); }
-.achievements-list { margin: 0; padding: 0; list-style: none; color: var(--fg-dim); }
+/* r26: body copy one step lighter plus a soft dark halo, so it holds contrast over the scene glow (WCAG AA 4.5:1 for body) */
+.role-desc { color: var(--fg-bright); margin-bottom: var(--space-4); text-shadow: 0 0 14px rgba(6, 5, 5, 0.9); }
+.achievements-list { margin: 0; padding: 0; list-style: none; color: var(--fg); text-shadow: 0 0 14px rgba(6, 5, 5, 0.9); }
 .achievements-list li { margin-bottom: var(--space-2); }
 .achievements-list li::before { content: "– "; color: var(--fg-muted); }
 
