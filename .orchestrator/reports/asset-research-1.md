@@ -1,5 +1,13 @@
 # Asset research 1: dark-fantasy swaps (desktop only, 09-Nov)
 
+## R19 flame swap status
+
+**Blocked:** [Large Campfire Loop - No Smoke](https://cgheven.com/assets/large-campfire-loop-no-smoke-flipbooks-6x6-8x8) by Ammar Khan offers only a 4K PNG marked Pro. Selecting it opens a paid-plan dialog; no free download is offered on the asset page.
+
+The 2025 article cited below describes the asset as CC0, but the site's [current licence](https://cgheven.com/licensing), updated October 24, 2026, restricts redistribution of downloaded files. The asset page links to that licence.
+
+Per the download-blocker instruction, no substitute was downloaded, no asset or code was changed, and visual verification was not performed.
+
 Method: web search, then page reads to verify licence, triangle count and texture size. Nothing was downloaded and no code was edited.
 Fields marked "unverified" are ones the page didn't show, or the fetch failed (Sketchfab returned empty 202s on some pages).
 Ranking is by visual gain per hour, scored against the c13 defects in `critic-cycle-13.md`.
