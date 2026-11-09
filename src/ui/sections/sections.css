@@ -26,6 +26,11 @@
     opacity: 1;
     background: linear-gradient(90deg, rgba(6, 5, 5, 0.98) 0%, rgba(6, 5, 5, 0.98) 67%, rgba(6, 5, 5, 0) 90%);
   }
+  .sections-scrim-left.scrim-experience {
+    width: 62vw;
+    opacity: 1;
+    background: linear-gradient(90deg, rgba(6, 5, 5, 0.98) 0%, rgba(6, 5, 5, 0.98) 55%, rgba(6, 5, 5, 0) 85%);
+  }
   .sections-scrim-left.scrim-projects {
     width: 52vw;
     opacity: 1;

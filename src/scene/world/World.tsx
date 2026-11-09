@@ -24,8 +24,8 @@ function WorldLighting() {
   return (
     <>
       <ambientLight intensity={look.ambientIntensity} color={look.ambientColor} />
-      {/* Moon key angled through the ruins so pillars catch faint rim and face grazing */}
-      <directionalLight position={[-6, 14, 4]} intensity={look.keyLightIntensity * 0.45} color="#8ea4c2" />
+      {/* Moon key angled through the ruins using per-chapter key color */}
+      <directionalLight position={[-6, 14, 4]} intensity={look.keyLightIntensity * 0.45} color={look.keyLightColor} />
       <Environment
         files="/assets/hdri/studio_small_09_1k.exr"
         resolution={quality === "lite" ? 128 : 256}
@@ -37,23 +37,34 @@ function WorldLighting() {
 }
 
 /**
- * R17 Lane B: One very low cool rim light (#6a7a90, ~0.3) behind each chapter subject (ch0, ch2, ch4)
- * to subtly separate the subject from the background atmosphere.
+ * Subject rim and key lights: confined strictly to subjects with short distance / spot cones (decay: 2)
+ * so light never washes background walls or creates false boxes.
  */
 function SubjectRimLight() {
   const section = useOmni((s) => s.section);
 
   if (section === "boot") {
     // ch0: low cool rim behind fire barrel & mourner relief
-    return <pointLight color="#6a7a90" intensity={0.32} distance={4.5} decay={2} position={[0.7, 1.25, -0.8]} />;
+    return <pointLight color="#6a7a90" intensity={0.32} distance={2.8} decay={2} position={[0.7, 1.25, -0.8]} />;
+  }
+  if (section === "about") {
+    // ch1: restore c12 warm key on the statue (highlights drapery, face and weapon) + confined cool rim on silhouette
+    return (
+      <>
+        {/* Warm key on statue (c12 bar): soft directional warm amber highlight */}
+        <pointLight color="#ffc882" intensity={3.2} distance={4.2} decay={2} position={[8.8, 2.2, -1.0]} />
+        {/* Confined cool rim behind statue to give crisp silhouette separation without wall wash */}
+        <pointLight color="#6a7a90" intensity={0.85} distance={2.2} decay={2} position={[11.8, 1.8, 0.4]} />
+      </>
+    );
   }
   if (section === "experience") {
-    // ch2: cool rim reduced so no vertical streaks read on the background wall/pillar
+    // ch2: cool rim spot cone is handled in HeroArmour.tsx strictly aimed at the cuirass (zero back wall emission)
     return null;
   }
   if (section === "contact") {
     // ch4: low cool rim behind barrel & relief
-    return <pointLight color="#6a7a90" intensity={0.32} distance={4.5} decay={2} position={[0.7, 1.25, -0.8]} />;
+    return <pointLight color="#6a7a90" intensity={0.32} distance={2.8} decay={2} position={[0.7, 1.25, -0.8]} />;
   }
   return null;
 }
