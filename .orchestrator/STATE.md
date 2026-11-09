@@ -447,3 +447,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r18 lane C ch3 merged (no pseudo-text, chain+wall). Pending B rim/ch1, F plinth
 - lane F copilot approved path prompt; lane B running on agy-world (r18/agy-world). c14 after B+F
 - lane F reassigned to blender-sanctum (copilot couldn't fetch assets)
+- Akash: critic researching OSS 3D replacements -> .orchestrator/reports/asset-research-1.md; dispatch top swaps to free lanes on landing; c14 runs meanwhile (after critic frees up)
