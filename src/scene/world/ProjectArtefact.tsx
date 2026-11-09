@@ -48,7 +48,7 @@ export default function ProjectArtefact() {
     });
     const box = new THREE.Box3().setFromObject(c);
     const size = box.getSize(new THREE.Vector3());
-    const k = 0.36 / size.y;
+    const k = 0.24 / size.y;
     const ctr = box.getCenter(new THREE.Vector3());
     const holder = new THREE.Group();
     c.position.set(-ctr.x, -ctr.y, -ctr.z);
@@ -106,7 +106,7 @@ export default function ProjectArtefact() {
     if (!groupRef.current) return;
     const dest = getProjectGlyphAnchor(activeProject);
     // The painting is the hero: large, right-centre, where the glyph swarm hangs
-    dest.y = 1.95;
+    dest.y = 1.75;
     // slide right on screen (clear of the copy column): the chapter camera's right-hand direction in glTF xz
     if (isEven) {
       dest.x += 0.9;
@@ -130,7 +130,7 @@ export default function ProjectArtefact() {
       const direction = lanternDirection.current.copy(state.camera.position).sub(currentPos.current);
       direction.y = 0;
       direction.normalize().multiplyScalar(0.7);
-      lanternRef.current.position.set(0.4 + direction.x, 1.45, direction.z);
+      lanternRef.current.position.set(0.4 + direction.x, 1.33, direction.z);
     }
     if (lightRef.current) {
       const tt = performance.now() / 1000;
@@ -152,7 +152,7 @@ export default function ProjectArtefact() {
         </group>
       </Float>
       {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
-      <group ref={lanternRef} position={[0.35, 1.45, 0.52]}>
+      <group ref={lanternRef} position={[0.35, 1.33, 0.52]}>
         <primitive object={lanternObj} />
         <pointLight ref={lightRef} color="#ffb066" intensity={4.5} distance={1.6} decay={2} />
       </group>

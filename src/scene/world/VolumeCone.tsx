@@ -27,9 +27,9 @@ export default function VolumeCone() {
         target={targetRef.current}
         color="#fff5e8"
         intensity={quality === "high" ? 1.0 : 0.7}
-        distance={16}
-        angle={0.55}
-        penumbra={0.9}
+        distance={24}
+        angle={1.05}
+        penumbra={0.98}
         decay={1.2}
       />
 

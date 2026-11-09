@@ -364,5 +364,7 @@ function SignalFieldCore({ quality, reducedMotion, anchors, shape: requestedShap
 }
 
 export default function SignalField(props: SignalFieldProps) {
+  const isNarrow = useThree((s) => s.size.width < 600);
+  if (isNarrow) return null;
   return <Suspense fallback={null}><SignalFieldCore {...props} /></Suspense>;
 }

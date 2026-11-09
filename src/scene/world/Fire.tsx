@@ -118,9 +118,9 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
-  // Flame billboards ~1.3x cycle-4 size (0.98m tall, width 0.84m) with lower opacity so it reads as light
-  const h = quality === "lite" ? 0.85 : 0.98;
-  const w = h * 0.86;
+  // Flame billboards scaled ~1.4x (1.37m tall, width 1.23m) so it fills the boulder ring
+  const h = quality === "lite" ? 1.19 : 1.37;
+  const w = h * 0.90;
 
   // 3 crossed additive billboards at 60 degree intervals resting directly on the coals (y = 0.60)
   return (
