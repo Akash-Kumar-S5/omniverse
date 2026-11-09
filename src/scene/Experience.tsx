@@ -1,5 +1,4 @@
 // Orchestrator-owned composition.
-import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerformanceMonitor } from "@react-three/drei";
 import { useOmni } from "../state/store";
@@ -17,15 +16,6 @@ const sanctumSpots = spotsData as unknown as SanctumSpots;
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
   const setQuality = useOmni((s) => s.setQuality);
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    const onVisibilityChange = () => setVisible(!document.hidden);
-    onVisibilityChange();
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
-  }, []);
-
   const handleIncline = () => {
     const current = useOmni.getState().quality;
     if (current === "medium") {
@@ -50,7 +40,7 @@ export default function Experience() {
 
   return (
     <Canvas
-      frameloop={visible ? "always" : "never"}
+      frameloop="always" // r31: never "never": a tab that loads while document.hidden (background or occluded window) used to stay on a blank canvas, the browser already pauses rAF for hidden pages
       dpr={quality === "lite" ? 1 : [1, 1.5]}
       gl={{ antialias: false, powerPreference: "high-performance" }}
       camera={{ fov: 62, near: 0.1, far: 200, position: [-4.6, 1.7, 5.2] }}
