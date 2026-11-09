@@ -423,3 +423,5 @@ Each lane own worktree/branch r16/<lane>, merge the moment evidence passes (no r
 blender-sanctum: ch0+ch4 (Fire.tsx owner) | agy-world: ch2 | agy-review: ch3 | orchestrator-b: ch1 | copilot-review: mobile 390 | copilot-swarm: perf/cold-load | codex-world: motion review after 13:54 IST.
 Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview servers; never touch 5173/5197. On SHIP start stage-2 judge immediately.
 - r16/blender-scenes merged (barrel scan, 3-card flame, ch4 camera). Others pending
+- codex-world rate-limited until Dec 7 (not Monday); don't use
+- r16/copilot-ui merged (mobile readability). ch4 priority: r16 blender merged; re-score at c12
