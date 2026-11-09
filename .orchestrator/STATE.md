@@ -425,3 +425,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - r16/blender-scenes merged (barrel scan, 3-card flame, ch4 camera). Others pending
 - codex-world rate-limited until Dec 7 (not Monday); don't use
 - r16/copilot-ui merged (mobile readability). ch4 priority: r16 blender merged; re-score at c12
+- r16/agy-world merged (ch2 cuirass lit; now cropped at right edge, check c12)
