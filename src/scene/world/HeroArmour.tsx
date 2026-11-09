@@ -3,8 +3,31 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 
 const URL = "/assets/scans/armour-torso.glb";
-const BASE: [number, number, number] = [-12.5, 0.04, -1.2];
-const HEIGHT = 1.2;
+const BASE: [number, number, number] = [-12.5, 0.04, -1.5];   // r25: shifted 0.3 m so the plate clears the copy column at 1512
+const HEIGHT = 0.95;
+// r25: the torso rests on a wooden armour stand (Sketchfab, CC-BY, see CREDITS.md): the post carries it, the crossbar is inside the plate
+const STAND_URL = "/assets/scans/armour-stand-scan.glb";
+const STAND_SCALE = 0.3;   // scan is 3.0 wide x 4.57 tall -> 0.9 m feet, 1.37 m tall
+const TORSO_LIFT = 0.62;   // plate bottom above the floor: the post shows below it
+
+function ArmourStand() {
+  const { scene } = useGLTF(STAND_URL, "/draco/");
+  const stand = useMemo(() => {
+    const clone = scene.clone(true);
+    clone.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+        const material = child.material.clone();
+        material.color.setRGB(0.5, 0.44, 0.4);
+        material.roughness = 0.95;
+        material.metalness = 0;
+        material.envMapIntensity = 0.2;
+        child.material = material;
+      }
+    });
+    return clone;
+  }, [scene]);
+  return <primitive object={stand} scale={STAND_SCALE} />;
+}
 
 export default function HeroArmour() {
   const { scene } = useGLTF(URL, "/draco/");
@@ -47,7 +70,7 @@ export default function HeroArmour() {
 
   const target = useMemo(() => {
     const object = new THREE.Object3D();
-    object.position.set(0, HEIGHT / 2, 0);
+    object.position.set(0, TORSO_LIFT + HEIGHT / 2, 0);
     return object;
   }, []);
 
@@ -59,10 +82,13 @@ export default function HeroArmour() {
         <meshStandardMaterial color="#161310" roughness={0.94} />
       </mesh>
       <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[1.8, 1.8]} />
+        <planeGeometry args={[1.5, 1.5]} />
         <meshBasicMaterial map={shadow} transparent depthWrite={false} />
       </mesh>
-      <primitive object={armour} />
+      <ArmourStand />
+      <group position={[0, TORSO_LIFT, 0]} rotation={[0, 0.85, 0]}>
+        <primitive object={armour} />
+      </group>
       <spotLight
         color="#c8d1d8"
         intensity={5}

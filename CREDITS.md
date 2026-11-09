@@ -198,6 +198,6 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 
 - "1964.88 Armor for Man and Horse" by the Cleveland Museum of Art, https://sketchfab.com/3d-models/196488-armor-for-man-and-horse-faca2ad557f64809b598c3a646a8804f, licence CC0 Public Domain. Only the rider's breastplate is kept (torso box crop, largest piece, 2,400 tris, 768 px textures, Draco): `public/assets/models/ch2-breastplate.glb`, made by `blender/scripts/make_breastplate.py`. The raw download stays git-ignored; re-fetch with `bun tools/sketchfab-dl.ts faca2ad557f64809b598c3a646a8804f blender/props/cleveland-armour`.
 
-## Round 25 (ch3 hang)
+## Round 25 ch2 (ch2-ground2)
 
-No new assets. The ch3 chain, hook and lantern core are primitive meshes (torus links, a small unlit sphere); the lantern is still the Poly Haven lantern chandelier (CC0) credited earlier.
+- "Armor Stand" by AspectStudios, https://sketchfab.com/3d-models/armor-stand-ebde5d6ad411472db69a95a79e5888af, licence CC Attribution (CC-BY). Centred, 512 px textures, Draco, 148 KB: `public/assets/scans/armour-stand-scan.glb`, made by `blender/scripts/make_armour_stand.py`. The ch2 armour torso rests on it (`src/scene/world/HeroArmour.tsx`). Re-fetch the raw file with `bun tools/sketchfab-dl.ts ebde5d6ad411472db69a95a79e5888af blender/props/armour-stand`.

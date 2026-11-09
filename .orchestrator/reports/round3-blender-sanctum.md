@@ -177,3 +177,8 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Mud: the relief is baked into the atlas, so there is no runtime normal map to halve. Colour went from (0.17, 0.19, 0.21) to (0.10, 0.11, 0.125), roughness 0.85. Plinth 15.1 vs statue 33.9 on my regions (0.45x).
 - Corner: fog 6.2-8.4 and the room shell at 0.45 colour in ch1 only. The bottom-right diagonal is now a faint edge, not a box line; it is not gone. Background right of the statue reads 4.2 (c14: 4.9).
 - No new assets; no CREDITS change. Proof: `.orchestrator/reference/r25-ch1-plinth-ch1-1920.png` and `-1512dpr2.png`. Build, tsc, eslint clean.
+
+## r25 ch2-ground2
+- Built off main, not copilot's `r25/ch2-ground` (its wall mount and the 0.12 x 1.2 bracket plane that drew the stray slab are not taken). The torso now sits on a scanned wooden armour stand (post visible below the plate, feet on the floor, contact shadow kept), turned 0.85 rad so the shoulder tears face away, torso 0.95 m, group shifted 0.3 m. At 1512 the plate starts about 78 px right of the copy column; right-edge air about 42 px.
+- Camera look.y 0.45 to 0.8 and pos.y 1.0 for ch2 role 0. Not polished: the plate is still a rough scan, the neck and left hem keep ragged edges, and the stand is only lit by the existing spot.
+- Proof: `.orchestrator/reference/r25-ch2-ground2-1920.png`, `-1512dpr2.png`. lint, build clean.
