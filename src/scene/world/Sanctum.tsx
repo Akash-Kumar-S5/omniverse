@@ -60,6 +60,10 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
     scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
+        if (mesh.name.includes("floor")) {
+          // ch1: hide the baked floor slab edge at x=12.5 (y~705 in shot) so floor seamlessly uses Floor.tsx
+          mesh.visible = section !== "about";
+        }
         if (mesh.material) {
           const mat = mesh.material as THREE.MeshStandardMaterial;
           // Standard material with baked lightmap so runtime directional/spot/rim lights
@@ -83,7 +87,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
       }
     });
     onReady?.();
-  }, [scene, onReady, propGlow]);
+  }, [scene, onReady, propGlow, section]);
 
   return <primitive object={scene} />;
 }

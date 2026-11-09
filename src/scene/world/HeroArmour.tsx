@@ -35,9 +35,17 @@ export default function HeroArmour() {
     return holder;
   }, [scene]);
 
+  const target = useMemo(() => {
+    const t = new THREE.Object3D();
+    t.position.set(0, STAND_TOP + 0.4, 0);
+    return t;
+  }, []);
+
   if (section !== "experience") return null;
+
   return (
     <group position={BASE}>
+      <primitive object={target} />
       {/* dark stone stand (covers the shorter baked block) */}
       <mesh position={[0, STAND_TOP / 2, 0]}>
         <boxGeometry args={[0.6, STAND_TOP, 0.6]} />
@@ -48,13 +56,36 @@ export default function HeroArmour() {
         <planeGeometry args={[0.61, 0.61]} />
         <meshBasicMaterial color="#010101" />
       </mesh>
+      {/* kill stray baked warm column at screen x: 150-220, y: 780-880 */}
+      <mesh position={[0.7, 1.1, 2.0]} rotation={[0, -Math.PI / 4, 0]}>
+        <planeGeometry args={[1.6, 2.4]} />
+        <meshBasicMaterial color="#060505" />
+      </mesh>
       <group position={[0, STAND_TOP, 0]} rotation={[0, Math.PI / 2 + 0.12, 0]} scale={1.35}>
         <primitive object={obj} />
       </group>
-      {/* low cool rim to separate weave without casting streaks on background wall */}
-      <pointLight color="#6a7a90" intensity={0.4} distance={2.2} decay={2} position={[-0.75, STAND_TOP + 0.75, 0.0]} />
-      {/* warm key light raised ~40% (6 -> 8.5) so plates and rivets catch clear warm highlights */}
-      <pointLight color="#ffb070" intensity={8.5} distance={4.5} decay={2} position={[1.4, STAND_TOP + 0.85, 0.85]} />
+      {/* cool rim spot cone aimed strictly at the cuirass from behind: zero emission backward onto back wall */}
+      <spotLight
+        color="#6a7a90"
+        intensity={1.8}
+        distance={2.6}
+        angle={Math.PI / 4}
+        penumbra={0.8}
+        decay={2}
+        position={[-0.75, STAND_TOP + 0.8, 0.0]}
+        target={target}
+      />
+      {/* warm key spot cone aimed strictly at the cuirass from the front: zero spill onto left pillar at z=0.8 */}
+      <spotLight
+        color="#ffb070"
+        intensity={9.5}
+        distance={3.6}
+        angle={Math.PI / 4.2}
+        penumbra={0.7}
+        decay={2}
+        position={[1.2, STAND_TOP + 0.85, 0.2]}
+        target={target}
+      />
     </group>
   );
 }
