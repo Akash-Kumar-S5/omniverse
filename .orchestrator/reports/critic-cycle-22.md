@@ -55,7 +55,27 @@ The path to 8.5: +0.4 in total across chapters. ch2 is the cheapest, since the c
 
 ## Cross-vendor check (advisory; the critic score above stays the gate)
 
-CROSS_VENDOR_PLACEHOLDER
+`bun tools/or-vision-review.ts` on the five 1920 shots (Medium tier). The model was `nvidia/nemotron-3.5-super-vl:free` for all five, and all 5 succeeded. The key was never printed. The counter went 14 → 19 of the 40/day cap.
+As before, its coordinates are on a downscaled frame (~0.44x) and its absolute scores (5-6) are uncalibrated.
+
+| Shot | OR score | Defects it flagged that I did not | Verdict |
+|---|---|---|---|
+| ch0 | 6 | No firelight spill on the background columns | **Partial**: the columns are lit only faintly. It is a mood choice, but a weak warm bounce on the nearest column would add depth. Low priority. |
+| | | Effigy crushed to near-black | **Reject at Medium**: the figure reads in my shot. It is the same contact issue as ch0 #1. |
+| | | Nav logo duplicates the hero title | **Reject**: a standard site mark. |
+| ch1 | 5 | Nav links low contrast | **Unmeasured**: they look ≥7:1 by eye. Measure once in c23. |
+| | | Statue cutout, no grounding | **Partial**: it is the same as the lumpy plinth base and corner fog (ch1 #1, #2). |
+| | | Body column narrow | **Reject**: ~570 px, a deliberate measure. |
+| ch2 | 5 | Muddy shading on the breastplate | **Partial**: it is the scan's low-frequency normals. Pair it with ch2 #3 if the rim darkening goes in. |
+| | | Body small / low contrast; type scale clash | **Reject**: measured in c19, and the hierarchy is deliberate. |
+| ch3 | 6 | Meta line ("Laravel, PHP…") low contrast | **Unmeasured, plausible**: it is the dimmest text on the page. Measure it in c23; if it is under 4.5:1, raise it to the body grey. *XS lane.* |
+| | | Frame has no shadow on the wall | **Partial**: it is lit from the lantern but has no occlusion behind it. A faint dark card behind the frame would ground it. *S lane, optional.* |
+| | | Chain reads clipped | **Reject**: the chain runs out of frame on purpose (it hangs from above). |
+| ch4 | 6 | Body copy low contrast | **Reject**: measured in c19 (16:1 class). |
+| | | Barrel is a cutout with no floor interaction | **Reject at Medium**: a warm pool of light is clearly on the floor. |
+| | | Gold email underline looks like a stuck hover | **Reject**: it is the site-wide link style. |
+
+Net: no new accepts, 4 partials folded into existing lanes, and 2 contrast items to measure in c23. The model again did not register the ch2 change (5 → 5), so it is still not usable as a regression detector.
 
 ## Keep
 - 0 console errors across all 31 loads, including Lite fallbacks. The Lite tier still renders a clean, coherent page, which is good as a degraded path.
