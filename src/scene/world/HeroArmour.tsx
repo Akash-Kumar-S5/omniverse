@@ -51,6 +51,45 @@ export default function HeroArmour() {
     const holder = new THREE.Group();
     holder.add(clone);
     holder.scale.setScalar(scale);
+    // r29: built-in vertex colours (no shader code): the floating strap tab (found by picking its pixels, holder-local about 0.07, 0.266, 0.114)
+    // goes near-black, and the torn top rim above 0.93 of the plate height fades into shadow
+    holder.updateMatrixWorld(true);
+    const p = new THREE.Vector3();
+    let minY = Infinity;
+    let maxY = -Infinity;
+    holder.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        const pos = child.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          p.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
+          holder.worldToLocal(p);
+          minY = Math.min(minY, p.y);
+          maxY = Math.max(maxY, p.y);
+        }
+      }
+    });
+    holder.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+        const geo = child.geometry;
+        const pos = geo.attributes.position;
+        const colors = new Float32Array(pos.count * 3);
+        for (let i = 0; i < pos.count; i++) {
+          p.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
+          holder.worldToLocal(p);
+          let shade = 1;
+          const dxz = Math.hypot(p.x - 0.07, p.z - 0.114);
+          const dy = Math.abs(p.y - 0.266);
+          const strap = Math.max(0, 1 - Math.max(dxz / 0.085, dy / 0.04));
+          shade = Math.min(shade, 1 - 0.88 * Math.min(1, strap * 2.5));
+          const top = (p.y - minY) / (maxY - minY);
+          if (top > 0.93) shade = Math.min(shade, 1 - 0.6 * Math.min(1, (top - 0.93) / 0.05));
+          colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = shade;
+        }
+        geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        child.material.vertexColors = true;
+        child.material.needsUpdate = true;
+      }
+    });
     return holder;
   }, [scene]);
 
@@ -111,9 +150,9 @@ export default function HeroArmour() {
       <ArmourStand />
       <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.2, 0]}>
         <primitive object={armour} />
-        <mesh position={[collar.x, collar.y - 0.12, collar.z]}>
-          <cylinderGeometry args={[collar.r, collar.r * 1.1, 0.1, 28, 1, false]} />
-          <meshStandardMaterial color="#161310" roughness={0.9} metalness={0.1} />
+        <mesh position={[collar.x, collar.y - 0.16, collar.z]}>
+          <cylinderGeometry args={[collar.r, collar.r * 1.1, 0.1, 28, 1, true]} />
+          <meshStandardMaterial color="#0d0b09" roughness={0.9} metalness={0.1} side={THREE.DoubleSide} />
         </mesh>
       </group>
       {/* r26: warm rim from behind-left so the dark plate edges catch light (c19: the breastplate read mostly black) */}

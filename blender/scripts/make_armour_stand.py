@@ -18,6 +18,14 @@ for o in meshes:
     for v in o.data.vertices:
         v.co = mathutils.Vector((v.co.x - (lo[0] + hi[0]) / 2, v.co.y - (lo[1] + hi[1]) / 2, v.co.z - lo[2]))
 print("STAND size", [round(hi[i] - lo[i], 3) for i in range(3)])
+# r29: the upper crossbar arms poked through the plate as a "floating strap tab"; keep the post, the legs and the feet only
+import bmesh
+for o in meshes:
+    bm = bmesh.new(); bm.from_mesh(o.data)
+    kill = [f for f in bm.faces if any(v.co.z > 1.9 and (v.co.x ** 2 + v.co.y ** 2) ** 0.5 > 0.3 for v in f.verts)]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.to_mesh(o.data); bm.free()
 for im in bpy.data.images:
     if im.size[0] > 512: im.scale(512, 512)
 bpy.ops.object.select_all(action="DESELECT")

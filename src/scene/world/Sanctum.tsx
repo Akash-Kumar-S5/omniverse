@@ -17,6 +17,11 @@ function PlinthCap() {
         <boxGeometry args={[1.31, 1.2, 1.31]} />
         <meshStandardMaterial color="#26231f" roughness={0.88} metalness={0} transparent opacity={0.5} depthWrite={false} />
       </mesh>
+      {/* r29: a thin straight base course squares off the lumpy foot of the scan */}
+      <mesh position={[0, 0.04, 0]}>
+        <boxGeometry args={[1.42, 0.08, 1.42]} />
+        <meshStandardMaterial color="#2d2926" roughness={0.88} metalness={0} />
+      </mesh>
       <mesh position={[0, 1.215, 0]}>
         <boxGeometry args={[1.32, 0.02, 1.32]} />
         <meshStandardMaterial color="#35312d" roughness={0.85} metalness={0} />
