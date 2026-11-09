@@ -171,3 +171,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Runtime: `EffigyKnight.tsx` and `RuinChurch.tsx`, both `React.lazy` in World.tsx and mounted only in ch0 and ch4, so neither is in the initial payload (about 0.9 MB total when a chapter needs them). The effigy takes the fire lights with a dark material; the church is an unlit dark material (0.11, 0.12, 0.16) that the fog eats, as two silhouettes at 15-25 m.
 - The church reads as a very faint set of pale roof edges at the right of ch4 and is almost invisible in ch0; making it stronger turned it into a pale wall, so I kept it subtle.
 - Proof: `.orchestrator/reference/r22-blender-scans-ch{0,4}-1920.png` and `-1512dpr2.png`.
+
+## r25 Lane E (ch1 plinth, critic c18 carry-over)
+- Plinth scaled 1.3x in X/Z about the statue axis (runtime, `Sanctum.tsx`; the pedestal mesh position/scale, heights unchanged so the statue still stands at y 1.25): at 1920 the plinth top now spans about the statue's base (1090-1470 vs base 1090-1460; was 1150-1415).
+- Mud: the relief is baked into the atlas, so there is no runtime normal map to halve. Colour went from (0.17, 0.19, 0.21) to (0.10, 0.11, 0.125), roughness 0.85. Plinth 15.1 vs statue 33.9 on my regions (0.45x).
+- Corner: fog 6.2-8.4 and the room shell at 0.45 colour in ch1 only. The bottom-right diagonal is now a faint edge, not a box line; it is not gone. Background right of the statue reads 4.2 (c14: 4.9).
+- No new assets; no CREDITS change. Proof: `.orchestrator/reference/r25-ch1-plinth-ch1-1920.png` and `-1512dpr2.png`. Build, tsc, eslint clean.
