@@ -520,3 +520,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - MERGED r37/work-floor + r37/contact-brazier (build+lint clean, lane gates 10/10 each). Combined runtime gate dispatched to sonnet-b, then judge 5.
 - R38 combined gate PASS on main 46183b3. Judge 5 dispatched.
 - JUDGE 5 = 8.2 ITERATE (ch0 8.3, ch1 8.5, ch2 8.2, ch3 8.0, ch4 8.4, motion 8.0). Defects: duplicate/4-motif project paintings, scroll jank p95 60ms, flat halo disc Fire.tsx:237, empty frame Work->Projects, Work no variety. Dispatched r39 lanes.
+- MERGED r39/proj-motion + r39/work-fire (build+lint clean). Known: 1512@2 p95 no gain; 400-1000ms hitch on chapter entry (probable shader recompile from light count change). R40 gate dispatched.
