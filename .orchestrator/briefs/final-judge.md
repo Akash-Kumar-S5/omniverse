@@ -22,3 +22,8 @@ CC0/CC-BY assets (Poly Haven, Sketchfab via tools/sketchfab-dl.ts, Smithsonian, 
 references, docs and libraries. Every asset goes in CREDITS.md.
 The standing rules still hold: no FromSoftware material, no game-character names anywhere, nothing paid or
 pirated, no push, no deploy, no rm -rf.
+
+## Update 12:32 IST 09-Nov (Akash): desktop web only
+"lets skip mobile devices for now, concentrate purely on web view." Score and gate on desktop (1440 ch0-4 plus
+motion/load/console) only. No 390 shots, no mobile score, no mobile lanes until Akash re-enables it. Mobile must not
+crash or show a blank page, but it is out of scope for quality.

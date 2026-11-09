@@ -63,3 +63,7 @@ list applies; perf must not regress below DONE §3 (a rejected upgrade is better
 When the critic says SHIP, start briefs/final-judge.md: a NEW judge agent, fresh each cycle. Loop fixes, merges and
 judge cycles until the judge gives >= 9 overall (no chapter < 8.5). Lanes may fetch from the internet anything
 they need, within the asset rules. Don't wait for Akash.
+
+## Desktop only (Akash 12:32 IST 09-Nov)
+Mobile is paused: the critic and judge score desktop 1440 only (SHIP = overall >= 8.5, no chapter < 8; judge DONE = >= 9,
+no chapter < 8.5). No mobile lanes or 390 shots until Akash re-enables it.
