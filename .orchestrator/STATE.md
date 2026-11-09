@@ -501,3 +501,5 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Merged r29/ch4-ch3; gate green. Waiting on r29/ch2-ch1 (blender-sanctum), then critic c23.
 - Merged r29/ch2-ch1; gate green. Critic c23 dispatched (port 4550). On SHIP -> stage-2 judge (briefs/final-judge.md).
 - c23 = 8.52 SHIP (ch0 8.6, ch1 8.5, ch2 8.3, ch3 8.6, ch4 8.6). Starting stage-2 judge.
+- Judge cycle 1 dispatched on w2:pX (port 4560).
+- JUDGE 1 = 7.3 ITERATE (ch0 7.6 [?chapter=0 blank at 1920 DPR1], ch1 7.6, ch2 7.2, ch3 6.8, ch4 8.2, motion 6.8). Verdict needs >=9/no ch<8.5. R30 dispatched: sonnet-b r30/flow (ch0 deeplink, contact tail, ch3 transitions, frame budget), blender-sanctum r30/assets (ch2 armour, ch3 frame hang, ch1 pedestal). Critic loop paused; judge reruns fresh after merges.
