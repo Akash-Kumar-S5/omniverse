@@ -444,3 +444,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r18 lane A fire merged (rusty barrel, seated flame, relief dimmed). Pending B rim leak, C ch3, F plinth
 - Morph reinforcement sent: ch3 no pseudo-text; ch1 revert r17 lane B light changes for ch1 only
 - r17/framing-world merged (ch2 streaks)
+- r18 lane C ch3 merged (no pseudo-text, chain+wall). Pending B rim/ch1, F plinth
