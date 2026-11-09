@@ -18,6 +18,7 @@ const PLINTH_TOP = 0.06;
 const COLS = 8;
 const ROWS = 8;
 const TOTAL_FRAMES = 64;
+const FLAME_COLOR = new THREE.Color("#ffd29a").multiplyScalar(2.5);
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -112,9 +113,9 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = THREE.ClampToEdgeWrapping;
     t.wrapT = THREE.ClampToEdgeWrapping;
-    // Avoid sampling neighbouring frames when the flame is minified.
-    t.generateMipmaps = false;
-    t.minFilter = THREE.LinearFilter;
+    t.generateMipmaps = true;
+    t.minFilter = THREE.LinearMipmapLinearFilter;
+    t.magFilter = THREE.LinearFilter;
     t.repeat.set(1 / COLS - 2 * insetX, 1 / ROWS - 2 * insetY);
     return { tex: t, insetX, insetY };
   }, [sheet]);
@@ -163,12 +164,10 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
           map={tex}
           alphaMap={radialMask}
           transparent
-          alphaTest={0.04}
-          opacity={0.22}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
-          color="#ffd29a"
+          color={FLAME_COLOR}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -178,7 +177,9 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
 
 function Flames() {
   const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
   const k = quality === "lite" ? 0.86 : 1.0;
+  const width = section === "contact" ? 1.5 : 1;
   const glow = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = 128; c.height = 128;
@@ -201,9 +202,9 @@ function Flames() {
   // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
     <group position={[0, 0.49, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} />
-      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
-      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
+      <FlamePlane rotationY={0} phase={0} width={1.15 * k * width} height={2.24 * k} />
+      <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k * width} height={1.92 * k} /></group>
+      <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k * width} height={1.6 * k} /></group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
         <circleGeometry args={[0.3, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
