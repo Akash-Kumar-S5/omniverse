@@ -131,3 +131,10 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - Mobile 390: ch0 and ch4 use one portrait camera (pos -4.4,0.9,5.2 / look 0,3.0,0 / fov 62): barrel, flame and relief fully in frame, flame top ~100 px below the link row, ~100 px of floor under the barrel (r15-scenes-ch0-390, ch4-390). The first try at 8 m put the camera inside a wall pilaster (black frame); r = 6.8 m fixes it.
 - ch2: the #8fb0ff rim sits behind the cuirass at half strength (1.7), stand darker (r15-scenes-ch2). ch3: 64 small links (about 1/3 size) run to the lantern finial (r15-scenes-ch3).
 - Edited: Fire.tsx (contact guards and mobile offset removed), CameraRig.tsx (contact + portrait boot), HeroArmour.tsx, ProjectArtefact.tsx. Dev server 5211 stopped.
+
+## r17 Lane A (fire, ch0 + ch4)
+- Dot ring source: the barrel scan's air-intake holes at the base, where fire light lit the interior and showed through as hot dots. Rivet specular was not the cause. A black unlit open liner (r 0.37, h 0.26) now sits behind the holes.
+- Barrel material pinned matte (metalness 0.25, roughness 0.78, scan maps dropped); key light lifted to y 1.4, mouth light dropped to y 0.66.
+- Flame cards 1.6x taller (and ~1.3x wider); floor-pool lights -15% (main 8.5 to 7.2, mouth 3.2 to 2.7).
+- Proof: `.orchestrator/reference/r17-blender-scenes-ch{0,4}-{1440,390}.png`. Lighting references: `ref-threejspunk.png`, `ref-rottensouls.png` (title gate only; the in-game scene did not load headless).
+- Embers already spawn at y 0.65 (World.tsx), unchanged. Build, tsc and eslint clean.
