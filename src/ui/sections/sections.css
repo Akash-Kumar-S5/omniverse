@@ -413,6 +413,19 @@
   .chapter-contact::before {
     background: linear-gradient(180deg, rgba(6, 5, 5, 0) 0%, rgba(6, 5, 5, 1) 20%, rgba(6, 5, 5, 1) 90%, rgba(6, 5, 5, 0) 100%);
   }
+
+  @media (max-width: 599px) {
+    .chapter-about::before {
+      background: linear-gradient(180deg, rgba(6, 5, 5, 0) 0%, rgba(6, 5, 5, 0.825) 35%, rgba(6, 5, 5, 0.825) 75%, rgba(6, 5, 5, 0) 100%);
+    }
+    .sections-scrim-left.scrim-active {
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 25%, transparent 70%);
+    }
+    .sections-scrim-left.scrim-active:not(.scrim-projects) {
+      background: linear-gradient(90deg, #000 0%, transparent 34%, transparent 66%, #000 92%),
+        linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 25%, transparent 70%);
+    }
+  }
   .chapter-view > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
 
   .hero-title { font-size: clamp(2.4rem, 11vw, 3.8rem); line-height: 1.0; }

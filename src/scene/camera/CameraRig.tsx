@@ -5,6 +5,7 @@ import { easing } from "maath";
 import { useOmni, type SectionId } from "../../state/store";
 import spotsData from "../../../public/assets/models/sanctum.spots.json";
 import type { SanctumSpots } from "../../state/signal";
+import { getProjectGlyphAnchor } from "../particles/targets";
 
 const spots = spotsData as unknown as SanctumSpots;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -180,6 +181,11 @@ export default function CameraRig() {
         look.set(...roleCam.target);
         // r16 ch2: frame cuirass prominently, push corridor floor litter (500-1100, 700-900) out of bottom frame
         look.y += 0.42;
+        if (window.innerWidth < 600) {
+          pos.set(-8, 1.5, -1.2);
+          look.set(-12.5, 4.5, -1.2);
+          targetFov = 62;
+        }
         break;
       }
       case "projects": {
@@ -190,6 +196,15 @@ export default function CameraRig() {
         look.set(...projCam.target);
         // Tilt camera slightly down so lantern is not clipped by top nav
         look.y -= 0.28;
+        if (window.innerWidth < 600) {
+          const anchor = getProjectGlyphAnchor(activeProject);
+          const even = activeProject % 2 === 0;
+          const x = anchor.x + 0.9;
+          const z = anchor.z + (even ? 0.8 : 2.2);
+          pos.set(x, 1.8, z + 5.35);
+          look.set(x, 5.1, z);
+          targetFov = 70;
+        }
         break;
       }
       case "contact": {
