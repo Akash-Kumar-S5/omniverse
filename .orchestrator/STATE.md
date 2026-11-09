@@ -428,3 +428,5 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 - r16/agy-world merged (ch2 cuirass lit; now cropped at right edge, check c12)
 - Akash lighting references forwarded to all lanes + critic (.orchestrator/briefs/lighting-references.md); reference only, no WebGPU until after SHIP
 - r16/agy-world (ch3 chain + SalarySync texture) merged; c12 dispatched (pending: agy-ui ch1, copilot-perf)
+- critic c12 = 7.6 (ch0 7.5, ch1 8.5, ch2 7.5, ch3 8, ch4 7.5, mobile 6.5); dispatched r17 lanes A fire(blender) B fog(agy-world) C framing(orchestrator-b) D ch3(agy-review)
+- r16/copilot-perf merged (lite sanctum first); r17 prompts resent to agy-world, orchestrator-b
