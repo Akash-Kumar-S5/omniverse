@@ -7,18 +7,18 @@ import { useOmni } from "../../state/store";
 /**
  * Authentic hearth fire with CC0 animated flame flipbook and crossed additive billboards:
  *  - stone_fire_pit.draco.glb: Poly Haven scan (CC0), Draco-compressed
- *  - flame_sheet_8x8.png: OpenGameArt CC0 animated flame sprite sheet (para, 8x8 frames)
+ *  - flame-spritesheet-6x1.png: Kenney CC0 flame sprites
  *  - 3 crossed additive billboards (~0.6m tall) inside the coals with warm core (#ffd29a)
  *  - ONE warm point light (#ff8a3d) on the plinth fire with organic flicker
  */
 const PIT_URL = "/assets/ruins/fire_barrel.draco.glb";   // r13: ONE scanned iron fire barrel (Poly Haven barrel_stove, CC0), 0.80 m across, 0.81 m tall, base on the floor
-const FLAME_URL = "/assets/fx/flame_sheet_8x8.png";
+const FLAME_URL = "/assets/props/textures/flame-spritesheet-6x1.png";
 const PIT_SCALE = 1.0;
 const PLINTH_TOP = 0.06;
-const COLS = 8;
-const ROWS = 8;
-const TOTAL_FRAMES = 64;
-const FLAME_COLOR = new THREE.Color("#ffd29a").multiplyScalar(2.5);
+const COLS = 6;
+const ROWS = 1;
+const TOTAL_FRAMES = 6;
+const FLAME_COLOR = new THREE.Color(1, 1, 1).multiplyScalar(2.5);
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -78,9 +78,10 @@ interface FlamePlaneProps {
   phase: number;
   width: number;
   height: number;
+  core?: boolean;
 }
 
-function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
+function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
   const { tex, insetX, insetY } = useMemo(() => {
     const image = sheet.image;
@@ -95,14 +96,16 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
       ctx.drawImage(image, 0, 0);
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const d = imgData.data;
-      // Purge background red haze (a < 45 or g < 15): make it pure transparent black (0,0,0,0)
+      const tip = [194, 65, 12], body = [255, 154, 60], core = [255, 243, 208];
+      // Map the greyscale sprite from dark orange tips to a pale hot core.
       for (let i = 0; i < d.length; i += 4) {
-        if (d[i + 3] < 45 || d[i + 1] < 15) {
-          d[i] = 0;
-          d[i + 1] = 0;
-          d[i + 2] = 0;
-          d[i + 3] = 0;
-        }
+        const light = d[i] / 255;
+        const from = light < 0.5 ? tip : body;
+        const to = light < 0.5 ? body : core;
+        const mix = light < 0.5 ? light * 2 : (light - 0.5) * 2;
+        d[i] = from[0] + (to[0] - from[0]) * mix;
+        d[i + 1] = from[1] + (to[1] - from[1]) * mix;
+        d[i + 2] = from[2] + (to[2] - from[2]) * mix;
       }
       ctx.putImageData(imgData, 0, 0);
     }
@@ -127,15 +130,23 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
     canvas.height = 128;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const grad = ctx.createRadialGradient(64, 70, 2, 64, 70, 38);
-      grad.addColorStop(0, "rgba(255,255,255,1.0)");
-      grad.addColorStop(0.25, "rgba(255,255,255,0.7)");
-      grad.addColorStop(0.5, "rgba(255,255,255,0.32)");
-      grad.addColorStop(0.75, "rgba(255,255,255,0.09)");
-      grad.addColorStop(0.9, "rgba(255,255,255,0.015)");
-      grad.addColorStop(1.0, "rgba(0,0,0,0)");
+      const grad = ctx.createRadialGradient(64, 64, 2, 64, 64, 64);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.25, "#dddddd");
+      grad.addColorStop(0.5, "#999999");
+      grad.addColorStop(0.75, "#444444");
+      grad.addColorStop(1.0, "#000000");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 128, 128);
+      const pixels = ctx.getImageData(0, 0, 128, 128);
+      for (let y = 109; y < 128; y++) {
+        const fade = (127 - y) / 18;
+        for (let x = 0; x < 128; x++) {
+          const i = (y * 128 + x) * 4;
+          pixels.data[i + 1] *= fade;
+        }
+      }
+      ctx.putImageData(pixels, 0, 0);
     }
     const mask = new THREE.CanvasTexture(canvas);
     mask.colorSpace = THREE.NoColorSpace;
@@ -148,7 +159,10 @@ function FlamePlane({ rotationY, phase, width, height }: FlamePlaneProps) {
   }, [tex, radialMask]);
 
   useFrame((state) => {
-    const frame = Math.floor(state.clock.elapsedTime * 26 + phase * TOTAL_FRAMES) % TOTAL_FRAMES;
+    // The atlas contains four wisps and two distinct core sprites, not six animation frames.
+    const frame = core
+      ? 4 + Math.floor(state.clock.elapsedTime * 2) % 2
+      : Math.floor(state.clock.elapsedTime * 4 + phase * TOTAL_FRAMES) % 4;
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
     // Invert row for standard Three.js UV origin (bottom-left)
@@ -195,19 +209,19 @@ function Flames() {
   }, []);
   const glowRef = useRef<THREE.MeshBasicMaterial>(null);
   useFrame((state) => {
-    if (glowRef.current) glowRef.current.opacity = 0.5 * (1 + 0.15 * Math.sin(state.clock.elapsedTime * 8 * Math.PI * 2 * 0.5));
+    if (glowRef.current) glowRef.current.opacity = 0.8 * (1 + 0.15 * Math.sin(state.clock.elapsedTime * 8 * Math.PI * 2 * 0.5));
   });
   useEffect(() => () => glow.dispose(), [glow]);
 
   // r16: 3 crossed cards at different heights, scales and frame offsets (r17: 1.6x taller, ~0.6x barrel height of visible flame above the rim), plus a small ember glow on the coals
   return (
     <group position={[0, 0.49, 0]}>
-      <FlamePlane rotationY={0} phase={0} width={1.15 * k * width} height={2.24 * k} />
+      <FlamePlane rotationY={0} phase={0} width={1.15 * k * width} height={2.24 * k} core />
       <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k * width} height={1.92 * k} /></group>
       <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k * width} height={1.6 * k} /></group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
-        <circleGeometry args={[0.3, 32]} />
-        <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <circleGeometry args={[0.45, 32]} />
+        <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
     </group>
   );

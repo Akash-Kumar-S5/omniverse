@@ -102,8 +102,8 @@ void main() {
   vec4 clipPos = projectionMatrix * mvPosition;
   gl_Position = clipPos;
 
-  // Thin 1.5-3 px sparks at 1440
-  gl_PointSize = aSize * uPixelRatio;
+  // Point sizes are drawing-buffer pixels, independent of display DPR.
+  gl_PointSize = aSize;
 
   // Screen Y in CSS pixels from top of viewport
   float ndcY = clipPos.y / clipPos.w; // -1 at bottom, +1 at top
@@ -201,8 +201,8 @@ function HearthEmbers() {
       positions[i * 3 + 1] = startY + Math.random() * heightRange;
       positions[i * 3 + 2] = r * Math.sin(theta);
 
-      // Sizes: thin 1.5 - 2.5 px at 1440
-      sizes[i] = 1.6 + Math.random() * 0.9;
+      // Keep sparks visible at DPR 1 while retaining their slender shape.
+      sizes[i] = 3.2 + Math.random() * 0.9;
       // Speeds
       speeds[i] = 0.20 + Math.random() * 0.25;
       // Dimmer opacities (0.30 - 0.50)
@@ -227,7 +227,7 @@ function HearthEmbers() {
 
     const u = {
       uTime: { value: 0 },
-      uPixelRatio: { value: Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2) },
+      uPixelRatio: { value: 1 },
       uIsMobile: { value: 0 },
       uViewportHeight: { value: 900 },
       uStartY: { value: startY },
@@ -243,7 +243,7 @@ function HearthEmbers() {
       const isMobile = size.width < 600 ? 1.0 : 0.0;
       matRef.current.uniforms.uIsMobile.value = isMobile;
       matRef.current.uniforms.uViewportHeight.value = size.height;
-      matRef.current.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
+      matRef.current.uniforms.uPixelRatio.value = state.gl.getPixelRatio();
     }
   });
 
