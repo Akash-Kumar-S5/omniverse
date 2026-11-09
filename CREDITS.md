@@ -49,7 +49,7 @@ The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo,
 
 | Project | Painting Title | Artist / Date | Source | Licence | File |
 |---|---|---|---|---|---|
-| SalarySync | *Arches in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437472)](https://www.metmuseum.org/art/collection/search/437472) | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg` |
+| SalarySync | *SalarySync Enterprise Payroll UI Architecture Blueprint* (Sepia edition) | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg`, `public/assets/paintings/salarysync_ui.jpg` |
 | Rentify | *A Colonnade in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437475)](https://www.metmuseum.org/art/collection/search/437475) | CC0 1.0 Universal | `public/assets/paintings/painting_1.jpg` |
 | Website Performance Monitor | *Aqueduct in Ruins* | Hubert Robert (French, 1733–1808), ca. 1785 | [The Metropolitan Museum of Art (Object 437471)](https://www.metmuseum.org/art/collection/search/437471) | CC0 1.0 Universal | `public/assets/paintings/painting_2.jpg` |
 | Innovation Sprint 2025 | *Gothic Windows in the Ruins of the Monastery at Oybin* | Carl Gustav Carus (German, 1789–1869), ca. 1828 | [The Metropolitan Museum of Art (Object 439122)](https://www.metmuseum.org/art/collection/search/439122) | CC0 1.0 Universal | `public/assets/paintings/painting_3.jpg` |

@@ -73,14 +73,18 @@ export default function ProjectArtefact() {
           // Hide glass to avoid reflections or occlusion on the artwork
           mesh.visible = false;
         } else if (matName.includes("artwork")) {
+          if (activeTexture) {
+            activeTexture.anisotropy = 8;
+            activeTexture.generateMipmaps = true;
+          }
           mesh.material = new THREE.MeshStandardMaterial({
             map: activeTexture,
-            color: new THREE.Color("#ffd2a0"),
-            roughness: 0.82,
+            color: new THREE.Color("#fbf6ee"),
+            roughness: 0.72,
             metalness: 0.0,
-            emissive: new THREE.Color("#ffb878"),
+            emissive: new THREE.Color("#ffe8cc"),
             emissiveMap: activeTexture,
-            emissiveIntensity: 0.55,
+            emissiveIntensity: 0.22,
             toneMapped: true,
           });
         } else {
@@ -154,9 +158,9 @@ export default function ProjectArtefact() {
       {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
       <group ref={lanternRef} position={[0.35, 1.33, 0.52]}>
         <primitive object={lanternObj} />
-        {/* r14: a plain iron chain runs from the lantern up out of frame, so it hangs from something */}
-        {Array.from({ length: 64 }, (_, i) => (
-          <mesh key={i} position={[0, 0.28 + i * 0.05, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
+        {/* r16: chain extends down to the lantern finial (y=0.11), completely closing the ~45px floating gap */}
+        {Array.from({ length: 110 }, (_, i) => (
+          <mesh key={i} position={[0, 0.11 + i * 0.024, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
             <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
             <meshBasicMaterial color="#5a3d27" toneMapped={false} />
           </mesh>
