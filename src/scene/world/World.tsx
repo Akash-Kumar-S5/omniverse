@@ -7,7 +7,7 @@ import { chapterLook } from "./chapterLook";
 import Sanctum from "./Sanctum";
 import VolumeCone from "./VolumeCone";
 import Floor from "./Floor";
-import ProjectArtefact from "./ProjectArtefact";
+import ProjectArtefact, { PaintingWarm } from "./ProjectArtefact";
 import Fire from "./Fire";
 import HeroArmour from "./HeroArmour";
 
@@ -465,6 +465,11 @@ export default function World() {
       {(armed || section === "projects") && (
         <Suspense fallback={null}>
           <ProjectArtefact />
+        </Suspense>
+      )}
+      {armed && (
+        <Suspense fallback={null}>
+          <PaintingWarm />
         </Suspense>
       )}
 

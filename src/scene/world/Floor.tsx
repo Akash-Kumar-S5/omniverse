@@ -6,6 +6,7 @@ import { TIERS } from "../../state/signal";
 
 function ReflectorFloorMesh() {
   const quality = useOmni((s) => s.quality);
+  const projects = useOmni((s) => s.section) === "projects";
   const roughnessMap = useTexture("/assets/textures/concrete_floor_worn_001_rough_1k.webp");
 
   useMemo(() => {
@@ -27,8 +28,8 @@ function ReflectorFloorMesh() {
         blur={quality === "high" ? [300, 150] : [200, 100]}
         resolution={quality === "high" ? 512 : 256}
         mixBlur={0.85}
-        mixStrength={2.6}
-        mirror={0.88}
+        mixStrength={projects ? 0.6 : 2.6}   // r37: ch3 reflected the wall and frame edges into hot, banded patches; keep only a faint sheen there
+        mirror={projects ? 0.45 : 0.88}
         depthScale={1.2}
         minDepthThreshold={0.4}
         maxDepthThreshold={1.4}
@@ -49,9 +50,11 @@ function FallbackFloor() {
 
 export default function Floor() {
   const quality = useOmni((s) => s.quality);
+  const projects = useOmni((s) => s.section) === "projects";
 
   // MeshReflectorMaterial on HIGH tier; plain matte #060505 floor on MEDIUM/LITE for 60fps
-  if (!TIERS[quality].reflector) {
+  // r37: and in ch3 on every tier: the mirror floor showed the wall and frame as grey banded slabs with a dark seam (HIGH tier only)
+  if (!TIERS[quality].reflector || projects) {
     return <FallbackFloor />;
   }
 

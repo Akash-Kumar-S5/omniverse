@@ -40,7 +40,7 @@ export const PROJECT_STAGES: ProjectStage[] = [
   // 6 Fuel Dispenser RFID: small and tilted, lantern on a right-hand bracket, hotter orange
   { scale: 0.88, roll: 0.075, yaw: -0.22, pitch: 0.0, dx: 0.1, dy: 0.05, zoom: 1.25, cropX: 0.35, cropY: 0.2, fixture: "side", side: 1, light: "#ff9448", lightK: 1.15, wall: "#4a3a30", wallScale: 1.0, cam: { dolly: 0.2, dy: 0.1, fov: -1, lean: -0.4 } },
   // 7 GenAI Experiments: the biggest frame, a cool moonlit lantern
-  { scale: 1.26, roll: -0.01, yaw: 0.08, pitch: 0.02, dx: -0.35, dy: 0.05, zoom: 1.0, cropX: 0, cropY: 0, fixture: "hang", side: 1, light: "#b8c8ee", lightK: 0.85, wall: "#3a3c44", wallScale: 1.25, cam: { dolly: 1.0, dy: -0.15, fov: 4, lean: 0.2 } },
+  { scale: 1.26, roll: -0.01, yaw: 0.08, pitch: 0.02, dx: -0.35, dy: 0.05, zoom: 1.0, cropX: 0, cropY: 0, fixture: "hang", side: 1, light: "#b8c8ee", lightK: 0.85, wall: "#3a3c44", wallScale: 1.25, cam: { dolly: 0.5, dy: -0.05, fov: 7, lean: 0.2 } },   // r37: pulled back so the lantern clears the top edge
 ];
 
 export function stageFor(index: number): ProjectStage {

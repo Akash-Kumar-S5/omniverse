@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Float, useGLTF, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useOmni } from "../../state/store";
@@ -16,6 +16,26 @@ const FRAME_SCALE = 2.0;
 const PAINTING_URLS = projects.map(
   (p, i) => p.image || `/assets/paintings/painting_${i % 8}.webp`
 );
+
+/**
+ * r37: uploads all eight project screens to the GPU ahead of time (same filters the artefact applies), so stepping to the next project
+ * swaps a texture that is already resident instead of decoding and uploading it mid-step (the 14 fps hitch).
+ */
+export function PaintingWarm() {
+  const gl = useThree((s) => s.gl);
+  const textures = useTexture(PAINTING_URLS);
+  useEffect(() => {
+    textures.forEach((t, i) => {
+      t.generateMipmaps = false;
+      t.minFilter = THREE.LinearFilter;
+      t.magFilter = THREE.LinearFilter;
+      t.anisotropy = 16;
+      // initialise one per 150 ms so the uploads never land in the same frame
+      window.setTimeout(() => gl.initTexture(t), i * 150);
+    });
+  }, [gl, textures]);
+  return null;
+}
 
 /** a lantern on its chain with an emissive core and two warm lights; colour and strength come from the project's stage */
 function LanternRig({ lantern, position, chain = 15, color, k, lightRef }: {
@@ -159,11 +179,13 @@ export default function ProjectArtefact() {
         } else if (matName.includes("canvas") || matName.includes("artwork") || meshName.includes("canvas")) {
           if (activeTexture) {
             // Maximum sharpness: disable mipmap blur, bilinear filtering, max hardware anisotropy
+            // r37: configure and upload once; flagging an already uploaded texture again re-uploads it (the swap hitch)
+            const firstUse = activeTexture.generateMipmaps;
             activeTexture.generateMipmaps = false;
             activeTexture.minFilter = THREE.LinearFilter;
             activeTexture.magFilter = THREE.LinearFilter;
             activeTexture.anisotropy = 16;
-            activeTexture.needsUpdate = true;
+            if (firstUse) activeTexture.needsUpdate = true;
           }
 
           // Remap UVs to cover [0, 1] fully based on vertex positions
@@ -281,20 +303,8 @@ export default function ProjectArtefact() {
 
             {stage.fixture === "hang" && (
               <>
-                {/* Hook at the frame's top centre, chain slanting up to the lantern base (lantern group sits at [0,1.10,0.30]) */}
-                <mesh position={[0, 0.775, 0.03]}>
-                  <torusGeometry args={[0.018, 0.005, 6, 12, Math.PI * 1.5]} />
-                  <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-                </mesh>
-                <group position={[0, 0.79, 0.03]} rotation={[Math.atan2(0.27, 0.19), 0, 0]}>
-                  {Array.from({ length: 14 }, (_, i) => (
-                    <mesh key={i} position={[0, 0.012 + i * 0.0235, 0]} rotation={[0, i % 2 ? Math.PI / 2 : 0, 0]}>
-                      <torusGeometry args={[0.0125, 0.0035, 5, 10]} />
-                      <meshBasicMaterial color="#5a3d27" toneMapped={false} />
-                    </mesh>
-                  ))}
-                </group>
-                <LanternRig lantern={lanternObj} position={[0, 1.1, 0.3]} color={stage.light} k={stage.lightK} lightRef={lightRef} />
+                {/* r37: the lantern hangs on its own chain out of the dark (no second chain slanting down to the frame hook) */}
+                <LanternRig lantern={lanternObj} position={[0, 1.1, 0.3]} chain={52} color={stage.light} k={stage.lightK} lightRef={lightRef} />
               </>
             )}
 

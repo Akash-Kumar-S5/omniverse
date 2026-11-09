@@ -101,7 +101,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
         const mesh = child as THREE.Mesh;
         if (mesh.name.includes("floor")) {
           // ch1: hide the baked floor slab edge at x=12.5 (y~705 in shot) so floor seamlessly uses Floor.tsx
-          mesh.visible = section !== "about";
+          mesh.visible = section !== "about" && section !== "projects"; // r37: ch3 also drops the baked slab (its edge was the vertical seam and the bottom-right diagonal)
         }
         if (mesh.name.includes("architecture")) {
           // ch2 (R19 fix 3): hide the background architecture slab in ch2 so no angular slab/plane edge reads

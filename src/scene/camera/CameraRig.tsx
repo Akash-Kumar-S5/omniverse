@@ -11,6 +11,14 @@ import { stageFor } from "../world/projectStaging";
 const spots = spotsData as unknown as SanctumSpots;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+// r37: per-role drift of the cuirass shot (dolly x, height, sideways of camera and look target)
+const ROLE_DRIFT = [
+  { dx: 0, dy: 0, dz: 0, ly: 0, lz: 0 },
+  { dx: 0.3, dy: 0.1, dz: 0.12, ly: 0.04, lz: 0.1 },
+  { dx: -0.22, dy: -0.06, dz: -0.1, ly: 0.07, lz: -0.1 },
+  { dx: 0.42, dy: 0.14, dz: 0.05, ly: -0.03, lz: 0.05 },
+] as const;
+
 // Architectural waypoints connecting rooms through open portals and rotunda hub
 const WAYPOINTS = {
   rotundaOculus: new Vector3(0.0, 1.2, 3.8),
@@ -187,11 +195,22 @@ export default function CameraRig() {
           // r17 Lane C: pan/yaw camera so cuirass sits at x~1000-1300 with 80+ px air to right edge
           pos.z -= 0.25;
           look.z -= 0.20;
-          if (activeRole === 0) {
-            pos.x = spots.cameras.exp_role_0.position[0];
-            pos.y = 1.0;   // r28: back to 1.0 (the r27 drop to 0.7 turned the lit chest out of the key and cost 0.2)
-            look.y = 0.8;   // r25: torso lifted onto its stand (plate 0.62-1.57 m, stand feet on the floor)
-            look.z = -0.3 + (size.width / size.height - 1512 / 982) * 0.45;
+          {
+            // r37: the cuirass stays framed for every role (roles 2-4 used to look down an empty corridor); each role drifts the shot a little
+            // (dolly along x, height, sideways) so the four steps still feel like movement and not a freeze
+            const r = clamp(activeRole, 0, 3);
+            const role0 = spots.cameras.exp_role_0;
+            const drift = ROLE_DRIFT[r];
+            pos.set(
+              role0.position[0] + drift.dx + p * drift.dx * 0.25,
+              1.0 + drift.dy,   // r28: 1.0 base (the r27 drop to 0.7 turned the lit chest out of the key and cost 0.2)
+              role0.position[2] - 0.25 + drift.dz,
+            );
+            look.set(
+              role0.target[0],
+              0.8 + drift.ly,   // r25: torso lifted onto its stand (plate 0.62-1.57 m, stand feet on the floor)
+              -0.3 + drift.lz + (size.width / size.height - 1512 / 982) * 0.45,
+            );
           }
         }
         if (window.innerWidth < 600) {
