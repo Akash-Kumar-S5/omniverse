@@ -457,3 +457,5 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - r19 #2 gilt frame merged (chain/nav addendum may follow). Pending flame (copilot-swarm), blender #3/#4/#5
 - r18/blender-plinth merged (scanned stone plinth ch1). critic c15 dispatched on current main (flame/effigy/#5 still in flight)
 - Akash: validation FULL SCREEN. From c16 + judge: shoot each chapter at 1920x1080 DPR1 and 1512x982 DPR2, score the worse. c15 (1440) done; rerun at new sizes before any SHIP.
+- critic c15 = 7.9 (ch1 7.8 regress, ch2 7.9, ch4 7.7). Dispatch: B ch1 plinth regress->blender (priority), C ch2->agy-world, D ch3 layout->agy-review, flame still open (copilot-swarm)
+- flame narrowed to copilot-swarm r20/flame; critic told about full-screen sizes
