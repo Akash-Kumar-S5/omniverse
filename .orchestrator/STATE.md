@@ -493,3 +493,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - Merged r26/ch2-copy (be6b446) + r26/ch0-effigy (ae4d6f4). Gate on main: build+lint clean, ch0..ch4 0 console errors. Critic c20 dispatched (port 4470, OR cross-check).
 - c20 = 8.4 overall (ch0 8.5, ch1 8.5, ch2 8.0, ch3 8.4, ch4 8.4); NOT SHIP (<8.5). R27 dispatched: blender-sanctum r27/ch2-ch1, sonnet-b r27/ch3-ch4 (+or-vision tool fix), copilot-swarm r27/ch0.
 - Merged r27/ch2-ch1 + r27/ch3-ch4. Gate: build+lint clean, ch0..ch4 0 console errors. Waiting on r27/ch0 (copilot-swarm), then critic c21.
+- Merged r27/ch0. All R27 merged on main; gate green (build+lint, ch0..ch4 0 console errors). NEXT: critic c21 (not yet dispatched; usage limit reached). Then Stage-2 judge on SHIP, GLB prune, FINAL.md.
