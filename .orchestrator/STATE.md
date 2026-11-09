@@ -517,3 +517,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - NUANCE (Morph): watchdog drove frames in 28/200 loads (rAF gaps >200 ms); those might have stayed blank pre-r34, so the watchdog is likely part of the fix, not just rig load. Keep it.
 - MERGED r34/art (gate 10/10, 0 errors, ch4@1920 thinnest 9.4). Judge 4 dispatched, solo-browser rule.
 - JUDGE 4 = 7.8 ITERATE (ch0 8.3, ch1 8.4, ch2 7.0 roles 2-4 empty right half, ch3 7.6 floor seam+monotony, ch4 7.8 brazier cropped, motion 8.0). No blank canvas: rig rule held. Dispatched r37 lanes: sonnet-b (ch2 all roles framed, ch3 floor+variety+lantern), blender-sanctum (ch4 reframe, brazier asset swap, ch0 floor detail).
+- MERGED r37/work-floor + r37/contact-brazier (build+lint clean, lane gates 10/10 each). Combined runtime gate dispatched to sonnet-b, then judge 5.
