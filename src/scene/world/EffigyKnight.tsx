@@ -23,10 +23,10 @@ export default function EffigyKnight() {
         m.material = new THREE.MeshStandardMaterial({
           map: src.map ?? null,
           normalMap: src.normalMap ?? null,
-          color: "#8a7560",
-          roughness: 0.9,
+          color: "#6e5b49",
+          roughness: 0.95,
           metalness: 0,
-          envMapIntensity: 0.2,
+          envMapIntensity: 0.1,
         });
       }
     });
@@ -34,9 +34,8 @@ export default function EffigyKnight() {
   }, [scene]);
 
   if (section !== "boot" && section !== "contact") return null;
-  // beside the barrel on the camera-right side, its length across the view, front toward the camera
   return (
-    <group position={[1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 : -0.82, 0]}>
+    <group position={section === "boot" ? [-1.25, 0, 0.75] : [1.1, 0, 0.1]} rotation={[0, section === "boot" ? -0.82 + Math.PI / 7.2 : -0.82, 0]}>
       <primitive object={obj} />
     </group>
   );
