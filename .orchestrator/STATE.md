@@ -437,3 +437,4 @@ Claude WK 81%: Claude only for blender, critic, judge. Lanes stop own preview se
 Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, no chapter < 8. No more mobile lanes (merged mobile work kept). copilot-review -> r17 lane F ch1 plinth.
 - r17 lane B (fog/rim) merged
 - r17 lane A fire merged (flame 1.6x, dot ring gone). Pending C desktop framing, D ch3, F ch1 plinth
+- r17 lane D (ch3 canvas/frame/wall) merged. Pending C framing, F plinth
