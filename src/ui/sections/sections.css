@@ -298,19 +298,19 @@
 }
 
 .project-display-desc {
-  grid-column: 3 / span 4;
-  max-width: var(--measure);
+  grid-column: 1 / span 5;
+  max-width: 440px;
   color: var(--fg-dim);
 }
 
 .project-stack {
-  grid-column: 3 / span 4;
+  grid-column: 1 / span 5;
   color: var(--fg-muted);
   font-size: var(--step--1);
 }
 
 .project-actions {
-  grid-column: 3 / span 4;
+  grid-column: 1 / span 5;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-8);
