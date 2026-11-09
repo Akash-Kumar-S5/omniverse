@@ -7,8 +7,8 @@
   --bg-overlay: rgba(8, 7, 6, 0.94);
 
   --fg: #ede8e1;
-  --fg-dim: #b4ada1;   /* about 9:1 on --bg */
-  --fg-muted: #9a9286; /* about 6.5:1 on --bg, AA for small text */
+  --fg-dim: #c4bdb1;   /* about 10.5:1 on --bg (r32: one step lighter) */
+  --fg-muted: #a8a094; /* about 7.7:1 on --bg, AAA for small text (r32: one step lighter) */
   --fg-bright: #ffffff;
 
   --accent: #e2b472;   /* about 10:1 on --bg */

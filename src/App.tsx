@@ -6,6 +6,7 @@ import { scrollToSection, useSmoothScroll } from "./state/smooth";
 import { SECTIONS } from "./state/store";
 import Overlay from "./ui/Overlay";
 import Fallback from "./ui/Fallback";
+import SceneBoundary from "./ui/SceneBoundary";
 
 const Experience = lazy(() => import("./scene/Experience"));
 
@@ -49,9 +50,11 @@ export default function App() {
   return (
     <>
       <div className="scene-layer" aria-hidden="true">
-        <Suspense fallback={null}>
-          <Experience />
-        </Suspense>
+        <SceneBoundary>
+          <Suspense fallback={null}>
+            <Experience />
+          </Suspense>
+        </SceneBoundary>
       </div>
       <Overlay />
     </>
