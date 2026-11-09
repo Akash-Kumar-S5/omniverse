@@ -480,3 +480,6 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - critic c18 dispatched (port 4420).
 - R25 dispatched after c18 (8.0, ch2 7.2 blocker): A copilot-review r25/ch2-ground, B copilot-swarm r25/fire-glow, C agy-world r25/effigy-dpr, E blender-sanctum r25/ch1-plinth; agy-review r23 ch3 hang still pending.
 - All agy lanes out of quota (resets ~114h). R25 C + ch3 hang reassigned to copilot-swarm (r25/effigy-dpr, then r25/ch3-hang). r25/fire-glow merged.
+- BUDGET (Akash/Morph, 2026-11-09): Copilot 142/1500 premium left (resets Dec 1); agy out ~4.5d; Codex locked to Dec 7; Claude 5H 44% WK 64%. Rule: ONE copilot lane at a time (copilot-swarm), small wiring/CSS only. Build work -> Claude: blender-sanctum (ch2 r25/ch2-ground2), new Sonnet lane sonnet-b (w2:pY, .worktrees/sonnet-b, r25/ch3-hang). copilot-review parked. Critic + judge stay Claude.
+- Merged r25/ch1-plinth (build+lint clean). Rejected as-is: r25/ch2-ground (stray slab, armour still hovers); refine via ch2-ground2.
+- copilot-swarm uses branch r25/copilot-effigy-dpr (r25/effigy-dpr was held by the agy-world worktree).
