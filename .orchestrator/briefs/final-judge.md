@@ -32,3 +32,11 @@ crash or show a blank page, but it is out of scope for quality.
 Shots so far were 1440x900 at DPR 1, which is smaller and softer than a real full screen. From c16 on, the critic and judge shoot
 every chapter at 1920x1080 DPR 1 (common desktop monitor) and at 1512x982 DPR 2 (MacBook 14" full-screen, Retina).
 Score the worse of the two. Keep 1440x900 only for comparison with older cycles.
+
+## Update 19:50 IST 09-Nov (Akash): OpenRouter free vision models as a second opinion
+`bun tools/or-vision-review.ts <png...>` sends each shot to a free OpenRouter vision model (Nemotron 3.5 Super VL, Gemma 4 31B
+fallback) and returns SCORE, 3 defects with pixel regions, and 1 thing that works. The key is read only from env or
+~/.claude/.env and is never printed. Budget: the free tier allows ~50 requests/day; the tool caps at 40/day
+(.orchestrator/openrouter-usage.json). Use it once per cycle on the 1920 shots (5 requests) and append its output to the
+critic/judge report under "Cross-vendor check". It is advisory: the Claude critic/judge score stays the gate, but any defect it
+finds that the critic missed must be addressed or explicitly rejected with a reason. Never use it for code-building lanes.
