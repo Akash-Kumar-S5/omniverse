@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { Environment, Clouds, Cloud } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -23,16 +23,39 @@ function WorldLighting() {
 
   return (
     <>
-      <ambientLight intensity={0.03} color="#1a1c24" />
-      <directionalLight position={[0, 14, -1.5]} intensity={look.keyLightIntensity * 0.3} color="#9fb3d1" />
+      <ambientLight intensity={look.ambientIntensity} color={look.ambientColor} />
+      {/* Moon key angled through the ruins so pillars catch faint rim and face grazing */}
+      <directionalLight position={[-6, 14, 4]} intensity={look.keyLightIntensity * 0.45} color="#8ea4c2" />
       <Environment
         files="/assets/hdri/studio_small_09_1k.exr"
         resolution={quality === "lite" ? 128 : 256}
         background={false}
-        environmentIntensity={0.04}
+        environmentIntensity={0.06}
       />
     </>
   );
+}
+
+/**
+ * R17 Lane B: One very low cool rim light (#6a7a90, ~0.3) behind each chapter subject (ch0, ch2, ch4)
+ * to subtly separate the subject from the background atmosphere.
+ */
+function SubjectRimLight() {
+  const section = useOmni((s) => s.section);
+
+  if (section === "boot") {
+    // ch0: low cool rim behind fire barrel & mourner relief
+    return <pointLight color="#6a7a90" intensity={0.32} distance={4.5} decay={2} position={[0.7, 1.25, -0.8]} />;
+  }
+  if (section === "experience") {
+    // ch2: low cool rim behind cuirass
+    return <pointLight color="#6a7a90" intensity={0.3} distance={3.8} decay={2} position={[-13.4, 2.5, -1.7]} />;
+  }
+  if (section === "contact") {
+    // ch4: low cool rim behind barrel & relief
+    return <pointLight color="#6a7a90" intensity={0.32} distance={4.5} decay={2} position={[0.7, 1.25, -0.8]} />;
+  }
+  return null;
 }
 
 const emberVertexShader = `
@@ -260,14 +283,21 @@ function SparksAndMist() {
 export default function World() {
   const section = useOmni((s) => s.section);
   const look = chapterLook[section];
+  const { scene: threeScene } = useThree();
+
+  useEffect(() => {
+    threeScene.background = new THREE.Color(look.fogColor);
+  }, [threeScene, look.fogColor]);
 
   return (
     <>
+      <color attach="background" args={[look.fogColor]} />
       <WorldLighting />
+      <SubjectRimLight />
       <SparksAndMist />
       <Fire />
       <HeroArmour />
-      {/* Fog precisely matching background (#060505) with seamless falloff */}
+      {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
 
       {/* Ruined gothic sanctum architecture with baked firelight */}
