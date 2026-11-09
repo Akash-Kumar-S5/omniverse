@@ -154,7 +154,7 @@ export default function ProjectArtefact() {
       {/* Lantern hangs clearly above the frame (>=40px black gap) lighting the painting */}
       <group ref={lanternRef} position={[0.35, 1.33, 0.52]}>
         <primitive object={lanternObj} />
-        <pointLight ref={lightRef} color="#ffb066" intensity={4.5} distance={1.6} decay={2} />
+        <pointLight ref={lightRef} color="#ffb066" intensity={3.15} distance={1.6} decay={2} />
       </group>
     </group>
   );

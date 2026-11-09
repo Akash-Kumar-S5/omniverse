@@ -154,3 +154,14 @@ No new third-party assets; reused CC0 files in new places.
 | Boulder 01 (`rubble-boulder.glb`) | Rico Cilliers, Poly Haven | https://polyhaven.com/a/boulder_01 | CC0 1.0 Universal | Ch0/ch4: nine-stone dark ring (darker albedo, boulder only) |
 | Dead Tree Trunk 02 (shape only, flat charcoal material) | Poly Haven | https://polyhaven.com/a/dead_tree_trunk_02 | CC0 1.0 Universal | Ch0/ch4: charred log shapes |
 | cobblestone_floor_13, concrete_wall_003 | Poly Haven | CC0 | Dark rough stone for the ch1 plinth; plaster backdrop planes behind the ch3 paintings |
+
+## Round 12 scenes (blender-scenes)
+
+No new third-party assets. Changes to credited CC0 files:
+
+| Asset | Source | Licence | Change |
+|---|---|---|---|
+| Kite Shield (Poly Haven) | https://polyhaven.com/a/kite_shield | CC0 | Face albedo x0.35, side-light halved: dark rusted face, rim catches light |
+| Met Open Access paintings (`public/assets/paintings/painting_0..7.jpg`) | The Metropolitan Museum of Art | CC0 | Flipped vertically so they read upright in the frame |
+| Boulder 01 ring props | Poly Haven | CC0 | Outer ring removed entirely |
+| Dead Tree Trunk 02 | Poly Haven | CC0 | Logs removed from the pit (they read blond even as flat charcoal) |

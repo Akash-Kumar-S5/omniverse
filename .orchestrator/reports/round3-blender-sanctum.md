@@ -102,3 +102,12 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch1: bust pedestal is dark rough cobble stone (not brick), the five candlesticks and their lights are deleted, wall tint 0.12, key light 2.4. The pedestal height could not be cut by 25%: the runtime statue is fixed at y=1.25 in Sanctum.tsx.
 - ch3: eight plaster backdrop planes (one per painting) added behind the frames; in r11-scenes-ch3 the backdrop reads almost black, so the effect is subtle.
 - sanctum.glb 1.90 MB, sanctum-lite.glb 0.69 MB. Dev server on port 5211 stopped.
+
+## Round 12 scenes (r12/blender-scenes) — before/after crops in .orchestrator/reference/r12-before-*.png and r12-after-*.png
+- ch0/ch4 outer ring (scan_ring) deleted: ch0 x760-1260 y510-680 now plain dark floor (r12-before/after-ch0-ring).
+- Pit sticks: a fast bake with the logs removed made the pale crossed sticks disappear, so they were the baked logs (even as flat 0.009 charcoal, roughness 0.9, they read blond: the props atlas islands of decimated meshes bleed). Logs removed; the pit is dark ash plus the flame planes.
+- ch2 shield: albedo x0.35 (sat .6), spot 65 W; face is dark rust-bronze, darker than the body text (r12-before/after-ch2-shield).
+- ch4 relief: albedo x0.15 and 25 W side fill; no longer cream (r12-before/after-ch4-relief).
+- ch3: the 8 painting JPEGs flipped vertically (src untouched except ProjectArtefact pointLight 4.5 -> 3.15, -30%); the painting reads upright (r12-before/after-ch3-painting).
+- Not done (not in my files): the red glow rectangle and ember size live in Fire.tsx.
+- sanctum.glb 1.78 MB, sanctum-lite.glb 0.53 MB. Dev server on port 5211 stopped.

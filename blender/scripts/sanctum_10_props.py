@@ -22,11 +22,11 @@ def emissive(name, col, strength):
 M_FLAME = emissive("mat_flame", (1.0, 0.45, 0.12), 6.0)
 M_CHAR = bpy.data.materials.new("mat_charcoal"); M_CHAR.use_nodes = True   # r11: charred logs, flat near-black (the textured scan read white once decimated and lit)
 _b = next(n for n in M_CHAR.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-_b.inputs["Base Color"].default_value = (0.035, 0.03, 0.026, 1); _b.inputs["Roughness"].default_value = 0.85
+_b.inputs["Base Color"].default_value = (0.009, 0.008, 0.007, 1); _b.inputs["Roughness"].default_value = 0.9
 
 DEC = {"../../../blender/props/kite_shield/kite_shield_1k": 6000, "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": 3000, "../scans/candles-brass": 6000, "../scans/statue-hooded-mourner": 7000, "../scans/helmet-sallet-scan": 5000, "../scans/armour-cuirass-scan": 5000, "../scans/sword-arming-scan": 3500, "../scans/shield-round-scan": 4000}
 # r6: (saturation, value) pulled down on the albedo so scans read as aged metal under warm light, not flat orange
-TUNE = {"../../../blender/props/kite_shield/kite_shield_1k": (0.7, 0.4), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.5, 0.3), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
+TUNE = {"../../../blender/props/kite_shield/kite_shield_1k": (0.6, 0.35), "../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k": (0.25, 0.14), "../scans/rubble-rock-moss": (0.4, 0.4), "../scans/rubble-boulder": (0.35, 0.22), "../scans/statue-hooded-mourner": (0.4, 0.15), "../../../blender/props/dry_branches_medium_01/dry_branches_medium_01_1k": (0.3, 0.28), "../scans/candles-brass": (0.8, 0.9), "../scans/shield-round-scan": (0.22, 0.5), "../scans/helmet-sallet-scan": (0.5, 0.75), "../scans/armour-cuirass-scan": (0.5, 0.75), "../scans/sword-arming-scan": (0.6, 0.8)}
 METAL = {"../scans/shield-round-scan": (0.8, 0.45)}
 _cache = {}
 def source(fn):
@@ -130,14 +130,12 @@ for o in [o for o in bpy.data.objects if o.type == "LIGHT" and (o.name.startswit
 
 # ---- ch0: the fire. Logs and flame sit in the pit (pit centre 0,0, floor of bowl ~z 0.5) ----
 # r8: scanned dry branches (Poly Haven, charred in the albedo) laid crosswise in the bowl
-for i, (yw, dz, ox, oy) in enumerate(((0, 0.50, 0.0, 0.0), (58, 0.62, 0.08, -0.08), (121, 0.74, -0.08, 0.08))):
+for i, (yw, dz, ox, oy) in enumerate(()):   # r12: logs removed: even as flat charcoal their baked atlas islands read pale blond at runtime
     P("../../../blender/props/dead_tree_trunk_02/dead_tree_trunk_02_1k", ox, oy, dz, 0.26, yw, fit=(1.0, 0.26), mat=M_CHAR, tag="scan_log")   # r10: scanned dead trunk, charred (albedo <= 0.3)
-for i, a in enumerate(range(0, 360, 40)):   # r10: five dark scanned rocks half-sunk round the pit foot (the dark disc under them is the plinth object)
-    rx, ry = 1.0 * math.cos(math.radians(a)), 1.0 * math.sin(math.radians(a))
-    P("../scans/rubble-boulder", rx, ry, -0.13, 0.5, a * 2, fit=(1.0, 0.55), tag="scan_ring")
+# r12: the outer rock ring (scan_ring) is deleted: the dark boulders of the pit scan are the only ring
 P("../scans/statue-hooded-mourner", 1.75, -0.2, 0.0, 1.55, face=(-3.4, -3.8), dyaw=28, tag="scan_mourner")
 firelight("FIRE_flame", (0, 0, 1.6), 70, (1.0, 0.5, 0.18), 0.3)
-firelight("FIRE_mourner_low", (0.7, 0.5, 0.9), 45, (1.0, 0.45, 0.15), 0.15)
+firelight("FIRE_mourner_low", (0.7, 0.5, 0.9), 25, (1.0, 0.45, 0.15), 0.15)
 
 # ---- ch1: altar candles on the niche pedestal (cap top z=1.25, x 10.4..11.6) ----
 # the statue itself is a runtime model, so the light that reveals its face and folds ships inside sanctum.glb (#ffb070)
@@ -155,7 +153,7 @@ for k, (x, (fn, h, rot, ph)) in enumerate(zip((-14, -19, -24, -29), JOB)):
     firelight(f"FIRE_job{k}", (sx + 0.4, sy - 0.8, ph - 0.2 if k == 0 else ph + 1.0), 55 if k == 0 else 40, (1.0, 0.62, 0.3), 0.1)
 # one wall sconce on the right-hand wall (torch prop) + a spot aimed straight at the shield face
 P("torch-wall", -11.2, 2.3, 2.6, 0.6, face=(-11.2, 0), tag="sconce")
-sp = bpy.data.lights.new("SCONCE_shield", "SPOT"); sp.energy = 130; sp.color = (1.0, 0.68, 0.36)
+sp = bpy.data.lights.new("SCONCE_shield", "SPOT"); sp.energy = 65; sp.color = (1.0, 0.68, 0.36)
 sp.spot_size = math.radians(38); sp.spot_blend = 0.55; sp.shadow_soft_size = 0.1
 spo = bpy.data.objects.new("SCONCE_shield", sp); sc.collection.objects.link(spo); spo.location = (-12.3, 2.2, 2.6); look_at(spo, (-12.5, 1.2, 2.4))
 
