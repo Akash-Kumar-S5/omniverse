@@ -234,4 +234,9 @@ No new assets.
 ## Round 37a (work floor)
 
 No new assets.
+
+## Round 37b (contact brazier)
+
+| Asset | Author | Source | Licence | Used for |
+|---|---|---|---|---|
 | Ancient Roman Bronze Brazier (4,760 faces) | ARTcheo3D | https://sketchfab.com/3d-models/ancient-roman-bronze-brazier-fa194c993d99411d8b211b0df5a4bf8c | CC Attribution (CC-BY 4.0) | `public/assets/ruins/bronze_brazier.draco.glb` (ch0/ch4 brazier; scaled 0.42, textures cut to 1024 px JPEG, Draco-compressed; replaces the banded barrel) |
