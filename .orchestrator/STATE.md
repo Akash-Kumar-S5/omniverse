@@ -516,3 +516,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - RELIABILITY-1: 0/100 black solo, 0/100 under 3-browser contention (p50 first frame 609 ms). No site bug found; judge-3 blank was rig load. Watchdog kept. Judge rule added to final-judge.md. Next: gate+merge r34/art, judge 4.
 - NUANCE (Morph): watchdog drove frames in 28/200 loads (rAF gaps >200 ms); those might have stayed blank pre-r34, so the watchdog is likely part of the fix, not just rig load. Keep it.
 - MERGED r34/art (gate 10/10, 0 errors, ch4@1920 thinnest 9.4). Judge 4 dispatched, solo-browser rule.
+- JUDGE 4 = 7.8 ITERATE (ch0 8.3, ch1 8.4, ch2 7.0 roles 2-4 empty right half, ch3 7.6 floor seam+monotony, ch4 7.8 brazier cropped, motion 8.0). No blank canvas: rig rule held. Dispatched r37 lanes: sonnet-b (ch2 all roles framed, ch3 floor+variety+lantern), blender-sanctum (ch4 reframe, brazier asset swap, ch0 floor detail).
