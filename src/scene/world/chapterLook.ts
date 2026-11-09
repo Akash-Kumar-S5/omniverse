@@ -31,8 +31,8 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     fogFar: 8.2,
   },
   experience: {
-    ambientIntensity: 0.10,
-    ambientColor: "#18181c",
+    ambientIntensity: 0.12,
+    ambientColor: "#1e1a17",
     keyLightIntensity: 1.4,
     keyLightColor: "#e6eaf0",
     fogColor: "#0b0907",
