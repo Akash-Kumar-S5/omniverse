@@ -201,3 +201,7 @@ No new assets. Fire.tsx now uses the Poly Haven barrel_stove scan (CC0) at 0.85 
 ## Round 25 ch2 (ch2-ground2)
 
 - "Armor Stand" by AspectStudios, https://sketchfab.com/3d-models/armor-stand-ebde5d6ad411472db69a95a79e5888af, licence CC Attribution (CC-BY). Centred, 512 px textures, Draco, 148 KB: `public/assets/scans/armour-stand-scan.glb`, made by `blender/scripts/make_armour_stand.py`. The ch2 armour torso rests on it (`src/scene/world/HeroArmour.tsx`). Re-fetch the raw file with `bun tools/sketchfab-dl.ts ebde5d6ad411472db69a95a79e5888af blender/props/armour-stand`.
+
+## Round 27 (ch3+ch4)
+
+No new assets: the ch3 fog card is a canvas gradient, the lantern is the Poly Haven lantern chandelier (CC0) credited earlier.

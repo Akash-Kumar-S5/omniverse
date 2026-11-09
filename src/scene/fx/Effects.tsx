@@ -77,7 +77,7 @@ export default function Effects() {
 
       {/* Subtle chromatic fringe, grain, and vignette */}
       <ChromaticAberration offset={fringe} />
-      <Noise opacity={0.03} />
+      <Noise opacity={section === "projects" ? 0.024 : 0.03} />
       <Vignette eskil={false} offset={0.14} darkness={0.42} />
     </EffectComposer>
   );

@@ -29,6 +29,11 @@ DEFECTS:
 - ...
 WORKS: ...`;
 
+function saveUsage() {
+  mkdirSync(join(import.meta.dir, "../.orchestrator"), { recursive: true });
+  writeFileSync(budgetFile, JSON.stringify(usage));
+}
+
 const files = process.argv.slice(2);
 if (!files.length) { console.error("usage: bun tools/or-vision-review.ts <png> [png...]"); process.exit(2); }
 const k = key();
@@ -38,13 +43,21 @@ for (const f of files) {
   let out = "";
   for (const model of MODELS) {
     usage.n++;
-    const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    let r: Response;
+    try {
+      r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${k}`, "Content-Type": "application/json", "X-Title": "omniverse-critic" },
       body: JSON.stringify({ model, messages: [{ role: "user", content: [{ type: "text", text: PROMPT }, { type: "image_url", image_url: { url: `data:image/png;base64,${b64}` } }] }] }),
-    });
+      });
+    } catch (e) {
+      out = `model ${model} failed: ${(e as Error).message}`; // a thrown fetch (TLS, network) is a model failure; try the next model
+      saveUsage();
+      continue;
+    }
     const j: any = await r.json().catch(() => ({}));
     const txt = j?.choices?.[0]?.message?.content;
+    saveUsage();
     if (r.ok && txt) { out = `model: ${model}\n${txt.trim()}`; break; }
     out = `model ${model} failed: ${r.status} ${j?.error?.message ?? ""}`;
     if (usage.n >= DAILY_CAP) break;

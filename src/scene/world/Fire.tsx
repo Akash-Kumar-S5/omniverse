@@ -20,6 +20,7 @@ const ROWS = 1;
 const TOTAL_FRAMES = 6;
 const FLAME_COLOR = new THREE.Color(1, 1, 1).multiplyScalar(2.5);
 const FLAME_SHELL_COLOR = new THREE.Color(2.5, 1.3, 0.65);
+const WARM_TINT = new THREE.Color(1, 0.88, 0.74);
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -35,6 +36,7 @@ export function FirePit() {
           m.color.multiplyScalar(0.85);
           // r18: the scan's own rust and roughness maps are back (the hot base dots were the air holes, now lined); factors keep the iron matte
           m.color.multiplyScalar(1.5);
+          m.color.multiply(WARM_TINT); // r27: pulls the cold blue-grey base band toward rust
           m.metalness = 0.35;
           m.roughness = 1;
           m.envMapIntensity = 0.6;
@@ -84,6 +86,7 @@ interface FlamePlaneProps {
 
 function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
+  const contact = useOmni((s) => s.section) === "contact";
   const { tex, insetX, insetY } = useMemo(() => {
     const image = sheet.image;
     if (!(image instanceof HTMLImageElement)) {
@@ -182,7 +185,7 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
           map={tex}
           alphaMap={radialMask}
           transparent
-          opacity={core ? 1 : 0.6}
+          opacity={core ? 1 : contact ? 0.2 : 0.6}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -293,6 +296,7 @@ function FireLight() {
  * into the ambient darkness (#060505), eliminating the hard circular edge.
  */
 function FloorVignette() {
+  const section = useOmni((s) => s.section);
   const tex = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 256;
@@ -315,6 +319,9 @@ function FloorVignette() {
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
   }, []);
+
+  // r27: its 8 m dark rim read as a ghost ring behind the ch3 pager
+  if (section === "projects") return null;
 
   return (
     <mesh position={[0, 0.035, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={3}>
