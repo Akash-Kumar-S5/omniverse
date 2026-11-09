@@ -485,3 +485,7 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - copilot-swarm uses branch r25/copilot-effigy-dpr (r25/effigy-dpr was held by the agy-world worktree).
 - Merged r25/copilot-effigy-dpr (effigy warm stone, dpr floor [1,1.5] except lite). Copilot lane now idle; keep parked.
 - Merged r25/ch3-hang (chain to hook, lantern core, wall shell dimmed). Build+lint clean. Waiting on blender-sanctum r25/ch2-ground2, then critic c19.
+- Merged r25/ch2-ground2 (armour on scanned CC-BY wooden stand, clear of copy; 1920 shot verified). All R25 lanes merged; dispatching critic c19.
+- OpenRouter: tools/or-vision-review.ts = advisory cross-vendor check, critic runs it on five 1920 shots each cycle (cap 40/day), 'Cross-vendor check' section. c18 ch2 flagged low-contrast body copy (x500-860,y520-695) -> blender-sanctum r26/ch2-copy. Free OR models NOT for build lanes.
+- HOTFIX: EffigyKnight crashed all chapters (mat.emissive.set on unlit scan material, from cad69ba/copilot-effigy-dpr). Fixed by rebuilding a MeshStandardMaterial from the scan's map/normalMap. Verified: build+lint clean, ch0..ch4 load in Playwright with 0 console errors.
+- MERGE GATE (standing, from Morph): no merge without runtime check: build + lint + load ch0..ch4 in a browser with 0 console errors/pageerrors. Build+lint alone is not enough (this crash passed both).

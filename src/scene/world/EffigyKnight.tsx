@@ -18,9 +18,16 @@ export default function EffigyKnight() {
     clone.traverse((c) => {
       const m = c as THREE.Mesh;
       if (m.isMesh && m.material) {
-        // the exported effigy material can arrive unlit (no emissive/metalness fields), which crashed the scene: always build a lit standard material from its map
-        const src = m.material as THREE.MeshStandardMaterial | THREE.MeshBasicMaterial;
-        m.material = new THREE.MeshStandardMaterial({ map: src.map ?? null, color: "#8a7560", roughness: 0.9, metalness: 0, envMapIntensity: 0.2 });
+        // The scan can arrive unlit (no emissive/roughness), so rebuild a lit standard material from its albedo.
+        const src = m.material as THREE.MeshStandardMaterial;
+        m.material = new THREE.MeshStandardMaterial({
+          map: src.map ?? null,
+          normalMap: src.normalMap ?? null,
+          color: "#8a7560",
+          roughness: 0.9,
+          metalness: 0,
+          envMapIntensity: 0.2,
+        });
       }
     });
     return clone;
