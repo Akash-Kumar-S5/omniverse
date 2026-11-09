@@ -5,7 +5,7 @@ import { useOmni } from "../../state/store";
 import { SANCTUM_FILES } from "../../state/signal";
 
 const STATUE_URL = "/assets/ruins/gothic_statue.glb";
-const FIRE_URL = "/assets/ruins/fire_barrel.draco.glb";
+const FIRE_URL = "/assets/ruins/bronze_brazier.draco.glb";
 
 /** r27: a stepped 4 cm cap slab (slightly lighter stone) on the scanned plinth, so its top reads as a dressed edge, not clay. Top face at the statue's base (y 1.25). */
 function PlinthCap() {

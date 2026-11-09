@@ -14,6 +14,7 @@ import HeroArmour from "./HeroArmour";
 // r22: the effigy and the church backdrop are lazy chunks (not in the initial payload)
 const EffigyKnight = lazy(() => import("./EffigyKnight"));
 const RuinChurch = lazy(() => import("./RuinChurch"));
+const HeroFloor = lazy(() => import("./HeroFloor"));
 
 /**
  * Light is fire + moon only. The single warm source is the flickering point light in Fire.tsx.
@@ -450,6 +451,7 @@ export default function World() {
       <Suspense fallback={null}>
         {(section === "boot" || section === "contact") && <EffigyKnight />}
         {(section === "boot" || section === "contact") && <RuinChurch />}
+        {section === "boot" && <HeroFloor />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />

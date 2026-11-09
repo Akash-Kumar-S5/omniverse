@@ -11,9 +11,10 @@ import { useOmni } from "../../state/store";
  *  - 3 crossed additive billboards (~0.6m tall) inside the coals with warm core (#ffd29a)
  *  - ONE warm point light (#ff8a3d) on the plinth fire with organic flicker
  */
-const PIT_URL = "/assets/ruins/fire_barrel.draco.glb";   // r13: ONE scanned iron fire barrel (Poly Haven barrel_stove, CC0), 0.80 m across, 0.81 m tall, base on the floor
+const PIT_URL = "/assets/ruins/bronze_brazier.draco.glb";   // r37: a CC-BY bronze brazier (ARTcheo3D, Sketchfab; see CREDITS.md) replaces the banded barrel; 0.92 m tall, bowl rim 0.28 m radius
 const FLAME_URL = "/assets/props/textures/flame-spritesheet-6x1.webp";
-const PIT_SCALE = 1.0;
+const PIT_SCALE = 0.42;
+const MOUTH_LIFT = 0.23;   // r37: the bowl mouth sits higher than the barrel mouth did; flame, coals and fire lights ride up with it
 const PLINTH_TOP = 0.06;
 const COLS = 6;
 const ROWS = 1;
@@ -39,8 +40,8 @@ export function FirePit() {
           m.color.multiply(WARM_TINT);
           m.normalScale.multiplyScalar(0.5); // r28: halve the rivet/rust normal noise on the base band
           m.emissiveIntensity *= 0.4; // r28: the beaded rim ring was too bright // r27: pulls the cold blue-grey base band toward rust
-          m.metalness = 0.35;
-          m.roughness = 1;
+          m.metalness = 0.55;
+          m.roughness = 0.72;
           m.envMapIntensity = 0.6;
           mesh.material = m;
         }
@@ -58,14 +59,9 @@ export function FirePit() {
   return (
     <group position={[0, PLINTH_TOP - 0.085, 0]}>
       <primitive object={pit} scale={[PIT_SCALE, PIT_SCALE, PIT_SCALE]} />
-      {/* r17: the scan's air-intake holes at the base showed the lit interior as a ring of hot dots; a black unlit liner behind them turns the holes dark */}
-      <mesh position={[0, 0.13, 0]}>
-        <cylinderGeometry args={[0.37, 0.37, 0.26, 32, 1, true]} />
-        <meshBasicMaterial color="#000000" side={THREE.DoubleSide} toneMapped={false} />
-      </mesh>
       {/* Dark charcoal coal bed inside the mouth: deep orange at <=30% intensity to eliminate pink/white reflection */}
-      <mesh position={[0, 0.62, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.38, 32]} />
+      <mesh position={[0, 0.84, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.26, 32]} />
         <meshStandardMaterial
           color="#0c0907"
           roughness={0.98}
@@ -349,8 +345,10 @@ export default function Fire() {
   return (
     <group>
       <FirePit />
-      <FireLight />
-      <Flames />
+      <group position={[0, MOUTH_LIFT, 0]}>
+        <FireLight />
+        <Flames />
+      </group>
       <FloorVignette />
     </group>
   );

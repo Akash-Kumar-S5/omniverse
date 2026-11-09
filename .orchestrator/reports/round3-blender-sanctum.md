@@ -227,3 +227,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - drei Clouds fetched its puff texture from a third-party CDN, a cold-load failure source; now a local canvas texture.
 - Merge gate (headed Chrome, fresh context per load, shots at 3/6/12 s, each chapter/size 3 runs): 30 of 30 pass, 0 console/page errors, right-half mean from 6 s: ch1 10.6 (1920) / 11.3 (1512 DPR2), ch4 9.4 / 9.8-10.1 (blank = 7.1). Lint and build clean. Proof: `.orchestrator/reference/r34-*`.
 - The judge's silent-blank scene did not reproduce; the baseline on main was 28/30 with 2 transient fetch failures (CDN cloud texture, one local glb drop), which SceneBoundary heals by reloading. No new assets, CREDITS.md unchanged.
+
+## r37 (branch r37/contact-brazier)
+- Brazier: the banded barrel is replaced by a CC-BY bronze tripod brazier (ARTcheo3D, Sketchfab, credited in CREDITS.md), recompressed to 650 KB (Draco, 1024 px JPEG), through the existing `Fire.tsx` wiring. Coal bed, flame and fire lights ride up 0.23 m to the bowl mouth; the real flame stays in ch0 and ch4.
+- ch4: camera raised and pulled back (-1.0, 1.0, 4.2; look -1.3, 1.7, -0.4), so the brazier feet sit ~140 px above the bottom edge at 1920 and 1512; the left slabs fall into darkness; the flame is full strength at DPR2.
+- ch0: `HeroFloor.tsx` adds a fallen breastplate scan (already in the repo) and six stone-block rubble pieces on the empty lower floor, lit by the fire only.
+- Gate (headed Chrome, fresh context, shots at 3/6/12 s): 10 of 10, 0 console errors; right-half mean from 6 s is 10.6 to 20.1 (ch4: 13.7 at 1920, 15.0 at 1512 DPR2). Lint and build clean.

@@ -230,3 +230,4 @@ No new assets. Existing credited assets were re-encoded only: paintings, floor r
 ## Round 34 (never blank)
 
 No new assets.
+| Ancient Roman Bronze Brazier (4,760 faces) | ARTcheo3D | https://sketchfab.com/3d-models/ancient-roman-bronze-brazier-fa194c993d99411d8b211b0df5a4bf8c | CC Attribution (CC-BY 4.0) | `public/assets/ruins/bronze_brazier.draco.glb` (ch0/ch4 brazier; scaled 0.42, textures cut to 1024 px JPEG, Draco-compressed; replaces the banded barrel) |

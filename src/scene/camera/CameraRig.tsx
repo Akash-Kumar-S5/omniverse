@@ -239,9 +239,9 @@ export default function CameraRig() {
         look.set(...sky.target);
         if (!isPortrait) {
           // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
-          pos.set(-1.3, 0.34, 3.0);   // r34 arrival: a low wide-angle look UP the ember column toward the oculus, fire at the bottom right, effigy out of frame
+          pos.set(-1.0, 1.0, 4.2);   // r37: raised and pulled back so the whole brazier clears the bottom edge. r34 arrival: a low wide-angle look UP the ember column toward the oculus, fire at the bottom right, effigy out of frame
           // r17 Lane C: yaw left (counter-clockwise away from right edge) so clipped statue at x1385-1440 is completely out of frame
-          look.set(-1.35, 2.0, -0.4);
+          look.set(-1.3, 1.7, -0.4);
           targetFov = 60;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
