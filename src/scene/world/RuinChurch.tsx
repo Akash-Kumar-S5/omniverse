@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useOmni } from "../../state/store";
@@ -24,6 +24,14 @@ export default function RuinChurch() {
     return clone;
   }, [scene]);
   const second = useMemo(() => obj.clone(true), [obj]);
+  // r28: in ch4 the near church block read as a pale grey box behind the barrel, so it drops into shadow there
+  useEffect(() => {
+    const k = section === "contact" ? 0.4 : 1;
+    obj.traverse((c) => {
+      const m = c as THREE.Mesh;
+      if (m.isMesh) (m.material as THREE.MeshBasicMaterial).color.setRGB(0.11 * k, 0.12 * k, 0.16 * k);
+    });
+  }, [obj, section]);
 
   if (section !== "boot" && section !== "contact") return null;
   return (

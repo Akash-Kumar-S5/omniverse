@@ -191,8 +191,8 @@ export default function ProjectArtefact() {
           />
 
           {/* r27: dark feathered card between the frame and the back wall; hides the hard vertical wall band at the left */}
-          <mesh position={[-1.25, -0.2, 0.4]}>
-            <planeGeometry args={[0.9, 6]} />
+          <mesh position={[-1.4, -0.2, 0.4]}>
+            <planeGeometry args={[1.2, 6]} />
             <meshBasicMaterial map={bandFog} transparent depthWrite={false} toneMapped={false} />
           </mesh>
 

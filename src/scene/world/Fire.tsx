@@ -20,7 +20,7 @@ const ROWS = 1;
 const TOTAL_FRAMES = 6;
 const FLAME_COLOR = new THREE.Color(1, 1, 1).multiplyScalar(2.5);
 const FLAME_SHELL_COLOR = new THREE.Color(2.5, 1.3, 0.65);
-const WARM_TINT = new THREE.Color(1, 0.88, 0.74);
+const WARM_TINT = new THREE.Color(1, 0.8, 0.62);
 
 export function FirePit() {
   const { scene } = useGLTF(PIT_URL, "/draco/");
@@ -36,7 +36,9 @@ export function FirePit() {
           m.color.multiplyScalar(0.85);
           // r18: the scan's own rust and roughness maps are back (the hot base dots were the air holes, now lined); factors keep the iron matte
           m.color.multiplyScalar(1.5);
-          m.color.multiply(WARM_TINT); // r27: pulls the cold blue-grey base band toward rust
+          m.color.multiply(WARM_TINT);
+          m.normalScale.multiplyScalar(0.5); // r28: halve the rivet/rust normal noise on the base band
+          m.emissiveIntensity *= 0.4; // r28: the beaded rim ring was too bright // r27: pulls the cold blue-grey base band toward rust
           m.metalness = 0.35;
           m.roughness = 1;
           m.envMapIntensity = 0.6;
@@ -68,8 +70,8 @@ export function FirePit() {
           color="#0c0907"
           roughness={0.98}
           metalness={0.02}
-          emissive="#ff6a1a"
-          emissiveIntensity={0.18}
+          emissive="#ff7a2a"
+          emissiveIntensity={2}
         />
       </mesh>
     </group>
@@ -185,7 +187,7 @@ function FlamePlane({ rotationY, phase, width, height, core = false }: FlamePlan
           map={tex}
           alphaMap={radialMask}
           transparent
-          opacity={core ? 1 : contact ? 0.2 : 0.6}
+          opacity={core ? 1 : contact ? 0.12 : 0.6}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           toneMapped={false}
@@ -227,11 +229,11 @@ function Flames() {
     <group position={[0, 0.49, 0]}>
       <group scale={[1, flameHeight, 1]}>
         <FlamePlane rotationY={0} phase={0} width={1.15 * k} height={2.24 * k} core />
-        <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.37} width={1.0 * k} height={1.92 * k} /></group>
-        <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.71} width={0.9 * k} height={1.6 * k} /></group>
+        <group position={[0, 0.03, 0]}><FlamePlane rotationY={(55 * Math.PI) / 180} phase={0.12} width={1.0 * k} height={1.92 * k} /></group>
+        <group position={[0, 0.06, 0]}><FlamePlane rotationY={(115 * Math.PI) / 180} phase={0.55} width={0.9 * k} height={1.6 * k} /></group>
       </group>
       <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={4}>
-        <circleGeometry args={[0.45, 32]} />
+        <circleGeometry args={[0.34, 32]} />
         <meshBasicMaterial ref={glowRef} map={glow} transparent opacity={0.8} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
     </group>
