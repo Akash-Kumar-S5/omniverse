@@ -87,8 +87,15 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
           });
           // r20: the scanned plinth sits in the pedestal atlas; keep its mean luminance at or under half the statue's (c15 regression)
           if (mesh.name.includes("pedestal")) {
-            (mesh.material as THREE.MeshStandardMaterial).color.setRGB(0.26, 0.30, 0.34);   // darker and slightly cooler so the baked rust-brown reads as dressed stone
+            (mesh.material as THREE.MeshStandardMaterial).color.setRGB(0.17, 0.19, 0.21);   // r21: near-neutral, cooler grey so the baked rust-brown reads as worn dressed stone, not mud
+            (mesh.material as THREE.MeshStandardMaterial).roughness = 0.72;
             (mesh.material as THREE.MeshStandardMaterial).envMapIntensity = 0.2;
+          }
+          // r21: the scanned relief is fire-side lit only and at most half the barrel's luminance on ch0 and ch4
+          if (isProps && propGlow < 0.3) {
+            (mesh.material as THREE.MeshStandardMaterial).color.setScalar(0.35);
+            (mesh.material as THREE.MeshStandardMaterial).emissive.setScalar(0.35);
+            (mesh.material as THREE.MeshStandardMaterial).envMapIntensity = 0.35;
           }
           mesh.castShadow = false;
           mesh.receiveShadow = false;
@@ -103,6 +110,7 @@ function SanctumModel({ file, onReady }: { file: string; onReady?: () => void })
 
 export default function Sanctum() {
   const quality = useOmni((s) => s.quality);
+  const section = useOmni((s) => s.section);
   const [liteReady, setLiteReady] = useState(false);
   const markLiteReady = useCallback(() => setLiteReady(true), []);
 
@@ -118,7 +126,8 @@ export default function Sanctum() {
         ) : lite}
       </Suspense>
       <Suspense fallback={null}>
-        <GothicStatue />
+        {/* r21: the statue only exists in ch1; elsewhere it sat as a lit sliver at the right frame edge (ch4 at 1920) */}
+        {section === "about" ? <GothicStatue /> : null}
       </Suspense>
     </group>
   );
