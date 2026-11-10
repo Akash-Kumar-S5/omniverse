@@ -18,8 +18,8 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightIntensity: 1.8,
     keyLightColor: "#fff1de",
     fogColor: "#0b0907",
-    fogNear: 5,
-    fogFar: 22,
+    fogNear: 7,
+    fogFar: 36, // r46 reveal the sanctum
   },
   about: {
     ambientIntensity: 1.2,   // r20: back toward c14 (0.38) so the warm back glow returns; the wall edges stay hidden by fog and the hidden floor
@@ -27,8 +27,8 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightIntensity: 1.9,
     keyLightColor: "#fff0da",
     fogColor: "#0b0907",
-    fogNear: 6.2,
-    fogFar: 7.4,   // r25: the bottom-right room corner (~7.7 m) falls mostly into fog; the statue (~6.2 m) is ahead of fogNear
+    fogNear: 7,
+    fogFar: 14, // r46: open enough that the wall wash reads; was 6.2-7.4
   },
   experience: {
     ambientIntensity: 0.12,
@@ -36,8 +36,8 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightIntensity: 1.4,
     keyLightColor: "#e6eaf0",
     fogColor: "#0b0907",
-    fogNear: 5,
-    fogFar: 22,
+    fogNear: 8,
+    fogFar: 60, // r46 reveal the sanctum
   },
   projects: {
     ambientIntensity: 0.16,
@@ -46,7 +46,7 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightColor: "#e0e8f4",
     fogColor: "#0b0907",
     fogNear: 6,
-    fogFar: 24,
+    fogFar: 30, // r46 reveal the sanctum
   },
   contact: {
     ambientIntensity: 0.34,
@@ -54,7 +54,7 @@ export const chapterLook: Record<SectionId, ChapterLook> = {
     keyLightIntensity: 3.4,
     keyLightColor: "#8aaae0",
     fogColor: "#0b0907",
-    fogNear: 6,
-    fogFar: 30,
+    fogNear: 7,
+    fogFar: 40, // r46 reveal the sanctum
   },
 };
