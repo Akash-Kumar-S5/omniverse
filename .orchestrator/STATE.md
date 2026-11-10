@@ -523,3 +523,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - MERGED r39/proj-motion + r39/work-fire (build+lint clean). Known: 1512@2 p95 no gain; 400-1000ms hitch on chapter entry (probable shader recompile from light count change). R40 gate dispatched.
 - MORPH/AKASH: REJECT r39 paintings (generic line icons = AI slop). Replace in r40 with (a) real project screenshots toned sepia/dark if they exist in repo/web portfolio (read-only) else (b) 8 distinct CC0 old-master paintings (Met/Rijks/AIC/Smithsonian), credited. No generated/drawn art. Judge 6 waits for this.
 - MERGED r41/paintings (8 Met CC0 paintings, credited; gate 0 errors). Judge 6 dispatched.
+- JUDGE 6 = 8.3 ITERATE (ch0 8.5, ch1 8.4, ch2 7.6 shard geometry + same cuirass for all roles, ch3 8.2 painting_6 too dark, ch4 8.5, motion 8.3 near-black dip between chapters). Dispatched r42 lanes.
