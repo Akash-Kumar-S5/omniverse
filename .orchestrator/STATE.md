@@ -1,3 +1,31 @@
+# HANDOVER to orchestrator-max (w2:pZ) from Sonnet orchestrator (w2:p1), 2026-11-10 ~03:15 UTC
+Main HEAD e8968e4 (build+lint clean at last merge, r44). No servers of mine are running (checked ports 46xx).
+
+## Judge status
+Judge 1 7.3, 2 5.8, 3 4.5 (rig blank canvas), reliability-1: 0/200 black solo and under 3-browser contention, so judge 3 was rig load (watchdog likely part of the fix, drove frames in 28/200 loads: keep it).
+Judge 4 7.8, 5 8.2, 6 8.3, JUDGE 7 = 8.3 ITERATE (ch0 8.6, ch1 8.3, ch2 7.9, ch3 8.2, ch4 8.4, motion 8.3). Report .orchestrator/reports/judge-cycle-7.md. DONE needs overall >= 9 and no chapter < 8.5.
+Judge 7 defects: (1) Work roles = one cuirass x4, floating shield / flat sword, no floor contact, role-3 copy crowds prop at 1512; (2) 1512 projects lantern clipped on proj0/4/6, GenAI title hits frame, proj7 lantern cold, frames skewed; (3) About statue in a black void, floor wedge; (4) transition dips to near-black (Hero->About luma 2.9, nav jumps, Projects->Contact overexposed flame); (5) Contact echoes hero, effigy clipped at 1512, clock gap, THREE.Clock warning.
+
+## Lanes / branches
+- r45/frame-motion (sonnet-b, w2:pY, commit d4278b3): fixes 1,4,5 above. COMMITTED, NOT MERGED, lane gate report not read by me.
+- r45/work-about (blender-sanctum, w2:pJ, commit 5c4766a): fixes 2,3 above. COMMITTED, NOT MERGED, lane gate report not read by me.
+- Both are in flight to merge: read each lane's final report (herdr agent read <name>), merge both into main (expect possible World.tsx/CREDITS.md conflicts: keep both sides), npm run build + lint, then the combined gate (R-gate to sonnet-b: detached .worktrees/rel at main, ch0-4 both sizes, 4 Work roles, 8 projects, 0 console errors, right-half mean >9, LOOK at shots), then judge 8.
+- Other panes: critic/judge w2:pX (Opus, /clear before each judge), copilot-swarm w2:pS (only Copilot lane, small CSS/wiring, 142/1500 premium left, /model fusion first), copilot-review w2:pQ parked, agy-world w2:pK and agy-review w2:pM out of quota, codex-world w2:pE locked until Dec 7.
+- All earlier lanes (r22..r44, r39 painting set replaced by r41 Met CC0 paintings) are merged.
+
+## Judge procedure
+herdr agent prompt critic "/clear"; then the judge prompt (read briefs/final-judge.md incl. Rig rule; do not read other reports or STATE.md; own preview port, stop by pid; 1920x1080 DPR1 + 1512x982 DPR2, score worse; walk all 4 roles and 8 projects; ONE headed browser; blank canvas counts only if it reproduces on a 2nd fresh load with window.__omniDiag; write reports/judge-cycle-N.md). Wait with `until rg -q Verdict report`. OpenRouter cross-check (tools/or-vision-review.ts, cap 40/day, key never printed) is advisory.
+
+## Standing rules (Akash/Morph)
+- No rm -rf, no git push, no deploy. Assets only (credited in CREDITS.md: author, URL, licence), no new modelling/shader code. Nothing FromSoftware or lookalike; no game-character names anywhere (assets, reports, commits).
+- Desktop only, full screen (1920x1080 DPR1 and 1512x982 DPR2, score the worse); mobile skipped until Akash re-enables. Do not change chapter subjects. Real flame stays in ch0/ch4. No generated/drawn/AI art or pseudo-text on project art (r39 icons were rejected; paintings are Met CC0).
+- MERGE GATE: no merge without build + lint + runtime load of ch0..ch4 at both sizes, 0 console errors, headed browser, fresh context per load, right-half mean >9.
+- Servers: stop every preview by pid after shots; never touch 5173/5197; each lane its own port; judge/reliability runs use one browser, no concurrent GPU work.
+- Budget: ONE Copilot lane at a time, small wiring/CSS only; build work goes to Claude lanes; critic/judge stay Claude. Sketchfab token and OpenRouter key never printed.
+- Agy approval prompts: I handle routine ones; rm -rf, git push, sudo, global installs, the web portfolio, ~/.claude and questions for Akash go to Akash.
+- After DONE (judge overall >= 9, no chapter < 8.5): prune unused GLBs (initial payload <= 8 MB, dist ~11 MB now), FINAL.md; mobile check only if Akash re-enables.
+- Known open: chapter-entry hitch at 1512@2 (400-1000 ms, probable shader recompile), dip fix from r42 unproven, proj frame cost ~66 fps vs ~100.
+
 # Omniverse orchestrator STATE
 ## STATUS TABLE (21:30 UTC 2026-11-07; main 36cf150, build+lint clean)
 | Agent | Pane | Status | Next |
