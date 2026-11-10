@@ -72,3 +72,10 @@ Every turn re-sends the whole context. A 368k-token orchestrator costs roughly 6
 - When starting or dispatching a Copilot lane (copilot-review w2:pQ, copilot-swarm w2:pS or new ones), first switch it with `/model fusion`:
   30% off Copilot Fusion usage through 2026-11-30. After 30 Nov, re-check the price before defaulting to it.
 - This applies to Copilot panes only. Never use `/model` in Claude panes.
+
+## Update 08:45 IST 10-Nov (Akash): token-saving tiers
+- Orchestrator: top model at max effort. Launch: `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=40 claude --model opus --effort max --permission-mode auto`.
+- Every worker sub-agent doing build work (blender, world, ui, flow, assets): Haiku. Launch: `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=40 claude --model haiku --permission-mode auto`.
+- All Claude panes auto-compact at 40% of the context window (CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=40).
+- Exception (Morph): the stage-2 judge stays a fresh Opus per briefs/final-judge.md, because it is a scorer, not a worker. Copilot/agy rules are unchanged.
+- Model changes happen by launching new panes with flags, never via `/model` in a Claude pane. Briefs to Haiku lanes must be small, explicit and file-scoped: the orchestrator does the thinking, Haiku executes.
