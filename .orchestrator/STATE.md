@@ -525,3 +525,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - MERGED r41/paintings (8 Met CC0 paintings, credited; gate 0 errors). Judge 6 dispatched.
 - JUDGE 6 = 8.3 ITERATE (ch0 8.5, ch1 8.4, ch2 7.6 shard geometry + same cuirass for all roles, ch3 8.2 painting_6 too dark, ch4 8.5, motion 8.3 near-black dip between chapters). Dispatched r42 lanes.
 - MERGED r42/work-props + r42/glow-ground (build+lint clean). Known: ch1 min mean 9.3 near floor; p3 lantern clipped at right; dip fix unproven. R43 gate dispatched.
+- R43 gate PASS but ch1 too dark (9.3, r42 plinth dimming overshot) and project 3 lantern clipped at right edge. R44 fix dispatched before judge 7.
