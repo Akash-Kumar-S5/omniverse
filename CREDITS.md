@@ -45,18 +45,20 @@
 (`ruins-arch-gothic`, `ruins-wall-hole`, `ruins-floor-squares`, `ruins-column-round[-short]`, `ruins-bricks`, `altar-stone`, `fire-basket`,
 `candle-multiple`, `stone_fire_pit`) imported, placed, scaled and lit only, textured with the existing Poly Haven stone textures above.
 The Kenney kit GLBs reference a `Textures/colormap.png` that is not in the repo, so those props get plain iron/wax materials in the bake.
-## Chapter 3 Project Artefact Masterwork Paintings (CC0 Open Access)
+## Chapter 3 Project Artefact Paintings (The Met Open Access, CC0)
+
+Each painting is a public-domain work from The Metropolitan Museum of Art Open Access collection, cropped to the frame and darkened slightly (round 41). No generated or drawn art.
 
 | Project | Painting Title | Artist / Date | Source | Licence | File |
 |---|---|---|---|---|---|
-| SalarySync | *SalarySync Archival Ruled Ledger & Cryptographic Seal* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_0.jpg`, `public/assets/paintings/salarysync_ui.jpg` |
-| Rentify | *Isometric Architectural Volume & Floorplan Blueprint* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_1.jpg` |
-| Website Performance Monitor | *Harmonic Golden Ratio Calibration & Spiral Study* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_2.jpg` |
-| Innovation Sprint 2025 | *Constellation Network Topology & Orbital Rings* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_3.jpg` |
-| MediHub | *Proportional Sacred Geometry Armature Folio* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_4.jpg` |
-| Finaca | *Double-Entry Archival Balance Sheet & Cumulative Chart* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_5.jpg` |
-| Fuel Dispenser RFID App | *Electromagnetic Flux Fields & Circuit Blueprint* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_6.jpg` |
-| GenAI Experiments | *High-Dimensional Lattice & Hypercube Projection* | Akash Kumar (Project Author) | Own Asset / Open Access | CC0 1.0 Universal | `public/assets/paintings/painting_7.jpg` |
+| SalarySync | *Still Life—Violin and Music* | William Michael Harnett, 1888 | https://www.metmuseum.org/art/collection/search/10997 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_0.webp` |
+| Rentify | *Virgil’s Tomb by Moonlight, with Silius Italicus Declaiming* | Joseph Wright of Derby, 1779 | https://www.metmuseum.org/art/collection/search/441769 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_1.webp` |
+| Website Performance Monitor | *Approaching Thunder Storm* | Martin Johnson Heade, 1859 | https://www.metmuseum.org/art/collection/search/11050 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_2.webp` |
+| Innovation Sprint 2025 | *The Penitent Magdalen* | Georges de La Tour, ca. 1640 | https://www.metmuseum.org/art/collection/search/436839 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_3.webp` |
+| MediHub | *The Afternoon Meal (La Merienda)* | Luis Meléndez, ca. 1772 | https://www.metmuseum.org/art/collection/search/437053 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_4.webp` |
+| Finaca | *The Trojan Women Setting Fire to Their Fleet* | Claude Lorrain, ca. 1643 | https://www.metmuseum.org/art/collection/search/435908 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_5.webp` |
+| Fuel Dispenser RFID App | *The Forest in Winter at Sunset* | Théodore Rousseau, ca. 1846–67 | https://www.metmuseum.org/art/collection/search/438816 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_6.webp` |
+| GenAI Experiments | *The Meditation on the Passion* | Vittore Carpaccio, ca. 1490 | https://www.metmuseum.org/art/collection/search/435851 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_7.webp` |
 
 ## Chapter Souls-Style 3D Props (Round 3 Direction 13:05)
 
@@ -241,6 +243,3 @@ No new assets.
 |---|---|---|---|---|
 | Ancient Roman Bronze Brazier (4,760 faces) | ARTcheo3D | https://sketchfab.com/3d-models/ancient-roman-bronze-brazier-fa194c993d99411d8b211b0df5a4bf8c | CC Attribution (CC-BY 4.0) | `public/assets/ruins/bronze_brazier.draco.glb` (ch0/ch4 brazier; scaled 0.42, textures cut to 1024 px JPEG, Draco-compressed; replaces the banded barrel) |
 
-## Round 39a (project motion)
-
-No third-party assets. The 8 project paintings are original line-art motifs drawn for this site (sources in tools/paintings/*.svg, rendered by tools/paintings/render.sh).
