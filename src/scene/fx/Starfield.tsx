@@ -35,7 +35,7 @@ export default function Starfield() {
 
   // Stars are only visible when looking up through the open oculus to the sky (boot and contact)
   // Cull starfield at narrow aspect (<600px) so no speckle cloud reads as a render glitch
-  if (isNarrow || section === "about" || section === "experience" || section === "projects") {
+  if (isNarrow || section === "boot" || section === "about" || section === "experience" || section === "projects") {
     return null;
   }
 

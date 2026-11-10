@@ -25,6 +25,7 @@ dist-ssr
 
 .worktrees/
 .tsbuild/
+.orchestrator/
 .orchestrator/research/refs/
 blender/sanctum.blend
 blender/props/*.glb

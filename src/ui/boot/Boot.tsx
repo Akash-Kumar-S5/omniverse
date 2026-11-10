@@ -3,6 +3,13 @@ import { useOmni } from "../../state/store";
 import { copy } from "../../content";
 import "./Boot.css";
 
+// Fixed (not random) so renders are stable: x %, delay s, duration s, sideways drift px
+const EMBERS = [
+  [8, 0, 9, 30], [17, 3.2, 11, -20], [26, 1.4, 8, 40], [34, 5.1, 12, -35], [43, 2.3, 10, 25],
+  [51, 6.4, 9, -15], [58, 0.8, 13, 45], [66, 4.0, 10, -40], [73, 2.9, 8, 20], [81, 5.7, 11, -25],
+  [88, 1.1, 9, 35], [94, 3.8, 12, -30],
+].map(([x, delay, dur, drift]) => ({ x, delay, dur, drift }));
+
 export default function Boot() {
   const entered = useOmni((s) => s.entered);
   const loadProgress = useOmni((s) => s.loadProgress);
@@ -19,7 +26,8 @@ export default function Boot() {
     setIsFading(true);
     useOmni.getState().setEntered();
     useOmni.getState().setBooted();
-    window.setTimeout(() => setMounted(false), 400);
+    // matches the 900ms fade in Boot.css
+    window.setTimeout(() => setMounted(false), 900);
   }, [isFading]);
 
   // Skip the gate for reduced motion and lite mode.
@@ -72,16 +80,21 @@ export default function Boot() {
       aria-modal="true"
       aria-label="Welcome"
     >
-      <div className="gate-grid">
-        <h1 className="gate-name">
-          Akash
-          <br />
-          <em>Kumar</em>
-        </h1>
+      <div className="gate-embers" aria-hidden="true">
+        {EMBERS.map((e, i) => (
+          <span
+            key={i}
+            style={{ left: `${e.x}%`, animationDelay: `${e.delay}s`, animationDuration: `${e.dur}s`, ["--drift" as string]: `${e.drift}px` }}
+          />
+        ))}
+      </div>
 
-        <div className="gate-side">
-          <p className="gate-line">{copy.hero.tagline}</p>
+      <div className="gate-stack">
+        <h1 className="gate-name">Akash Kumar</h1>
+        <div className="gate-rule" aria-hidden="true" />
+        <p className="gate-line">{copy.hero.tagline}</p>
 
+        <div className="gate-action">
           {!isReady ? (
             <div className="gate-progress">
               <div
@@ -95,12 +108,13 @@ export default function Boot() {
                 <div className="gate-bar-fill" style={{ width: `${displayProgress}%` }} />
               </div>
               <span className="gate-pct" aria-hidden="true">
-                Loading {displayProgress}%
+                Kindling {displayProgress}%
               </span>
             </div>
           ) : (
-            <button type="button" className="text-link gate-enter" onClick={handleEnter}>
-              Come in
+            <button type="button" className="gate-enter" onClick={handleEnter} aria-label="Enter the site">
+              <span className="gate-enter-key">Press Enter</span>
+              <span className="gate-enter-tap">Tap to enter</span>
             </button>
           )}
         </div>

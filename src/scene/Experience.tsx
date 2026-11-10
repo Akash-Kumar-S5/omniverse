@@ -47,7 +47,8 @@ function ScrollDpr({ full }: { full: number }) {
 export default function Experience() {
   const quality = useOmni((s) => s.quality);
   const entered = useOmni((s) => s.entered);
-  const setQuality = useOmni((s) => s.setQuality);
+  const section = useOmni((s) => s.section);
+  const setAdaptiveQuality = useOmni((s) => s.setAdaptiveQuality);
   // r32: sample frame rate only after the load spike, so a slow first load cannot drop the tier to lite
   const [perfOn, setPerfOn] = useState(false);
   useEffect(() => {
@@ -57,23 +58,23 @@ export default function Experience() {
   const handleIncline = () => {
     const current = useOmni.getState().quality;
     if (current === "medium") {
-      setQuality("high");
+      setAdaptiveQuality("high");
     } else if (current === "lite") {
-      setQuality("medium");
+      setAdaptiveQuality("medium");
     }
   };
 
   const handleDecline = () => {
     const current = useOmni.getState().quality;
     if (current === "high") {
-      setQuality("medium");
+      setAdaptiveQuality("medium");
     } else if (current === "medium") {
-      setQuality("lite");
+      setAdaptiveQuality("lite");
     }
   };
 
   const handleFallback = () => {
-    setQuality("lite");
+    setAdaptiveQuality("lite");
   };
 
   // r34: watchdog. It runs on a timer, not requestAnimationFrame, so it still works when rAF is paused or starved.
@@ -124,7 +125,7 @@ export default function Experience() {
       <color attach="background" args={["#060505"]} />
       <Starfield />
       {/* r34: the gate shows only the lit hall: the particle cloud (clipped at the top edge) stays hidden until Enter */}
-      <group visible={entered}>
+      <group visible={entered && section !== "boot"}>
         <SignalField anchors={sanctumSpots.anchors} />
       </group>
       <World />

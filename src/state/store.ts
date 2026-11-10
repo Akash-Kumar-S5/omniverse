@@ -18,6 +18,7 @@ export interface OmniState {
   /** 0..100 asset loading progress, written by the scene (drei useProgress inside the Canvas). */
   loadProgress: number;
   quality: Quality;
+  qualityManual: boolean;
   reducedMotion: boolean;
   webgl: boolean;
   setScroll: (s: { section: SectionId; progress: number; sectionProgress: number }) => void;
@@ -27,6 +28,7 @@ export interface OmniState {
   setEntered: () => void;
   setLoadProgress: (p: number) => void;
   setQuality: (q: Quality) => void;
+  setAdaptiveQuality: (q: Quality) => void;
   setEnv: (e: { reducedMotion: boolean; webgl: boolean }) => void;
   setSection: (section: SectionId) => void;
 }
@@ -59,6 +61,7 @@ export const useOmni = create<OmniState>()((set) => ({
   entered: initial.entered,
   loadProgress: 0,
   quality: "medium", // Default tier MEDIUM for smooth 60fps start
+  qualityManual: false,
   reducedMotion: false,
   webgl: true,
   setScroll: (s) => set(s),
@@ -67,7 +70,8 @@ export const useOmni = create<OmniState>()((set) => ({
   setBooted: () => set({ booted: true }),
   setEntered: () => set({ entered: true }),
   setLoadProgress: (loadProgress) => set({ loadProgress }),
-  setQuality: (quality) => set({ quality }),
+  setQuality: (quality) => set({ quality, qualityManual: true }),
+  setAdaptiveQuality: (quality) => set((state) => state.qualityManual ? state : { quality }),
   setEnv: (e) => set(e),
   setSection: (section) => set({ section }),
 }));

@@ -10,11 +10,11 @@ import Floor from "./Floor";
 import ProjectArtefact, { PaintingWarm } from "./ProjectArtefact";
 import Fire from "./Fire";
 import HeroArmour from "./HeroArmour";
+import HeroSoulOfCinder from "./HeroSoulOfCinder";
 
 // r22: the effigy and the church backdrop are lazy chunks (not in the initial payload)
 const EffigyKnight = lazy(() => import("./EffigyKnight"));
 const RuinChurch = lazy(() => import("./RuinChurch"));
-const HeroFloor = lazy(() => import("./HeroFloor"));
 const AboutRoom = lazy(() => import("./AboutRoom"));
 
 /**
@@ -501,11 +501,16 @@ export default function World() {
   return (
     <>
       <color attach="background" args={[look.fogColor]} />
-      <WorldLighting late={armed} />
-      <SubjectRimLight />
-      <SparksAndMist />
+      {section !== "boot" && <WorldLighting late={armed} />}
+      {section !== "boot" && <SubjectRimLight />}
+      {section !== "boot" && <SparksAndMist />}
+      {section === "boot" && (
+        <Suspense fallback={null}>
+          <HeroSoulOfCinder />
+        </Suspense>
+      )}
       {/* r29: the fire is far off-screen in ch3; hiding it removes its bloom/DOF contribution (ghost disc behind the pager) */}
-      <group visible={section !== "projects"}>
+      <group visible={section !== "projects" && section !== "boot"}>
         <Suspense fallback={null}>
           {(section !== "projects" || armed) && <Fire />}
         </Suspense>
@@ -516,19 +521,18 @@ export default function World() {
         </Suspense>
       )}
       <Suspense fallback={null}>
-        {(section === "boot" || section === "contact") && <EffigyKnight />}
-        {(section === "boot" || section === "contact") && <RuinChurch />}
-        {section === "boot" && <HeroFloor />}
+        {section === "contact" && <EffigyKnight />}
+        {section === "contact" && <RuinChurch />}
         {section === "about" && <AboutRoom />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, aboutFlight ? 5 : look.fogNear, aboutFlight ? 22 : look.fogFar]} />
 
       {/* Ruined gothic sanctum architecture with baked firelight */}
-      <Sanctum />
+      {section !== "boot" && <Sanctum />}
 
       {/* Seamless ground plane matching background to eliminate any hard horizon */}
-      <Floor />
+      {section !== "boot" && <Floor />}
 
       {/* Lit readable hero artefact per project beside the active slab */}
       {/* r32: its 9 textures and 2 GLBs used to hold the whole canvas (root suspense) until loaded; now they stream in after first paint */}
@@ -544,7 +548,7 @@ export default function World() {
       )}
 
       {/* Soft oculus light and floating motes */}
-      <VolumeCone />
+      {section !== "boot" && <VolumeCone />}
     </>
   );
 }

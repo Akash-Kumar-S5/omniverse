@@ -131,7 +131,7 @@ export default function CameraRig() {
 
   useFrame((_, delta) => {
     const state = useOmni.getState();
-    const { section, sectionProgress, activeProject, activeRole, reducedMotion, entered } = state;
+    const { section, sectionProgress, activeProject, activeRole, reducedMotion } = state;
     const p = clamp(sectionProgress, 0, 1);
     const pos = positionTarget.current;
     const look = lookDesired.current;
@@ -141,34 +141,9 @@ export default function CameraRig() {
 
     switch (section) {
       case "boot": {
-        const wide = spots.cameras.boot_wide;
-        const oculus = spots.cameras.boot_under_oculus;
-        targetFov = wide.fov;
-        const t = entered ? clamp(0.5 + p * 0.5, 0, 1) : 0;
-        pos.set(
-          wide.position[0] + (oculus.position[0] - wide.position[0]) * t,
-          wide.position[1] + (oculus.position[1] - wide.position[1]) * t,
-          wide.position[2] + (oculus.position[2] - wide.position[2]) * t,
-        );
-        look.set(
-          wide.target[0] + (oculus.target[0] - wide.target[0]) * t,
-          wide.target[1] + (oculus.target[1] - wide.target[1]) * t,
-          wide.target[2] + (oculus.target[2] - wide.target[2]) * t,
-        );
-        // Morph composition rule: keep swarm footprint to the RIGHT of ~58% width and clear of right viewport edge
-        if (!isPortrait) {
-          look.x -= 1.45;
-          // r14: lower ch0 camera a few degrees so the barrel rim is edge-on and the interior is not visible
-          // r23 Lane E: adjust target Y so barrel+relief sit at y~55% and empty bottom floor shrinks from ~45% to ~30%
-          pos.y -= 0.68;
-          look.y += 0.05;
-        } else {
-          // Mobile 390: lower camera so barrel rim is edge-on, fire sits in bottom 30% below body copy
-          // r15: whole subject (barrel, flame, relief) in frame, >=40 px under the link row and ~60 px of floor under it
-          pos.set(-4.4, 0.9, 5.2);
-          look.set(0.0, 3.0, 0.0);
-          targetFov = 62;
-        }
+        targetFov = isPortrait ? 52 : 48;
+        pos.set(isPortrait ? 0 : 0.1, isPortrait ? 2.5 : 2.3, isPortrait ? 11.5 : 10.4);
+        look.set(isPortrait ? 0 : 0.8, 2.5, 0);
         break;
       }
       case "about": {

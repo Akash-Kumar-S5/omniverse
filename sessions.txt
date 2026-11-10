@@ -1,0 +1,6 @@
+main orchestrator - f0bd278a-e5f9-49b5-b77d-5a4236250a3d
+
+sub orchestrator - claude --model sonnet --permission-mode auto --resume 6c36dbd9-f1a8-4f30-b472-31d2caf56adb
+
+max value orchestrator - claude --model opus --effort max --permission-mode auto --resume 4edf95a3-3c80-42de-b29c-817b9e5b9f73
+

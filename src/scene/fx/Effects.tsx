@@ -22,7 +22,9 @@ export default function Effects() {
 
   useFrame(() => {
     // Focus distance = subject distance for each chapter so subjects are sharp and legible
-    if (section === "about") {
+    if (section === "boot") {
+      dofTarget.current.set(0.65, 2.8, 0);
+    } else if (section === "about") {
       dofTarget.current.set(10.8, 1.48, -1.5);
     } else if (section === "experience") {
       dofTarget.current.set(0.5, 1.25, 12.0);
@@ -55,14 +57,16 @@ export default function Effects() {
 
       {/* Subtle bloom on luminous highlights only; threshold tuned so bloom never washes UI text */}
       <Bloom
-        intensity={0.13}
-        luminanceThreshold={0.96}
-        luminanceSmoothing={0.08}
+        intensity={section === "boot" ? 1.7 : 0.13}
+        luminanceThreshold={section === "boot" ? 0.5 : 0.96}
+        luminanceSmoothing={section === "boot" ? 0.3 : 0.08}
+        // Soft halo on the hero like the source viewer, kept tight enough not to fog the frame
+        radius={section === "boot" ? 0.8 : 0.85}
         mipmapBlur
       />
 
       {/* Depth of field enabled on HIGH only; bokehScale <= 1 on chapters 1-3 */}
-      {quality === "high" && (
+      {quality === "high" && section !== "boot" && (
         <DepthOfField
           target={dofTarget.current}
           bokehScale={bokehScale}
@@ -71,8 +75,8 @@ export default function Effects() {
         />
       )}
 
-      {/* AgX tone mapping for brutalist filmic contrast */}
-      <ToneMapping mode={ToneMappingMode.AGX} />
+      {/* AgX tone mapping for brutalist filmic contrast; the hero skips it because AgX bleaches its painted reds/oranges to salmon */}
+      {section !== "boot" && <ToneMapping mode={ToneMappingMode.AGX} />}
 
       {/* Grain and vignette (the 0.0006 chromatic fringe was invisible and cost a pass) */}
       <Noise opacity={section === "projects" ? 0.024 : 0.03} />
