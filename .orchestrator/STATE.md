@@ -1,3 +1,16 @@
+# ORCHESTRATOR-MAX LIVE (w2:pZ, Opus max, autocompact 40%) — took over 03:20 UTC 2026-11-10
+| Lane | Pane / tab | Model | Worktree | Status |
+|---|---|---|---|---|
+| orchestrator-max | w2:pZ | Opus max | main | ACTIVE |
+| haiku-a | w2:p0 / w2:tP | Haiku, autocompact 40 | .worktrees/sonnet-b | idle |
+| haiku-b | w2:p11 / w2:tQ | Haiku, autocompact 40 | .worktrees/blender-sanctum | idle |
+| judge | new tab + fresh Opus pane per cycle (autocompact 40) | Opus | main, own port | see log |
+| copilot-swarm | w2:pS | Copilot `/model fusion` | .worktrees/copilot-swarm | parked (~140 requests left) |
+| RETIRED from dispatch | w2:p1 orchestrator, w2:pY sonnet-b, w2:pJ blender-sanctum, w2:pX critic (Opus, no autocompact env) | | | never prompt |
+| OUT | agy-world w2:pK, agy-review w2:pM (quota), codex-world w2:pE (to Dec 7), copilot-review w2:pQ parked | | | |
+Tools: `node tools/gate.cjs --port P [--no-build] [--motion|--motion-only]` = the merge gate (build, lint, ch0-4 + 4 roles + 8 projects at 1920@1 and 1512@2, 0 console errors, right-half mean >= 9, FLAKY = passed on retry; `--motion` adds a wheel-scroll pass that fails on any frame < 6 mean luma). Judge procedure: `.orchestrator/briefs/judge-run.md`.
+Known: a leftover REA-MCP Chrome from blender-sanctum's session (pid 44687, ~35% CPU) is still running; the classifier blocked me from killing it (not mine). It was present during judges 4-7.
+
 # HANDOVER to orchestrator-max (w2:pZ) from Sonnet orchestrator (w2:p1), 2026-11-10 ~03:15 UTC
 Main HEAD e8968e4 (build+lint clean at last merge, r44). No servers of mine are running (checked ports 46xx).
 
@@ -556,3 +569,6 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - R43 gate PASS but ch1 too dark (9.3, r42 plinth dimming overshot) and project 3 lantern clipped at right edge. R44 fix dispatched before judge 7.
 - MERGED r44 (ch1 12.7/13.2, p3 lantern in frame; gate clean). Judge 7 dispatched.
 - JUDGE 7 = 8.3 ITERATE (ch0 8.6, ch1 8.3, ch2 7.9, ch3 8.2, ch4 8.4, motion 8.3). Defects: Work roles one object x4 (floating shield, flat sword), 1512 projects lantern clipped on 3/8 + GenAI title collides + cold lantern, About void, transition dips, Contact echoes hero + effigy clipped at 1512 + clock gap. Dispatched r45.
+- 03:20 UTC orchestrator-max took over (HANDOVER 5e7189d). Merged r45/frame-motion (d4278b3) + r45/work-about (5c4766a), no conflicts; build+lint clean.
+- 03:22 sonnet-b + blender-sanctum retired from dispatch; haiku-a (w2:p0) and haiku-b (w2:p11) started: claude --model haiku --permission-mode auto, CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=40, in the old worktrees.
+- 03:27 COMBINED GATE on main (tools/gate.cjs, port 4701): PASS 34/34 loads, 0 console errors, lowest right-half mean 12.0 (proj6-1512), port freed. Sheets: .orchestrator/tmp/gate-4701/sheet-*.jpg. Morph's look: clean but every chapter is a small lit subject in a black void; ch2 one cuirass x4; ch0 bare floor.
