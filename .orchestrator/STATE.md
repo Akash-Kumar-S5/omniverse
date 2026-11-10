@@ -522,3 +522,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - JUDGE 5 = 8.2 ITERATE (ch0 8.3, ch1 8.5, ch2 8.2, ch3 8.0, ch4 8.4, motion 8.0). Defects: duplicate/4-motif project paintings, scroll jank p95 60ms, flat halo disc Fire.tsx:237, empty frame Work->Projects, Work no variety. Dispatched r39 lanes.
 - MERGED r39/proj-motion + r39/work-fire (build+lint clean). Known: 1512@2 p95 no gain; 400-1000ms hitch on chapter entry (probable shader recompile from light count change). R40 gate dispatched.
 - MORPH/AKASH: REJECT r39 paintings (generic line icons = AI slop). Replace in r40 with (a) real project screenshots toned sepia/dark if they exist in repo/web portfolio (read-only) else (b) 8 distinct CC0 old-master paintings (Met/Rijks/AIC/Smithsonian), credited. No generated/drawn art. Judge 6 waits for this.
+- MERGED r41/paintings (8 Met CC0 paintings, credited; gate 0 errors). Judge 6 dispatched.
