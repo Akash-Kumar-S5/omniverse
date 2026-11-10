@@ -77,6 +77,9 @@ export default function ProjectArtefact() {
 
   // r32: only the active painting blocks the first paint; the rest stream in right after, so later swaps hit the cache
   const stage = stageFor(activeProject);
+  // r45: narrow viewports (1512) put the lantern on the inside (left) of the frame so it never clips the right edge
+  const aspect = useThree((s) => s.size.width / s.size.height);
+  const lanternSide = aspect < 1.7 ? -1 : stage.side;
   const safeIdx = Math.max(0, Math.min(projects.length - 1, activeProject));
   const activeTexture = useTexture(PAINTING_URLS[safeIdx]);
   useEffect(() => {
@@ -248,7 +251,11 @@ export default function ProjectArtefact() {
     const dest = getProjectGlyphAnchor(activeProject);
     dest.y = 1.85;
     // Shift frame group right (~80px of screen) along camera right vector so chain lands at x >= 1060 and copy never collides
-    dest.addScaledVector(camRight, 0.82 + stage.dx);
+    // r45: below 16:9 the frame shrinks and sits closer in, so frame and lantern stay inside ~92% of the width
+    const asp = state.size.width / state.size.height;
+    const fit = Math.max(0.8, Math.min(1, asp / 1.78));
+    groupRef.current.scale.setScalar(fit);
+    dest.addScaledVector(camRight, (0.82 + stage.dx) * (0.55 + 0.45 * fit));
     dest.addScaledVector(camUp, 0.48 + stage.dy);
 
     targetPos.current.copy(dest);
@@ -313,11 +320,11 @@ export default function ProjectArtefact() {
             {stage.fixture === "side" && (
               <>
                 {/* a short iron arm out of the wall; the lantern hangs from its end beside the frame */}
-                <mesh position={[stage.side * 1.0, 1.0, 0.04]}>
+                <mesh position={[lanternSide * 1.0, 1.0, 0.04]}>
                   <boxGeometry args={[0.5, 0.035, 0.05]} />
                   <meshStandardMaterial color="#1c1814" roughness={0.8} metalness={0.4} />
                 </mesh>
-                <LanternRig lantern={lanternObj} position={[stage.side * 1.18, 0.62, 0.25]} chain={11} color={stage.light} k={stage.lightK} lightRef={lightRef} />
+                <LanternRig lantern={lanternObj} position={[lanternSide * 1.18, 0.62, 0.25]} chain={11} color={stage.light} k={stage.lightK} lightRef={lightRef} />
               </>
             )}
 
@@ -329,7 +336,7 @@ export default function ProjectArtefact() {
                   <meshStandardMaterial map={wall.stone} color="#4a443c" roughness={0.95} />
                 </mesh>
                 {[-0.32, 0.05, 0.36].map((cx, i) => (
-                  <group key={i} position={[cx * (stage.side === 1 ? 1 : -1), -0.805, 0.18]}>
+                  <group key={i} position={[cx * (lanternSide === 1 ? 1 : -1), -0.805, 0.18]}>
                     <mesh position={[0, 0.07 + (i % 2) * 0.03, 0]}>
                       <cylinderGeometry args={[0.02, 0.024, 0.14 + (i % 2) * 0.06, 14]} />
                       <meshStandardMaterial color="#cdb98c" roughness={0.92} />
@@ -347,19 +354,19 @@ export default function ProjectArtefact() {
             {stage.fixture === "sconce" && (
               <>
                 {/* a wall sconce beside the frame: iron arm, a small cup and a steady flame */}
-                <mesh position={[stage.side * 1.12, 0.35, 0.05]}>
+                <mesh position={[lanternSide * 1.12, 0.35, 0.05]}>
                   <boxGeometry args={[0.04, 0.5, 0.04]} />
                   <meshStandardMaterial color="#1c1814" roughness={0.8} metalness={0.4} />
                 </mesh>
-                <mesh position={[stage.side * 1.12, 0.62, 0.11]}>
+                <mesh position={[lanternSide * 1.12, 0.62, 0.11]}>
                   <cylinderGeometry args={[0.07, 0.04, 0.07, 14]} />
                   <meshStandardMaterial color="#2a241d" roughness={0.7} metalness={0.5} />
                 </mesh>
-                <mesh position={[stage.side * 1.12, 0.72, 0.11]}>
+                <mesh position={[lanternSide * 1.12, 0.72, 0.11]}>
                   <sphereGeometry args={[0.028, 10, 8]} />
                   <meshBasicMaterial color="#ffc890" toneMapped={false} />
                 </mesh>
-                <pointLight ref={lightRef} color={stage.light} intensity={2.8 * stage.lightK} distance={3.6} decay={1.8} position={[stage.side * 1.0, 0.7, 0.35]} />
+                <pointLight ref={lightRef} color={stage.light} intensity={2.8 * stage.lightK} distance={3.6} decay={1.8} position={[lanternSide * 1.0, 0.7, 0.35]} />
               </>
             )}
           </group>

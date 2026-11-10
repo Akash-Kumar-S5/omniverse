@@ -448,15 +448,28 @@ export default function World() {
   // r39: keep the armour on screen for 1.4 s after Work -> Projects so the right half is never empty while the camera moves
   const [armourHold, setArmourHold] = useState(false);
   const prevSec = useRef(section);
+  // r45: while the camera flies into About, use the open Hero fog so the statue and floor show up early instead of arriving out of a black void
+  const [aboutFlight, setAboutFlight] = useState(false);
   useEffect(() => {
     const was = prevSec.current;
     prevSec.current = section;
+    let fogTimer = 0;
+    if (section === "about" && was !== "about") {
+      setAboutFlight(true);
+      fogTimer = window.setTimeout(() => setAboutFlight(false), 1800);
+    } else {
+      setAboutFlight(false);
+    }
     if (was === "experience" && section === "projects") {
       setArmourHold(true);
       const id = window.setTimeout(() => setArmourHold(false), 1400);
-      return () => window.clearTimeout(id);
+      return () => {
+        window.clearTimeout(id);
+        window.clearTimeout(fogTimer);
+      };
     }
     setArmourHold(false);
+    return () => window.clearTimeout(fogTimer);
   }, [section]);
 
   useEffect(() => {
@@ -486,7 +499,7 @@ export default function World() {
         {section === "boot" && <HeroFloor />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
-      <fog attach="fog" args={[look.fogColor, look.fogNear, look.fogFar]} />
+      <fog attach="fog" args={[look.fogColor, aboutFlight ? 5 : look.fogNear, aboutFlight ? 22 : look.fogFar]} />
 
       {/* Ruined gothic sanctum architecture with baked firelight */}
       <Sanctum />

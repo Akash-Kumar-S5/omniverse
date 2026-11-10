@@ -86,6 +86,10 @@ interface FlamePlaneProps {
 function FlamePlane({ rotationY, phase, width, height, core = false, contactOpacity = 0.12 }: FlamePlaneProps) {
   const sheet = useTexture(FLAME_URL);
   const contact = useOmni((s) => s.section) === "contact";
+  // r45: the additive flame card fills the screen when the camera flies past it (Projects -> Contact); fade it with distance
+  const groupRef = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.MeshBasicMaterial>(null);
+  const wp = useMemo(() => new THREE.Vector3(), []);
   const { tex, insetX, insetY } = useMemo(() => {
     const image = sheet.image;
     if (!(image instanceof HTMLImageElement)) {
@@ -173,14 +177,20 @@ function FlamePlane({ rotationY, phase, width, height, core = false, contactOpac
     const row = Math.floor(frame / COLS);
     // Invert row for standard Three.js UV origin (bottom-left)
     tex.offset.set(col / COLS + insetX, (ROWS - 1 - row) / ROWS + insetY);
+    if (groupRef.current && matRef.current) {
+      groupRef.current.getWorldPosition(wp);
+      const near = Math.max(0.15, Math.min(1, (state.camera.position.distanceTo(wp) - 0.8) / 1.4));
+      matRef.current.opacity = (core ? 1 : contact ? contactOpacity : 0.6) * near;
+    }
   });
 
   return (
-    <group rotation={[0, rotationY, 0]}>
+    <group ref={groupRef} rotation={[0, rotationY, 0]}>
       {/* Plane bottom sits at coals level and rises ~1.0m tall */}
       <mesh position={[0, height * 0.5, 0]} renderOrder={5}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
+          ref={matRef}
           map={tex}
           alphaMap={radialMask}
           transparent
