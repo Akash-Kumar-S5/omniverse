@@ -30,7 +30,7 @@ export const PROJECT_STAGES: ProjectStage[] = [
   // 1 Rentify: turned left, lantern on a bracket to the left
   { scale: 0.92, roll: 0.03, yaw: -0.3, pitch: 0, dx: 0.12, dy: -0.05, zoom: 1, cropX: 0, cropY: 0, fixture: "side", side: -1, light: "#ffa857", lightK: 1.05, wall: "#443a31", wallScale: 1.1, cam: { dolly: 0.5, dy: -0.1, fov: -2, lean: -0.3 } },
   // 2 Website Performance Monitor: tall and close, candles on a stone ledge below
-  { scale: 1.12, roll: -0.025, yaw: 0.16, pitch: -0.05, dx: -0.1, dy: 0.1, zoom: 1, cropX: 0, cropY: 0, fixture: "side", side: 1, light: "#ffc27a", lightK: 0.95, wall: "#3c352e", wallScale: 1.15, cam: { dolly: 0.8, dy: -0.25, fov: 2, lean: 0.3 } },
+  { scale: 1.12, roll: -0.025, yaw: 0.16, pitch: -0.05, dx: -0.1, dy: 0.1, zoom: 1, cropX: 0, cropY: 0, fixture: "side", side: -1, light: "#ffc27a", lightK: 0.95, wall: "#3c352e", wallScale: 1.15, cam: { dolly: 0.8, dy: -0.25, fov: 2, lean: 0.3 } },
   // 3 Innovation Sprint: small and high, lantern off-centre, moon-gold light
   { scale: 0.82, roll: 0.03, yaw: 0.28, pitch: 0.06, dx: 0.2, dy: 0.28, zoom: 1, cropX: 0, cropY: 0, fixture: "side", side: 1, light: "#ffdba0", lightK: 0.9, wall: "#4a4a44", wallScale: 0.95, cam: { dolly: -0.4, dy: 0.2, fov: -3, lean: 0.5 } },
   // 4 MediHub: crooked, rose-tinted sconce on the right

@@ -170,6 +170,9 @@ function SubjectRimLight() {
         {/* r34: a stronger cool back-rim from behind-right and a warm kicker from behind-left, so both contours of the statue separate from the wall */}
         <pointLight color="#9db4d8" intensity={2.4} distance={3.4} decay={2} position={[12.4, 2.9, 1.0]} />
         <pointLight color="#ff9a52" intensity={2.0} distance={3.0} decay={2} position={[11.9, 2.2, -1.5]} />
+        {/* r44: a faint warm fill low in front and a warm wash behind, so the plinth, floor and wall are not near-black */}
+        <pointLight color="#ff9658" intensity={14} distance={9} decay={2} position={[9.2, 0.9, 2.4]} />
+        <pointLight color="#e8864a" intensity={8} distance={8} decay={2} position={[13.4, 2.2, -2.4]} />
       </>
     );
   }

@@ -43,24 +43,24 @@ function PlinthCap() {
       {/* r28: the baked plinth body reads as clay; a half-transparent flat stone skin over it halves its visible relief and ties it to the cap slabs */}
       <mesh position={[0, 0.6, 0]}>
         <boxGeometry args={[1.31, 1.2, 1.31]} />
-        <meshStandardMaterial map={stone} color="#3a3632" roughness={0.88} metalness={0} transparent opacity={0.55} depthWrite={false} />
+        <meshStandardMaterial map={stone} color="#4a4540" roughness={0.88} metalness={0} transparent opacity={0.55} depthWrite={false} />
       </mesh>
       {/* r29: a thin straight base course squares off the lumpy foot of the scan */}
       <mesh position={[0, 0.04, 0]}>
         <boxGeometry args={[1.42, 0.08, 1.42]} />
-        <meshStandardMaterial map={stone} color="#453f3a" roughness={0.88} metalness={0} />
+        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
       </mesh>
       <mesh position={[0, 1.1925, 0]}>
         <boxGeometry args={[1.37, 0.02, 1.37]} />
-        <meshStandardMaterial map={stone} color="#453f3a" roughness={0.88} metalness={0} />
+        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
       </mesh>
       <mesh position={[0, 1.215, 0]}>
         <boxGeometry args={[1.32, 0.02, 1.32]} />
-        <meshStandardMaterial map={stone} color="#524c45" roughness={0.85} metalness={0} />
+        <meshStandardMaterial map={stone} color="#6a625a" roughness={0.85} metalness={0} />
       </mesh>
       <mesh position={[0, 1.2375, 0]}>
         <boxGeometry args={[1.28, 0.025, 1.28]} />
-        <meshStandardMaterial map={stone} color="#5f5850" roughness={0.8} metalness={0} />
+        <meshStandardMaterial map={stone} color="#7a7168" roughness={0.8} metalness={0} />
       </mesh>
     </group>
   );
