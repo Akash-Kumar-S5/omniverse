@@ -1,7 +1,7 @@
 // Contract (round 2). OWNER: codex-chapters. Mounts Lenis for the page.
 import { useEffect } from "react";
 import Lenis from "lenis";
-import { useOmni, type SectionId } from "./store";
+import { SECTIONS, useOmni, type SectionId } from "./store";
 
 let activeLenis: Lenis | undefined;
 
@@ -9,6 +9,11 @@ let activeLenis: Lenis | undefined;
 export function scrollToSection(id: SectionId, immediate = false) {
   const element = document.querySelector<HTMLElement>(`[data-section="${id}"]`);
   if (!element) return;
+
+  // r45: a jump over more than one chapter would scroll through every chapter in between (camera flights and black frames); cut straight there instead
+  const here = SECTIONS.indexOf(useOmni.getState().section);
+  const there = SECTIONS.indexOf(id);
+  if (Math.abs(here - there) > 1) immediate = true;
 
   if (immediate) {
     if (activeLenis) {

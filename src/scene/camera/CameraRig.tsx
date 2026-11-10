@@ -261,10 +261,12 @@ export default function CameraRig() {
         look.set(...sky.target);
         if (!isPortrait) {
           // r15 ch4: the barrel + real flame, seen from a LOW SIDE angle (rim edge-on, interior glow hidden), relief dim behind
-          pos.set(-1.0, 1.0, 4.2);   // r37: raised and pulled back so the whole brazier clears the bottom edge. r34 arrival: a low wide-angle look UP the ember column toward the oculus, fire at the bottom right, effigy out of frame
-          // r17 Lane C: yaw left (counter-clockwise away from right edge) so clipped statue at x1385-1440 is completely out of frame
-          look.set(-1.3, 1.7, -0.4);
-          targetFov = 60;
+          // r45: Contact's own shot (no longer a rerun of the Hero): lower and closer, so the flame is bigger and the ember column runs up the frame;
+          // below 16:9 the look point slides right so the effigy beside the brazier stays inside the frame
+          const narrow = Math.max(0, 1.78 - size.width / Math.max(1, size.height));
+          pos.set(-1.3, 0.62, 3.5);
+          look.set(-0.7 + narrow * 1.1, 1.5, -0.3);
+          targetFov = 58;
         } else {
           // mobile 390: elevated angle so fire sits in bottom 25% below the GitHub/LinkedIn link row
           pos.set(-4.4, 0.9, 5.2);

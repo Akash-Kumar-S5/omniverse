@@ -159,6 +159,10 @@
 .hud-time {
   font-size: var(--step--1);
   color: var(--fg-muted);
+}
+
+/* r45: tabular figures only on the digits; applied to the whole line they gave the comma a digit-wide gap ("Chennai , 8:18 am") */
+.hud-time time {
   font-variant-numeric: tabular-nums;
 }
 
