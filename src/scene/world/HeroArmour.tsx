@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
+import { Suspense } from "react";
+import RoleProp from "./RoleProp";
 
 // r30: a clean museum breastplate scan (Cleveland Museum of Art 1916.1521, CC0, see CREDITS.md) replaces the low-poly torso that read melted at Retina
 const URL = "/assets/scans/armour-breastplate-scan.glb";
@@ -89,6 +91,7 @@ export default function HeroArmour() {
         <meshBasicMaterial map={shadow} transparent opacity={0.8} depthWrite={false} />
       </mesh>
       <ArmourStand />
+      <Suspense fallback={null}><RoleProp /></Suspense>
       <group position={[0, TORSO_LIFT, 0]} rotation={[0, 1.2, 0]}>
         <primitive object={armour} />
       </group>

@@ -239,3 +239,9 @@ The shaft is now cold (0.72, 0.82, 1.0). Warm point lights are baked on cold sto
 - ch2: camera drift is now sideways and height only (dx 0 for every role), so the armour keeps one on-screen size; each role gets its own key spot angle and colour temperature (`ROLE_LIGHT`); two ruin-church scan pieces stand far behind the armour as a fogged back wall (`RuinChurch.tsx`, existing asset). Chapter subjects unchanged.
 - ch0: one low cool moon point light (#8fa6cf, 14, from high behind the ruins). It lifts the floor and shell; the church pieces are unlit basic material, so they stay as dim as before.
 - Gate (headed Chrome, fresh context, shots at 3/6/12 s): 10 of 10, 0 console errors, right-half mean from 6 s 10.6 to 19.8. Lint and build clean. Proof: `.orchestrator/reference/r39-*`. No new assets, CREDITS.md unchanged.
+
+## r42 (branch r42/work-props)
+- Shards: the dark jagged geometry behind the cuirass in ch2 was the ruin-church scan pieces r39 had added behind the stand (the baked shell is already hidden there). They are removed from ch2; the stand's full feet now show, so the "crude stub" is gone too.
+- Role props (CC-BY, credited in CREDITS.md): role 0 the cuirass alone; role 1 a burgonet helm on a stone block; role 2 a schiavona sword lying at the stand foot; role 3 a shield leaning at the stand. Each prop has its own warm point light; the per-role key-light angle and colour from r39 stays. Files are 240 to 720 KB, lazy-loaded with the chapter.
+- Verified by eye: helm and sword and shield each seen in a ch2 shot; the roles 2 and 3 views came from forcing the role through a temporary URL param (removed again) because the headed tab clicks lag behind the capture.
+- Gate (headed Chrome, fresh context, shots at 3/6/12 s): 10 of 10, 0 console errors, right-half mean from 6 s 10.6 to 20.2. Lint and build clean.

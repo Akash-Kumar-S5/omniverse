@@ -243,3 +243,11 @@ No new assets.
 |---|---|---|---|---|
 | Ancient Roman Bronze Brazier (4,760 faces) | ARTcheo3D | https://sketchfab.com/3d-models/ancient-roman-bronze-brazier-fa194c993d99411d8b211b0df5a4bf8c | CC Attribution (CC-BY 4.0) | `public/assets/ruins/bronze_brazier.draco.glb` (ch0/ch4 brazier; scaled 0.42, textures cut to 1024 px JPEG, Draco-compressed; replaces the banded barrel) |
 
+
+## Round 42 (Work chapter role props)
+
+| Asset | Author | URL | Licence | Use |
+|---|---|---|---|---|
+| German Burgonet circa 1570 | Pratas | https://sketchfab.com/3d-models/german-burgonet-circa-1570-758e8d69c4644d5ba8de135d5b8847df | CC Attribution (CC-BY 4.0) | `public/assets/scans/role-helm.draco.glb` (ch2 role 2 prop; scaled to 0.32 m, 1024 px JPEG, Draco) |
+| Schiavona | CliffUnderside | https://sketchfab.com/3d-models/schiavona-41a54a6d094f484ca4bb6eec05d3f0c3 | CC Attribution (CC-BY 4.0) | `public/assets/scans/role-sword.draco.glb` (ch2 role 3 prop; scaled to 1.1 m) |
+| Medieval Shield | denis_cliofas | https://sketchfab.com/3d-models/medieval-shield-e4be4327cd424c1b84ea69c8e36dd6ea | CC Attribution (CC-BY 4.0) | `public/assets/scans/role-shield.draco.glb` (ch2 role 4 prop; scaled to 0.7 m) |

@@ -479,7 +479,7 @@ export default function World() {
       )}
       <Suspense fallback={null}>
         {(section === "boot" || section === "contact") && <EffigyKnight />}
-        {(section === "boot" || section === "contact" || section === "experience") && <RuinChurch />}
+        {(section === "boot" || section === "contact") && <RuinChurch />}
         {section === "boot" && <HeroFloor />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
