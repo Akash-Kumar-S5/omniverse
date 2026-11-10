@@ -15,6 +15,7 @@ import HeroArmour from "./HeroArmour";
 const EffigyKnight = lazy(() => import("./EffigyKnight"));
 const RuinChurch = lazy(() => import("./RuinChurch"));
 const HeroFloor = lazy(() => import("./HeroFloor"));
+const AboutRoom = lazy(() => import("./AboutRoom"));
 
 /**
  * Light is fire + moon only. The single warm source is the flickering point light in Fire.tsx.
@@ -55,6 +56,13 @@ const ROLE_LIGHT = [
   { color: "#ffc27a", pos: [-13.2, 1.9, 0.9] },
   { color: "#ff8c3a", pos: [-13.3, 0.9, -0.9] },
   { color: "#ffe0b8", pos: [-13.0, 2.1, 0.3] },
+] as const;
+
+const ROLE_ROOM = [
+  { color: "#ff9a4a", pos: [-17, 1.4, -2.8], size: [5.0, 3.2], opacity: 0.12 },   // warm hearth glow, wide
+  { color: "#8fa6d8", pos: [-17, 2.4, -2.4], size: [2.4, 4.4], opacity: 0.12 },   // tall cool arch of moonlight, left
+  { color: "#ff7a30", pos: [-17, 0.7, -3.4], size: [6.5, 1.8], opacity: 0.14 },   // low hot glow along the floor, right
+  { color: "#d8c8a8", pos: [-17, 3.0, -2.6], size: [3.4, 3.0], opacity: 0.11 },   // pale high window
 ] as const;
 
 function ExperienceLighting() {
@@ -132,6 +140,20 @@ function ExperienceLighting() {
             map={hazeTexture}
             transparent
             opacity={0.04}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+      {/* r45: each role gets its own back-glow "room" (colour, height, width) behind the stand, so the four steps read as four places */}
+      {hazeTexture && (
+        <mesh position={[...ROLE_ROOM[role].pos]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[...ROLE_ROOM[role].size]} />
+          <meshBasicMaterial
+            map={hazeTexture}
+            color={ROLE_ROOM[role].color}
+            transparent
+            opacity={ROLE_ROOM[role].opacity}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
           />
@@ -497,6 +519,7 @@ export default function World() {
         {(section === "boot" || section === "contact") && <EffigyKnight />}
         {(section === "boot" || section === "contact") && <RuinChurch />}
         {section === "boot" && <HeroFloor />}
+        {section === "about" && <AboutRoom />}
       </Suspense>
       {/* Fog with #0b0907 atmosphere creating 2-3 faint silhouette layers of pillars */}
       <fog attach="fog" args={[look.fogColor, aboutFlight ? 5 : look.fogNear, aboutFlight ? 22 : look.fogFar]} />
