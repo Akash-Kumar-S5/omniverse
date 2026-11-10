@@ -286,9 +286,8 @@ export default function CameraRig() {
 
     // On chapter change after initialization, build a spline through open doorways
     if (initialized.current && prevSection.current && prevSection.current !== section) {
-      if ((prevSection.current === "experience" && section === "projects") || (prevSection.current === "projects" && section === "experience")) {
-        fastUntil.current = performance.now() + 1500; // r39: quicker settle so the next subject is on screen sooner
-      }
+      // r39/r42: every chapter change flies faster, so the near-black stretch between two subjects is shorter
+      fastUntil.current = performance.now() + 1500;
       const waypoints = getTransitionWaypoints(prevSection.current, section);
       if (waypoints.length > 0) {
         const splinePoints = [camera.position.clone(), ...waypoints, pos.clone()];
@@ -312,7 +311,7 @@ export default function CameraRig() {
       activeSpline.current = null;
     } else if (activeSpline.current && splineProgress.current.value < 0.99) {
       // Visibly travel through the building spline connecting rooms
-      easing.damp(splineProgress.current, "value", 1, 0.45, delta);
+      easing.damp(splineProgress.current, "value", 1, performance.now() < fastUntil.current ? 0.26 : 0.45, delta);
       activeSpline.current.getPointAt(splineProgress.current.value, sampledPosition.current);
       camera.position.copy(sampledPosition.current);
       easing.damp3(lookTarget.current, look, 0.45, delta);

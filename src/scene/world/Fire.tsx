@@ -207,10 +207,14 @@ function Flames() {
     c.width = 128; c.height = 128;
     const g = c.getContext("2d");
     if (g) {
-      const r = g.createRadialGradient(64, 64, 2, 64, 64, 62);
-      r.addColorStop(0, "rgba(255,120,40,1)");
-      r.addColorStop(0.35, "rgba(255,80,20,0.55)");
-      r.addColorStop(1, "rgba(255,60,10,0)");
+      // r42: smooth falloff to exactly zero well inside the card (no visible ellipse edge), warmer and less saturated than the old red
+      const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      r.addColorStop(0, "rgba(255,170,90,0.9)");
+      r.addColorStop(0.2, "rgba(255,150,80,0.45)");
+      r.addColorStop(0.45, "rgba(240,120,60,0.16)");
+      r.addColorStop(0.7, "rgba(220,100,50,0.04)");
+      r.addColorStop(0.9, "rgba(200,90,40,0)");
+      r.addColorStop(1, "rgba(200,90,40,0)");
       g.fillStyle = r; g.fillRect(0, 0, 128, 128);
     }
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
@@ -231,8 +235,8 @@ function Flames() {
       </group>
       {/* r29: small warm glow standing at the flame base so the flame has a root at the rim from a low camera */}
       <mesh position={[0, 0.17, 0.05]} renderOrder={4}>
-        <planeGeometry args={[0.8, 0.36]} />
-        <meshBasicMaterial map={glow} transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <planeGeometry args={[0.9, 0.42]} />
+        <meshBasicMaterial map={glow} transparent opacity={0.2} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
     </group>
   );

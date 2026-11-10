@@ -57,7 +57,7 @@ Each painting is a public-domain work from The Metropolitan Museum of Art Open A
 | Innovation Sprint 2025 | *The Penitent Magdalen* | Georges de La Tour, ca. 1640 | https://www.metmuseum.org/art/collection/search/436839 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_3.webp` |
 | MediHub | *The Afternoon Meal (La Merienda)* | Luis Meléndez, ca. 1772 | https://www.metmuseum.org/art/collection/search/437053 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_4.webp` |
 | Finaca | *The Trojan Women Setting Fire to Their Fleet* | Claude Lorrain, ca. 1643 | https://www.metmuseum.org/art/collection/search/435908 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_5.webp` |
-| Fuel Dispenser RFID App | *The Forest in Winter at Sunset* | Théodore Rousseau, ca. 1846–67 | https://www.metmuseum.org/art/collection/search/438816 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_6.webp` |
+| Fuel Dispenser RFID App | *The Holy Family with Saints Anne and Catherine of Alexandria* | Jusepe de Ribera, 1648 | https://www.metmuseum.org/art/collection/search/437455 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_6.webp` |
 | GenAI Experiments | *The Meditation on the Passion* | Vittore Carpaccio, ca. 1490 | https://www.metmuseum.org/art/collection/search/435851 | CC0 1.0 Universal (Met Open Access) | `public/assets/paintings/painting_7.webp` |
 
 ## Chapter Souls-Style 3D Props (Round 3 Direction 13:05)

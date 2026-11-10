@@ -19,29 +19,48 @@ function PlinthCap() {
     t.needsUpdate = true;
     return t;
   }, [src]);
+  // r42: a soft contact shadow on the floor around the plinth foot so the block sits on the ground instead of floating in the void
+  const contact = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const g = c.getContext("2d");
+    if (g) {
+      const r = g.createRadialGradient(64, 64, 20, 64, 64, 64);
+      r.addColorStop(0, "rgba(0,0,0,0.95)");
+      r.addColorStop(0.5, "rgba(0,0,0,0.55)");
+      r.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = r;
+      g.fillRect(0, 0, 128, 128);
+    }
+    return new THREE.CanvasTexture(c);
+  }, []);
   return (
     <group position={[11, 0, 0]}>
+      <mesh position={[0, 0.006, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+        <planeGeometry args={[3.6, 3.6]} />
+        <meshBasicMaterial map={contact} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
       {/* r28: the baked plinth body reads as clay; a half-transparent flat stone skin over it halves its visible relief and ties it to the cap slabs */}
       <mesh position={[0, 0.6, 0]}>
         <boxGeometry args={[1.31, 1.2, 1.31]} />
-        <meshStandardMaterial map={stone} color="#4a4540" roughness={0.88} metalness={0} transparent opacity={0.55} depthWrite={false} />
+        <meshStandardMaterial map={stone} color="#3a3632" roughness={0.88} metalness={0} transparent opacity={0.55} depthWrite={false} />
       </mesh>
       {/* r29: a thin straight base course squares off the lumpy foot of the scan */}
       <mesh position={[0, 0.04, 0]}>
         <boxGeometry args={[1.42, 0.08, 1.42]} />
-        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
+        <meshStandardMaterial map={stone} color="#453f3a" roughness={0.88} metalness={0} />
       </mesh>
       <mesh position={[0, 1.1925, 0]}>
         <boxGeometry args={[1.37, 0.02, 1.37]} />
-        <meshStandardMaterial map={stone} color="#5a534c" roughness={0.88} metalness={0} />
+        <meshStandardMaterial map={stone} color="#453f3a" roughness={0.88} metalness={0} />
       </mesh>
       <mesh position={[0, 1.215, 0]}>
         <boxGeometry args={[1.32, 0.02, 1.32]} />
-        <meshStandardMaterial map={stone} color="#6a625a" roughness={0.85} metalness={0} />
+        <meshStandardMaterial map={stone} color="#524c45" roughness={0.85} metalness={0} />
       </mesh>
       <mesh position={[0, 1.2375, 0]}>
         <boxGeometry args={[1.28, 0.025, 1.28]} />
-        <meshStandardMaterial map={stone} color="#7a7168" roughness={0.8} metalness={0} />
+        <meshStandardMaterial map={stone} color="#5f5850" roughness={0.8} metalness={0} />
       </mesh>
     </group>
   );
