@@ -527,3 +527,4 @@ Critic drops 390 shots + mobile score. SHIP = overall >= 8.5 on desktop ch0-4, n
 - MERGED r42/work-props + r42/glow-ground (build+lint clean). Known: ch1 min mean 9.3 near floor; p3 lantern clipped at right; dip fix unproven. R43 gate dispatched.
 - R43 gate PASS but ch1 too dark (9.3, r42 plinth dimming overshot) and project 3 lantern clipped at right edge. R44 fix dispatched before judge 7.
 - MERGED r44 (ch1 12.7/13.2, p3 lantern in frame; gate clean). Judge 7 dispatched.
+- JUDGE 7 = 8.3 ITERATE (ch0 8.6, ch1 8.3, ch2 7.9, ch3 8.2, ch4 8.4, motion 8.3). Defects: Work roles one object x4 (floating shield, flat sword), 1512 projects lantern clipped on 3/8 + GenAI title collides + cold lantern, About void, transition dips, Contact echoes hero + effigy clipped at 1512 + clock gap. Dispatched r45.
