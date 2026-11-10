@@ -12,6 +12,8 @@ const HELM = "/assets/scans/role-helm.draco.glb";
 const SWORD = "/assets/scans/role-sword.draco.glb";
 const SHIELD = "/assets/scans/role-shield.draco.glb";
 const STONE = "/assets/ruins/textures/stone_block_512.jpg";
+const SWORD_LIFT = 0.55;   // half the blade length: the lying scan is re-stood on its point
+const SWORD_TILT = -0.1;
 
 function useLit(url: string, tint: string) {
   const { scene } = useGLTF(url, "/draco/");
@@ -40,6 +42,34 @@ function useLit(url: string, tint: string) {
   }, [scene, tint]);
 }
 
+function useShadow() {
+  const tex = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Cannot create prop contact shadow");
+    const g = ctx.createRadialGradient(64, 64, 2, 64, 64, 64);
+    g.addColorStop(0, "rgba(0,0,0,0.85)");
+    g.addColorStop(0.6, "rgba(0,0,0,0.55)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+  return tex;
+}
+
+/** a soft dark pool on the floor under a prop, so it sits on the ground instead of floating */
+function Contact({ x, z, w, d, rot = 0 }: { x: number; z: number; w: number; d: number; rot?: number }) {
+  const shadow = useShadow();
+  return (
+    <mesh position={[x, 0.004, z]} rotation={[-Math.PI / 2, 0, rot]}>
+      <planeGeometry args={[w, d]} />
+      <meshBasicMaterial map={shadow} transparent depthWrite={false} />
+    </mesh>
+  );
+}
+
 function Helm() {
   const helm = useLit(HELM, "#b9b4ad");
   const src = useTexture(STONE);
@@ -52,6 +82,7 @@ function Helm() {
   }, [src]);
   return (
     <group position={[0.05, 0, 0.9]}>
+      <Contact x={0} z={0} w={0.9} d={0.9} />
       <mesh position={[0, 0.09, 0]}>
         <boxGeometry args={[0.34, 0.18, 0.34]} />
         <meshStandardMaterial map={stone} color="#5d554d" roughness={0.9} />
@@ -63,20 +94,40 @@ function Helm() {
   );
 }
 
+/** the sword stands upright, point down in a stone block, leaning a little toward the stand */
 function Sword() {
   const sword = useLit(SWORD, "#c9c3ba");
+  const src = useTexture(STONE);
+  const stone = useMemo(() => {
+    const t = src.clone();
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.needsUpdate = true;
+    return t;
+  }, [src]);
   return (
-    <group position={[0.15, 0.02, 0.55]} rotation={[0, 0.25, -0.2]}>
-      <primitive object={sword} />
+    <group position={[0.1, 0, 0.5]} scale={0.8}>
+      <Contact x={0} z={0} w={0.8} d={0.8} />
+      <mesh position={[0, 0.07, 0]}>
+        <boxGeometry args={[0.3, 0.14, 0.3]} />
+        <meshStandardMaterial map={stone} color="#5d554d" roughness={0.9} />
+      </mesh>
+      <group position={[0, 0.14 + SWORD_LIFT, 0]} rotation={[SWORD_TILT, 0, 0.06]}>
+        <group rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={sword} />
+        </group>
+      </group>
     </group>
   );
 }
 
+/** the shield rests on its rim against the stand's foot, tilted back so it is supported, with a contact pool under it */
 function Shield() {
   const shield = useLit(SHIELD, "#b4aea6");
   return (
-    <group position={[-0.25, 0, 0.45]} scale={0.8} rotation={[0, 0.9, 0]}>
-      <group rotation={[0.28, 0, 0]}>
+    <group position={[0.0, 0, 0.48]} scale={0.9} rotation={[0, 0.25, 0]}>
+      <Contact x={0.05} z={0} w={0.9} d={0.5} />
+      <group position={[0, 0.3, 0]} rotation={[0, 0, -1.3]}>
         <primitive object={shield} />
       </group>
     </group>
